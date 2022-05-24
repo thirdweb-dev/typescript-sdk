@@ -120,20 +120,20 @@ export const BaseSignaturePayloadInput: z.ZodObject<{
     primarySaleRecipient: z.ZodDefault<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
     to: string;
+    primarySaleRecipient: string;
+    uid: string;
     price: string;
     currencyAddress: string;
     mintStartTime: ethers.BigNumber;
     mintEndTime: ethers.BigNumber;
-    uid: string;
-    primarySaleRecipient: string;
 }, {
     to?: string | undefined;
+    primarySaleRecipient?: string | undefined;
+    uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
     mintStartTime?: Date | undefined;
     mintEndTime?: Date | undefined;
-    uid?: string | undefined;
-    primarySaleRecipient?: string | undefined;
 }>;
 
 // @public (undocumented)
@@ -241,33 +241,33 @@ export const ClaimConditionInputArray: z.ZodArray<z.ZodObject<{
         address: string;
         maxClaimable: string;
     }, {
-        address: string;
         maxClaimable?: string | number | undefined;
+        address: string;
     }>, "many">]>>;
 }, "strip", z.ZodTypeAny, {
-    startTime: BigNumber;
-    currencyAddress: string;
-    price: string;
-    maxQuantity: string;
-    quantityLimitPerTransaction: string;
-    waitInSeconds: string;
-    merkleRootHash: (string | number[] | undefined) & (string | number[]);
     snapshot?: {
         address: string;
         maxClaimable: string;
     }[] | undefined;
+    quantityLimitPerTransaction: string;
+    startTime: BigNumber;
+    price: string;
+    currencyAddress: string;
+    maxQuantity: string;
+    waitInSeconds: string;
+    merkleRootHash: string | number[];
 }, {
-    startTime?: Date | undefined;
-    currencyAddress?: string | undefined;
-    price?: string | number | undefined;
-    maxQuantity?: string | number | undefined;
     quantityLimitPerTransaction?: string | number | undefined;
+    startTime?: Date | undefined;
+    price?: string | number | undefined;
+    snapshot?: string[] | {
+        maxClaimable?: string | number | undefined;
+        address: string;
+    }[] | undefined;
+    currencyAddress?: string | undefined;
+    maxQuantity?: string | number | undefined;
     waitInSeconds?: string | number | bigint | BigNumber | undefined;
     merkleRootHash?: string | number[] | undefined;
-    snapshot?: string[] | {
-        address: string;
-        maxClaimable?: string | number | undefined;
-    }[] | undefined;
 }>, "many">;
 
 // Warning: (ae-internal-missing-underscore) The name "ClaimConditionInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
@@ -291,33 +291,33 @@ export const ClaimConditionInputSchema: z.ZodObject<{
         address: string;
         maxClaimable: string;
     }, {
-        address: string;
         maxClaimable?: string | number | undefined;
+        address: string;
     }>, "many">]>>;
 }, "strip", z.ZodTypeAny, {
-    startTime: BigNumber;
-    currencyAddress: string;
-    price: string;
-    maxQuantity: string;
-    quantityLimitPerTransaction: string;
-    waitInSeconds: string;
-    merkleRootHash: (string | number[] | undefined) & (string | number[]);
     snapshot?: {
         address: string;
         maxClaimable: string;
     }[] | undefined;
+    quantityLimitPerTransaction: string;
+    startTime: BigNumber;
+    price: string;
+    currencyAddress: string;
+    maxQuantity: string;
+    waitInSeconds: string;
+    merkleRootHash: string | number[];
 }, {
-    startTime?: Date | undefined;
-    currencyAddress?: string | undefined;
-    price?: string | number | undefined;
-    maxQuantity?: string | number | undefined;
     quantityLimitPerTransaction?: string | number | undefined;
+    startTime?: Date | undefined;
+    price?: string | number | undefined;
+    snapshot?: string[] | {
+        maxClaimable?: string | number | undefined;
+        address: string;
+    }[] | undefined;
+    currencyAddress?: string | undefined;
+    maxQuantity?: string | number | undefined;
     waitInSeconds?: string | number | bigint | BigNumber | undefined;
     merkleRootHash?: string | number[] | undefined;
-    snapshot?: string[] | {
-        address: string;
-        maxClaimable?: string | number | undefined;
-    }[] | undefined;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "ClaimConditionOutputSchema" should be prefixed with an underscore because the declaration is marked as @internal
@@ -341,8 +341,8 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         address: string;
         maxClaimable: string;
     }, {
-        address: string;
         maxClaimable?: string | number | undefined;
+        address: string;
     }>, "many">]>>;
 }, {
     availableSupply: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>;
@@ -357,45 +357,45 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     }>, "strip", z.ZodTypeAny, {
         symbol: string;
         name: string;
-        decimals: number;
         value: BigNumber;
+        decimals: number;
         displayValue: string;
     }, {
         symbol: string;
         name: string;
+        value: string | number | bigint | BigNumber;
         decimals: number;
-        value: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
         displayValue: string;
     }>>;
     price: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
     waitInSeconds: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
     startTime: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, Date, string | number | bigint | BigNumber>;
 }>, "strip", z.ZodTypeAny, {
-    quantityLimitPerTransaction: string;
     snapshot?: {
         address: string;
         maxClaimable: string;
     }[] | undefined;
+    quantityLimitPerTransaction: string;
+    startTime: Date;
+    price: BigNumber;
     currencyAddress: string;
     maxQuantity: string;
-    merkleRootHash: (string | number[] | undefined) & (string | number[]);
+    waitInSeconds: BigNumber;
+    merkleRootHash: string | number[];
     availableSupply: string;
     currentMintSupply: string;
     currencyMetadata: {
         symbol: string;
         name: string;
-        decimals: number;
         value: BigNumber;
+        decimals: number;
         displayValue: string;
     };
-    price: BigNumber;
-    waitInSeconds: BigNumber;
-    startTime: Date;
 }, {
     quantityLimitPerTransaction?: string | number | undefined;
     snapshot?: string[] | {
-        address: string;
         maxClaimable?: string | number | undefined;
+        address: string;
     }[] | undefined;
     currencyAddress?: string | undefined;
     maxQuantity?: string | number | undefined;
@@ -405,13 +405,13 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     currencyMetadata?: {
         symbol: string;
         name: string;
+        value: string | number | bigint | BigNumber;
         decimals: number;
-        value: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
         displayValue: string;
     } | undefined;
-    price: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
-    waitInSeconds: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
-    startTime: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
+    startTime: string | number | bigint | BigNumber;
+    price: string | number | bigint | BigNumber;
+    waitInSeconds: string | number | bigint | BigNumber;
 }>;
 
 // @public (undocumented)
@@ -457,16 +457,16 @@ export const CommonContractOutputSchema: z.ZodObject<z.extendShape<{
     image: z.ZodOptional<z.ZodString>;
 }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
     [x: string]: Json;
-    name: string;
     description?: string | undefined;
-    external_link?: string | undefined;
     image?: string | undefined;
+    external_link?: string | undefined;
+    name: string;
 }, {
     [x: string]: Json;
-    name: string;
     description?: string | undefined;
-    external_link?: string | undefined;
     image?: string | undefined;
+    external_link?: string | undefined;
+    name: string;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "CommonContractSchema" should be prefixed with an underscore because the declaration is marked as @internal
@@ -478,15 +478,15 @@ export const CommonContractSchema: z.ZodObject<{
     image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     external_link: z.ZodOptional<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
-    name: string;
     description?: string | undefined;
     image?: any;
     external_link?: string | undefined;
+    name: string;
 }, {
-    name: string;
     description?: string | undefined;
     image?: any;
     external_link?: string | undefined;
+    name: string;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "CommonPlatformFeeSchema" should be prefixed with an underscore because the declaration is marked as @internal
@@ -788,12 +788,12 @@ export const CurrencySchema: z.ZodObject<{
     symbol: z.ZodString;
     decimals: z.ZodNumber;
 }, "strip", z.ZodTypeAny, {
-    name: string;
     symbol: string;
+    name: string;
     decimals: number;
 }, {
-    name: string;
     symbol: string;
+    name: string;
     decimals: number;
 }>;
 
@@ -815,14 +815,14 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
 }>, "strip", z.ZodTypeAny, {
     symbol: string;
     name: string;
-    decimals: number;
     value: BigNumber;
+    decimals: number;
     displayValue: string;
 }, {
     symbol: string;
     name: string;
+    value: string | number | bigint | BigNumber;
     decimals: number;
-    value: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
     displayValue: string;
 }>;
 
@@ -881,7 +881,7 @@ export interface DirectListing {
 // Warning: (ae-forgotten-export) The symbol "DropERC20" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
+export class DropClaimConditions<TContract extends SignatureDrop_2 | DropERC721 | DropERC20> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
     canClaim(quantity: Amount, addressToCheck?: string): Promise<boolean>;
     getActive(): Promise<ClaimCondition>;
@@ -986,11 +986,11 @@ export class Edition extends Erc1155<TokenERC1155> {
         }>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
-        symbol: string;
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
         seller_fee_basis_points: number;
         fee_recipient: string;
         primary_sale_recipient: string;
@@ -999,16 +999,16 @@ export class Edition extends Erc1155<TokenERC1155> {
         trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        primary_sale_recipient: string;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
+        name: string;
+        primary_sale_recipient: string;
         }>;
         output: ZodObject<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -1024,22 +1024,22 @@ export class Edition extends Erc1155<TokenERC1155> {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
         seller_fee_basis_points: number;
         fee_recipient: string;
-        symbol: string;
         }, {
         [x: string]: Json;
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
         input: ZodObject<extendShape<extendShape<    {
         name: ZodString;
@@ -1052,21 +1052,21 @@ export class Edition extends Erc1155<TokenERC1155> {
         }>, {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
         seller_fee_basis_points: number;
         fee_recipient: string;
-        symbol: string;
         }, {
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
     };
     signature: Erc1155SignatureMinting;
@@ -1133,12 +1133,12 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         }>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
-        symbol: string;
-        name: string;
         description?: string | undefined;
-        merkle: Record<string, string>;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
         seller_fee_basis_points: number;
         fee_recipient: string;
         primary_sale_recipient: string;
@@ -1147,17 +1147,17 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
-        name: string;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: any;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        primary_sale_recipient: string;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
+        name: string;
+        primary_sale_recipient: string;
         }>;
         output: ZodObject<extendShape<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -1175,24 +1175,24 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
-        merkle: Record<string, string>;
         image?: string | undefined;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
         seller_fee_basis_points: number;
         fee_recipient: string;
-        symbol: string;
         }, {
         [x: string]: Json;
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
         input: ZodObject<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -1207,23 +1207,23 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         }>, {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
-        merkle: Record<string, string>;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
         seller_fee_basis_points: number;
         fee_recipient: string;
-        symbol: string;
         }, {
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: any;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
     };
 }
@@ -1275,31 +1275,20 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     }>, z.ZodString]>;
 }, "strip", z.ZodTypeAny, {
+    metadata: string | {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    };
     supply: string;
-    metadata: (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    } | undefined) & (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    });
 }, {
-    supply: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
-    metadata: (string | {
+    metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
         description?: string | null | undefined;
@@ -1309,17 +1298,8 @@ export const EditionMetadataInputOrUriSchema: z.ZodObject<{
         background_color?: string | undefined;
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    } | undefined) & (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    });
+    };
+    supply: string | number | bigint | BigNumber;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "EditionMetadataInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1359,20 +1339,19 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     }>;
 }, "strip", z.ZodTypeAny, {
+    metadata: {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    };
     supply: string;
-    metadata: {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    };
 }, {
-    supply: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
     metadata: {
         [x: string]: Json;
         name?: string | undefined;
@@ -1384,6 +1363,7 @@ export const EditionMetadataInputSchema: z.ZodObject<{
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    supply: string | number | bigint | BigNumber;
 }>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "EditionMetadataOrUri" is marked as @public, but its signature references "EditionMetadataInputOrUriSchema" which is marked as @internal
@@ -1411,46 +1391,46 @@ export const EditionMetadataOutputSchema: z.ZodObject<{
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         name?: string | undefined;
-        uri: string;
-        id: BigNumber;
         description?: string | null | undefined;
         image?: string | null | undefined;
         external_url?: string | null | undefined;
         animation_url?: string | null | undefined;
+        uri: string;
+        id: BigNumber;
     }, {
         [x: string]: Json;
         name?: string | undefined;
-        uri: string;
-        id: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
         description?: string | null | undefined;
         image?: string | null | undefined;
         external_url?: string | null | undefined;
         animation_url?: string | null | undefined;
+        uri: string;
+        id: string | number | bigint | BigNumber;
     }>;
 }, "strip", z.ZodTypeAny, {
-    supply: BigNumber;
     metadata: {
         [x: string]: Json;
         name?: string | undefined;
+        description?: string | null | undefined;
+        image?: string | null | undefined;
+        external_url?: string | null | undefined;
+        animation_url?: string | null | undefined;
         uri: string;
         id: BigNumber;
-        description?: string | null | undefined;
-        image?: string | null | undefined;
-        external_url?: string | null | undefined;
-        animation_url?: string | null | undefined;
     };
+    supply: BigNumber;
 }, {
-    supply: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
     metadata: {
         [x: string]: Json;
         name?: string | undefined;
-        uri: string;
-        id: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
         description?: string | null | undefined;
         image?: string | null | undefined;
         external_url?: string | null | undefined;
         animation_url?: string | null | undefined;
+        uri: string;
+        id: string | number | bigint | BigNumber;
     };
+    supply: string | number | bigint | BigNumber;
 }>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "EditionMetadataOwner" is marked as @public, but its signature references "EditionMetadataWithOwnerOutputSchema" which is marked as @internal
@@ -1478,53 +1458,53 @@ export const EditionMetadataWithOwnerOutputSchema: z.ZodObject<z.extendShape<{
     }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
         [x: string]: Json;
         name?: string | undefined;
-        uri: string;
-        id: BigNumber;
         description?: string | null | undefined;
         image?: string | null | undefined;
         external_url?: string | null | undefined;
         animation_url?: string | null | undefined;
+        uri: string;
+        id: BigNumber;
     }, {
         [x: string]: Json;
         name?: string | undefined;
-        uri: string;
-        id: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
         description?: string | null | undefined;
         image?: string | null | undefined;
         external_url?: string | null | undefined;
         animation_url?: string | null | undefined;
+        uri: string;
+        id: string | number | bigint | BigNumber;
     }>;
 }, {
     owner: z.ZodString;
     quantityOwned: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
 }>, "strip", z.ZodTypeAny, {
+    owner: string;
     metadata: {
         [x: string]: Json;
         name?: string | undefined;
+        description?: string | null | undefined;
+        image?: string | null | undefined;
+        external_url?: string | null | undefined;
+        animation_url?: string | null | undefined;
         uri: string;
         id: BigNumber;
-        description?: string | null | undefined;
-        image?: string | null | undefined;
-        external_url?: string | null | undefined;
-        animation_url?: string | null | undefined;
     };
     supply: BigNumber;
-    owner: string;
     quantityOwned: BigNumber;
 }, {
+    owner: string;
     metadata: {
         [x: string]: Json;
         name?: string | undefined;
-        uri: string;
-        id: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
         description?: string | null | undefined;
         image?: string | null | undefined;
         external_url?: string | null | undefined;
         animation_url?: string | null | undefined;
+        uri: string;
+        id: string | number | bigint | BigNumber;
     };
-    supply: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
-    owner: string;
-    quantityOwned: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
+    supply: string | number | bigint | BigNumber;
+    quantityOwned: string | number | bigint | BigNumber;
 }>;
 
 // Warning: (ae-forgotten-export) The symbol "BaseERC1155" needs to be exported by the entry point index.d.ts
@@ -1763,8 +1743,8 @@ export enum EventType {
 // @internal (undocumented)
 export function extractConstructorParams(metadataUri: string, storage: IStorage): Promise<{
     [x: string]: any;
-    type: string;
     name: string;
+    type: string;
 }[]>;
 
 // Warning: (ae-internal-missing-underscore) The name "extractConstructorParamsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1772,8 +1752,8 @@ export function extractConstructorParams(metadataUri: string, storage: IStorage)
 // @internal (undocumented)
 export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>): {
     [x: string]: any;
-    type: string;
     name: string;
+    type: string;
 }[];
 
 // Warning: (ae-internal-missing-underscore) The name "extractFunctions" should be prefixed with an underscore because the declaration is marked as @internal
@@ -2111,21 +2091,21 @@ export class Marketplace implements UpdateableNetwork {
         }>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        name: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
         trusted_forwarders: string[];
         }, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
+        name: string;
         }>;
         output: ZodObject<extendShape<    {
         name: ZodString;
@@ -2136,16 +2116,16 @@ export class Marketplace implements UpdateableNetwork {
         image: ZodOptional<ZodString>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
-        external_link?: string | undefined;
         image?: string | undefined;
+        external_link?: string | undefined;
+        name: string;
         }, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
-        external_link?: string | undefined;
         image?: string | undefined;
+        external_link?: string | undefined;
+        name: string;
         }>;
         input: ZodObject<    {
         name: ZodString;
@@ -2153,15 +2133,15 @@ export class Marketplace implements UpdateableNetwork {
         image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
         external_link: ZodOptional<ZodString>;
         }, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        name: string;
         }, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        name: string;
         }>;
     };
     setBidBufferBps(bufferBps: BigNumberish): Promise<void>;
@@ -2382,11 +2362,11 @@ export class NFTCollection extends Erc721<TokenERC721> {
         }>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
-        symbol: string;
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
         seller_fee_basis_points: number;
         fee_recipient: string;
         primary_sale_recipient: string;
@@ -2395,16 +2375,16 @@ export class NFTCollection extends Erc721<TokenERC721> {
         trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        primary_sale_recipient: string;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
+        name: string;
+        primary_sale_recipient: string;
         }>;
         output: ZodObject<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -2420,22 +2400,22 @@ export class NFTCollection extends Erc721<TokenERC721> {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
         seller_fee_basis_points: number;
         fee_recipient: string;
-        symbol: string;
         }, {
         [x: string]: Json;
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
         input: ZodObject<extendShape<extendShape<    {
         name: ZodString;
@@ -2448,21 +2428,21 @@ export class NFTCollection extends Erc721<TokenERC721> {
         }>, {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
         seller_fee_basis_points: number;
         fee_recipient: string;
-        symbol: string;
         }, {
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
     };
     signature: Erc721SignatureMinting;
@@ -2546,12 +2526,12 @@ export class NFTDrop extends Erc721<DropERC721> {
         }>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
-        symbol: string;
-        name: string;
         description?: string | undefined;
-        merkle: Record<string, string>;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
         seller_fee_basis_points: number;
         fee_recipient: string;
         primary_sale_recipient: string;
@@ -2560,17 +2540,17 @@ export class NFTDrop extends Erc721<DropERC721> {
         trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
-        name: string;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: any;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        primary_sale_recipient: string;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
+        name: string;
+        primary_sale_recipient: string;
         }>;
         output: ZodObject<extendShape<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -2588,24 +2568,24 @@ export class NFTDrop extends Erc721<DropERC721> {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
-        merkle: Record<string, string>;
         image?: string | undefined;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
         seller_fee_basis_points: number;
         fee_recipient: string;
-        symbol: string;
         }, {
         [x: string]: Json;
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
         input: ZodObject<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -2620,23 +2600,23 @@ export class NFTDrop extends Erc721<DropERC721> {
         }>, {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
-        merkle: Record<string, string>;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
         seller_fee_basis_points: number;
         fee_recipient: string;
-        symbol: string;
         }, {
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: any;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
     };
     totalClaimedSupply(): Promise<BigNumber>;
@@ -2757,11 +2737,11 @@ export class Pack implements UpdateableNetwork {
         }>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
-        symbol: string;
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
         seller_fee_basis_points: number;
         fee_recipient: string;
         platform_fee_basis_points: number;
@@ -2769,7 +2749,6 @@ export class Pack implements UpdateableNetwork {
         trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
@@ -2778,6 +2757,7 @@ export class Pack implements UpdateableNetwork {
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
+        name: string;
         }>;
         output: ZodObject<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -2793,22 +2773,22 @@ export class Pack implements UpdateableNetwork {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
         seller_fee_basis_points: number;
         fee_recipient: string;
-        symbol: string;
         }, {
         [x: string]: Json;
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
         input: ZodObject<extendShape<extendShape<    {
         name: ZodString;
@@ -2821,21 +2801,21 @@ export class Pack implements UpdateableNetwork {
         }>, {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
         seller_fee_basis_points: number;
         fee_recipient: string;
-        symbol: string;
         }, {
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
     };
     // (undocumented)
@@ -2900,33 +2880,33 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
         address: string;
         maxClaimable: string;
     }, {
-        address: string;
         maxClaimable?: string | number | undefined;
+        address: string;
     }>, "many">]>>>;
 }, "strip", z.ZodTypeAny, {
-    startTime?: BigNumber | undefined;
-    currencyAddress?: string | undefined;
-    price?: string | undefined;
-    maxQuantity?: string | undefined;
     quantityLimitPerTransaction?: string | undefined;
-    waitInSeconds?: string | undefined;
-    merkleRootHash?: string | number[] | undefined;
+    startTime?: BigNumber | undefined;
+    price?: string | undefined;
     snapshot?: {
         address: string;
         maxClaimable: string;
     }[] | undefined;
-}, {
-    startTime?: Date | undefined;
     currencyAddress?: string | undefined;
-    price?: string | number | undefined;
-    maxQuantity?: string | number | undefined;
+    maxQuantity?: string | undefined;
+    waitInSeconds?: string | undefined;
+    merkleRootHash?: string | number[] | undefined;
+}, {
     quantityLimitPerTransaction?: string | number | undefined;
+    startTime?: Date | undefined;
+    price?: string | number | undefined;
+    snapshot?: string[] | {
+        maxClaimable?: string | number | undefined;
+        address: string;
+    }[] | undefined;
+    currencyAddress?: string | undefined;
+    maxQuantity?: string | number | undefined;
     waitInSeconds?: string | number | bigint | BigNumber | undefined;
     merkleRootHash?: string | number[] | undefined;
-    snapshot?: string[] | {
-        address: string;
-        maxClaimable?: string | number | undefined;
-    }[] | undefined;
 }>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "PayloadToSign1155" is marked as @public, but its signature references "Signature1155PayloadInput" which is marked as @internal
@@ -3125,11 +3105,11 @@ export const SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
         rpcUrl: z.ZodString;
         chainId: z.ZodOptional<z.ZodNumber>;
     }, "strip", z.ZodTypeAny, {
-        rpcUrl: string;
         chainId?: number | undefined;
+        rpcUrl: string;
     }, {
-        rpcUrl: string;
         chainId?: number | undefined;
+        rpcUrl: string;
     }>>;
     gasSettings: z.ZodDefault<z.ZodObject<{
         maxPriceInGwei: z.ZodDefault<z.ZodNumber>;
@@ -3149,8 +3129,8 @@ export const SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
             relayerUrl: string;
             relayerForwarderAddress: string;
         }, {
-            relayerUrl: string;
             relayerForwarderAddress?: string | undefined;
+            relayerUrl: string;
         }>;
     }, "strip", z.ZodTypeAny, {
         openzeppelin: {
@@ -3159,8 +3139,8 @@ export const SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
         };
     }, {
         openzeppelin: {
-            relayerUrl: string;
             relayerForwarderAddress?: string | undefined;
+            relayerUrl: string;
         };
     }>, z.ZodObject<{
         biconomy: z.ZodObject<{
@@ -3172,9 +3152,9 @@ export const SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
             apiKey: string;
             deadlineSeconds: number;
         }, {
+            deadlineSeconds?: number | undefined;
             apiId: string;
             apiKey: string;
-            deadlineSeconds?: number | undefined;
         }>;
     }, "strip", z.ZodTypeAny, {
         biconomy: {
@@ -3184,20 +3164,16 @@ export const SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
         };
     }, {
         biconomy: {
+            deadlineSeconds?: number | undefined;
             apiId: string;
             apiKey: string;
-            deadlineSeconds?: number | undefined;
         };
     }>]>>;
 }, "strip", z.ZodTypeAny, {
     readonlySettings?: {
-        rpcUrl: string;
         chainId?: number | undefined;
+        rpcUrl: string;
     } | undefined;
-    gasSettings: {
-        maxPriceInGwei: number;
-        speed: "standard" | "fast" | "fastest";
-    };
     gasless?: {
         openzeppelin: {
             relayerUrl: string;
@@ -3210,10 +3186,14 @@ export const SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
             deadlineSeconds: number;
         };
     } | undefined;
+    gasSettings: {
+        maxPriceInGwei: number;
+        speed: "standard" | "fast" | "fastest";
+    };
 }, {
     readonlySettings?: {
-        rpcUrl: string;
         chainId?: number | undefined;
+        rpcUrl: string;
     } | undefined;
     gasSettings?: {
         maxPriceInGwei?: number | undefined;
@@ -3221,14 +3201,14 @@ export const SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
     } | undefined;
     gasless?: {
         openzeppelin: {
-            relayerUrl: string;
             relayerForwarderAddress?: string | undefined;
+            relayerUrl: string;
         };
     } | {
         biconomy: {
+            deadlineSeconds?: number | undefined;
             apiId: string;
             apiKey: string;
-            deadlineSeconds?: number | undefined;
         };
     } | undefined;
 }>>;
@@ -3319,14 +3299,16 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
+    tokenId: string;
     royaltyRecipient: string;
     royaltyBps: number;
+    quantity: string;
     uid: string;
     price: string;
     currencyAddress: string;
     mintStartTime: ethers.BigNumber;
     mintEndTime: ethers.BigNumber;
-    metadata: (string | {
+    metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
         description?: string | null | undefined;
@@ -3336,22 +3318,11 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         background_color?: string | undefined;
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    } | undefined) & (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    });
-    tokenId: string;
-    quantity: string;
+    };
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
+    tokenId?: string | number | bigint | ethers.BigNumber | undefined;
     royaltyRecipient?: string | undefined;
     royaltyBps?: number | undefined;
     uid?: string | undefined;
@@ -3370,8 +3341,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     } | undefined;
-    tokenId?: string | number | bigint | ethers.BigNumber | undefined;
-    quantity: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
+    quantity: string | number | bigint | ethers.BigNumber;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature1155PayloadOutput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3433,14 +3403,16 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     to: string;
     primarySaleRecipient: string;
     uri: string;
+    tokenId: ethers.BigNumber;
     royaltyRecipient: string;
     royaltyBps: ethers.BigNumber;
+    quantity: ethers.BigNumber;
     uid: string;
     price: string;
     currencyAddress: string;
     mintStartTime: ethers.BigNumber;
     mintEndTime: ethers.BigNumber;
-    metadata: (string | {
+    metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
         description?: string | null | undefined;
@@ -3450,31 +3422,21 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         background_color?: string | undefined;
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    } | undefined) & (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    });
-    tokenId: ethers.BigNumber;
-    quantity: ethers.BigNumber;
+    };
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    uri: string;
     royaltyRecipient?: string | undefined;
-    royaltyBps: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
-    mintStartTime: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
-    mintEndTime: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
-    metadata: (string | {
+    uri: string;
+    tokenId: string | number | bigint | ethers.BigNumber;
+    royaltyBps: string | number | bigint | ethers.BigNumber;
+    quantity: string | number | bigint | ethers.BigNumber;
+    mintStartTime: string | number | bigint | ethers.BigNumber;
+    mintEndTime: string | number | bigint | ethers.BigNumber;
+    metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
         description?: string | null | undefined;
@@ -3484,19 +3446,7 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         background_color?: string | undefined;
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    } | undefined) & (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    });
-    tokenId: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
-    quantity: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
+    };
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature20PayloadInput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3515,12 +3465,12 @@ export const Signature20PayloadInput: z.ZodObject<z.extendShape<{
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
+    quantity: string;
     uid: string;
     price: string;
     currencyAddress: string;
     mintStartTime: ethers.BigNumber;
     mintEndTime: ethers.BigNumber;
-    quantity: string;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -3560,12 +3510,12 @@ export const Signature20PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<{
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    quantity: string | number;
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
-    mintStartTime: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
-    mintEndTime: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
+    quantity: string | number;
+    mintStartTime: string | number | bigint | ethers.BigNumber;
+    mintEndTime: string | number | bigint | ethers.BigNumber;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature721PayloadInput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3618,12 +3568,14 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
+    royaltyRecipient: string;
+    royaltyBps: number;
     uid: string;
     price: string;
     currencyAddress: string;
     mintStartTime: ethers.BigNumber;
     mintEndTime: ethers.BigNumber;
-    metadata: (string | {
+    metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
         description?: string | null | undefined;
@@ -3633,28 +3585,18 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
         background_color?: string | undefined;
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    } | undefined) & (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    });
-    royaltyRecipient: string;
-    royaltyBps: number;
+    };
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
+    royaltyRecipient?: string | undefined;
+    royaltyBps?: number | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
     mintStartTime?: Date | undefined;
     mintEndTime?: Date | undefined;
-    metadata: (string | {
+    metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
         description?: string | null | undefined;
@@ -3664,19 +3606,7 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
         background_color?: string | undefined;
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    } | undefined) & (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    });
-    royaltyRecipient?: string | undefined;
-    royaltyBps?: number | undefined;
+    };
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature721PayloadOutput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3734,35 +3664,25 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
+    uri: string;
     royaltyRecipient: string;
+    royaltyBps: ethers.BigNumber;
     uid: string;
     price: string;
     currencyAddress: string;
-    metadata: (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    } | undefined) & (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    });
-    uri: string;
-    royaltyBps: ethers.BigNumber;
     mintStartTime: ethers.BigNumber;
     mintEndTime: ethers.BigNumber;
+    metadata: string | {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    };
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -3770,31 +3690,21 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
-    metadata: (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    } | undefined) & (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    });
     uri: string;
-    royaltyBps: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
-    mintStartTime: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
-    mintEndTime: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
+    royaltyBps: string | number | bigint | ethers.BigNumber;
+    mintStartTime: string | number | bigint | ethers.BigNumber;
+    mintEndTime: string | number | bigint | ethers.BigNumber;
+    metadata: string | {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    };
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature721WithQuantityInput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3884,12 +3794,13 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
     primarySaleRecipient: string;
     royaltyRecipient: string;
     royaltyBps: number;
+    quantity: string;
     uid: string;
     price: string;
     currencyAddress: string;
     mintStartTime: ethers.BigNumber;
     mintEndTime: ethers.BigNumber;
-    metadata: (string | {
+    metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
         description?: string | null | undefined;
@@ -3899,18 +3810,7 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
         background_color?: string | undefined;
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    } | undefined) & (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    });
-    quantity: string;
+    };
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -3932,7 +3832,7 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     } | undefined;
-    quantity: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
+    quantity: string | number | bigint | ethers.BigNumber;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature721WithQuantityOutput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3995,12 +3895,13 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
     uri: string;
     royaltyRecipient: string;
     royaltyBps: ethers.BigNumber;
+    quantity: ethers.BigNumber;
     uid: string;
     price: string;
     currencyAddress: string;
     mintStartTime: ethers.BigNumber;
     mintEndTime: ethers.BigNumber;
-    metadata: (string | {
+    metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
         description?: string | null | undefined;
@@ -4010,30 +3911,20 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
         background_color?: string | undefined;
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    } | undefined) & (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    });
-    quantity: ethers.BigNumber;
+    };
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    uri: string;
     royaltyRecipient?: string | undefined;
-    royaltyBps: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
-    mintStartTime: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
-    mintEndTime: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
-    metadata: (string | {
+    uri: string;
+    royaltyBps: string | number | bigint | ethers.BigNumber;
+    quantity: string | number | bigint | ethers.BigNumber;
+    mintStartTime: string | number | bigint | ethers.BigNumber;
+    mintEndTime: string | number | bigint | ethers.BigNumber;
+    metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
         description?: string | null | undefined;
@@ -4043,18 +3934,7 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
         background_color?: string | undefined;
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    } | undefined) & (string | {
-        [x: string]: Json;
-        name?: string | undefined;
-        description?: string | null | undefined;
-        image?: any;
-        external_url?: any;
-        animation_url?: any;
-        background_color?: string | undefined;
-        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
-        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
-    });
-    quantity: (string | number | bigint | ethers.BigNumber | undefined) & (string | number | bigint | ethers.BigNumber);
+    };
 }>;
 
 // @public
@@ -4063,6 +3943,9 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     // (undocumented)
     analytics: ContractAnalytics<SignatureDrop_2>;
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
+    claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claimConditions: DropClaimConditions<SignatureDrop_2>;
+    claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -4119,12 +4002,12 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
         }>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
-        symbol: string;
-        name: string;
         description?: string | undefined;
-        merkle: Record<string, string>;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
         seller_fee_basis_points: number;
         fee_recipient: string;
         primary_sale_recipient: string;
@@ -4133,17 +4016,17 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
         trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
-        name: string;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: any;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        primary_sale_recipient: string;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
+        name: string;
+        primary_sale_recipient: string;
         }>;
         output: ZodObject<extendShape<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -4161,24 +4044,24 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
-        merkle: Record<string, string>;
         image?: string | undefined;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
         seller_fee_basis_points: number;
         fee_recipient: string;
-        symbol: string;
         }, {
         [x: string]: Json;
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
         input: ZodObject<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -4193,23 +4076,23 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
         }>, {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
-        merkle: Record<string, string>;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
         seller_fee_basis_points: number;
         fee_recipient: string;
-        symbol: string;
         }, {
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: any;
         external_link?: string | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
     };
     // Warning: (ae-forgotten-export) The symbol "Erc721WithQuantitySignatureMinting" needs to be exported by the entry point index.d.ts
@@ -4304,7 +4187,6 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
         symbol?: string | undefined;
-        name: string;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: any;
@@ -4315,10 +4197,10 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
+        name: string;
         }, {
         [x: string]: Json;
         symbol?: string | undefined;
-        name: string;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: any;
@@ -4329,6 +4211,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
+        name: string;
         }>;
         output: ZodObject<extendShape<extendShape<    {
         name: ZodString;
@@ -4344,24 +4227,24 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
         symbol: ZodOptional<ZodDefault<ZodOptional<ZodString>>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }, {
         [x: string]: Json;
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
         input: ZodObject<extendShape<    {
         name: ZodString;
@@ -4375,24 +4258,24 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
         symbol: ZodOptional<ZodDefault<ZodOptional<ZodString>>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         image?: any;
         external_link?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }, {
         [x: string]: Json;
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
         image?: any;
         external_link?: string | undefined;
-        merkle?: Record<string, string> | undefined;
         seller_fee_basis_points?: number | undefined;
         fee_recipient?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
     };
     token: Erc20 | undefined;
@@ -4413,8 +4296,8 @@ export const SnapshotAddressInput: z.ZodObject<{
     address: string;
     maxClaimable: string;
 }, {
-    address: string;
     maxClaimable?: string | number | undefined;
+    address: string;
 }>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "SnapshotInfo" is marked as @public, but its signature references "SnapshotInfoSchema" which is marked as @internal
@@ -4437,25 +4320,25 @@ export const SnapshotInfoSchema: z.ZodObject<{
             proof: z.ZodArray<z.ZodString, "many">;
         }>, "strip", z.ZodTypeAny, {
             address: string;
-            maxClaimable: string;
             proof: string[];
+            maxClaimable: string;
         }, {
-            address: string;
             maxClaimable?: string | number | undefined;
+            address: string;
             proof: string[];
         }>, "many">;
     }, "strip", z.ZodTypeAny, {
         merkleRoot: string;
         claims: {
             address: string;
-            maxClaimable: string;
             proof: string[];
+            maxClaimable: string;
         }[];
     }, {
         merkleRoot: string;
         claims: {
-            address: string;
             maxClaimable?: string | number | undefined;
+            address: string;
             proof: string[];
         }[];
     }>;
@@ -4466,8 +4349,8 @@ export const SnapshotInfoSchema: z.ZodObject<{
         merkleRoot: string;
         claims: {
             address: string;
-            maxClaimable: string;
             proof: string[];
+            maxClaimable: string;
         }[];
     };
 }, {
@@ -4476,8 +4359,8 @@ export const SnapshotInfoSchema: z.ZodObject<{
     snapshot: {
         merkleRoot: string;
         claims: {
-            address: string;
             maxClaimable?: string | number | undefined;
+            address: string;
             proof: string[];
         }[];
     };
@@ -4501,8 +4384,8 @@ export const SnapshotInputSchema: z.ZodUnion<[z.ZodEffects<z.ZodArray<z.ZodStrin
     address: string;
     maxClaimable: string;
 }, {
-    address: string;
     maxClaimable?: string | number | undefined;
+    address: string;
 }>, "many">]>;
 
 // Warning: (ae-internal-missing-underscore) The name "SnapshotSchema" should be prefixed with an underscore because the declaration is marked as @internal
@@ -4517,25 +4400,25 @@ export const SnapshotSchema: z.ZodObject<{
         proof: z.ZodArray<z.ZodString, "many">;
     }>, "strip", z.ZodTypeAny, {
         address: string;
-        maxClaimable: string;
         proof: string[];
+        maxClaimable: string;
     }, {
-        address: string;
         maxClaimable?: string | number | undefined;
+        address: string;
         proof: string[];
     }>, "many">;
 }, "strip", z.ZodTypeAny, {
     merkleRoot: string;
     claims: {
         address: string;
-        maxClaimable: string;
         proof: string[];
+        maxClaimable: string;
     }[];
 }, {
     merkleRoot: string;
     claims: {
-        address: string;
         maxClaimable?: string | number | undefined;
+        address: string;
         proof: string[];
     }[];
 }>;
@@ -4554,8 +4437,8 @@ export class Split implements UpdateableNetwork {
         [key: string]: {
             symbol: string;
             name: string;
-            decimals: number;
             value: BigNumber;
+            decimals: number;
             displayValue: string;
         };
     }>;
@@ -4632,25 +4515,25 @@ export class Split implements UpdateableNetwork {
         }>>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        name: string;
+        trusted_forwarders: string[];
         recipients: {
         address: string;
         sharesBps: number;
         }[];
-        trusted_forwarders: string[];
         }, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
         recipients?: {
         address: string;
         sharesBps: number;
         }[] | undefined;
-        trusted_forwarders?: string[] | undefined;
+        name: string;
         }>;
         output: ZodObject<extendShape<extendShape<    {
         name: ZodString;
@@ -4675,20 +4558,20 @@ export class Split implements UpdateableNetwork {
         }>, "many">;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
+        name: string;
         recipients: {
         address: string;
         sharesBps: number;
         }[];
         }, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
+        name: string;
         recipients: {
         address: string;
         sharesBps: number;
@@ -4717,16 +4600,15 @@ export class Split implements UpdateableNetwork {
         sharesBps: number;
         }[] | undefined>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        name: string;
         recipients: {
         address: string;
         sharesBps: number;
         }[];
         }, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
@@ -4734,6 +4616,7 @@ export class Split implements UpdateableNetwork {
         address: string;
         sharesBps: number;
         }[] | undefined;
+        name: string;
         }>;
     };
     withdraw(walletAddress: string): Promise<TransactionResult>;
@@ -4871,25 +4754,25 @@ export class Token extends Erc20<TokenERC20> {
         }>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
-        symbol: string;
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
         primary_sale_recipient: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
         trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
-        primary_sale_recipient: string;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
+        name: string;
+        primary_sale_recipient: string;
         }>;
         output: ZodObject<extendShape<extendShape<    {
         name: ZodString;
@@ -4902,18 +4785,18 @@ export class Token extends Erc20<TokenERC20> {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
         symbol: string;
+        name: string;
         }, {
         [x: string]: Json;
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
         input: ZodObject<extendShape<    {
         name: ZodString;
@@ -4923,17 +4806,17 @@ export class Token extends Erc20<TokenERC20> {
         }, {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
         symbol: string;
-        }, {
         name: string;
+        }, {
+        symbol?: string | undefined;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
     };
     signature: Erc20SignatureMinting;
@@ -5009,27 +4892,27 @@ export class TokenDrop extends Erc20<DropERC20> {
         }>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
-        symbol: string;
-        name: string;
         description?: string | undefined;
-        merkle: Record<string, string>;
         image?: any;
         external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
         primary_sale_recipient: string;
         platform_fee_basis_points: number;
         platform_fee_recipient: string;
         trusted_forwarders: string[];
         }, {
         symbol?: string | undefined;
-        name: string;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: any;
         external_link?: string | undefined;
-        primary_sale_recipient: string;
         platform_fee_basis_points?: number | undefined;
         platform_fee_recipient?: string | undefined;
         trusted_forwarders?: string[] | undefined;
+        name: string;
+        primary_sale_recipient: string;
         }>;
         output: ZodObject<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -5044,20 +4927,20 @@ export class TokenDrop extends Erc20<DropERC20> {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
-        merkle: Record<string, string>;
         image?: string | undefined;
         external_link?: string | undefined;
         symbol: string;
+        name: string;
+        merkle: Record<string, string>;
         }, {
         [x: string]: Json;
-        name: string;
+        symbol?: string | undefined;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
         input: ZodObject<extendShape<extendShape<    {
         name: ZodString;
@@ -5069,19 +4952,19 @@ export class TokenDrop extends Erc20<DropERC20> {
         }>, {
         symbol: ZodDefault<ZodOptional<ZodString>>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
-        merkle: Record<string, string>;
         image?: any;
         external_link?: string | undefined;
         symbol: string;
-        }, {
         name: string;
+        merkle: Record<string, string>;
+        }, {
+        symbol?: string | undefined;
         description?: string | undefined;
         merkle?: Record<string, string> | undefined;
         image?: any;
         external_link?: string | undefined;
-        symbol?: string | undefined;
+        name: string;
         }>;
     };
 }
@@ -5110,11 +4993,11 @@ export const TokenMintInputSchema: z.ZodObject<{
     toAddress: z.ZodEffects<z.ZodString, string, string>;
     amount: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>;
 }, "strip", z.ZodTypeAny, {
-    toAddress: string;
     amount: string;
-}, {
     toAddress: string;
+}, {
     amount: string | number;
+    toAddress: string;
 }>;
 
 // @public (undocumented)
@@ -5256,27 +5139,27 @@ export class Vote implements UpdateableNetwork {
         }>, {
         trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        name: string;
+        trusted_forwarders: string[];
         voting_delay_in_blocks: number;
         voting_period_in_blocks: number;
         voting_token_address: string;
         voting_quorum_fraction: number;
         proposal_token_threshold: string;
-        trusted_forwarders: string[];
         }, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
-        voting_token_address: string;
         voting_quorum_fraction?: number | undefined;
         proposal_token_threshold?: string | number | bigint | BigNumber | undefined;
-        trusted_forwarders?: string[] | undefined;
+        name: string;
+        voting_token_address: string;
         }>;
         output: ZodObject<extendShape<extendShape<    {
         name: ZodString;
@@ -5295,10 +5178,10 @@ export class Vote implements UpdateableNetwork {
         proposal_token_threshold: ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
         }>>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
+        name: string;
         voting_delay_in_blocks: number;
         voting_period_in_blocks: number;
         voting_token_address: string;
@@ -5306,15 +5189,15 @@ export class Vote implements UpdateableNetwork {
         proposal_token_threshold: BigNumber;
         }, {
         [x: string]: Json;
-        name: string;
         description?: string | undefined;
         image?: string | undefined;
         external_link?: string | undefined;
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
-        voting_token_address: string;
         voting_quorum_fraction?: number | undefined;
-        proposal_token_threshold: (string | number | bigint | BigNumber | undefined) & (string | number | bigint | BigNumber);
+        name: string;
+        voting_token_address: string;
+        proposal_token_threshold: string | number | bigint | BigNumber;
         }>;
         input: ZodObject<extendShape<    {
         name: ZodString;
@@ -5328,25 +5211,25 @@ export class Vote implements UpdateableNetwork {
         voting_quorum_fraction: ZodDefault<ZodNumber>;
         proposal_token_threshold: ZodDefault<ZodEffects<ZodEffects<ZodUnion<[ZodString, ZodNumber, ZodBigInt, ZodType<BigNumber, ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>>;
         }>, "strip", ZodTypeAny, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
+        name: string;
         voting_delay_in_blocks: number;
         voting_period_in_blocks: number;
         voting_token_address: string;
         voting_quorum_fraction: number;
         proposal_token_threshold: string;
         }, {
-        name: string;
         description?: string | undefined;
         image?: any;
         external_link?: string | undefined;
         voting_delay_in_blocks?: number | undefined;
         voting_period_in_blocks?: number | undefined;
-        voting_token_address: string;
         voting_quorum_fraction?: number | undefined;
         proposal_token_threshold?: string | number | bigint | BigNumber | undefined;
+        name: string;
+        voting_token_address: string;
         }>;
     };
     settings(): Promise<VoteSettings>;

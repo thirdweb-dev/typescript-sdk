@@ -1,4 +1,4 @@
-import { TWFactory, TWFactory__factory } from "contracts";
+import { SigMint__factory, TWFactory, TWFactory__factory } from "contracts";
 import { BigNumber, Contract, ethers, constants } from "ethers";
 import { z } from "zod";
 import {
@@ -28,6 +28,7 @@ import {
 } from "../../constants";
 import { TokenDrop } from "../../contracts/token-drop";
 import { ProxyDeployedEvent } from "contracts/TWFactory";
+import invariant from "tiny-invariant";
 
 /**
  * @internal
@@ -107,7 +108,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
     }
     switch (contractType) {
       case NFTDrop.contractType:
-      case SignatureDrop.contractType:
       case NFTCollection.contractType:
         const erc721metadata = NFTDrop.schema.deploy.parse(metadata);
         return [
@@ -121,6 +121,35 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc721metadata.seller_fee_basis_points,
           erc721metadata.platform_fee_basis_points,
           erc721metadata.platform_fee_recipient,
+        ];
+      case SignatureDrop.contractType:
+        // Deploy a SigMint Contract
+        const signer = this.getSigner();
+        invariant(signer);
+        const sigMintDeployer = await new ethers.ContractFactory(
+          SigMint__factory.abi,
+          SigMint__factory.bytecode,
+        )
+          .connect(signer)
+          .deploy();
+
+        await sigMintDeployer.deployTransaction.wait();
+
+        const sigMintAddress = sigMintDeployer.address;
+        const signatureDropmetadata =
+          SignatureDrop.schema.deploy.parse(metadata);
+        return [
+          await this.getSignerAddress(),
+          signatureDropmetadata.name,
+          signatureDropmetadata.symbol,
+          contractURI,
+          trustedForwarders,
+          signatureDropmetadata.primary_sale_recipient,
+          signatureDropmetadata.fee_recipient,
+          signatureDropmetadata.seller_fee_basis_points,
+          signatureDropmetadata.platform_fee_basis_points,
+          signatureDropmetadata.platform_fee_recipient,
+          sigMintAddress,
         ];
       case EditionDrop.contractType:
       case Edition.contractType:

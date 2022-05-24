@@ -635,6 +635,15 @@
     },
     "methods": [
       {
+        "name": "claimTo",
+        "summary": "Claim unique NFTs to a specific Wallet\n\n",
+        "remarks": "\n\nLet the specified wallet claim NFTs.\n\n",
+        "examples": {
+          "javascript": "const address = \"{{wallet_address}}\"; // address of the wallet you want to claim the NFTs\nconst quantity = 1; // how many unique NFTs you want to claim\n\nconst tx = await contract.claimTo(address, quantity);\nconst receipt = tx.receipt; // the transaction receipt\nconst claimedTokenId = tx.id; // the id of the NFT claimed\nconst claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.SignatureDrop.claimTo"
+      },
+      {
         "name": "createBatch",
         "summary": "Create a batch of unique NFTs to be claimed in the future\n\n",
         "remarks": "\n\nCreate batch allows you to create a batch of many unique NFTs in one transaction.\n\n",
@@ -726,6 +735,15 @@
       }
     ],
     "properties": [
+      {
+        "name": "claimConditions",
+        "summary": "Configure claim conditions\n\n",
+        "remarks": "\n\nDefine who can claim NFTs in the collection, when and how many.\n\n",
+        "examples": {
+          "javascript": "const presaleStartTime = new Date();\nconst publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst claimConditions = [\n  {\n    startTime: presaleStartTime, // start the presale now\n    maxQuantity: 2, // limit how many mints for this presale\n    price: 0.01, // presale price\n    snapshot: ['0x...', '0x...'], // limit minting to only certain addresses\n  },\n  {\n    startTime: publicSaleStartTime, // 24h after presale, start public sale\n    price: 0.08, // public sale price\n  }\n]);\nawait contract.claimConditions.set(claimConditions);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.dropclaimconditions"
+      },
       {
         "name": "revealer",
         "summary": "Delayed reveal\n\n",

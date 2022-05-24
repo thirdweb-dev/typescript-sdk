@@ -4,9 +4,9 @@ import {
   BigNumber,
   BigNumberish,
   BytesLike,
+  constants,
   ethers,
   utils,
-  constants,
 } from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";

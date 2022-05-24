@@ -36,6 +36,7 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [analytics](./sdk.signaturedrop.analytics.md) |  | ContractAnalytics&lt;SignatureDropContract&gt; |  |
+|  [claimConditions](./sdk.signaturedrop.claimconditions.md) |  | [DropClaimConditions](./sdk.dropclaimconditions.md)<!-- -->&lt;SignatureDropContract&gt; | Configure claim conditions |
 |  [contractAbi](./sdk.signaturedrop.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.signaturedrop.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.signaturedrop.contracttype.md) | <code>static</code> | "signature-drop" |  |
@@ -55,6 +56,8 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [burn(tokenId)](./sdk.signaturedrop.burn.md) |  | Burn a single NFT |
+|  [claim(quantity, proofs)](./sdk.signaturedrop.claim.md) |  | Claim NFTs to the connected wallet. |
+|  [claimTo(destinationAddress, quantity, proofs)](./sdk.signaturedrop.claimto.md) |  | Claim unique NFTs to a specific Wallet |
 |  [createBatch(metadatas)](./sdk.signaturedrop.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |
 |  [getAll(queryParams)](./sdk.signaturedrop.getall.md) |  | Get All Minted NFTs |
 |  [getAllClaimed(queryParams)](./sdk.signaturedrop.getallclaimed.md) |  | Get All Claimed NFTs |

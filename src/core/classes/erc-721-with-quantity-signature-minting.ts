@@ -1,21 +1,22 @@
 import {
-  // FilledSignaturePayload1155,
   FilledSignature721WithQuantity,
-  // MintRequest1155,
   MintRequest721withQuantity,
-  PayloadToSign1155, PayloadToSign721withQuantity,
+  PayloadToSign1155,
+  PayloadToSign721withQuantity,
   PayloadWithUri721withQuantity,
-  // Signature1155PayloadInput,
   Signature721WithQuantityInput,
   Signature721WithQuantityOutput,
-  // Signature1155PayloadOutput,
-  SignedPayload1155, SignedPayload721WithQuantitySignature,
+  SignedPayload1155,
+  SignedPayload721WithQuantitySignature,
 } from "../../schema/contracts/common/signature";
 import { TransactionResultWithId } from "../types";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ISignatureMintERC721, SignatureDrop as SignatureDropContract } from "contracts";
+import {
+  ISignatureMintERC721,
+  SignatureDrop as SignatureDropContract,
+} from "contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { SignatureDrop } from "../../contracts";
@@ -28,17 +29,17 @@ import { TokensMintedEvent } from "contracts/SignatureDrop";
  * @public
  */
 export class Erc721WithQuantitySignatureMinting {
-  private contractWrapper: ContractWrapper<ISignatureMintERC721>;
+  private contractWrapper: ContractWrapper<SignatureDropContract>;
   private storage: IStorage;
   private roles: ContractRoles<
-      SignatureDropContract,
+    SignatureDropContract,
     typeof SignatureDrop.contractRoles[number]
   >;
 
   constructor(
-    contractWrapper: ContractWrapper<ISignatureMintERC721>,
+    contractWrapper: ContractWrapper<SignatureDropContract>,
     roles: ContractRoles<
-        SignatureDropContract,
+      SignatureDropContract,
       typeof SignatureDrop.contractRoles[number]
     >,
     storage: IStorage,
@@ -128,11 +129,10 @@ export class Erc721WithQuantitySignatureMinting {
       );
     });
     const receipt = await this.contractWrapper.multiCall(encoded);
-    const events =
-      this.contractWrapper.parseLogs<TokensMintedEvent>(
-        "TokensMinted",
-        receipt.logs,
-      );
+    const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
+      "TokensMinted",
+      receipt.logs,
+    );
     if (events.length === 0) {
       throw new Error("No MintWithSignature event found");
     }
@@ -146,7 +146,9 @@ export class Erc721WithQuantitySignatureMinting {
    * Verify that a payload is correctly signed
    * @param signedPayload - the payload to verify
    */
-  public async verify(signedPayload: SignedPayload721WithQuantitySignature): Promise<boolean> {
+  public async verify(
+    signedPayload: SignedPayload721WithQuantitySignature,
+  ): Promise<boolean> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = await this.mapPayloadToContractStruct(mintRequest);
@@ -154,7 +156,7 @@ export class Erc721WithQuantitySignatureMinting {
     // console.log("signature: ", signature);
     const verification: [boolean, string] =
       await this.contractWrapper.readContract.verify(message, signature);
-      // console.log("recovered signer: ", verification[1]);
+    // console.log("recovered signer: ", verification[1]);
     return verification[0];
   }
 
@@ -237,7 +239,8 @@ export class Erc721WithQuantitySignatureMinting {
             name: "SignatureMintERC721",
             version: "1",
             chainId,
-            verifyingContract: this.contractWrapper.readContract.address,
+            verifyingContract:
+              await this.contractWrapper.readContract.sigMint(),
           },
           { MintRequest: MintRequest721withQuantity }, // TYPEHASH
           await this.mapPayloadToContractStruct(finalPayload),
