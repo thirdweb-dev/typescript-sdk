@@ -336,6 +336,12 @@ export class IpfsStorage implements IStorage {
     };
   }
 
+  /**
+   * @internal
+   * @param data
+   * @param contractAddress
+   * @param signerAddress
+   */
   public async uploadSingle(
     data: string | Record<string, any>,
     contractAddress?: string,

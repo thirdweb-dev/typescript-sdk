@@ -1974,7 +1974,7 @@ export class IpfsStorage implements IStorage {
         baseUri: string;
         metadataUris: string[];
     }>;
-    // (undocumented)
+    // @internal (undocumented)
     uploadSingle(data: string | Record<string, any>, contractAddress?: string, signerAddress?: string): Promise<string>;
 }
 

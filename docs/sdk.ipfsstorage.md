@@ -30,5 +30,4 @@ export declare class IpfsStorage implements IStorage
 |  [uploadBatch(files, fileStartNumber, contractAddress, signerAddress)](./sdk.ipfsstorage.uploadbatch.md) |  | Uploads a folder to storage. |
 |  [uploadMetadata(metadata, contractAddress, signerAddress)](./sdk.ipfsstorage.uploadmetadata.md) |  | Uploads JSON metadata to IPFS |
 |  [uploadMetadataBatch(metadatas, fileStartNumber, contractAddress, signerAddress)](./sdk.ipfsstorage.uploadmetadatabatch.md) |  | Uploads JSON metadata to IPFS |
-|  [uploadSingle(data, contractAddress, signerAddress)](./sdk.ipfsstorage.uploadsingle.md) |  |  |
 
