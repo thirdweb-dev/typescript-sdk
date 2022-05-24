@@ -93,14 +93,6 @@ export class ContractPublisher extends RPCConnectionHandler {
     return extractFunctions(bytecodeUri, this.storage);
   }
 
-  /**
-   * @internal
-   * @param metadataUri
-   */
-  // public async fetchFullContractMetadata(metadataUri: string) {
-  //   return fetchContractMetadata(metadataUri, this.storage);
-  // }
-
   public async fetchFullContractMetadataFromBytecodeUri(bytecodeUri: string) {
     return fetchContractBytecodeMetadata(bytecodeUri, this.storage);
   }
@@ -125,9 +117,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     const data = await this.publisher.readContract.getAllPublishedContracts(
       publisherAddress,
     );
-    return data
-      .filter((d) => d.publishTimestamp) // TODO (byoc) remove this before going to prod
-      .map((d) => this.toPublishedContract(d));
+    return data.map((d) => this.toPublishedContract(d));
   }
 
   /**
@@ -244,14 +234,11 @@ export class ContractPublisher extends RPCConnectionHandler {
   ) {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
-    console.log("Deploying contract", bytecodeUri);
     const fetchedBytecode = await this.storage.getRaw(bytecodeUri);
-    console.log("Deploying contract", fetchedBytecode);
     const metadata = await fetchContractMetadataFromBytecode(
       fetchedBytecode,
       this.storage,
     );
-    console.log("Deploying contract", metadata);
     const bytecode = fetchedBytecode.startsWith("0x")
       ? fetchedBytecode
       : `0x${fetchedBytecode}`;
@@ -315,7 +302,6 @@ export class ContractPublisher extends RPCConnectionHandler {
   ): Promise<string> {
     const signer = this.getSigner();
     invariant(signer, "Signer is required to deploy contracts");
-    console.log("Deploying contract", bytecode, abi, constructorParams);
     const deployer = await new ethers.ContractFactory(abi, bytecode)
       .connect(signer)
       .deploy(...constructorParams);

@@ -13,7 +13,7 @@ export const uploadContractMetadata = async (
   storage: IpfsStorage,
 ) => {
   const buildinfo = JSON.parse(
-    readFileSync("test/abis/build-info.json", "utf-8"),
+    readFileSync("test/abis/hardhat-build-info.json", "utf-8"),
   );
   const info =
     buildinfo.output.contracts[`contracts/${contractName}.sol`][contractName];
@@ -84,9 +84,6 @@ describe("Publishing", async () => {
       adminWallet.address,
       contract.id,
       [],
-      {
-        name: "CustomContract",
-      },
     );
     expect(deployedAddr.length).to.be.gt(0);
     const all = await publisher.getAll(adminWallet.address);
