@@ -53,9 +53,9 @@ export const CONTRACT_ADDRESSES: Record<
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
     twFactory: TWFactory_address,
     twRegistry: TWRegistry_address,
-    twBYOCRegistry: constants.AddressZero,
-    contractDeployer: constants.AddressZero,
-    contractMetadataRegistry: constants.AddressZero,
+    twBYOCRegistry: "0x308473Be900F4185A56587dE54bDFF5E8f7a6AE7",
+    contractDeployer: "0x06312720bB2aa22346510c28bf8b4F5df20c71eb",
+    contractMetadataRegistry: "0xB67D404478d91F1C94bc607b8945cBe159B86Df8",
   },
   [ChainId.Mumbai]: {
     biconomyForwarder: "0x9399BB24DBB5C4b782C70c2969F58716Ebbd6a3b",
