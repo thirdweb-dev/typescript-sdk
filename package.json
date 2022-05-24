@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "2.2.16-7",
+  "version": "2.2.18",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -11,15 +11,8 @@
   "main": "dist/index.js",
   "types": "dist/src/index.d.ts",
   "module": "dist/index.mjs",
-  "browser": "dist/index.global.js",
+  "browser": "dist/index.js",
   "unpkg": "dist/index.global.js",
-  "exports": {
-    ".": {
-      "require": "./dist/index.js",
-      "import": "./dist/index.mjs",
-      "types": "./dist/src/index.d.ts"
-    }
-  },
   "files": [
     "dist/**/*"
   ],
