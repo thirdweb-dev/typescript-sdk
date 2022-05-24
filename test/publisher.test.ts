@@ -1,25 +1,40 @@
-import { sdk, signers, storage } from "./before-setup";
+import { signers } from "./before-setup";
 import { readFileSync } from "fs";
 import { expect } from "chai";
-import { isFeatureEnabled, ThirdwebSDK } from "../src";
+import { IpfsStorage, isFeatureEnabled, IStorage, ThirdwebSDK } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../typechain";
 
 global.fetch = require("cross-fetch");
 
-export const uploadContractMetadata = async (filename) => {
-  const greeterJson = JSON.parse(readFileSync(filename, "utf-8"));
-  const abi = greeterJson.abi;
-  const bytecode = greeterJson.bytecode;
-  const abiUri = await storage.uploadMetadata(abi);
-  const bytecodeUri = await storage.upload(bytecode);
-  const contractData = {
-    name: greeterJson.contractName,
-    abiUri,
-    bytecodeUri,
-  };
-  return await storage.uploadMetadata(contractData);
+export const uploadContractMetadata = async (
+  contractName: string,
+  storage: IpfsStorage,
+) => {
+  // const greeterJson = JSON.parse(
+  //   readFileSync("test/abis/greeter.json", "utf-8"),
+  // );
+  const buildinfo = JSON.parse(
+    readFileSync("test/abis/build-info.json", "utf-8"),
+  );
+  const info =
+    buildinfo.output.contracts[`contracts/${contractName}.sol`][contractName];
+  // const abi = greeterJson.abi;
+  const bytecode = `0x${info.evm.bytecode.object}`;
+
+  console.log(bytecode);
+  const metaUri = await storage.uploadSingle(info.metadata);
+  console.log(metaUri);
+
+  const bytecodeUri = await storage.uploadSingle(bytecode);
+  return `ipfs://${bytecodeUri}`;
+  // const contractData = {
+  //   name: greeterJson.contractName,
+  //   abiUri,
+  //   bytecodeUri,
+  // };
+  // return await storage.uploadMetadata(bytecodeUri);
 };
 
 describe("Publishing", async () => {
@@ -28,9 +43,13 @@ describe("Publishing", async () => {
   let adminWallet: SignerWithAddress;
   let samWallet: SignerWithAddress;
   let bobWallet: SignerWithAddress;
+  let sdk: ThirdwebSDK;
+  let storage: IStorage;
 
   before("Upload abis", async () => {
     [adminWallet, samWallet, bobWallet] = signers;
+    sdk = new ThirdwebSDK(adminWallet);
+    storage = sdk.storage;
     simpleContractUri = await uploadContractMetadata("test/abis/greeter.json");
     contructorParamsContractUri = await uploadContractMetadata(
       "test/abis/constructor_params.json",
@@ -159,7 +178,7 @@ describe("Publishing", async () => {
   it("AzukiWithMinting mintable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmPoEDD6EdjMZ6U5pDdLbZnLhcNuMzyEFFEMVqVDw5JAJX/1";
+    const ipfsUri = "ipfs://QmWcDvt4TJQbjhpZrgHgfXegew8xvg5JbhbfGbpossBU8e/0";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
     const deployedAddr = await pub.deployPublishedContract(

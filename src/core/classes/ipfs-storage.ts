@@ -335,4 +335,43 @@ export class IpfsStorage implements IStorage {
       fileNames,
     };
   }
+
+  public async uploadSingle(
+    data: string | Record<string, any>,
+    contractAddress?: string,
+    signerAddress?: string,
+  ): Promise<string> {
+    const token = await this.getUploadToken(contractAddress || "");
+    const metadata = {
+      name: `CONSOLE-TS-SDK-${contractAddress}`,
+      keyvalues: {
+        sdk: "typescript",
+        contractAddress,
+        signerAddress,
+      },
+    };
+    const formData = new FormData();
+    const filepath = `files`; // Root directory
+    formData.append("file", data as any, filepath as any);
+    formData.append("pinataMetadata", JSON.stringify(metadata));
+    formData.append(
+      "pinataOptions",
+      JSON.stringify({
+        wrapWithDirectory: false,
+      }),
+    );
+    const res = await fetch(PINATA_IPFS_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData as any,
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to upload to IPFS [status code = ${res.status}]`);
+    }
+
+    const body = await res.json();
+    return body.IpfsHash;
+  }
 }

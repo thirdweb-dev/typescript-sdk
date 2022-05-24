@@ -108,5 +108,4 @@ export type AbiFunction = {
 export type PublishedMetadata = {
   name: string;
   abi: z.infer<typeof AbiSchema>;
-  bytecode: string;
 };

@@ -15,14 +15,14 @@ import {
   extractConstructorParams,
   extractConstructorParamsFromAbi,
   extractFunctions,
-  fetchContractMetadata,
+  fetchContractBytecodeMetadata,
   fetchContractMetadataFromAddress,
+  fetchContractMetadataFromBytecode,
 } from "../../common/feature-detection";
 import {
   AbiFunction,
   ContractParam,
   CustomContractMetadata,
-  CustomContractMetadataSchema,
   PublishedContract,
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
@@ -99,8 +99,12 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * @param metadataUri
    */
-  public async fetchFullContractMetadata(metadataUri: string) {
-    return fetchContractMetadata(metadataUri, this.storage);
+  // public async fetchFullContractMetadata(metadataUri: string) {
+  //   return fetchContractMetadata(metadataUri, this.storage);
+  // }
+
+  public async fetchFullContractMetadataFromBytecodeUri(bytecodeUri: string) {
+    return fetchContractBytecodeMetadata(bytecodeUri, this.storage);
   }
 
   /**
@@ -166,24 +170,22 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   public async publishBatch(
-    metadataUris: string[],
+    bytecodeUris: string[],
   ): Promise<TransactionResult<PublishedContract>[]> {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
     const publisher = await signer.getAddress();
 
     const fullMetadatas = await Promise.all(
-      metadataUris.map(async (uri) => ({
+      bytecodeUris.map(async (uri) => ({
         uri,
-        fullMetadata: await this.fetchFullContractMetadata(uri),
+        bytecode: await this.storage.getRaw(uri),
+        fullMetadata: await this.fetchFullContractMetadataFromBytecodeUri(uri),
       })),
     );
 
     const encoded = fullMetadatas.map((meta) => {
-      const bytecodeHash = utils.solidityKeccak256(
-        ["bytes"],
-        [meta.fullMetadata.bytecode],
-      );
+      const bytecodeHash = utils.solidityKeccak256(["bytes"], [meta.bytecode]);
       const contractId = meta.fullMetadata.name;
       return this.publisher.readContract.interface.encodeFunctionData(
         "publishContract",
@@ -236,30 +238,30 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param publishMetadataUri
+   * @param bytecodeUri
    * @param constructorParamValues
    * @param contractMetadata
    */
   public async deployContract(
-    publishMetadataUri: string,
+    bytecodeUri: string,
     constructorParamValues: any[],
-    contractMetadata?: CustomContractMetadata,
   ) {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
-    const unwrappedMetadata = CustomContractMetadataSchema.parse(
-      await this.storage.get(publishMetadataUri),
+    console.log("Deploying contract", bytecodeUri);
+    const fetchedBytecode = await this.storage.getRaw(bytecodeUri);
+    console.log("Deploying contract", fetchedBytecode);
+    const metadata = await fetchContractMetadataFromBytecode(
+      fetchedBytecode,
+      this.storage,
     );
-    const metadata = await this.fetchFullContractMetadata(publishMetadataUri);
-    const publisher = await signer.getAddress();
-    const bytecode = metadata.bytecode.startsWith("0x")
-      ? metadata.bytecode
-      : `0x${metadata.bytecode}`;
+    console.log("Deploying contract", metadata);
+    const bytecode = fetchedBytecode.startsWith("0x")
+      ? fetchedBytecode
+      : `0x${fetchedBytecode}`;
     if (!ethers.utils.isHexString(bytecode)) {
       throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
     }
-    const salt = ethers.utils.formatBytes32String(Math.random().toString()); // TODO expose as optional
-    const value = BigNumber.from(0);
     const constructorParamTypes = extractConstructorParamsFromAbi(
       metadata.abi,
     ).map((p) => p.type);
@@ -267,34 +269,8 @@ export class ContractPublisher extends RPCConnectionHandler {
       constructorParamTypes,
       constructorParamValues,
     );
-    const constructorParamsEncoded = ethers.utils.defaultAbiCoder.encode(
-      constructorParamTypes,
-      paramValues,
-    );
-    const deployMetadata = {
-      ...unwrappedMetadata,
-      deployMetadata: contractMetadata || {},
-      deployTimestamp: new Date().toISOString(),
-    };
-    const populatedContractUri = await this.storage.uploadMetadata(
-      deployMetadata,
-    );
-    const receipt = await this.factory.sendTransaction("deployInstance", [
-      publisher,
-      bytecode,
-      constructorParamsEncoded,
-      salt,
-      value,
-      populatedContractUri,
-    ]);
-    const events = this.factory.parseLogs<ContractDeployedEvent>(
-      "ContractDeployed",
-      receipt.logs,
-    );
-    if (events.length < 1) {
-      throw new Error("No ContractDeployed event found");
-    }
-    return events[0].args.deployedContract;
+
+    return this.deployContractWithAbi(metadata.abi, bytecode, paramValues);
   }
 
   private convertParamValues(
@@ -343,10 +319,12 @@ export class ContractPublisher extends RPCConnectionHandler {
   ): Promise<string> {
     const signer = this.getSigner();
     invariant(signer, "Signer is required to deploy contracts");
+    console.log("Deploying contract", bytecode, abi, constructorParams);
     const deployer = await new ethers.ContractFactory(abi, bytecode)
       .connect(signer)
       .deploy(...constructorParams);
     const deployedContract = await deployer.deployed();
+    // TODO parse transaction receipt
     return deployedContract.address;
   }
 

@@ -5,10 +5,12 @@ import {
   TokenERC1155__factory,
   TokenERC20__factory,
   TokenERC721__factory,
+  TWFee__factory,
   VoteERC20__factory,
 } from "contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { uploadContractMetadata } from "./publisher.test";
+import { IpfsStorage, IStorage, ThirdwebSDK } from "../src";
 
 require("./before-setup");
 
@@ -22,19 +24,29 @@ describe("Custom Contracts", async () => {
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
+  let sdk: ThirdwebSDK;
+  let storage: IpfsStorage;
 
   before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    const simpleContractUri = await uploadContractMetadata(
-      "test/abis/greeter.json",
-    );
+    sdk = new ThirdwebSDK(adminWallet);
+    storage = sdk.storage as IpfsStorage;
+    const simpleContractUri = await uploadContractMetadata("Greeter", storage);
     const publisher = await sdk.getPublisher();
+
+    // const testAddr = await publisher.deployContractWithAbi(
+    //   TWFee__factory.abi,
+    //   TWFee__factory.bytecode,
+    //   [
+    //     "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+    //     "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
+    //   ],
+    // );
+    // console.log("test deploy", testAddr);
+
     customContractAddress = await publisher.deployContract(
       simpleContractUri,
       [],
-      {
-        name: "CustomContract",
-      },
     );
   });
 
