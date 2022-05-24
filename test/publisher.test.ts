@@ -12,29 +12,15 @@ export const uploadContractMetadata = async (
   contractName: string,
   storage: IpfsStorage,
 ) => {
-  // const greeterJson = JSON.parse(
-  //   readFileSync("test/abis/greeter.json", "utf-8"),
-  // );
   const buildinfo = JSON.parse(
     readFileSync("test/abis/build-info.json", "utf-8"),
   );
   const info =
     buildinfo.output.contracts[`contracts/${contractName}.sol`][contractName];
-  // const abi = greeterJson.abi;
   const bytecode = `0x${info.evm.bytecode.object}`;
-
-  console.log(bytecode);
-  const metaUri = await storage.uploadSingle(info.metadata);
-  console.log(metaUri);
-
+  await storage.uploadSingle(info.metadata);
   const bytecodeUri = await storage.uploadSingle(bytecode);
   return `ipfs://${bytecodeUri}`;
-  // const contractData = {
-  //   name: greeterJson.contractName,
-  //   abiUri,
-  //   bytecodeUri,
-  // };
-  // return await storage.uploadMetadata(bytecodeUri);
 };
 
 describe("Publishing", async () => {
@@ -44,15 +30,16 @@ describe("Publishing", async () => {
   let samWallet: SignerWithAddress;
   let bobWallet: SignerWithAddress;
   let sdk: ThirdwebSDK;
-  let storage: IStorage;
+  let storage: IpfsStorage;
 
   before("Upload abis", async () => {
     [adminWallet, samWallet, bobWallet] = signers;
     sdk = new ThirdwebSDK(adminWallet);
-    storage = sdk.storage;
-    simpleContractUri = await uploadContractMetadata("test/abis/greeter.json");
+    storage = sdk.storage as IpfsStorage;
+    simpleContractUri = await uploadContractMetadata("Greeter", storage);
     contructorParamsContractUri = await uploadContractMetadata(
-      "test/abis/constructor_params.json",
+      "ConstructorParams",
+      storage,
     );
   });
 
@@ -107,7 +94,7 @@ describe("Publishing", async () => {
     // fetch metadata back
     const c = await sdk.getContract(deployedAddr);
     const meta = await c.metadata.get();
-    expect(meta.name).to.eq("CustomContract");
+    expect(meta.name).to.eq("Greeter");
   });
 
   it("should publish multiple versions", async () => {

@@ -22,7 +22,6 @@ import {
 import {
   AbiFunction,
   ContractParam,
-  CustomContractMetadata,
   PublishedContract,
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
@@ -36,7 +35,6 @@ import { getContractPublisherAddress } from "../../constants";
 import ContractDeployerAbi from "../../../abis/ContractDeployer.json";
 import ContractPublisherAbi from "../../../abis/ContractPublisher.json";
 import { ContractPublishedEvent } from "contracts/ContractPublisher";
-import { ContractDeployedEvent } from "contracts/ContractDeployer";
 
 /**
  * Handles publishing contracts (EXPERIMENTAL)
@@ -91,8 +89,8 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * @param metadataUri
    */
-  public async extractFunctions(metadataUri: string): Promise<AbiFunction[]> {
-    return extractFunctions(metadataUri, this.storage);
+  public async extractFunctions(bytecodeUri: string): Promise<AbiFunction[]> {
+    return extractFunctions(bytecodeUri, this.storage);
   }
 
   /**
@@ -222,7 +220,6 @@ export class ContractPublisher extends RPCConnectionHandler {
     publisherAddress: string,
     contractId: string,
     constructorParamValues: any[],
-    contractMetadata?: CustomContractMetadata,
   ): Promise<string> {
     // TODO this gets the latest version, should we allow deploying a certain version?
     const contract = await this.publisher.readContract.getPublishedContract(
@@ -232,7 +229,6 @@ export class ContractPublisher extends RPCConnectionHandler {
     return this.deployContract(
       contract.publishMetadataUri,
       constructorParamValues,
-      contractMetadata,
     );
   }
 

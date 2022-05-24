@@ -1756,12 +1756,17 @@ export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>):
 // Warning: (ae-internal-missing-underscore) The name "extractFunctions" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function extractFunctions(metadataUri: string, storage: IStorage): Promise<AbiFunction[]>;
+export function extractFunctions(bytecodeUri: string, storage: IStorage): Promise<AbiFunction[]>;
 
 // Warning: (ae-internal-missing-underscore) The name "extractFunctionsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>): AbiFunction[];
+
+// Warning: (ae-internal-missing-underscore) The name "fetchContractBytecodeMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function fetchContractBytecodeMetadata(bytecodeUri: string, storage: IStorage): Promise<PublishedMetadata>;
 
 // Warning: (ae-internal-missing-underscore) The name "fetchContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -1772,6 +1777,11 @@ export function fetchContractMetadata(metadataUri: string, storage: IStorage): P
 //
 // @internal (undocumented)
 export function fetchContractMetadataFromAddress(address: string, provider: ethers.providers.Provider, storage: IStorage): Promise<PublishedMetadata>;
+
+// Warning: (ae-internal-missing-underscore) The name "fetchContractMetadataFromBytecode" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function fetchContractMetadataFromBytecode(bytecode: string, storage: IStorage): Promise<PublishedMetadata>;
 
 // Warning: (ae-internal-missing-underscore) The name "FetchError" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -1964,6 +1974,8 @@ export class IpfsStorage implements IStorage {
         baseUri: string;
         metadataUris: string[];
     }>;
+    // (undocumented)
+    uploadSingle(data: string | Record<string, any>, contractAddress?: string, signerAddress?: string): Promise<string>;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "isFeatureEnabled" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3055,7 +3067,7 @@ export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
 // Warning: (ae-internal-missing-underscore) The name "resolveContractUriFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function resolveContractUriFromAddress(address: string, provider: ethers.providers.Provider): Promise<string>;
+export function resolveContractUriFromAddress(address: string, provider: ethers.providers.Provider): Promise<string | undefined>;
 
 // Warning: (ae-internal-missing-underscore) The name "RestrictedTransferError" should be prefixed with an underscore because the declaration is marked as @internal
 //

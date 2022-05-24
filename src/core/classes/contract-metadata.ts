@@ -9,7 +9,7 @@ import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   detectContractFeature,
-  resolveContractUriFromAddress,
+  fetchContractMetadataFromAddress,
 } from "../../common";
 
 /**
@@ -65,14 +65,22 @@ export class ContractMetadata<
     if (this.supportsContractMetadata(this.contractWrapper)) {
       uri = await this.contractWrapper.readContract.contractURI();
       data = await this.storage.get(uri);
-    } else if (this.isThirdWebContract(this.contractWrapper)) {
-      uri = await resolveContractUriFromAddress(
-        this.contractWrapper.readContract.address,
-        this.contractWrapper.getProvider(),
-      );
-      const publishMeta = await this.storage.get(uri);
-      data = publishMeta.deployMetadata || publishMeta;
-    } else {
+    }
+
+    if (!data) {
+      try {
+        // try fetching metadata from bytecode
+        data = await fetchContractMetadataFromAddress(
+          this.contractWrapper.readContract.address,
+          this.contractWrapper.getProvider(),
+          this.storage,
+        );
+      } catch (e) {
+        // ignore
+      }
+    }
+
+    if (!data) {
       throw new Error("Contract does not support reading contract metadata");
     }
 
@@ -122,11 +130,5 @@ export class ContractMetadata<
       contractWrapper,
       "ContractMetadata",
     );
-  }
-
-  private isThirdWebContract(
-    contractWrapper: ContractWrapper<any>,
-  ): contractWrapper is ContractWrapper<ThirdwebContract> {
-    return "tw_initializeOwner" in contractWrapper.readContract.functions;
   }
 }

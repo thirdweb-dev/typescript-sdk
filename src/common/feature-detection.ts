@@ -90,15 +90,12 @@ export async function extractConstructorParams(
  * @param storage
  */
 export async function extractFunctions(
-  metadataUri: string,
+  bytecodeUri: string,
   storage: IStorage,
 ): Promise<AbiFunction[]> {
-  const metadata = CustomContractMetadataSchema.parse(
-    await storage.get(metadataUri),
-  );
-  const abiRaw = await storage.get(metadata.abiUri);
-  const abi = AbiSchema.parse(abiRaw);
-  return extractFunctionsFromAbi(abi);
+  const bytecode = await storage.getRaw(bytecodeUri);
+  const metadata = await fetchContractMetadataFromBytecode(bytecode, storage);
+  return extractFunctionsFromAbi(metadata.abi);
 }
 
 /**

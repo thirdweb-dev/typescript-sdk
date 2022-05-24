@@ -33,17 +33,6 @@ describe("Custom Contracts", async () => {
     storage = sdk.storage as IpfsStorage;
     const simpleContractUri = await uploadContractMetadata("Greeter", storage);
     const publisher = await sdk.getPublisher();
-
-    // const testAddr = await publisher.deployContractWithAbi(
-    //   TWFee__factory.abi,
-    //   TWFee__factory.bytecode,
-    //   [
-    //     "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
-    //     "0xE79ee09bD47F4F5381dbbACaCff2040f2FbC5803",
-    //   ],
-    // );
-    // console.log("test deploy", testAddr);
-
     customContractAddress = await publisher.deployContract(
       simpleContractUri,
       [],
@@ -112,7 +101,7 @@ describe("Custom Contracts", async () => {
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Contract undefined");
     const meta = await c.metadata.get();
-    expect(meta.name).to.eq("CustomContract");
+    expect(meta.name).to.eq("Greeter");
   });
 
   it("should detect feature: roles", async () => {
