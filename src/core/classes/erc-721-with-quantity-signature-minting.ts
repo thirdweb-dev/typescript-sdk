@@ -207,8 +207,8 @@ export class Erc721WithQuantitySignatureMinting {
    * @returns an array of payloads and signatures
    */
   public async generateBatch(
-    payloadsToSign: PayloadToSign1155[] | PayloadToSign721withQuantity[],
-  ): Promise<SignedPayload1155[] | SignedPayload721WithQuantitySignature[]> {
+    payloadsToSign: PayloadToSign721withQuantity[],
+  ): Promise<SignedPayload721WithQuantitySignature[]> {
     await this.roles.verify(
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
