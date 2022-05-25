@@ -48,6 +48,14 @@ describe("NFT Contract", async () => {
     expect(nfts).to.be.an("array").length(2);
   });
 
+  it("should let authorized minters mint with detected features", async () => {
+    await nftContract.roles.grant("minter", samWallet.address);
+    sdk.updateSignerOrProvider(samWallet);
+    await nftContract.mint?.to(samWallet.address, {
+      name: "Test1",
+    });
+  });
+
   it("should return owned token ids", async () => {
     await nftContract.mintToSelf({
       name: "Test1",

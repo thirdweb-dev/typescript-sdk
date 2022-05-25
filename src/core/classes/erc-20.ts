@@ -65,11 +65,6 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    */
   onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
     this.contractWrapper.updateSignerOrProvider(network);
-    // we have to always cascade these...
-    // TODO - we should be able to do this in a more elegant way
-    if (this.mint) {
-      this.mint.onNetworkUpdated(network);
-    }
   }
 
   /**
