@@ -4,7 +4,7 @@
 
 ## SignatureDrop class
 
-Setup a collection of one-of-one NFTs that are minted as users claim them.
+Setup a collection of NFTs where when it comes to minting, you can authorize some external party to mint tokens on your contract, and specify what exactly will be minted by that external party..
 
 <b>Signature:</b>
 
@@ -22,7 +22,7 @@ import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 // You can switch out this provider with any wallet or provider setup you like.
 const provider = ethers.Wallet.createRandom();
 const sdk = new ThirdwebSDK(provider);
-const contract = sdk.getNFTDrop("{{contract_address}}");
+const contract = sdk.getSignatureDrop("{{contract_address}}");
 ```
 
 ## Constructors

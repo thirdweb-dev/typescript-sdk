@@ -15,7 +15,7 @@ totalClaimedSupply(): Promise<BigNumber>;
 
 Promise&lt;BigNumber&gt;
 
-the unclaimed supply
+the claimed supply
 
 ## Remarks
 

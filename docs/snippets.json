@@ -628,10 +628,10 @@
   },
   "SignatureDrop": {
     "name": "SignatureDrop",
-    "summary": "Setup a collection of one-of-one NFTs that are minted as users claim them.\n\n",
+    "summary": "Setup a collection of NFTs where when it comes to minting, you can authorize some external party to mint tokens on your contract, and specify what exactly will be minted by that external party..\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getNFTDrop(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\n// You can switch out this provider with any wallet or provider setup you like.\nconst provider = ethers.Wallet.createRandom();\nconst sdk = new ThirdwebSDK(provider);\nconst contract = sdk.getSignatureDrop(\"{{contract_address}}\");"
     },
     "methods": [
       {
