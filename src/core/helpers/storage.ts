@@ -45,6 +45,9 @@ export function replaceHashWithGatewayUrl(
   scheme: string,
   gatewayUrl: string,
 ): Record<string, any> {
+  if (object === null || !object) {
+    return {};
+  }
   const keys = Object.keys(object);
   for (const key in keys) {
     const val = object[keys[key]];

@@ -1,7 +1,6 @@
 import {
   CommonContractOutputSchema,
   CommonContractSchema,
-  CommonPlatformFeeSchema,
   CommonTrustedForwarderSchema,
 } from "./common";
 import { z } from "zod";
@@ -60,10 +59,8 @@ export const SplitsContractOutput = CommonContractOutputSchema.extend({
 });
 
 export const SplitsContractDeploy = SplitsContractInput.merge(
-  CommonPlatformFeeSchema,
-)
-  .merge(SplitsContractInput)
-  .merge(CommonTrustedForwarderSchema);
+  SplitsContractInput,
+).merge(CommonTrustedForwarderSchema);
 
 export const SplitsContractSchema = {
   deploy: SplitsContractDeploy,

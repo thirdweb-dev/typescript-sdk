@@ -37,9 +37,7 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * // You can switch out this provider with any wallet or provider setup you like.
- * const provider = ethers.Wallet.createRandom();
- * const sdk = new ThirdwebSDK(provider);
+ * const sdk = new ThirdwebSDK("rinkeby");
  * const contract = sdk.getMarketplace("{{contract_address}}");
  * ```
  *
@@ -464,6 +462,7 @@ export class Marketplace implements UpdateableNetwork {
         try {
           listing = await this.getListing(i);
         } catch (err) {
+          console.log(`Error fetching listing with id: ${i}`, err);
           return undefined;
         }
 
@@ -510,7 +509,7 @@ export class Marketplace implements UpdateableNetwork {
         );
       }
 
-      if (filter.tokenId) {
+      if (filter.tokenId !== undefined) {
         rawListings = rawListings.filter(
           (tokenContract) =>
             tokenContract.tokenId.toString() === filter?.tokenId?.toString(),

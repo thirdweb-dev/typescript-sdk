@@ -1,8 +1,10 @@
 import {
-  ByocFactory,
-  ByocFactory__factory,
-  ByocRegistry,
-  ByocRegistry__factory,
+  ContractDeployer,
+  ContractDeployer__factory,
+  ContractPublisher,
+  ContractPublisher__factory,
+  ContractMetadataRegistry,
+  ContractMetadataRegistry__factory,
   DropERC1155__factory,
   DropERC20__factory,
   DropERC721__factory,
@@ -112,25 +114,42 @@ before(async () => {
     .deploy(trustedForwarderAddress, thirdwebFactoryDeployer.address);
   await thirdwebFactoryDeployer.deployed();
 
-  const customFactoryDeployer = (await new ethers.ContractFactory(
-    ByocFactory__factory.abi,
-    ByocFactory__factory.bytecode,
+  const metadataRegistry = (await new ethers.ContractFactory(
+    ContractMetadataRegistry__factory.abi,
+    ContractMetadataRegistry__factory.bytecode,
   )
     .connect(signer)
-    .deploy(registry.address, trustedForwarderAddress)) as ByocFactory;
-  await customFactoryDeployer.deployed();
+    .deploy(trustedForwarderAddress)) as ContractMetadataRegistry;
+  await metadataRegistry.deployed();
 
-  const customRegistryDeployer = (await new ethers.ContractFactory(
-    ByocRegistry__factory.abi,
-    ByocRegistry__factory.bytecode,
+  const contactDeployer = (await new ethers.ContractFactory(
+    ContractDeployer__factory.abi,
+    ContractDeployer__factory.bytecode,
   )
     .connect(signer)
-    .deploy(trustedForwarderAddress)) as ByocRegistry;
-  await customRegistryDeployer.deployed();
+    .deploy(
+      registry.address,
+      metadataRegistry.address,
+      trustedForwarderAddress,
+    )) as ContractDeployer;
+  await contactDeployer.deployed();
+
+  const contractPublisher = (await new ethers.ContractFactory(
+    ContractPublisher__factory.abi,
+    ContractPublisher__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(trustedForwarderAddress)) as ContractPublisher;
+  await contractPublisher.deployed();
 
   await registryContract.grantRole(
     await registryContract.OPERATOR_ROLE(),
-    customFactoryDeployer.address,
+    contactDeployer.address,
+  );
+
+  await metadataRegistry.grantRole(
+    await registryContract.OPERATOR_ROLE(),
+    contactDeployer.address,
   );
 
   async function deployContract(
@@ -218,9 +237,11 @@ before(async () => {
   }
 
   process.env.registryAddress = thirdwebRegistryAddress;
+  process.env.byocRegistryAddress = thirdwebRegistryAddress;
   process.env.factoryAddress = thirdwebFactoryDeployer.address;
-  process.env.byocRegistryAddress = customRegistryDeployer.address;
-  process.env.byocFactoryAddress = customFactoryDeployer.address;
+  process.env.contractPublisherAddress = contractPublisher.address;
+  process.env.contractDeployerAddress = contactDeployer.address;
+  process.env.contractMetadataRegistryAddress = metadataRegistry.address;
 
   storage = new MockStorage();
   sdk = new ThirdwebSDK(

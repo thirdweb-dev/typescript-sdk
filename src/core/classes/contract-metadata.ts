@@ -1,8 +1,16 @@
-import { IThirdwebContract, ThirdwebContract } from "contracts";
+import {
+  IContractMetadata,
+  IThirdwebContract,
+  ThirdwebContract,
+} from "contracts";
 import { z } from "zod";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import {
+  detectContractFeature,
+  resolveContractUriFromAddress,
+} from "../../common";
 
 /**
  * @internal
@@ -52,8 +60,22 @@ export class ContractMetadata<
    * @returns the metadata of the given contract
    */
   public async get() {
-    const uri = await this.contractWrapper.readContract.contractURI();
-    const data = await this.storage.get(uri);
+    let uri;
+    let data;
+    if (this.supportsContractMetadata(this.contractWrapper)) {
+      uri = await this.contractWrapper.readContract.contractURI();
+      data = await this.storage.get(uri);
+    } else if (this.isThirdWebContract(this.contractWrapper)) {
+      uri = await resolveContractUriFromAddress(
+        this.contractWrapper.readContract.address,
+        this.contractWrapper.getProvider(),
+      );
+      const publishMeta = await this.storage.get(uri);
+      data = publishMeta.deployMetadata || publishMeta;
+    } else {
+      throw new Error("Contract does not support reading contract metadata");
+    }
+
     return this.parseOutputMetadata(data);
   }
   /**
@@ -65,13 +87,13 @@ export class ContractMetadata<
     const uri = await this._parseAndUploadMetadata(metadata);
 
     const wrapper = this.contractWrapper;
-    if (this.canUpdateContractUri(wrapper)) {
+    if (this.supportsContractMetadata(wrapper)) {
       const receipt = await wrapper.sendTransaction("setContractURI", [uri]);
       return { receipt, data: this.get } as TransactionResult<
         z.output<TSchema["output"]>
       >;
     } else {
-      throw new Error("Contract does not support updating contractURI");
+      throw new Error("Contract does not support updating contract metadata");
     }
   }
 
@@ -93,9 +115,18 @@ export class ContractMetadata<
     return this.storage.uploadMetadata(parsedMetadata);
   }
 
-  private canUpdateContractUri(
+  private supportsContractMetadata(
     contractWrapper: ContractWrapper<any>,
-  ): contractWrapper is ContractWrapper<IThirdwebContract> {
-    return "setContractURI" in contractWrapper.readContract.functions;
+  ): contractWrapper is ContractWrapper<IContractMetadata> {
+    return detectContractFeature<IContractMetadata>(
+      contractWrapper,
+      "ContractMetadata",
+    );
+  }
+
+  private isThirdWebContract(
+    contractWrapper: ContractWrapper<any>,
+  ): contractWrapper is ContractWrapper<ThirdwebContract> {
+    return "tw_initializeOwner" in contractWrapper.readContract.functions;
   }
 }

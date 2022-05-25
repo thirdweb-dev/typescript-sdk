@@ -4,7 +4,7 @@ import { expect } from "chai";
 import { isFeatureEnabled, ThirdwebSDK } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
-import { DropERC721__factory, TokenERC721__factory } from "../lib";
+import { DropERC721__factory, TokenERC721__factory } from "../typechain";
 
 global.fetch = require("cross-fetch");
 
@@ -114,7 +114,13 @@ describe("Publishing", async () => {
     const deployedAddr = await publisher.deployPublishedContract(
       bobWallet.address,
       contract.id,
-      ["someUri", 12345],
+      [
+        adminWallet.address,
+        "someUri",
+        12345,
+        [adminWallet.address, samWallet.address],
+        [12, 23, 45],
+      ],
     );
     expect(deployedAddr.length).to.be.gt(0);
     const all = await publisher.getAll(bobWallet.address);
@@ -132,26 +138,10 @@ describe("Publishing", async () => {
     expect((await tx[1].data()).id).to.eq("ConstructorParams");
   });
 
-  it("Ethrone real ipfs test", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
-    const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmQeHhdLVcTPQBAqqqnJUEcsmeqkjERx3GmmuHN5gZtVSn/0";
-    const tx = await pub.publish(ipfsUri);
-    const contract = await tx.data();
-    const deployedAddr = await pub.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
-      [60000, 3, 100000],
-    );
-    const ethrone = await realSDK.getContract(deployedAddr);
-    const maxAttempts = await ethrone.functions.maxAttempts();
-    expect(maxAttempts).to.eq(3);
-  });
-
   it("SimpleAzuki enumerable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmeiwNZ3AJkDdSwMoodCeYJxbbLWUp7iDoUhntuiYm7C7F/0";
+    const ipfsUri = "ipfs://QmPoEDD6EdjMZ6U5pDdLbZnLhcNuMzyEFFEMVqVDw5JAJX/0";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
     const deployedAddr = await pub.deployPublishedContract(
@@ -169,7 +159,7 @@ describe("Publishing", async () => {
   it("AzukiWithMinting mintable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmeiwNZ3AJkDdSwMoodCeYJxbbLWUp7iDoUhntuiYm7C7F/1";
+    const ipfsUri = "ipfs://QmPoEDD6EdjMZ6U5pDdLbZnLhcNuMzyEFFEMVqVDw5JAJX/1";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
     const deployedAddr = await pub.deployPublishedContract(
@@ -189,28 +179,5 @@ describe("Publishing", async () => {
     invariant(c.nft.query, "no nft query detected");
     const all = await c.nft.query.all();
     expect(all.length).to.eq(1);
-  });
-
-  it("Solc raw bytecode", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
-    const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmVtCnHePncGSaMqUALd6bHMBhb9Xw3k5FES2fWRoeiHAt/0";
-    const deployedAddr = await pub.deployContract(ipfsUri, []);
-    const c = await realSDK.getContract(deployedAddr);
-    await c.functions.increment();
-    const n = await c.functions.number();
-    expect(n.toNumber()).to.eq(2);
-  });
-
-  it("array constructor param passed as string", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
-    const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://Qmdo7CBVn8TgRbPxtFMCPqZVH8ptv7Wb2Xmcy6kSLboUYA/2";
-    const deployedAddr = await pub.deployContract(ipfsUri, [
-      `["adminWallet.address", "samWallet.address"]`,
-    ]);
-    const c = await realSDK.getContract(deployedAddr);
-    const r = await c.functions.candidateCount();
-    expect(r.toNumber()).to.eq(2);
   });
 });

@@ -89,23 +89,31 @@ export class ContractRoyalty<
       mergedMetadata,
     );
 
-    // encode both the functions we want to send
-    const encoded = [
-      this.contractWrapper.readContract.interface.encodeFunctionData(
-        "setDefaultRoyaltyInfo",
-        [mergedMetadata.fee_recipient, mergedMetadata.seller_fee_basis_points],
-      ),
-      this.contractWrapper.readContract.interface.encodeFunctionData(
-        "setContractURI",
-        [contractURI],
-      ),
-    ];
-
-    // actually send the transaction and return the receipt + a way to get the new royalty info
-    return {
-      receipt: await this.contractWrapper.multiCall(encoded),
-      data: () => this.getDefaultRoyaltyInfo(),
-    };
+    if (this.canUpdateContractUri(this.contractWrapper)) {
+      // encode both the functions we want to send
+      const encoded = [
+        this.contractWrapper.readContract.interface.encodeFunctionData(
+          "setDefaultRoyaltyInfo",
+          [
+            mergedMetadata.fee_recipient,
+            mergedMetadata.seller_fee_basis_points,
+          ],
+        ),
+        this.contractWrapper.readContract.interface.encodeFunctionData(
+          "setContractURI",
+          [contractURI],
+        ),
+      ];
+      // actually send the transaction and return the receipt + a way to get the new royalty info
+      return {
+        receipt: await this.contractWrapper.multiCall(encoded),
+        data: () => this.getDefaultRoyaltyInfo(),
+      };
+    } else {
+      throw new Error(
+        "Updating royalties requires implementing ContractMetadata in your contract to support marketplaces like OpenSea.",
+      );
+    }
   }
 
   /**
@@ -128,5 +136,11 @@ export class ContractRoyalty<
       ),
       data: () => this.getDefaultRoyaltyInfo(),
     };
+  }
+
+  private canUpdateContractUri(
+    contractWrapper: ContractWrapper<any>,
+  ): contractWrapper is ContractWrapper<IThirdwebContract> {
+    return "setContractURI" in contractWrapper.readContract.functions;
   }
 }

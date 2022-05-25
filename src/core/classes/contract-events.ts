@@ -1,7 +1,7 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { BaseContract, providers } from "ethers";
 import { EventType } from "../../constants";
-import { ListenerFn } from "eventemitter2";
+import { ListenerFn } from "eventemitter3";
 
 /**
  * Listen to Contract events in real time
@@ -55,7 +55,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the receiver that will be called on every new event
    */
   public addEventListener(
-    eventName: keyof TContract["filters"] | string,
+    eventName: keyof TContract["filters"] | (string & {}),
     listener: (event: Record<string, any>) => void,
   ) {
     // validates event, throws error if not found
@@ -91,7 +91,7 @@ export class ContractEvents<TContract extends BaseContract> {
    * @param listener - the listener to unregister
    */
   public removeEventListener(
-    eventName: keyof TContract["filters"] | string,
+    eventName: keyof TContract["filters"] | (string & {}),
     listener: providers.Listener,
   ) {
     // validates event, throws error if not found

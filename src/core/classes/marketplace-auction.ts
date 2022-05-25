@@ -130,6 +130,19 @@ export class MarketplaceAuction {
    * ```
    */
   public async getWinner(listingId: BigNumberish): Promise<string> {
+    const listing = await this.validateListing(BigNumber.from(listingId));
+    const offers = await this.contractWrapper.readContract.winningBid(
+      listingId,
+    );
+    const now = BigNumber.from(Math.floor(Date.now() / 1000));
+    const endTime = BigNumber.from(listing.endTimeInEpochSeconds);
+
+    // if we have a winner in the map and the current time is past the endtime of the auction return the address of the winner
+    if (now.gt(endTime) && offers.offeror !== constants.AddressZero) {
+      return offers.offeror;
+    }
+    // otherwise fall back to query filter things
+
     // TODO this should be via indexer or direct contract call
     const closedAuctions = await this.contractWrapper.readContract.queryFilter(
       this.contractWrapper.readContract.filters.AuctionClosed(),

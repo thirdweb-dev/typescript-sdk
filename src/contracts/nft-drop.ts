@@ -57,9 +57,7 @@ import { UploadProgressEvent } from "../types/events";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * // You can switch out this provider with any wallet or provider setup you like.
- * const provider = ethers.Wallet.createRandom();
- * const sdk = new ThirdwebSDK(provider);
+ * const sdk = new ThirdwebSDK("rinkeby");
  * const contract = sdk.getNFTDrop("{{contract_address}}");
  * ```
  *
@@ -249,7 +247,8 @@ export class NFTDrop extends Erc721<DropERC721> {
   }
 
   /**
-   * {@inheritDoc Erc721Enumerable.tokendIds}
+   * Get all token ids of NFTs owned by a specific wallet.
+   * @param walletAddress - the wallet address to query, defaults to the connected wallet
    */
   public async getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]> {
     return this._owned.tokenIds(walletAddress);

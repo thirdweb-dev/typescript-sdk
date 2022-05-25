@@ -12,8 +12,8 @@
     // match output dir to input dir. e.g. dist/index instead of dist/src/index
     "outDir": "./dist",
     "paths": {
-      "contracts/*": ["./lib/*"],
-      "contracts": ["./lib"]
+      "contracts/*": ["./typechain/*"],
+      "contracts": ["./typechain"]
     },
     // stricter type-checking for stronger correctness. Recommended by TS
     "strict": true,

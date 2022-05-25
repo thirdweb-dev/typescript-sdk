@@ -67,10 +67,22 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
 
     const contractName = REMOTE_CONTRACT_NAME[contractType];
     const encodedType = ethers.utils.formatBytes32String(contractName);
-    const receipt = await this.sendTransaction("deployProxy", [
-      encodedType,
-      encodedFunc,
-    ]);
+    let receipt;
+    try {
+      receipt = await this.sendTransaction("deployProxy", [
+        encodedType,
+        encodedFunc,
+      ]);
+    } catch (e) {
+      // deploy might fail due to salt already used, fallback to deterministic deploy
+      const blockNumber = await this.getProvider().getBlockNumber();
+      receipt = await this.sendTransaction("deployProxyDeterministic", [
+        encodedType,
+        encodedFunc,
+        ethers.utils.formatBytes32String(blockNumber.toString()),
+      ]);
+    }
+
     const events = this.parseLogs<ProxyDeployedEvent>(
       "ProxyDeployed",
       receipt.logs,
