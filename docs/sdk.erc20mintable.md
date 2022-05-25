@@ -9,9 +9,9 @@ Mint ERC20 Tokens
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc20Mintable implements DetectableFeature 
+export declare class Erc20Mintable implements DetectableFeature, UpdateableNetwork 
 ```
-<b>Implements:</b> DetectableFeature
+<b>Implements:</b> DetectableFeature, UpdateableNetwork
 
 ## Remarks
 
@@ -42,5 +42,6 @@ await contract.nft.mint.to(walletAddress, nftMetadata);
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [getAddress()](./sdk.erc20mintable.getaddress.md) |  |  |
 |  [to(to, amount)](./sdk.erc20mintable.to.md) |  | Mint Tokens |
 

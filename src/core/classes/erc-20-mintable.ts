@@ -1,12 +1,13 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { IMintableERC20, IMulticall } from "contracts";
-import { TransactionResult } from "../types";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { detectContractFeature } from "../../common";
 import { Erc20 } from "./erc-20";
 import { Amount } from "../../types";
 import { Erc20BatchMintable } from "./erc-20-batch-mintable";
 import { FEATURE_TOKEN_MINTABLE } from "../../constants/erc20-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { UpdateableNetwork } from "../interfaces/contract";
 
 /**
  * Mint ERC20 Tokens
@@ -18,7 +19,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * ```
  * @public
  */
-export class Erc20Mintable implements DetectableFeature {
+export class Erc20Mintable implements DetectableFeature, UpdateableNetwork {
   featureName = FEATURE_TOKEN_MINTABLE.name;
   private contractWrapper: ContractWrapper<IMintableERC20>;
   private erc20: Erc20;
@@ -53,6 +54,17 @@ export class Erc20Mintable implements DetectableFeature {
         await this.erc20.normalizeAmount(amount),
       ]),
     };
+  }
+
+  /**
+   * @internal
+   */
+  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
+    this.contractWrapper.updateSignerOrProvider(network);
+  }
+
+  getAddress(): string {
+    return this.contractWrapper.readContract.address;
   }
 
   private detectErc20BatchMintable() {

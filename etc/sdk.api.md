@@ -636,21 +636,21 @@ export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebCont
     // @internal (undocumented)
     parseOutputMetadata(metadata: any): z.output<TSchema["output"]>;
     // (undocumented)
-    set(metadata: z.input<TSchema["input"]>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+    set(metadata: z.input<TSchema["input"]>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
     }, "data"> : {
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
-    }>;
+    } : never : never>;
     // (undocumented)
-    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
     }, "data"> : {
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
-    }>;
+    } : never : never>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "IPlatformFee" needs to be exported by the entry point index.d.ts
@@ -1595,7 +1595,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20> imp
     // (undocumented)
     featureName: "ERC20";
     get(): Promise<Currency>;
-    // (undocumented)
+    // @internal (undocumented)
     getAddress(): string;
     // @internal (undocumented)
     protected getValue(value: BigNumberish): Promise<CurrencyValue>;
@@ -1625,11 +1625,15 @@ export class Erc20BatchMintable implements DetectableFeature {
 }
 
 // @public
-export class Erc20Mintable implements DetectableFeature {
+export class Erc20Mintable implements DetectableFeature, UpdateableNetwork {
     constructor(erc20: Erc20, contractWrapper: ContractWrapper<IMintableERC20>);
     batch: Erc20BatchMintable | undefined;
     // (undocumented)
     featureName: "ERC20Mintable";
+    // (undocumented)
+    getAddress(): string;
+    // @internal (undocumented)
+    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     to(to: string, amount: Amount): Promise<TransactionResult>;
 }
 
@@ -2064,7 +2068,7 @@ export class Marketplace implements UpdateableNetwork {
     // (undocumented)
     getAddress(): string;
     // @internal (undocumented)
-    getAll: (filter?: MarketplaceFilter | undefined) => Promise<(AuctionListing | DirectListing)[]>;
+    getAll: (filter?: MarketplaceFilter) => Promise<(AuctionListing | DirectListing)[]>;
     getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
     getBidBufferBps(): Promise<BigNumber>;
     getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;

@@ -13,6 +13,8 @@ export default defineConfig([
     minify: true,
     platform: "node",
     replaceNodeEnv: true,
+    shims: true,
+    treeshake: true,
     globalName: "ThirdwebSDK",
     format: ["cjs", "esm"],
   },
@@ -26,6 +28,7 @@ export default defineConfig([
     minify: true,
     platform: "browser",
     replaceNodeEnv: true,
+    shims: true,
     globalName: "_thirdweb",
     format: ["iife"],
     banner: {
