@@ -143,19 +143,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ) {
-<<<<<<< HEAD
     super(network, options);
     this.storageHandler = storage;
     this.storage = new Storage(storage);
     this.deployer = new ContractDeployer(network, options, storage);
     this.wallet = new UserWallet(network, options);
-=======
-    const rpc = getProviderForNetwork(network);
-    super(rpc, options);
-    this.storage = storage;
-    this.deployer = new ContractDeployer(rpc, options, storage);
-    this.wallet = new UserWallet(rpc, options);
->>>>>>> main
   }
 
   /**
