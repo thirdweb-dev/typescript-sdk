@@ -605,8 +605,10 @@ describe("ERC 721 with Signature minting", async () => {
       expect(all.length).to.eq(100);
       await signatureDropContract.claimConditions.set([{}]);
       await signatureDropContract.claim(1);
-      const claimed = await signatureDropContract.getClaimed();
-      expect(claimed).to.eq(1);
+      const claimed = await signatureDropContract.totalClaimedSupply();
+      const unclaimed = await signatureDropContract.totalUnclaimedSupply();
+      expect(claimed.toNumber()).to.eq(1);
+      expect(unclaimed.toNumber()).to.eq(99);
     });
 
     it("should correctly update total supply after burning", async () => {

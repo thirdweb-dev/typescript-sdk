@@ -50,7 +50,9 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { Erc721WithQuantitySignatureMinting } from "../core/classes/erc-721-with-quantity-signature-minting";
 
 /**
- * Setup a collection of one-of-one NFTs that are minted as users claim them.
+ * Setup a collection of NFTs where when it comes to minting, you can authorize
+ * some external party to mint tokens on your contract, and specify what exactly
+ * will be minted by that external party..
  *
  * @example
  *
@@ -60,7 +62,7 @@ import { Erc721WithQuantitySignatureMinting } from "../core/classes/erc-721-with
  * // You can switch out this provider with any wallet or provider setup you like.
  * const provider = ethers.Wallet.createRandom();
  * const sdk = new ThirdwebSDK(provider);
- * const contract = sdk.getNFTDrop("{{contract_address}}");
+ * const contract = sdk.getSignatureDrop("{{contract_address}}");
  * ```
  *
  * @public
@@ -246,36 +248,6 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   }
 
   /**
-   * @remarks Gets the number of claimed NFTs.
-   *
-   *
-   * @example
-   * ```javascript
-   *  const claimed = await signatureDropContract.getClaimed();
-   * ```
-   *
-   * @returns Number of claimed NFTs.
-   */
-  public async getClaimed() {
-    const claimCondition =
-      await this.contractWrapper.readContract.claimCondition();
-    const startId = claimCondition.currentStartId.toNumber();
-    const count = claimCondition.count.toNumber();
-    const conditions = [];
-    for (let i = startId; i < startId + count; i++) {
-      conditions.push(
-        await this.contractWrapper.readContract.getClaimConditionById(i),
-      );
-    }
-
-    const totalClaimed = conditions.reduce(function (total, condition) {
-      return total + condition.supplyClaimed.toNumber();
-    }, 0);
-
-    return totalClaimed;
-  }
-
-  /**
    * Get Owned NFTs
    *
    * @remarks Get all the data associated with the NFTs owned by a specific wallet.
@@ -395,10 +367,25 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * const claimedNFTCount = await contract.totalClaimedSupply();
    * console.log(`NFTs claimed so far: ${claimedNFTCount}`);
    * ```
-   * @returns the unclaimed supply
+   * @returns the claimed supply
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.nextTokenIdToMint();
+    const claimCondition =
+      await this.contractWrapper.readContract.claimCondition();
+    const startId = claimCondition.currentStartId.toNumber();
+    const count = claimCondition.count.toNumber();
+    const conditions = [];
+    for (let i = startId; i < startId + count; i++) {
+      conditions.push(
+        await this.contractWrapper.readContract.getClaimConditionById(i),
+      );
+    }
+
+    const totalClaimed = conditions.reduce(function (total, condition) {
+      return total + condition.supplyClaimed.toNumber();
+    }, 0);
+
+    return ethers.BigNumber.from(totalClaimed);
   }
 
   /**
@@ -414,9 +401,25 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * @returns the unclaimed supply
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
-    return (await this.contractWrapper.readContract.nextTokenIdToMint()).sub(
-      await this.totalClaimedSupply(),
-    );
+    const claimCondition =
+      await this.contractWrapper.readContract.claimCondition();
+    const startId = claimCondition.currentStartId.toNumber();
+    const count = claimCondition.count.toNumber();
+    const conditions = [];
+    for (let i = startId; i < startId + count; i++) {
+      conditions.push(
+        await this.contractWrapper.readContract.getClaimConditionById(i),
+      );
+    }
+
+    const maxSupply =
+      await this.contractWrapper.readContract.nextTokenIdToMint();
+
+    const totalClaimed = conditions.reduce(function (total, condition) {
+      return total + condition.supplyClaimed.toNumber();
+    }, 0);
+
+    return BigNumber.from(maxSupply).sub(totalClaimed);
   }
 
   /**
