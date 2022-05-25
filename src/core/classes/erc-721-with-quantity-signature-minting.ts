@@ -1,12 +1,10 @@
 import {
   FilledSignature721WithQuantity,
   MintRequest721withQuantity,
-  PayloadToSign1155,
   PayloadToSign721withQuantity,
   PayloadWithUri721withQuantity,
   Signature721WithQuantityInput,
   Signature721WithQuantityOutput,
-  SignedPayload1155,
   SignedPayload721WithQuantitySignature,
 } from "../../schema/contracts/common/signature";
 import { TransactionResultWithId } from "../types";
@@ -25,7 +23,7 @@ import { uploadOrExtractURIs } from "../../common/nft";
 import { TokensMintedWithSignatureEvent } from "contracts/SigMint";
 
 /**
- * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
+ * Enables generating dynamic ERC721 NFTs. You can authorize then some external party to mint tokens on your contract
  * @public
  */
 export class Erc721WithQuantitySignatureMinting {
@@ -193,8 +191,8 @@ export class Erc721WithQuantitySignatureMinting {
    * @returns the signed payload and the corresponding signature
    */
   public async generate(
-    mintRequest: PayloadToSign1155 | PayloadToSign721withQuantity,
-  ): Promise<SignedPayload1155 | SignedPayload721WithQuantitySignature> {
+    mintRequest: PayloadToSign721withQuantity,
+  ): Promise<SignedPayload721WithQuantitySignature> {
     return (await this.generateBatch([mintRequest]))[0];
   }
 

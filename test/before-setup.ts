@@ -1,15 +1,16 @@
 import {
   ContractDeployer,
   ContractDeployer__factory,
-  ContractPublisher,
-  ContractPublisher__factory,
   ContractMetadataRegistry,
   ContractMetadataRegistry__factory,
+  ContractPublisher,
+  ContractPublisher__factory,
   DropERC1155__factory,
   DropERC20__factory,
   DropERC721__factory,
   Marketplace__factory,
   Pack__factory,
+  SigMint__factory,
   SignatureDrop__factory,
   Split__factory,
   TokenERC1155__factory,
@@ -35,8 +36,8 @@ import {
   Marketplace,
   NFTCollection,
   NFTDrop,
-  SignatureDrop,
   Pack,
+  SignatureDrop,
   Split,
   ThirdwebSDK,
   Token,
@@ -143,6 +144,14 @@ before(async () => {
     .deploy(trustedForwarderAddress)) as ContractPublisher;
   await contractPublisher.deployed();
 
+  const sigMintDeployer = await new ethers.ContractFactory(
+    SigMint__factory.abi,
+    SigMint__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy();
+  await sigMintDeployer.deployed();
+
   await registryContract.grantRole(
     await registryContract.OPERATOR_ROLE(),
     contactDeployer.address,
@@ -247,6 +256,7 @@ before(async () => {
   process.env.contractPublisherAddress = contractPublisher.address;
   process.env.contractDeployerAddress = contactDeployer.address;
   process.env.contractMetadataRegistryAddress = metadataRegistry.address;
+  process.env.sigMintDeployerAddress = sigMintDeployer.address;
 
   storage = new MockStorage();
   sdk = new ThirdwebSDK(
