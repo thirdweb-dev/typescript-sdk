@@ -22,7 +22,7 @@ import { ContractRoles } from "./contract-roles";
 import { SignatureDrop } from "../../contracts";
 import { BigNumber } from "ethers";
 import { uploadOrExtractURIs } from "../../common/nft";
-import { TokensMintedEvent } from "contracts/SignatureDrop";
+import { TokensMintedWithSignatureEvent } from "contracts/SigMint";
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
@@ -84,14 +84,14 @@ export class Erc721WithQuantitySignatureMinting {
       [message, signature],
       overrides,
     );
-    const t = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
+    const t = this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
+      "TokensMintedWithSignature",
       receipt.logs,
     );
     if (t.length === 0) {
       throw new Error("No MintWithSignature event found");
     }
-    const id = t[0].args.startTokenId;
+    const id = t[0].args.tokenIdMinted;
     return {
       id,
       receipt,
@@ -129,15 +129,16 @@ export class Erc721WithQuantitySignatureMinting {
       );
     });
     const receipt = await this.contractWrapper.multiCall(encoded);
-    const events = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
-      receipt.logs,
-    );
+    const events =
+      this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
+        "TokensMintedWithSignature",
+        receipt.logs,
+      );
     if (events.length === 0) {
       throw new Error("No MintWithSignature event found");
     }
     return events.map((log) => ({
-      id: log.args.startTokenId,
+      id: log.args.tokenIdMinted,
       receipt,
     }));
   }
