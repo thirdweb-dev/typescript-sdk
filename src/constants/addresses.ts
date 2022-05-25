@@ -23,6 +23,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: string;
     contractDeployer: string;
     contractMetadataRegistry: string;
+    sigMint: string;
   }
 > = {
   [ChainId.Mainnet]: {
@@ -32,6 +33,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: constants.AddressZero,
     contractDeployer: constants.AddressZero,
     contractMetadataRegistry: constants.AddressZero,
+    sigMint: constants.AddressZero,
   },
   [ChainId.Rinkeby]: {
     biconomyForwarder: "0xFD4973FeB2031D4409fB57afEE5dF2051b171104",
@@ -40,6 +42,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
     contractDeployer: "0xBD9fdebD651733e7EEAB8A83536D57023c3d3225",
     contractMetadataRegistry: "0x1e474395f58418e9c594a79abb0152D04C229E8e",
+    sigMint: constants.AddressZero,
   },
   [ChainId.Goerli]: {
     biconomyForwarder: constants.AddressZero,
@@ -48,6 +51,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: "0xB1Bd9d7942A250BA2Dce27DD601F2ED4211A60C4",
     contractDeployer: "0x25F2Ea750BF8bE10e1139C3a19F7B4e46557D04B",
     contractMetadataRegistry: "0x520B80B85a3B9abfF75F77068116D759a11a455D",
+    sigMint: constants.AddressZero,
   },
   [ChainId.Polygon]: {
     biconomyForwarder: "0x86C80a8aa58e0A4fa09A69624c31Ab2a6CAD56b8",
@@ -56,6 +60,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: "0x308473Be900F4185A56587dE54bDFF5E8f7a6AE7",
     contractDeployer: "0x06312720bB2aa22346510c28bf8b4F5df20c71eb",
     contractMetadataRegistry: "0xB67D404478d91F1C94bc607b8945cBe159B86Df8",
+    sigMint: constants.AddressZero,
   },
   [ChainId.Mumbai]: {
     biconomyForwarder: "0x9399BB24DBB5C4b782C70c2969F58716Ebbd6a3b",
@@ -64,6 +69,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: "0x3F17972CB27506eb4a6a3D59659e0B57a43fd16C",
     contractDeployer: "0x14905281051Cc0Cf1064Ad16c319DBe324C62196",
     contractMetadataRegistry: "0x25F2Ea750BF8bE10e1139C3a19F7B4e46557D04B",
+    sigMint: constants.AddressZero,
   },
   [ChainId.Avalanche]: {
     biconomyForwarder: "0x64CD353384109423a966dCd3Aa30D884C9b2E057",
@@ -72,6 +78,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: constants.AddressZero,
     contractDeployer: constants.AddressZero,
     contractMetadataRegistry: constants.AddressZero,
+    sigMint: constants.AddressZero,
   },
   [ChainId.AvalancheFujiTestnet]: {
     biconomyForwarder: "0x6271Ca63D30507f2Dcbf99B52787032506D75BBF",
@@ -80,6 +87,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
     contractDeployer: "0xBD9fdebD651733e7EEAB8A83536D57023c3d3225",
     contractMetadataRegistry: "0x1e474395f58418e9c594a79abb0152D04C229E8e",
+    sigMint: constants.AddressZero,
   },
   [ChainId.Fantom]: {
     biconomyForwarder: constants.AddressZero,
@@ -88,6 +96,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: constants.AddressZero,
     contractDeployer: constants.AddressZero,
     contractMetadataRegistry: constants.AddressZero,
+    sigMint: constants.AddressZero,
   },
   [ChainId.FantomTestnet]: {
     biconomyForwarder: constants.AddressZero,
@@ -96,6 +105,7 @@ export const CONTRACT_ADDRESSES: Record<
     twBYOCRegistry: "0x3E6eE864f850F5e5A98bc950B68E181Cf4010F23",
     contractDeployer: "0xBD9fdebD651733e7EEAB8A83536D57023c3d3225",
     contractMetadataRegistry: "0x1e474395f58418e9c594a79abb0152D04C229E8e",
+    sigMint: constants.AddressZero,
   },
 };
 
@@ -118,6 +128,8 @@ export function getContractAddressByChainId(
       return process.env.contractDeployerAddress as string;
     } else if (contractName === "contractMetadataRegistry") {
       return process.env.contractMetadataRegistryAddress as string;
+    } else if (contractName === "sigMint") {
+      return process.env.sigMintDeployerAddress as string;
     } else {
       return constants.AddressZero;
     }

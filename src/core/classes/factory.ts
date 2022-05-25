@@ -23,6 +23,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { ChainlinkVrf } from "../../constants/chainlink";
 import {
   CONTRACT_ADDRESSES,
+  getContractAddressByChainId,
   OZ_DEFENDER_FORWARDER_ADDRESS,
   SUPPORTED_CHAIN_IDS,
 } from "../../constants";
@@ -124,6 +125,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       case SignatureDrop.contractType:
         const signatureDropmetadata =
           SignatureDrop.schema.deploy.parse(metadata);
+        const chainId = await this.getChainID();
         return [
           await this.getSignerAddress(),
           signatureDropmetadata.name,
@@ -135,7 +137,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           signatureDropmetadata.seller_fee_basis_points,
           signatureDropmetadata.platform_fee_basis_points,
           signatureDropmetadata.platform_fee_recipient,
-          process.env.sigMintDeployerAddress,
+          getContractAddressByChainId(chainId, "sigMint"),
         ];
       case EditionDrop.contractType:
       case Edition.contractType:

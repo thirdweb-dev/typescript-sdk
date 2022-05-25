@@ -560,6 +560,7 @@ export const CONTRACT_ADDRESSES: Record<SUPPORTED_CHAIN_ID, {
     twBYOCRegistry: string;
     contractDeployer: string;
     contractMetadataRegistry: string;
+    sigMint: string;
 }>;
 
 // Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
