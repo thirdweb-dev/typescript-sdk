@@ -48,8 +48,6 @@ describe("ERC 721 with Signature minting", async () => {
       }),
     );
 
-    // console.log(signatureDropContract.signature);
-
     meta = {
       currencyAddress: NATIVE_TOKEN_ADDRESS,
       metadata: {
@@ -81,8 +79,6 @@ describe("ERC 721 with Signature minting", async () => {
   });
 
   describe("Generating Signatures", () => {
-    // let voucher: SignaturePayload;
-    // let signature: string, badSignature: string;
     let goodPayload: SignedPayload721WithQuantitySignature;
     let badPayload: SignedPayload721WithQuantitySignature;
 
@@ -90,9 +86,6 @@ describe("ERC 721 with Signature minting", async () => {
       goodPayload = await signatureDropContract.signature.generate(meta);
       badPayload = await signatureDropContract.signature.generate(meta);
       badPayload.payload.price = "0";
-      // console.log("good payload: ", goodPayload);
-      // console.log("admin address: ", adminWallet.address);
-      // console.log("sam address: ", samWallet.address);
     });
 
     it("should generate a valid signature", async () => {
@@ -471,7 +464,7 @@ describe("ERC 721 with Signature minting", async () => {
   });
 
   describe("Claim Conditions", () => {
-    it("sshould allow a snapshot to be set", async () => {
+    it("should allow a snapshot to be set", async () => {
       await signatureDropContract.createBatch([
         { name: "test", description: "test" },
         { name: "test", description: "test" },
@@ -612,15 +605,8 @@ describe("ERC 721 with Signature minting", async () => {
       expect(all.length).to.eq(100);
       await signatureDropContract.claimConditions.set([{}]);
       await signatureDropContract.claim(1);
-      const claimed = await signatureDropContract.getAllClaimed();
-      const unclaimed = await signatureDropContract.getAllUnclaimed({
-        start: 0,
-        count: 30,
-      });
-      expect(claimed.length).to.eq(1);
-      expect(unclaimed.length).to.eq(30);
-      expect(unclaimed[0].name).to.eq("test 1");
-      expect(unclaimed[unclaimed.length - 1].name).to.eq("test 30");
+      const claimed = await signatureDropContract.getClaimed();
+      expect(claimed).to.eq(1);
     });
 
     it("should correctly update total supply after burning", async () => {

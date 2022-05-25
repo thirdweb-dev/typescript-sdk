@@ -246,6 +246,36 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   }
 
   /**
+   * @remarks Gets the number of claimed NFTs.
+   *
+   *
+   * @example
+   * ```javascript
+   *  const claimed = await signatureDropContract.getClaimed();
+   * ```
+   *
+   * @returns Number of claimed NFTs.
+   */
+  public async getClaimed() {
+    const claimCondition =
+      await this.contractWrapper.readContract.claimCondition();
+    const startId = claimCondition.currentStartId.toNumber();
+    const count = claimCondition.count.toNumber();
+    const conditions = [];
+    for (let i = startId; i < startId + count; i++) {
+      conditions.push(
+        await this.contractWrapper.readContract.getClaimConditionById(i),
+      );
+    }
+
+    const totalClaimed = conditions.reduce(function (total, condition) {
+      return total + condition.supplyClaimed.toNumber();
+    }, 0);
+
+    return totalClaimed;
+  }
+
+  /**
    * Get Owned NFTs
    *
    * @remarks Get all the data associated with the NFTs owned by a specific wallet.
@@ -498,8 +528,11 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
         quantity,
         claimVerification.currencyAddress,
         claimVerification.price,
-        claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
+        {
+          proof: claimVerification.proofs,
+          maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
+        },
+        ethers.utils.toUtf8Bytes(""),
       ],
       claimVerification.overrides,
     );

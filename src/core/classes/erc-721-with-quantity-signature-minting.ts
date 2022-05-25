@@ -152,11 +152,8 @@ export class Erc721WithQuantitySignatureMinting {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = await this.mapPayloadToContractStruct(mintRequest);
-    // console.log("message: ", message);
-    // console.log("signature: ", signature);
     const verification: [boolean, string] =
       await this.contractWrapper.readContract.verify(message, signature);
-    // console.log("recovered signer: ", verification[1]);
     return verification[0];
   }
 
