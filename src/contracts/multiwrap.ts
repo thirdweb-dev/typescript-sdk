@@ -1,4 +1,5 @@
 import {
+  Erc721Supply,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -20,12 +21,14 @@ import {
   ERC20Wrappable,
   ERC721Wrappable,
   TokensToWrap,
+  WrappedTokens,
 } from "../types/multiwrap";
 import { normalizePriceValue } from "../common/currency";
 import { ITokenBundle, TokensWrappedEvent } from "contracts/Multiwrap";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { BigNumberish, ethers } from "ethers";
 import TokenStruct = ITokenBundle.TokenStruct;
+import { QueryAllParams } from "../types";
 
 /**
  * Multiwrap lets you wrap arbitrary ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token / NFT.
@@ -79,6 +82,8 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
    */
   public royalty: ContractRoyalty<MultiwrapContract, typeof Multiwrap.schema>;
 
+  private _query = this.query as Erc721Supply;
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
@@ -108,82 +113,34 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
     this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
   }
 
-  public async wrap(
-    contents: TokensToWrap,
-    wrappedTokenMetadata: NFTMetadataOrUri,
-    recipientAddress?: string,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
-    const uri = await uploadOrExtractURI(wrappedTokenMetadata, this.storage);
+  /** ******************************
+   * READ FUNCTIONS
+   *******************************/
 
-    const recipient = recipientAddress
-      ? recipientAddress
-      : await this.contractWrapper.getSignerAddress();
-
-    const tokens: TokenStruct[] = [];
-
-    const provider = this.contractWrapper.getProvider();
-
-    if (contents.erc20Tokens) {
-      for (const erc20 of contents.erc20Tokens) {
-        tokens.push({
-          assetContract: erc20.contractAddress,
-          totalAmount: await normalizePriceValue(
-            provider,
-            erc20.tokenAmount,
-            erc20.contractAddress,
-          ),
-          tokenId: 0,
-          tokenType: 0,
-        });
-      }
-    }
-
-    if (contents.erc721Tokens) {
-      for (const erc721 of contents.erc721Tokens) {
-        tokens.push({
-          assetContract: erc721.contractAddress,
-          totalAmount: 0,
-          tokenId: erc721.tokenId,
-          tokenType: 1,
-        });
-      }
-    }
-
-    if (contents.erc1155Tokens) {
-      for (const erc1155 of contents.erc1155Tokens) {
-        tokens.push({
-          assetContract: erc1155.contractAddress,
-          totalAmount: erc1155.tokenAmount,
-          tokenId: erc1155.tokenId,
-          tokenType: 2,
-        });
-      }
-    }
-
-    const receipt = await this.contractWrapper.sendTransaction("wrap", [
-      tokens,
-      uri,
-      recipient,
-    ]);
-
-    const event = this.contractWrapper.parseLogs<TokensWrappedEvent>(
-      "TokensWrapped",
-      receipt?.logs,
-    );
-    if (event.length === 0) {
-      throw new Error("TokenMinted event not found");
-    }
-    const tokenId = event[0].args.tokenIdOfWrappedToken;
-    return {
-      id: tokenId,
-      receipt,
-      data: () => this.get(tokenId),
-    };
+  /**
+   * Get All Wrapped Token Bundles
+   *
+   * @remarks Get all the data associated with every token bundle in this contract.
+   *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const nfts = await contract.getAll();
+   * console.log(nfts);
+   * ```
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns The NFT metadata for all NFTs queried.
+   */
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<NFTMetadataOwner[]> {
+    return this._query.all(queryParams);
   }
 
   public async getWrappedContents(
     wrappedTokenId: BigNumberish,
-  ): Promise<TokensToWrap> {
+  ): Promise<WrappedTokens> {
     const wrappedTokens =
       await this.contractWrapper.readContract.getWrappedContents(
         wrappedTokenId,
@@ -226,6 +183,43 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
     };
   }
 
+  /** ******************************
+   * WRITE FUNCTIONS
+   *******************************/
+
+  public async wrap(
+    contents: TokensToWrap,
+    wrappedTokenMetadata: NFTMetadataOrUri,
+    recipientAddress?: string,
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
+    const uri = await uploadOrExtractURI(wrappedTokenMetadata, this.storage);
+
+    const recipient = recipientAddress
+      ? recipientAddress
+      : await this.contractWrapper.getSignerAddress();
+
+    const tokens = await this.toTokenStructList(contents);
+    const receipt = await this.contractWrapper.sendTransaction("wrap", [
+      tokens,
+      uri,
+      recipient,
+    ]);
+
+    const event = this.contractWrapper.parseLogs<TokensWrappedEvent>(
+      "TokensWrapped",
+      receipt?.logs,
+    );
+    if (event.length === 0) {
+      throw new Error("TokensWrapped event not found");
+    }
+    const tokenId = event[0].args.tokenIdOfWrappedToken;
+    return {
+      id: tokenId,
+      receipt,
+      data: () => this.get(tokenId),
+    };
+  }
+
   public async unwrap(
     wrappedTokenId: BigNumberish,
     recipientAddress?: string,
@@ -233,12 +227,59 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
     const recipient = recipientAddress
       ? recipientAddress
       : await this.contractWrapper.getSignerAddress();
-    const receipt = await this.contractWrapper.sendTransaction("unwrap", [
-      wrappedTokenId,
-      recipient,
-    ]);
     return {
-      receipt,
+      receipt: await this.contractWrapper.sendTransaction("unwrap", [
+        wrappedTokenId,
+        recipient,
+      ]),
     };
+  }
+
+  /** ******************************
+   * PRIVATE FUNCTIONS
+   *******************************/
+
+  private async toTokenStructList(contents: TokensToWrap) {
+    const tokens: TokenStruct[] = [];
+
+    const provider = this.contractWrapper.getProvider();
+
+    if (contents.erc20Tokens) {
+      for (const erc20 of contents.erc20Tokens) {
+        tokens.push({
+          assetContract: erc20.contractAddress,
+          totalAmount: await normalizePriceValue(
+            provider,
+            erc20.tokenAmount,
+            erc20.contractAddress,
+          ),
+          tokenId: 0,
+          tokenType: 0,
+        });
+      }
+    }
+
+    if (contents.erc721Tokens) {
+      for (const erc721 of contents.erc721Tokens) {
+        tokens.push({
+          assetContract: erc721.contractAddress,
+          totalAmount: 0,
+          tokenId: erc721.tokenId,
+          tokenType: 1,
+        });
+      }
+    }
+
+    if (contents.erc1155Tokens) {
+      for (const erc1155 of contents.erc1155Tokens) {
+        tokens.push({
+          assetContract: erc1155.contractAddress,
+          totalAmount: erc1155.tokenAmount,
+          tokenId: erc1155.tokenId,
+          tokenType: 2,
+        });
+      }
+    }
+    return tokens;
   }
 }

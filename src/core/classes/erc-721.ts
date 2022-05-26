@@ -6,7 +6,11 @@ import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { fetchTokenMetadata } from "../../common/nft";
-import { detectContractFeature, NotFoundError } from "../../common";
+import {
+  detectContractFeature,
+  hasFunction,
+  NotFoundError,
+} from "../../common";
 import {
   DropERC721,
   IERC721Supply,
@@ -217,7 +221,8 @@ export class Erc721<
       detectContractFeature<BaseERC721 & IERC721Supply>(
         this.contractWrapper,
         "ERC721Supply",
-      )
+      ) ||
+      hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)
     ) {
       return new Erc721Supply(this, this.contractWrapper);
     }

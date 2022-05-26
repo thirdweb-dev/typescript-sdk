@@ -140,6 +140,9 @@
 |  [EditionMetadataInput](./sdk.editionmetadatainput.md) |  |
 |  [EditionMetadataOrUri](./sdk.editionmetadataoruri.md) |  |
 |  [EditionMetadataOwner](./sdk.editionmetadataowner.md) |  |
+|  [ERC1155Wrappable](./sdk.erc1155wrappable.md) | Represents a certain amount of ERC1155 NFTs that can be wrapped |
+|  [ERC20Wrappable](./sdk.erc20wrappable.md) | Represents a certain amount of ERC20 tokens that can be wrapped |
+|  [ERC721Wrappable](./sdk.erc721wrappable.md) | Represents a ERC721 NFT that can be wrapped |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [FilledConditionInput](./sdk.filledconditioninput.md) |  |
 |  [FilledSignature721WithQuantity](./sdk.filledsignature721withquantity.md) |  |
@@ -176,10 +179,12 @@
 |  [SUPPORTED\_CHAIN\_ID](./sdk.supported_chain_id.md) |  |
 |  [TokenHolderBalance](./sdk.tokenholderbalance.md) | A token holder address and its current balance |
 |  [TokenMintInput](./sdk.tokenmintinput.md) |  |
+|  [TokensToWrap](./sdk.tokenstowrap.md) | Input for wrapping any number of tokens |
 |  [TransactionResult](./sdk.transactionresult.md) |  |
 |  [TransactionResultWithAddress](./sdk.transactionresultwithaddress.md) |  |
 |  [TransactionResultWithId](./sdk.transactionresultwithid.md) |  |
 |  [ValidContractClass](./sdk.validcontractclass.md) |  |
 |  [ValidContractInstance](./sdk.validcontractinstance.md) |  |
 |  [ValueOf](./sdk.valueof.md) |  |
+|  [WrappedTokens](./sdk.wrappedtokens.md) | Output for the contents of a bundle wrapped token |
 

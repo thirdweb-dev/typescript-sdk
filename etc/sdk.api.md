@@ -1586,6 +1586,13 @@ export class Erc1155SignatureMinting {
     verify(signedPayload: SignedPayload1155): Promise<boolean>;
 }
 
+// @public
+export type ERC1155Wrappable = {
+    contractAddress: string;
+    tokenAmount: Amount;
+    tokenId: BigNumberish;
+};
+
 // Warning: (ae-forgotten-export) The symbol "TokenERC20" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseERC20" needs to be exported by the entry point index.d.ts
 //
@@ -1648,6 +1655,12 @@ export class Erc20SignatureMinting {
     mintBatch(signedPayloads: SignedPayload20[]): Promise<TransactionResult>;
     verify(signedPayload: SignedPayload20): Promise<boolean>;
 }
+
+// @public
+export type ERC20Wrappable = {
+    contractAddress: string;
+    tokenAmount: Amount;
+};
 
 // Warning: (ae-forgotten-export) The symbol "Multiwrap" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "TokenERC721" needs to be exported by the entry point index.d.ts
@@ -1735,6 +1748,12 @@ export class Erc721Supply implements DetectableFeature {
     owned: Erc721Enumerable | undefined;
     totalCirculatingSupply(): Promise<BigNumber>;
 }
+
+// @public
+export type ERC721Wrappable = {
+    contractAddress: string;
+    tokenId: BigNumberish;
+};
 
 // @public (undocumented)
 export enum EventType {
@@ -1894,6 +1913,11 @@ export function getReadOnlyProvider(network: string, chainId?: number): ethers.p
 // @internal (undocumented)
 export function getRoleHash(role: Role): BytesLike;
 
+// Warning: (ae-internal-missing-underscore) The name "hasFunction" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function hasFunction<TContract extends BaseContract>(functionName: string, contractWrapper: ContractWrapper<any>): contractWrapper is ContractWrapper<TContract>;
+
 // Warning: (ae-internal-missing-underscore) The name "hashLeafNode" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -1910,11 +1934,6 @@ export interface IGenericSchemaType {
     // (undocumented)
     output: z.AnyZodObject;
 }
-
-// Warning: (ae-internal-missing-underscore) The name "implementsInterface" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
-export function implementsInterface<C extends BaseContract>(contractWrapper: ContractWrapper<BaseContract>, interfaceToMatch: utils.Interface): contractWrapper is ContractWrapper<C>;
 
 // Warning: (ae-internal-missing-underscore) The name "includesErrorMessage" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -2281,8 +2300,9 @@ export class Multiwrap extends Erc721<Multiwrap_2> {
     estimator: GasCostEstimator<Multiwrap_2>;
     // (undocumented)
     events: ContractEvents<Multiwrap_2>;
+    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     // (undocumented)
-    getWrappedContents(wrappedTokenId: BigNumberish): Promise<TokensToWrap>;
+    getWrappedContents(wrappedTokenId: BigNumberish): Promise<WrappedTokens>;
     // (undocumented)
     metadata: ContractMetadata<Multiwrap_2, typeof Multiwrap.schema>;
     // (undocumented)
@@ -2382,9 +2402,6 @@ export class Multiwrap extends Erc721<Multiwrap_2> {
     };
     // (undocumented)
     unwrap(wrappedTokenId: BigNumberish, recipientAddress?: string): Promise<TransactionResult>;
-    // Warning: (ae-forgotten-export) The symbol "TokensToWrap" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     wrap(contents: TokensToWrap, wrappedTokenMetadata: NFTMetadataOrUri, recipientAddress?: string): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 }
 
@@ -5145,6 +5162,13 @@ export const TokenMintInputSchema: z.ZodObject<{
     toAddress: string;
 }>;
 
+// @public
+export type TokensToWrap = {
+    erc20Tokens?: ERC20Wrappable[];
+    erc721Tokens?: ERC721Wrappable[];
+    erc1155Tokens?: ERC1155Wrappable[];
+};
+
 // @public (undocumented)
 export class TransactionError extends Error {
     constructor(reason: string, from: string, to: string, data: string, network: providers.Network, rpcUrl: string, raw: string);
@@ -5420,6 +5444,13 @@ export enum VoteType {
     // (undocumented)
     For = 1
 }
+
+// @public
+export type WrappedTokens = {
+    erc20Tokens: ERC20Wrappable[];
+    erc721Tokens: ERC721Wrappable[];
+    erc1155Tokens: ERC1155Wrappable[];
+};
 
 // Warning: (ae-internal-missing-underscore) The name "WrongListingTypeError" should be prefixed with an underscore because the declaration is marked as @internal
 //

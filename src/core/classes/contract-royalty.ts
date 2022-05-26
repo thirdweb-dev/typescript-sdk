@@ -1,4 +1,9 @@
-import { IRoyalty, IThirdwebContract, ThirdwebContract } from "contracts";
+import {
+  ContractMetadata as ContractMetadataContract,
+  IRoyalty,
+  IThirdwebContract,
+  ThirdwebContract,
+} from "contracts";
 import { CommonRoyaltySchema } from "../../schema/contracts/common";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
@@ -7,6 +12,7 @@ import { TransactionResult } from "../types";
 import { BigNumberish } from "ethers";
 import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { hasFunction } from "../../common";
 
 /**
  * Handle contract royalties
@@ -89,7 +95,12 @@ export class ContractRoyalty<
       mergedMetadata,
     );
 
-    if (this.canUpdateContractUri(this.contractWrapper)) {
+    if (
+      hasFunction<ContractMetadataContract>(
+        "setContractURI",
+        this.contractWrapper,
+      )
+    ) {
       // encode both the functions we want to send
       const encoded = [
         this.contractWrapper.readContract.interface.encodeFunctionData(
@@ -136,11 +147,5 @@ export class ContractRoyalty<
       ),
       data: () => this.getDefaultRoyaltyInfo(),
     };
-  }
-
-  private canUpdateContractUri(
-    contractWrapper: ContractWrapper<any>,
-  ): contractWrapper is ContractWrapper<IThirdwebContract> {
-    return "setContractURI" in contractWrapper.readContract.functions;
   }
 }

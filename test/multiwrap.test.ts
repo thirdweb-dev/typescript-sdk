@@ -134,7 +134,7 @@ describe("Multiwrap Contract", async () => {
   it("should wrap erc20s", async () => {
     await multiwrapContract.wrap(
       {
-        erc20tokens: [
+        erc20Tokens: [
           {
             contractAddress: tokenContract.getAddress(),
             tokenAmount: 100.5,
@@ -158,7 +158,7 @@ describe("Multiwrap Contract", async () => {
   it("should wrap erc721s", async () => {
     await multiwrapContract.wrap(
       {
-        erc721tokens: [
+        erc721Tokens: [
           {
             contractAddress: nftContract.getAddress(),
             tokenId: "0",
@@ -180,7 +180,7 @@ describe("Multiwrap Contract", async () => {
   it("should wrap erc1155s", async () => {
     await multiwrapContract.wrap(
       {
-        erc1155tokens: [
+        erc1155Tokens: [
           {
             contractAddress: editionContract.getAddress(),
             tokenId: "0",
@@ -206,19 +206,19 @@ describe("Multiwrap Contract", async () => {
   it("should wrap mixed tokens", async () => {
     await multiwrapContract.wrap(
       {
-        erc20tokens: [
+        erc20Tokens: [
           {
             contractAddress: tokenContract.getAddress(),
             tokenAmount: 100.5,
           },
         ],
-        erc721tokens: [
+        erc721Tokens: [
           {
             contractAddress: nftContract.getAddress(),
             tokenId: "0",
           },
         ],
-        erc1155tokens: [
+        erc1155Tokens: [
           {
             contractAddress: editionContract.getAddress(),
             tokenId: "0",
@@ -241,7 +241,7 @@ describe("Multiwrap Contract", async () => {
   it("get wrapped contents", async () => {
     const tx = await multiwrapContract.wrap(
       {
-        erc20tokens: [
+        erc20Tokens: [
           {
             contractAddress: tokenContract.getAddress(),
             tokenAmount: 100.5,
@@ -251,13 +251,13 @@ describe("Multiwrap Contract", async () => {
             tokenAmount: 19.5,
           },
         ],
-        erc721tokens: [
+        erc721Tokens: [
           {
             contractAddress: nftContract.getAddress(),
             tokenId: "0",
           },
         ],
-        erc1155tokens: [
+        erc1155Tokens: [
           {
             contractAddress: editionContract.getAddress(),
             tokenId: "0",
@@ -282,19 +282,19 @@ describe("Multiwrap Contract", async () => {
   it("unwrapped contents", async () => {
     const tx = await multiwrapContract.wrap(
       {
-        erc20tokens: [
+        erc20Tokens: [
           {
             contractAddress: tokenContract.getAddress(),
             tokenAmount: 100.5,
           },
         ],
-        erc721tokens: [
+        erc721Tokens: [
           {
             contractAddress: nftContract.getAddress(),
             tokenId: "0",
           },
         ],
-        erc1155tokens: [
+        erc1155Tokens: [
           {
             contractAddress: editionContract.getAddress(),
             tokenId: "0",
@@ -322,5 +322,52 @@ describe("Multiwrap Contract", async () => {
     expect(balanceN2.toNumber()).to.eq(4);
     const balanceE2 = await editionContract.balanceOf(adminWallet.address, 0);
     expect(balanceE2.toNumber()).to.eq(100);
+  });
+
+  it("can list all wrapped tokens", async () => {
+    await multiwrapContract.wrap(
+      {
+        erc20Tokens: [
+          {
+            contractAddress: tokenContract.getAddress(),
+            tokenAmount: 100.5,
+          },
+        ],
+      },
+      {
+        name: "Wrapped token 0",
+      },
+    );
+    await multiwrapContract.wrap(
+      {
+        erc721Tokens: [
+          {
+            contractAddress: nftContract.getAddress(),
+            tokenId: "0",
+          },
+        ],
+      },
+      {
+        name: "Wrapped token 1",
+      },
+    );
+    await multiwrapContract.wrap(
+      {
+        erc1155Tokens: [
+          {
+            contractAddress: editionContract.getAddress(),
+            tokenId: "0",
+            tokenAmount: 10,
+          },
+        ],
+      },
+      {
+        name: "Wrapped token 2",
+      },
+    );
+    const all = await multiwrapContract.getAll();
+    expect(all.length).to.eq(3);
+    expect(all[0].metadata.name).to.eq("Wrapped token 0");
+    expect(all[1].metadata.name).to.eq("Wrapped token 1");
   });
 });
