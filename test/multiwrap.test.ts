@@ -2,6 +2,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { sdk, signers } from "./before-setup";
 import { Edition, Multiwrap, NFTCollection, Token } from "../src/contracts";
 import { expect } from "chai";
+import { BigNumber } from "ethers";
 
 describe("Multiwrap Contract", async () => {
   let multiwrapContract: Multiwrap;
@@ -236,5 +237,44 @@ describe("Multiwrap Contract", async () => {
     expect(balanceN.toNumber()).to.eq(3);
     const balanceE = await editionContract.balanceOf(adminWallet.address, 0);
     expect(balanceE.toNumber()).to.eq(90);
+  });
+
+  it("get wrapped contents", async () => {
+    await multiwrapContract.wrap(
+      {
+        erc20tokens: [
+          {
+            contractAddress: tokenContract.getAddress(),
+            tokenAmount: 100.5,
+          },
+          {
+            contractAddress: tokenContract2.getAddress(),
+            tokenAmount: 19.5,
+          },
+        ],
+        erc721tokens: [
+          {
+            contractAddress: nftContract.getAddress(),
+            tokenId: "0",
+          },
+        ],
+        erc1155tokens: [
+          {
+            contractAddress: editionContract.getAddress(),
+            tokenId: "0",
+            tokenAmount: 10,
+          },
+        ],
+      },
+      {
+        name: "Wrapped token",
+      },
+    );
+    const wrappedTokens = await multiwrapContract.getWrappedContents();
+    expect(wrappedTokens.erc20Tokens.length).to.eq(2);
+    expect(wrappedTokens.erc20Tokens[0].contractAddress).to.eq(
+      tokenContract.getAddress(),
+    );
+    expect(wrappedTokens.erc1155Tokens[0].tokenAmount).to.eq("10");
   });
 });

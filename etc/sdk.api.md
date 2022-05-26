@@ -5425,9 +5425,9 @@ export class WrongListingTypeError extends Error {
 
 // Warnings were encountered during analysis:
 //
-// dist/src/contracts/multiwrap.d.ts:160:9 - (ae-forgotten-export) The symbol "ERC20Wrappable" needs to be exported by the entry point index.d.ts
-// dist/src/contracts/multiwrap.d.ts:161:9 - (ae-forgotten-export) The symbol "ERC721Wrappable" needs to be exported by the entry point index.d.ts
-// dist/src/contracts/multiwrap.d.ts:162:9 - (ae-forgotten-export) The symbol "ERC1155Wrappable" needs to be exported by the entry point index.d.ts
+// dist/src/contracts/multiwrap.d.ts:150:9 - (ae-forgotten-export) The symbol "ERC20Wrappable" needs to be exported by the entry point index.d.ts
+// dist/src/contracts/multiwrap.d.ts:151:9 - (ae-forgotten-export) The symbol "ERC721Wrappable" needs to be exported by the entry point index.d.ts
+// dist/src/contracts/multiwrap.d.ts:152:9 - (ae-forgotten-export) The symbol "ERC1155Wrappable" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

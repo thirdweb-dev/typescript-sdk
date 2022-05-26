@@ -20,9 +20,10 @@ import {
   ERC721Wrappable,
 } from "../types/multiwrap";
 import { normalizePriceValue } from "../common/currency";
-import TokenStruct = ITokenBundle.TokenStruct;
 import { ITokenBundle } from "contracts/Multiwrap";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
+import { BigNumber, BigNumberish, ethers } from "ethers";
+import TokenStruct = ITokenBundle.TokenStruct;
 
 /**
  * Multiwrap lets you wrap arbitrary ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token / NFT.
@@ -120,10 +121,6 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
       ? recipientAddress
       : await this.contractWrapper.getSignerAddress();
 
-    // tokenStructs = []
-    // contents[1].each do token
-    // TransformtoTokenStruct(token)
-    //
     const tokens: TokenStruct[] = [];
 
     const provider = this.contractWrapper.getProvider();
@@ -175,4 +172,52 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
       receipt,
     };
   }
+
+  public async getWrappedContents(wrappedTokenId: BigNumberish = 0) {
+    const wrappedTokens =
+      await this.contractWrapper.readContract.getWrappedContents(
+        wrappedTokenId,
+      );
+
+    // console.log(wrappedTokens[0].totalAmount);
+
+    const erc20Tokens: ERC20Wrappable[] = [];
+    const erc721Tokens: ERC721Wrappable[] = [];
+    const erc1155Tokens: ERC1155Wrappable[] = [];
+
+    for (const token of wrappedTokens) {
+      switch (token.tokenType) {
+        case 0: {
+          erc20Tokens.push({
+            contractAddress: token.assetContract,
+            tokenAmount: ethers.utils.formatEther(token.totalAmount),
+          });
+          break;
+        }
+        case 1: {
+          erc721Tokens.push({
+            contractAddress: token.assetContract,
+            tokenId: token.tokenId,
+          });
+          break;
+        }
+        case 2: {
+          erc1155Tokens.push({
+            contractAddress: token.assetContract,
+            tokenId: token.tokenId,
+            tokenAmount: token.totalAmount.toString(),
+          });
+          break;
+        }
+      }
+    }
+
+    return {
+      erc20Tokens,
+      erc721Tokens,
+      erc1155Tokens,
+    };
+  }
+
+  // public async unwrap(wrappedTokenId: BigNumber): Promise<TransactionResult> {}
 }
