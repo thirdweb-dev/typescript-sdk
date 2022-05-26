@@ -115,10 +115,10 @@ export async function uploadOrExtractURIs(
   if (isUriList(metadatas)) {
     return metadatas;
   } else if (isMetadataList(metadatas)) {
-    const { metadataUris } = await storage.uploadMetadataBatch(
+    const { uris } = await storage.uploadMetadataBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),
     );
-    return metadataUris;
+    return uris;
   } else {
     throw new Error(
       "NFT metadatas must all be of the same type (all URI or all NFTMetadataInput)",

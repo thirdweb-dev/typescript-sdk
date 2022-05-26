@@ -107,16 +107,12 @@ export class Storage {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<StorageUpload> {
-    const { baseUri, metadataUris } = await this.storage.uploadMetadataBatch(
+    return await this.storage.uploadMetadataBatch(
       metadatas,
       undefined,
       undefined,
       undefined,
       options,
     );
-    return {
-      baseUri,
-      uris: metadataUris,
-    };
   }
 }

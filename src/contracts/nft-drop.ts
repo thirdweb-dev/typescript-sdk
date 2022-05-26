@@ -429,7 +429,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     );
     const baseUri = batch.baseUri;
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.metadataUris.length,
+      batch.uris.length,
       baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
       ethers.utils.toUtf8Bytes(""),
     ]);

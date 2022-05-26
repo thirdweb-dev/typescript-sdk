@@ -21,7 +21,7 @@ uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: s
 |  metadata | [JsonObject](./sdk.jsonobject.md) | The metadata to be uploaded. |
 |  contractAddress | string | <i>(Optional)</i> Optional. The contract address the data belongs to. |
 |  signerAddress | string | <i>(Optional)</i> Optional. The address of the signer. |
-|  options | { onProgress: (event: UploadProgressEvent) =&gt; void; } | <i>(Optional)</i> |
+|  options | { onProgress: (event: [UploadProgressEvent](./sdk.uploadprogressevent.md)<!-- -->) =&gt; void; } | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

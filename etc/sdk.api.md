@@ -1984,7 +1984,7 @@ export class IpfsStorage implements IStorage {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<{
         baseUri: string;
-        metadataUris: string[];
+        uris: string[];
     }>;
 }
 
@@ -2000,17 +2000,16 @@ export interface IStorage {
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<string>;
-    // Warning: (ae-incompatible-release-tags) The symbol "uploadBatch" is marked as @public, but its signature references "UploadBatchResult" which is marked as @internal
+    // Warning: (ae-forgotten-export) The symbol "StorageUpload" needs to be exported by the entry point index.d.ts
     uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<UploadBatchResult>;
+    }): Promise<StorageUpload>;
     uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<string>;
-    // Warning: (ae-incompatible-release-tags) The symbol "uploadMetadataBatch" is marked as @public, but its signature references "UploadMetadataBatchResult" which is marked as @internal
     uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<UploadMetadataBatchResult>;
+    }): Promise<StorageUpload>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "JsonLiteralOrFileOrBuffer" needs to be exported by the entry point index.d.ts
@@ -5074,16 +5073,6 @@ export enum UnderlyingType {
     None = 0
 }
 
-// Warning: (ae-internal-missing-underscore) The name "UploadBatchResult" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export interface UploadBatchResult {
-    // (undocumented)
-    baseUri: string;
-    // (undocumented)
-    uris: string[];
-}
-
 // Warning: (ae-internal-missing-underscore) The name "UploadError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -5091,14 +5080,10 @@ export class UploadError extends Error {
     constructor(message: string);
 }
 
-// Warning: (ae-internal-missing-underscore) The name "UploadMetadataBatchResult" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export interface UploadMetadataBatchResult {
-    // (undocumented)
-    baseUri: string;
-    // (undocumented)
-    metadataUris: string[];
+// @public (undocumented)
+export interface UploadProgressEvent {
+    progress: number;
+    total: number;
 }
 
 // @public
@@ -5317,10 +5302,6 @@ export enum VoteType {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
-
-// Warnings were encountered during analysis:
-//
-// dist/src/core/classes/delayed-reveal.d.ts:50:9 - (ae-forgotten-export) The symbol "UploadProgressEvent" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

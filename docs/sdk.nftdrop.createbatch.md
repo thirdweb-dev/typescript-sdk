@@ -19,7 +19,7 @@ createBatch(metadatas: NFTMetadataInput[], options?: {
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  metadatas | [NFTMetadataInput](./sdk.nftmetadatainput.md)<!-- -->\[\] | The metadata to include in the batch. |
-|  options | { onProgress: (event: UploadProgressEvent) =&gt; void; } | <i>(Optional)</i> |
+|  options | { onProgress: (event: [UploadProgressEvent](./sdk.uploadprogressevent.md)<!-- -->) =&gt; void; } | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

@@ -104,6 +104,7 @@
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
 |  [SplitRecipientInput](./sdk.splitrecipientinput.md) |  |
 |  [TokenContractDeployMetadata](./sdk.tokencontractdeploymetadata.md) | Options for deploying a Token contract |
+|  [UploadProgressEvent](./sdk.uploadprogressevent.md) |  |
 |  [VoteContractDeployMetadata](./sdk.votecontractdeploymetadata.md) | Options for deploying a Vote contract |
 |  [VoteSettings](./sdk.votesettings.md) |  |
 

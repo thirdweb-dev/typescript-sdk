@@ -13,7 +13,7 @@ uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractA
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<{
         baseUri: string;
-        metadataUris: string[];
+        uris: string[];
     }>;
 ```
 
@@ -25,9 +25,9 @@ uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractA
 |  fileStartNumber | number | <i>(Optional)</i> Optional. The first file file name begins with. |
 |  contractAddress | string | <i>(Optional)</i> Optional. The contract address the data belongs to. |
 |  signerAddress | string | <i>(Optional)</i> Optional. The address of the signer. |
-|  options | { onProgress: (event: UploadProgressEvent) =&gt; void; } | <i>(Optional)</i> |
+|  options | { onProgress: (event: [UploadProgressEvent](./sdk.uploadprogressevent.md)<!-- -->) =&gt; void; } | <i>(Optional)</i> |
 
 <b>Returns:</b>
 
-Promise&lt;{ baseUri: string; metadataUris: string\[\]; }&gt;
+Promise&lt;{ baseUri: string; uris: string\[\]; }&gt;
 
