@@ -51,6 +51,10 @@ describe("Multiwrap Contract", async () => {
         name: "Test 3",
       },
     ]);
+
+    // TODO should this be done inside wrap() ? might result in a ton of different transactions :/
+    await nftContract.setApprovalForAll(multiwrapContract.getAddress(), true);
+
     editionContract = sdk.getEdition(
       await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "TEST BUNDLE",
@@ -73,6 +77,11 @@ describe("Multiwrap Contract", async () => {
       },
     ]);
 
+    await editionContract.setApprovalForAll(
+      multiwrapContract.getAddress(),
+      true,
+    );
+
     tokenContract = sdk.getToken(
       await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
@@ -94,6 +103,9 @@ describe("Multiwrap Contract", async () => {
         amount: 1000,
       },
     ]);
+
+    await tokenContract.setAllowance(multiwrapContract.getAddress(), 1000);
+
     tokenContract2 = sdk.getToken(
       await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test2",
@@ -115,6 +127,8 @@ describe("Multiwrap Contract", async () => {
         amount: 1000,
       },
     ]);
+
+    await tokenContract2.setAllowance(multiwrapContract.getAddress(), 1000);
   });
 
   it("should wrap erc20s", async () => {
@@ -136,7 +150,7 @@ describe("Multiwrap Contract", async () => {
       },
     );
     const balance = await tokenContract.balanceOf(adminWallet.address);
-    const balance2 = await tokenContract.balanceOf(adminWallet.address);
+    const balance2 = await tokenContract2.balanceOf(adminWallet.address);
     expect(balance.displayValue).to.equal("899.5");
     expect(balance2.displayValue).to.equal("799.9");
   });
@@ -219,7 +233,7 @@ describe("Multiwrap Contract", async () => {
     const balanceT = await tokenContract.balanceOf(adminWallet.address);
     expect(balanceT.displayValue).to.equal("899.5");
     const balanceN = await nftContract.balanceOf(adminWallet.address);
-    expect(balanceN.toNumber()).to.eq(2);
+    expect(balanceN.toNumber()).to.eq(3);
     const balanceE = await editionContract.balanceOf(adminWallet.address, 0);
     expect(balanceE.toNumber()).to.eq(90);
   });
