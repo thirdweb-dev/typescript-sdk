@@ -3,17 +3,6 @@ import { FileOrBuffer, JsonObject } from "../types";
 import { StorageUpload } from "./IStorageUpload";
 
 /**
- * @internal
- */
-export interface UploadMetadataBatchResult {
-  // base cid of the directory
-  baseUri: string;
-
-  // path to each of the file within the directory, included full cid path
-  metadataUris: string[];
-}
-
-/**
  * @public
  */
 export interface IStorage {
@@ -106,5 +95,5 @@ export interface IStorage {
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
-  ): Promise<UploadMetadataBatchResult>;
+  ): Promise<StorageUpload>;
 }

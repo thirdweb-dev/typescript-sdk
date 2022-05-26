@@ -119,14 +119,14 @@ export class IpfsStorage implements IStorage {
     },
   ): Promise<string> {
     // since there's only single object, always use the first index
-    const { metadataUris } = await this.uploadMetadataBatch(
+    const { uris } = await this.uploadMetadataBatch(
       [metadata],
       0,
       contractAddress,
       signerAddress,
       options,
     );
-    return metadataUris[0];
+    return uris[0];
   }
 
   /**
@@ -157,7 +157,7 @@ export class IpfsStorage implements IStorage {
 
     return {
       baseUri,
-      metadataUris: uris,
+      uris,
     };
   }
 

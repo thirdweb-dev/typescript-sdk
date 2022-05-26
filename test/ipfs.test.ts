@@ -95,7 +95,7 @@ describe("IPFS Uploads", async () => {
     try {
       const metadata = JSON.parse(readFileSync("test/metadata.json", "utf8"));
       const upload = await storage.uploadMetadataBatch([metadata]);
-      assert.isTrue(upload.metadataUris.length > 0);
+      assert.isTrue(upload.uris.length > 0);
     } catch (err) {
       assert.fail(err as string);
     }
@@ -279,14 +279,12 @@ describe("IPFS Uploads", async () => {
         },
       },
     ];
-    const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
-      sampleObjects,
-    );
+    const { baseUri, uris } = await storage.uploadMetadataBatch(sampleObjects);
     assert(baseUri.startsWith("ipfs://") && baseUri.endsWith("/"));
-    assert(metadataUris.length === sampleObjects.length);
+    assert(uris.length === sampleObjects.length);
     const [metadata1, metadata2, metadata3] = await Promise.all(
       (
-        await Promise.all(metadataUris.map((m) => getFile(m)))
+        await Promise.all(uris.map((m) => getFile(m)))
       ).map((m: any) => m.json()),
     );
     assert(
@@ -312,13 +310,11 @@ describe("IPFS Uploads", async () => {
       };
       sampleObjects.push(nft);
     }
-    const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
-      sampleObjects,
-    );
+    const { baseUri, uris } = await storage.uploadMetadataBatch(sampleObjects);
     assert(baseUri.startsWith("ipfs://") && baseUri.endsWith("/"));
-    assert(metadataUris.length === sampleObjects.length);
+    assert(uris.length === sampleObjects.length);
     const metadatas = await Promise.all(
-      metadataUris.map(async (m) => await storage.get(m)),
+      uris.map(async (m) => await storage.get(m)),
     );
     for (let i = 0; i < metadatas.length; i++) {
       const expected = sampleObjects[i];

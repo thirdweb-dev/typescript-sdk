@@ -98,12 +98,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     network: ChainOrRpc,
     options: SDKOptions = {},
   ): ThirdwebSDK {
-    const rpc = getProviderForNetwork(network);
-    const provider = Signer.isSigner(rpc)
-      ? rpc.provider
-      : typeof rpc === "string"
-      ? getReadOnlyProvider(rpc)
-      : rpc;
+    const signerOrProvider = getProviderForNetwork(network);
+    const provider = Signer.isSigner(signerOrProvider)
+      ? signerOrProvider.provider
+      : typeof signerOrProvider === "string"
+      ? getReadOnlyProvider(signerOrProvider)
+      : signerOrProvider;
     const signer = new ethers.Wallet(privateKey, provider);
     return ThirdwebSDK.fromSigner(signer, network, options);
   }
@@ -144,12 +144,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ) {
-    const rpc = getProviderForNetwork(network);
-    super(rpc, options);
+    const signerOrProvider = getProviderForNetwork(network);
+    super(signerOrProvider, options);
     this.storageHandler = storage;
     this.storage = new Storage(storage);
-    this.deployer = new ContractDeployer(rpc, options, storage);
-    this.wallet = new UserWallet(rpc, options);
+    this.deployer = new ContractDeployer(signerOrProvider, options, storage);
+    this.wallet = new UserWallet(signerOrProvider, options);
   }
 
   /**
