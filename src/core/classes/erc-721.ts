@@ -11,6 +11,7 @@ import {
   DropERC721,
   IERC721Supply,
   IMintableERC721,
+  Multiwrap,
   SignatureDrop,
   TokenERC721,
 } from "contracts";
@@ -31,7 +32,12 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
  * @public
  */
 export class Erc721<
-  T extends SignatureDrop | DropERC721 | TokenERC721 | BaseERC721 = BaseERC721,
+  T extends
+    | Multiwrap
+    | SignatureDrop
+    | DropERC721
+    | TokenERC721
+    | BaseERC721 = BaseERC721,
 > implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_NFT.name;
