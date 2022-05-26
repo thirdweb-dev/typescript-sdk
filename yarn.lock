@@ -815,10 +815,10 @@
     "@swc/core-win32-ia32-msvc" "1.2.194"
     "@swc/core-win32-x64-msvc" "1.2.194"
 
-"@thirdweb-dev/contracts@2.3.9-1":
-  version "2.3.9-1"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.9-1.tgz#98dd38ed67ee505a38cf888d5ccd36e27c606674"
-  integrity sha512-AMbTw92sKZgIS5udTClX+RNRVASbcrVNjQzlivLoxJR25Zhi91Ul+OcllYFANI0WTslYR6Riq9NGsAZRW8I1FA==
+"@thirdweb-dev/contracts@2.3.9":
+  version "2.3.9"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.9.tgz#1493c7b12133b3a23733eb9bfa1355ad68954d6f"
+  integrity sha512-MmOVqWKdlFsZRk/Ym/fFfrCo/mzJyWL+EWsLYjpa3CUvwt6DffED+LB8pfTo8DkoTkC0Y9J4yzsdbJSgoa0tFw==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.8"
@@ -4257,7 +4257,6 @@ rollup-pluginutils@^2.8.1:
   integrity sha512-EEp9NhnUkwY8aif6bxgovPHMoMoNr2FulJziTndpt5H9RdwC47GSGuII9XxpSdzVGM0GWrNPHV6ie1LTNJPaLQ==
   dependencies:
     estree-walker "^0.6.1"
-
 
 rollup@^2.74.1:
   version "2.74.1"
