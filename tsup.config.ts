@@ -13,7 +13,9 @@ export default defineConfig([
     minify: true,
     platform: "node",
     replaceNodeEnv: true,
+    // now required because not defaulted anymore
     shims: true,
+    // use rollup for build to get smaller bundle sizes with tree shaking
     treeshake: true,
     globalName: "ThirdwebSDK",
     format: ["cjs", "esm"],
@@ -28,6 +30,7 @@ export default defineConfig([
     minify: true,
     platform: "browser",
     replaceNodeEnv: true,
+    // now required because not defaulted anymore
     shims: true,
     globalName: "_thirdweb",
     format: ["iife"],

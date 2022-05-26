@@ -8,6 +8,7 @@ import {
   Marketplace,
   NFTCollection,
   NFTDrop,
+  SignatureDrop,
   Pack,
   REMOTE_CONTRACT_NAME,
   Split,
@@ -22,11 +23,13 @@ import { ContractWrapper } from "./contract-wrapper";
 import { ChainlinkVrf } from "../../constants/chainlink";
 import {
   CONTRACT_ADDRESSES,
+  getContractAddressByChainId,
   OZ_DEFENDER_FORWARDER_ADDRESS,
   SUPPORTED_CHAIN_IDS,
 } from "../../constants";
 import { TokenDrop } from "../../contracts/token-drop";
 import { ProxyDeployedEvent } from "contracts/TWFactory";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * @internal
@@ -119,6 +122,27 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc721metadata.seller_fee_basis_points,
           erc721metadata.platform_fee_basis_points,
           erc721metadata.platform_fee_recipient,
+        ];
+      case SignatureDrop.contractType:
+        const signatureDropmetadata =
+          SignatureDrop.schema.deploy.parse(metadata);
+        const chainId = await this.getChainID();
+        const signMintAddress = getContractAddressByChainId(chainId, "sigMint");
+        if (signMintAddress === AddressZero) {
+          throw new Error("SignatureDrop contract not deployable yet");
+        }
+        return [
+          await this.getSignerAddress(),
+          signatureDropmetadata.name,
+          signatureDropmetadata.symbol,
+          contractURI,
+          trustedForwarders,
+          signatureDropmetadata.primary_sale_recipient,
+          signatureDropmetadata.fee_recipient,
+          signatureDropmetadata.seller_fee_basis_points,
+          signatureDropmetadata.platform_fee_basis_points,
+          signatureDropmetadata.platform_fee_recipient,
+          signMintAddress,
         ];
       case EditionDrop.contractType:
       case Edition.contractType:

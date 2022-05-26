@@ -39,7 +39,11 @@ interface CidWithFileName {
  * @public
  */
 export class IpfsStorage implements IStorage {
-  private gatewayUrl: string;
+  /**
+   * {@inheritdoc IStorage.gatewayUrl}
+   * @internal
+   */
+  public gatewayUrl: string;
   private failedUrls: string[] = [];
 
   constructor(gatewayUrl: string = DEFAULT_IPFS_GATEWAY) {
