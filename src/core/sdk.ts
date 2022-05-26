@@ -38,6 +38,7 @@ import {
   getReadOnlyProvider,
 } from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
+import { Multiwrap } from "../contracts/multiwrap";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -164,8 +165,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public getSignatureDrop(contractAddress: string): SignatureDrop {
     return this.getBuiltInContract(
-        contractAddress,
-        SignatureDrop.contractType,
+      contractAddress,
+      SignatureDrop.contractType,
     ) as SignatureDrop;
   }
 
@@ -260,6 +261,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public getPack(address: string): Pack {
     return this.getBuiltInContract(address, Pack.contractType) as Pack;
+  }
+
+  /**
+   * Get an instance of a Multiwrap contract
+   * @param address - the address of the deployed contract
+   * @returns the contract
+   */
+  public getMultiwrap(address: string): Multiwrap {
+    return this.getBuiltInContract(
+      address,
+      Multiwrap.contractType,
+    ) as Multiwrap;
   }
 
   /**

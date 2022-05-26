@@ -1,23 +1,18 @@
 import {
-  ContractEncoder,
-  ContractEvents,
-  ContractMetadata,
-  ContractRoles,
-  ContractRoyalty,
-  Erc721,
-  GasCostEstimator,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
 } from "../core";
-import {
-  NFTMetadataOrUri,
-  SDKOptions,
-  TokenErc721ContractSchema,
-} from "../schema";
+import { Erc721 } from "../core/classes/erc-721";
+import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { NFTMetadataOrUri, SDKOptions } from "../schema";
 import { Multiwrap as MultiwrapContract } from "contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { ITokenBundle } from "../../lib/Multiwrap";
 import { uploadOrExtractURI } from "../common/nft";
 import {
   ERC1155Wrappable,
@@ -26,6 +21,8 @@ import {
 } from "../types/multiwrap";
 import { normalizePriceValue } from "../common/currency";
 import TokenStruct = ITokenBundle.TokenStruct;
+import { ITokenBundle } from "contracts/Multiwrap";
+import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 
 /**
  * Multiwrap lets you wrap arbitrary ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token / NFT.
@@ -49,7 +46,7 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
   /**
    * @internal
    */
-  static schema = TokenErc721ContractSchema;
+  static schema = MultiwrapContractSchema;
 
   public encoder: ContractEncoder<MultiwrapContract>;
   public estimator: GasCostEstimator<MultiwrapContract>;

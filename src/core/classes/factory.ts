@@ -29,6 +29,7 @@ import {
 } from "../../constants";
 import { TokenDrop } from "../../contracts/token-drop";
 import { ProxyDeployedEvent } from "contracts/TWFactory";
+import { Multiwrap } from "../../contracts/multiwrap";
 
 /**
  * @internal
@@ -138,6 +139,17 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           signatureDropmetadata.platform_fee_basis_points,
           signatureDropmetadata.platform_fee_recipient,
           getContractAddressByChainId(chainId, "sigMint"),
+        ];
+      case Multiwrap.contractType:
+        const multiwrapMetadata = Multiwrap.schema.deploy.parse(metadata);
+        return [
+          await this.getSignerAddress(),
+          multiwrapMetadata.name,
+          multiwrapMetadata.symbol,
+          contractURI,
+          trustedForwarders,
+          multiwrapMetadata.fee_recipient,
+          multiwrapMetadata.seller_fee_basis_points,
         ];
       case EditionDrop.contractType:
       case Edition.contractType:

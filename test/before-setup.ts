@@ -9,6 +9,7 @@ import {
   DropERC20__factory,
   DropERC721__factory,
   Marketplace__factory,
+  Multiwrap__factory,
   Pack__factory,
   SigMint__factory,
   SignatureDrop__factory,
@@ -34,6 +35,7 @@ import {
   getNativeTokenByChainId,
   IStorage,
   Marketplace,
+  Multiwrap,
   NFTCollection,
   NFTDrop,
   Pack,
@@ -228,6 +230,9 @@ before(async () => {
         break;
       case Pack.contractType:
         factory = Pack__factory;
+        break;
+      case Multiwrap.contractType:
+        factory = Multiwrap__factory;
         break;
       default:
         throw new Error(`No factory for contract: ${contractType}`);

@@ -223,3 +223,42 @@ export interface SplitContractDeployMetadata {
    */
   recipients: SplitRecipientInput[];
 }
+
+/**
+ * Options for deploying an Multiwrap contract
+ * @public
+ */
+export interface MultiwrapContractDeployMetadata {
+  /**
+   * name of the contract
+   */
+  name: string;
+  /**
+   * Optional description of the contract
+   */
+  description?: string;
+  /**
+   * Optional image for the contract
+   */
+  image?: FileBufferOrString;
+  /**
+   * Optional url for the contract
+   */
+  external_link?: string;
+  /**
+   * Symbol for the NFTs
+   */
+  symbol?: string;
+  /**
+   * Custom gasless trusted forwarder addresses
+   */
+  trusted_forwarders?: string[];
+  /**
+   * The address that will receive the proceeds from secondary sales (royalties)
+   */
+  fee_recipient?: string;
+  /**
+   * The percentage (in basis points) of royalties for secondary sales
+   */
+  seller_fee_basis_points?: number;
+}

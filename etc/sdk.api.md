@@ -60,7 +60,7 @@ export class AdminRoleMissingError extends Error {
 export type AirdropInput = z.input<typeof AirdropInputSchema>;
 
 // @public (undocumented)
-export const ALL_ROLES: ("transfer" | "lister" | "admin" | "minter" | "pauser" | "editor" | "asset")[];
+export const ALL_ROLES: ("transfer" | "unwrap" | "lister" | "admin" | "minter" | "pauser" | "editor" | "asset")[];
 
 // Warning: (ae-forgotten-export) The symbol "PriceSchema" needs to be exported by the entry point index.d.ts
 //
@@ -573,6 +573,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     deployEdition(metadata: NFTContractDeployMetadata): Promise<string>;
     deployEditionDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deployMarketplace(metadata: MarketplaceContractDeployMetadata): Promise<string>;
+    deployMultiwrap(metadata: MultiwrapContractDeployMetadata): Promise<string>;
     deployNFTCollection(metadata: NFTContractDeployMetadata): Promise<string>;
     deployNFTDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deployPack(metadata: NFTContractDeployMetadata): Promise<string>;
@@ -638,21 +639,21 @@ export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebCont
     // @internal (undocumented)
     parseOutputMetadata(metadata: any): z.output<TSchema["output"]>;
     // (undocumented)
-    set(metadata: z.input<TSchema["input"]>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+    set(metadata: z.input<TSchema["input"]>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
     }, "data"> : {
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
-    }>;
+    } : never : never>;
     // (undocumented)
-    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
     }, "data"> : {
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
-    }>;
+    } : never : never>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "IPlatformFee" needs to be exported by the entry point index.d.ts
@@ -759,6 +760,7 @@ export const CONTRACTS_MAP: {
     readonly split: typeof Split;
     readonly marketplace: typeof Marketplace;
     readonly pack: typeof Pack;
+    readonly multiwrap: typeof Multiwrap;
 };
 
 // Warning: (ae-incompatible-release-tags) The symbol "ContractType" is marked as @public, but its signature references "CONTRACTS_MAP" which is marked as @internal
@@ -1647,11 +1649,12 @@ export class Erc20SignatureMinting {
     verify(signedPayload: SignedPayload20): Promise<boolean>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "Multiwrap" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "TokenERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class Erc721<T extends SignatureDrop_2 | DropERC721 | TokenERC721 | BaseERC721 = BaseERC721> implements UpdateableNetwork, DetectableFeature {
+export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | TokenERC721 | BaseERC721 = BaseERC721> implements UpdateableNetwork, DetectableFeature {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     balance(): Promise<BigNumber>;
     balanceOf(address: string): Promise<BigNumber>;
@@ -2017,6 +2020,7 @@ export const KNOWN_CONTRACTS_MAP: {
     readonly split: typeof Split;
     readonly marketplace: typeof Marketplace;
     readonly pack: typeof Pack;
+    readonly multiwrap: typeof Multiwrap;
 };
 
 // Warning: (ae-internal-missing-underscore) The name "ListingNotFoundError" should be prefixed with an underscore because the declaration is marked as @internal
@@ -2062,7 +2066,7 @@ export class Marketplace implements UpdateableNetwork {
     // (undocumented)
     getAddress(): string;
     // @internal (undocumented)
-    getAll: (filter?: MarketplaceFilter | undefined) => Promise<(AuctionListing | DirectListing)[]>;
+    getAll: (filter?: MarketplaceFilter) => Promise<(AuctionListing | DirectListing)[]>;
     getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
     getBidBufferBps(): Promise<BigNumber>;
     getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
@@ -2258,6 +2262,138 @@ export class MissingOwnerRoleError extends Error {
 // @internal (undocumented)
 export class MissingRoleError extends Error {
     constructor(address: string, role: string);
+}
+
+// @public
+export class Multiwrap extends Erc721<Multiwrap_2> {
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Multiwrap_2>);
+    // (undocumented)
+    static contractAbi: any;
+    // (undocumented)
+    static contractRoles: readonly ["transfer", "minter", "unwrap", "asset"];
+    // (undocumented)
+    static contractType: "multiwrap";
+    // (undocumented)
+    encoder: ContractEncoder<Multiwrap_2>;
+    // (undocumented)
+    estimator: GasCostEstimator<Multiwrap_2>;
+    // (undocumented)
+    events: ContractEvents<Multiwrap_2>;
+    // (undocumented)
+    metadata: ContractMetadata<Multiwrap_2, typeof Multiwrap.schema>;
+    // (undocumented)
+    roles: ContractRoles<Multiwrap_2, typeof Multiwrap.contractRoles[number]>;
+    royalty: ContractRoyalty<Multiwrap_2, typeof Multiwrap.schema>;
+    // @internal (undocumented)
+    static schema: {
+        deploy: ZodObject<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, {
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        }>, "strip", ZodTypeAny, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        trusted_forwarders: string[];
+        }, {
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
+        name: string;
+        }>;
+        output: ZodObject<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        image: ZodOptional<ZodString>;
+        }>, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        }, {
+        [x: string]: Json;
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+        }>;
+        input: ZodObject<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, "strip", ZodTypeAny, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        }, {
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+        }>;
+    };
+    // (undocumented)
+    wrap(contents: {
+        erc20tokens?: ERC20Wrappable[];
+        erc721tokens?: ERC721Wrappable[];
+        erc1155tokens?: ERC1155Wrappable[];
+    }, wrappedTokenMetadata: NFTMetadataOrUri, recipientAddress?: string): Promise<TransactionResult>;
+}
+
+// @public
+export interface MultiwrapContractDeployMetadata {
+    description?: string;
+    external_link?: string;
+    fee_recipient?: string;
+    image?: FileBufferOrString;
+    name: string;
+    seller_fee_basis_points?: number;
+    symbol?: string;
+    trusted_forwarders?: string[];
 }
 
 // @public (undocumented)
@@ -3061,6 +3197,7 @@ export const REMOTE_CONTRACT_NAME: {
     readonly marketplace: "Marketplace";
     readonly pack: "Pack";
     readonly custom: "Custom";
+    readonly multiwrap: "Multiwrap";
 };
 
 // Warning: (ae-internal-missing-underscore) The name "REMOTE_CONTRACT_TO_CONTRACT_TYPE" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3078,6 +3215,7 @@ export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
     readonly Split: "split";
     readonly Marketplace: "marketplace";
     readonly Pack: "pack";
+    readonly Multiwrap: "multiwrap";
 };
 
 // Warning: (ae-internal-missing-underscore) The name "resolveContractUriFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
@@ -4673,12 +4811,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ThirdwebContract>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "split" | "custom" | "token" | "pack" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "signature-drop" | "nft-collection";
+        contractType: "split" | "custom" | "token" | "pack" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
     getEdition(address: string): Edition;
     getEditionDrop(address: string): EditionDrop;
     getMarketplace(address: string): Marketplace;
+    getMultiwrap(address: string): Multiwrap;
     getNFTCollection(address: string): NFTCollection;
     getNFTDrop(contractAddress: string): NFTDrop;
     getPack(address: string): Pack;
@@ -5283,6 +5422,12 @@ export enum VoteType {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/src/contracts/multiwrap.d.ts:160:9 - (ae-forgotten-export) The symbol "ERC20Wrappable" needs to be exported by the entry point index.d.ts
+// dist/src/contracts/multiwrap.d.ts:161:9 - (ae-forgotten-export) The symbol "ERC721Wrappable" needs to be exported by the entry point index.d.ts
+// dist/src/contracts/multiwrap.d.ts:162:9 - (ae-forgotten-export) The symbol "ERC1155Wrappable" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

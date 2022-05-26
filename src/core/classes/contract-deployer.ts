@@ -20,12 +20,14 @@ import {
 } from "../../contracts";
 import {
   MarketplaceContractDeployMetadata,
+  MultiwrapContractDeployMetadata,
   NFTContractDeployMetadata,
   SplitContractDeployMetadata,
   TokenContractDeployMetadata,
   VoteContractDeployMetadata,
 } from "../../types/deploy/deploy-metadata";
 import { TokenDrop } from "../../contracts/token-drop";
+import { Multiwrap } from "../../contracts/multiwrap";
 
 /**
  * Handles deploying new contracts
@@ -84,9 +86,22 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @returns the address of the deployed contract
    */
   public async deploySignatureDrop(
-      metadata: NFTContractDeployMetadata,
+    metadata: NFTContractDeployMetadata,
   ): Promise<string> {
-    return await this.deployBuiltInContract(SignatureDrop.contractType, metadata);
+    return await this.deployBuiltInContract(
+      SignatureDrop.contractType,
+      metadata,
+    );
+  }
+
+  /**
+   * Deploys a new SignatureDrop contract
+   * @param metadata
+   */
+  public async deployMultiwrap(
+    metadata: MultiwrapContractDeployMetadata,
+  ): Promise<string> {
+    return await this.deployBuiltInContract(Multiwrap.contractType, metadata);
   }
 
   /**

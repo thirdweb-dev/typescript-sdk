@@ -8,5 +8,5 @@
 <b>Signature:</b>
 
 ```typescript
-ALL_ROLES: ("transfer" | "lister" | "admin" | "minter" | "pauser" | "editor" | "asset")[]
+ALL_ROLES: ("transfer" | "unwrap" | "lister" | "admin" | "minter" | "pauser" | "editor" | "asset")[]
 ```

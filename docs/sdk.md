@@ -42,6 +42,7 @@
 |  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [MarketplaceAuction](./sdk.marketplaceauction.md) | Handles auction listings |
 |  [MarketplaceDirect](./sdk.marketplacedirect.md) | Handles direct listings |
+|  [Multiwrap](./sdk.multiwrap.md) | Multiwrap lets you wrap arbitrary ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token / NFT. |
 |  [NFTCollection](./sdk.nftcollection.md) | Create a collection of one-of-one NFTs. |
 |  [NFTDrop](./sdk.nftdrop.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [Pack](./sdk.pack.md) | Create lootboxes of NFTs with rarity based open mechanics. |
@@ -88,6 +89,7 @@
 |  [IStorage](./sdk.istorage.md) |  |
 |  [MarketplaceContractDeployMetadata](./sdk.marketplacecontractdeploymetadata.md) | Options for deploying a Marketplace contract |
 |  [MarketplaceFilter](./sdk.marketplacefilter.md) |  |
+|  [MultiwrapContractDeployMetadata](./sdk.multiwrapcontractdeploymetadata.md) | Options for deploying an Multiwrap contract |
 |  [NativeToken](./sdk.nativetoken.md) |  |
 |  [NewAuctionListing](./sdk.newauctionlisting.md) | Represents a new marketplace auction listing. |
 |  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
