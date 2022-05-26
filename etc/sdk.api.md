@@ -638,21 +638,21 @@ export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebCont
     // @internal (undocumented)
     parseOutputMetadata(metadata: any): z.output<TSchema["output"]>;
     // (undocumented)
-    set(metadata: z.input<TSchema["input"]>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+    set(metadata: z.input<TSchema["input"]>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
     }, "data"> : {
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
-    }>;
+    } : never : never>;
     // (undocumented)
-    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
     }, "data"> : {
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
-    }>;
+    } : never : never>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "IPlatformFee" needs to be exported by the entry point index.d.ts
@@ -1963,6 +1963,8 @@ export interface IPackCreateArgs {
 // @public
 export class IpfsStorage implements IStorage {
     constructor(gatewayUrl?: string);
+    // @internal (undocumented)
+    gatewayUrl: string;
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
     getUploadToken(contractAddress: string): Promise<string>;
@@ -1982,6 +1984,8 @@ export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: Fe
 
 // @public (undocumented)
 export interface IStorage {
+    // @internal (undocumented)
+    gatewayUrl: string;
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
     getUploadToken(contractAddress: string): Promise<string>;
@@ -2062,7 +2066,7 @@ export class Marketplace implements UpdateableNetwork {
     // (undocumented)
     getAddress(): string;
     // @internal (undocumented)
-    getAll: (filter?: MarketplaceFilter | undefined) => Promise<(AuctionListing | DirectListing)[]>;
+    getAll: (filter?: MarketplaceFilter) => Promise<(AuctionListing | DirectListing)[]>;
     getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
     getBidBufferBps(): Promise<BigNumber>;
     getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
