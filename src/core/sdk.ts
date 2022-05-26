@@ -135,7 +135,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public wallet: UserWallet;
 
   /**
-   * Upload and download files from IPFS
+   * Upload and download files from IPFS or from your own storage service
    */
   public storage: Storage;
 
@@ -148,8 +148,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     super(rpc, options);
     this.storageHandler = storage;
     this.storage = new Storage(storage);
-    this.deployer = new ContractDeployer(network, options, storage);
-    this.wallet = new UserWallet(network, options);
+    this.deployer = new ContractDeployer(rpc, options, storage);
+    this.wallet = new UserWallet(rpc, options);
   }
 
   /**

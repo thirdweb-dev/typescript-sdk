@@ -12,6 +12,10 @@ if (!globalThis.FormData) {
   // eslint-disable-next-line @typescript-eslint/no-var-requires
   globalThis.FormData = require("form-data");
 }
+
+/**
+ * @internal
+ */
 export class IpfsUploader implements IStorageUpload {
   /**
    * Fetches a one-time-use upload token that can used to upload

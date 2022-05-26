@@ -7,13 +7,13 @@
 <b>Signature:</b>
 
 ```typescript
-update(metadata: Partial<z.input<TSchema["input"]>>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+update(metadata: Partial<z.input<TSchema["input"]>>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: import("@ethersproject/abstract-provider").TransactionReceipt;
         data: () => Promise<unknown>;
     }, "data"> : {
         receipt: import("@ethersproject/abstract-provider").TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
-    }>;
+    } : never : never>;
 ```
 
 ## Parameters
@@ -24,5 +24,5 @@ update(metadata: Partial<z.input<TSchema["input"]>>): Promise<(<A>() => A extend
 
 <b>Returns:</b>
 
-Promise&lt;(&lt;A&gt;() =&gt; A extends never ? 1 : 0 extends &lt;A\_1&gt;() =&gt; A\_1 extends z.output&lt;TSchema\["output"\]&gt; ? 1 : 0 ? 1 : 0) extends 1 ? Omit&lt;{ receipt: import("@ethersproject/abstract-provider").TransactionReceipt; data: () =&gt; Promise&lt;unknown&gt;; }, "data"&gt; : { receipt: import("@ethersproject/abstract-provider").TransactionReceipt; data: () =&gt; Promise&lt;z.output&lt;TSchema\["output"\]&gt;&gt;; }&gt;
+Promise&lt;((&lt;A&gt;() =&gt; A extends never ? 1 : 0) extends &lt;A\_1&gt;() =&gt; A\_1 extends z.output&lt;TSchema\["output"\]&gt; ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((&lt;A&gt;() =&gt; A extends never ? 1 : 0) extends &lt;A\_1&gt;() =&gt; A\_1 extends z.output&lt;TSchema\["output"\]&gt; ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit&lt;{ receipt: import("@ethersproject/abstract-provider").TransactionReceipt; data: () =&gt; Promise&lt;unknown&gt;; }, "data"&gt; : { receipt: import("@ethersproject/abstract-provider").TransactionReceipt; data: () =&gt; Promise&lt;z.output&lt;TSchema\["output"\]&gt;&gt;; } : never : never&gt;
 

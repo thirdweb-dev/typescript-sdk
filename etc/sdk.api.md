@@ -638,21 +638,21 @@ export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebCont
     // @internal (undocumented)
     parseOutputMetadata(metadata: any): z.output<TSchema["output"]>;
     // (undocumented)
-    set(metadata: z.input<TSchema["input"]>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+    set(metadata: z.input<TSchema["input"]>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
     }, "data"> : {
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
-    }>;
+    } : never : never>;
     // (undocumented)
-    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
     }, "data"> : {
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
-    }>;
+    } : never : never>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "IPlatformFee" needs to be exported by the entry point index.d.ts
@@ -1973,7 +1973,10 @@ export class IpfsStorage implements IStorage {
     }): Promise<string>;
     uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<string>;
+    }): Promise<{
+        baseUri: string;
+        uris: string[];
+    }>;
     uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<string>;
@@ -1997,9 +2000,10 @@ export interface IStorage {
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "uploadBatch" is marked as @public, but its signature references "UploadBatchResult" which is marked as @internal
     uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<string>;
+    }): Promise<UploadBatchResult>;
     uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<string>;
@@ -2079,7 +2083,7 @@ export class Marketplace implements UpdateableNetwork {
     // (undocumented)
     getAddress(): string;
     // @internal (undocumented)
-    getAll: (filter?: MarketplaceFilter | undefined) => Promise<(AuctionListing | DirectListing)[]>;
+    getAll: (filter?: MarketplaceFilter) => Promise<(AuctionListing | DirectListing)[]>;
     getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
     getBidBufferBps(): Promise<BigNumber>;
     getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
@@ -5055,11 +5059,6 @@ export type TransactionResultWithId<T = never> = TransactionResult<T> & {
     id: BigNumber;
 };
 
-// Warning: (ae-internal-missing-underscore) The name "TW_FILEBASE_SERVER_URL" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export const TW_FILEBASE_SERVER_URL = "http://localhost:3002";
-
 // Warning: (ae-internal-missing-underscore) The name "TW_IPFS_SERVER_URL" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -5073,6 +5072,16 @@ export enum UnderlyingType {
     ERC721 = 2,
     // (undocumented)
     None = 0
+}
+
+// Warning: (ae-internal-missing-underscore) The name "UploadBatchResult" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export interface UploadBatchResult {
+    // (undocumented)
+    baseUri: string;
+    // (undocumented)
+    uris: string[];
 }
 
 // Warning: (ae-internal-missing-underscore) The name "UploadError" should be prefixed with an underscore because the declaration is marked as @internal

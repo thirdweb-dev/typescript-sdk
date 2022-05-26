@@ -11,7 +11,7 @@ Uploads a folder to storage.
 ```typescript
 uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<string>;
+    }): Promise<UploadBatchResult>;
 ```
 
 ## Parameters
@@ -26,7 +26,7 @@ uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contract
 
 <b>Returns:</b>
 
-Promise&lt;string&gt;
+Promise&lt;UploadBatchResult&gt;
 
 - The CID of the uploaded folder.
 

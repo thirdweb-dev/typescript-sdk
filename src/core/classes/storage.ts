@@ -2,17 +2,8 @@ import { JsonObject } from "..";
 import { FileOrBuffer } from "../..";
 import { UploadProgressEvent } from "../../types/events";
 import { IStorage } from "../interfaces/IStorage";
+import { StorageUpload } from "../interfaces/IStorageUpload";
 
-interface StorageUpload {
-  /**
-   * Base URI of the directory that all files are uploaded to.
-   */
-  baseUri: string;
-  /**
-   * Individual URI for each file or metadata upload.
-   */
-  uris: string[];
-}
 export class Storage {
   private storage: IStorage;
 
@@ -39,7 +30,8 @@ export class Storage {
   }
 
   /**
-   * Upload any data to an IPFS directory.
+   * Upload any data to an IPFS directory. We'll handle all the details for you, including
+   * pinning your files and making sure that you get the fastest upload speeds.
    *
    * @example
    * ```javascript
@@ -50,6 +42,7 @@ export class Storage {
    *   fs.readFileSync("file3.png"),
    * ]
    * const uri = await sdk.storage.upload(files);
+   * // uri will look like something like: ipfs://<hash>/0
    * ```
    *
    * @param data - An array of file data or an array of JSON metadata to upload to IPFS
