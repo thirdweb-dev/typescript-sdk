@@ -16,6 +16,10 @@ export interface UploadMetadataBatchResult {
  */
 export interface IStorage {
   /**
+   * @internal
+   */
+  gatewayUrl: string;
+  /**
    * Fetches a one-time-use upload token that can used to upload
    * a file to storage.
    *
