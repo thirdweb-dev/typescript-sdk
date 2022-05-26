@@ -9,7 +9,7 @@ Standard ERC721 NFT functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721 = BaseERC721> implements UpdateableNetwork, DetectableFeature 
+export declare class Erc721<T extends SignatureDrop | DropERC721 | TokenERC721 | BaseERC721 = BaseERC721> implements UpdateableNetwork, DetectableFeature 
 ```
 <b>Implements:</b> UpdateableNetwork, DetectableFeature
 

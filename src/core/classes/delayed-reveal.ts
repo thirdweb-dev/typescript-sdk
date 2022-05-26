@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721 } from "contracts";
+import { DropERC721, SignatureDrop } from "contracts";
 import {
   CommonNFTInput,
   NFTMetadata,
@@ -16,7 +16,7 @@ import { UploadProgressEvent } from "../../types/events";
  * Handles delayed reveal logic
  * @public
  */
-export class DelayedReveal<T extends DropERC721> {
+export class DelayedReveal<T extends SignatureDrop | DropERC721> {
   private contractWrapper: ContractWrapper<T>;
   private storage: IStorage;
 
@@ -167,10 +167,12 @@ export class DelayedReveal<T extends DropERC721> {
 
     const countRangeArray = Array.from(Array(count.toNumber()).keys());
 
+    const contractType = ethers.utils.toUtf8String(await this.contractWrapper.readContract.contractType());
+
     // map over to get the base uri indices, which should be the end token id of every batch
     const uriIndices = await Promise.all(
       countRangeArray.map((i) =>
-        this.contractWrapper.readContract.baseURIIndices(i),
+          this.isSignatureDrop(this.contractWrapper.readContract, contractType) ? this.contractWrapper.readContract.getBatchIdAtIndex(i) : this.contractWrapper.readContract.baseURIIndices(i)
       ),
     );
 
@@ -228,5 +230,9 @@ export class DelayedReveal<T extends DropERC721> {
   private async getNftMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
     return fetchTokenMetadata(tokenId, tokenUri, this.storage);
+  }
+
+  private isSignatureDrop( _contract: SignatureDrop | DropERC721, contractType: string): _contract is SignatureDrop {
+    return contractType.includes("SignatureDrop");
   }
 }
