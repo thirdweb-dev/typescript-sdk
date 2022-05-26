@@ -10,8 +10,14 @@ import {
   GasCostEstimator,
   IStorage,
   NetworkOrSignerOrProvider,
+  TransactionResult,
 } from "../core";
-import { SDKOptions, TokenErc721ContractSchema } from "../schema";
+import {
+  NFTMetadata,
+  NFTMetadataOrUri,
+  SDKOptions,
+  TokenErc721ContractSchema,
+} from "../schema";
 import {
   Multiwrap as MultiwrapContract,
   MultiwrapContract,
@@ -20,6 +26,13 @@ import {
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { ITokenBundle } from "../../lib/Multiwrap";
 import TokenStruct = ITokenBundle.TokenStruct;
+import { Transaction } from "ethers";
+import { uploadOrExtractURI } from "../common/nft";
+import {
+  ERC1155Wrappable,
+  ERC20Wrappable,
+  ERC721Wrappable,
+} from "../types/multiwrap";
 
 /**
  * Multiwrap lets you wrap arbitrary ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token / NFT.
@@ -103,8 +116,28 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
   }
 
   public async wrap(
-    tokens: TokenStruct,
-    wrappedTokenUri: string
-    recipient:
-  )
+    contents: {
+      erc20tokens: ERC20Wrappable[];
+      erc721tokens: ERC721Wrappable[];
+      erc1155tokens: ERC1155Wrappable[];
+    },
+    wrappedTokenMetadata: NFTMetadataOrUri,
+    recipientAddress?: string,
+  ): Promise<TransactionResult> {
+    const uri = await uploadOrExtractURI(wrappedTokenMetadata, this.storage);
+
+    const recepient = recipientAddress
+      ? recipientAddress
+      : await this.contractWrapper.getSignerAddress();
+
+    const receipt = await this.contractWrapper.sendTransaction("wrap", [
+      tokens,
+      uri,
+      recepient,
+    ]);
+
+    return {
+      receipt,
+    };
+  }
 }
