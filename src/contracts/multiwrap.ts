@@ -2,8 +2,6 @@ import {
   ContractEncoder,
   ContractEvents,
   ContractMetadata,
-  ContractPlatformFee,
-  ContractPrimarySale,
   ContractRoles,
   ContractRoyalty,
   Erc721,
@@ -13,26 +11,21 @@ import {
   TransactionResult,
 } from "../core";
 import {
-  NFTMetadata,
   NFTMetadataOrUri,
   SDKOptions,
   TokenErc721ContractSchema,
 } from "../schema";
-import {
-  Multiwrap as MultiwrapContract,
-  MultiwrapContract,
-  SignatureDrop as SignatureDropContract,
-} from "contracts";
+import { Multiwrap as MultiwrapContract } from "contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { ITokenBundle } from "../../lib/Multiwrap";
-import TokenStruct = ITokenBundle.TokenStruct;
-import { Transaction } from "ethers";
 import { uploadOrExtractURI } from "../common/nft";
 import {
   ERC1155Wrappable,
   ERC20Wrappable,
   ERC721Wrappable,
 } from "../types/multiwrap";
+import { normalizePriceValue } from "../common/currency";
+import TokenStruct = ITokenBundle.TokenStruct;
 
 /**
  * Multiwrap lets you wrap arbitrary ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token / NFT.
@@ -117,9 +110,9 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
 
   public async wrap(
     contents: {
-      erc20tokens: ERC20Wrappable[];
-      erc721tokens: ERC721Wrappable[];
-      erc1155tokens: ERC1155Wrappable[];
+      erc20tokens?: ERC20Wrappable[];
+      erc721tokens?: ERC721Wrappable[];
+      erc1155tokens?: ERC1155Wrappable[];
     },
     wrappedTokenMetadata: NFTMetadataOrUri,
     recipientAddress?: string,
@@ -129,6 +122,51 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
     const recepient = recipientAddress
       ? recipientAddress
       : await this.contractWrapper.getSignerAddress();
+
+    // tokenStructs = []
+    // contents[1].each do token
+    // TransformtoTokenStruct(token)
+    //
+    const tokens: TokenStruct[] = [];
+
+    const provider = this.contractWrapper.getProvider();
+
+    if (contents.erc20tokens) {
+      for (const erc20 of contents.erc20tokens) {
+        tokens.push({
+          assetContract: erc20.contractAddress,
+          totalAmount: await normalizePriceValue(
+            provider,
+            erc20.tokenAmount,
+            erc20.contractAddress,
+          ),
+          tokenId: 0,
+          tokenType: 0,
+        });
+      }
+    }
+
+    if (contents.erc721tokens) {
+      for (const erc721 of contents.erc721tokens) {
+        tokens.push({
+          assetContract: erc721.contractAddress,
+          totalAmount: 0,
+          tokenId: erc721.tokenId,
+          tokenType: 1,
+        });
+      }
+    }
+
+    if (contents.erc1155tokens) {
+      for (const erc1155 of contents.erc1155tokens) {
+        tokens.push({
+          assetContract: erc1155.contractAddress,
+          totalAmount: erc1155.tokenAmount,
+          tokenId: erc1155.tokenId,
+          tokenType: 2,
+        });
+      }
+    }
 
     const receipt = await this.contractWrapper.sendTransaction("wrap", [
       tokens,
