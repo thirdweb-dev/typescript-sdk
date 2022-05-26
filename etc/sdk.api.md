@@ -577,6 +577,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     deployNFTCollection(metadata: NFTContractDeployMetadata): Promise<string>;
     deployNFTDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deployPack(metadata: NFTContractDeployMetadata): Promise<string>;
+    // @internal
     deploySignatureDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deploySplit(metadata: SplitContractDeployMetadata): Promise<string>;
     deployToken(metadata: TokenContractDeployMetadata): Promise<string>;
@@ -1985,6 +1986,8 @@ export interface IPackCreateArgs {
 // @public
 export class IpfsStorage implements IStorage {
     constructor(gatewayUrl?: string);
+    // @internal (undocumented)
+    gatewayUrl: string;
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
     getUploadToken(contractAddress: string): Promise<string>;
@@ -2004,6 +2007,8 @@ export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: Fe
 
 // @public (undocumented)
 export interface IStorage {
+    // @internal (undocumented)
+    gatewayUrl: string;
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
     getUploadToken(contractAddress: string): Promise<string>;
@@ -4097,7 +4102,9 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
     };
 }>;
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "SignatureDrop" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export class SignatureDrop extends Erc721<SignatureDrop_2> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<SignatureDrop_2>);
     // (undocumented)
@@ -4127,7 +4134,7 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     //
     // (undocumented)
     getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
-    // @internal (undocumented)
+    // (undocumented)
     interceptor: ContractInterceptor<SignatureDrop_2>;
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
@@ -4140,7 +4147,7 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     // (undocumented)
     roles: ContractRoles<SignatureDrop_2, typeof SignatureDrop.contractRoles[number]>;
     royalty: ContractRoyalty<SignatureDrop_2, typeof SignatureDrop.schema>;
-    // @internal (undocumented)
+    // (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -4847,6 +4854,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     //
     // @internal (undocumented)
     getPublisher(): Promise<ContractPublisher>;
+    // @internal
     getSignatureDrop(contractAddress: string): SignatureDrop;
     getSplit(address: string): Split;
     getToken(address: string): Token;

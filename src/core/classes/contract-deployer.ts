@@ -84,6 +84,7 @@ export class ContractDeployer extends RPCConnectionHandler {
    * Deploys a new SignatureDrop contract
    * @param metadata - the contract metadata
    * @returns the address of the deployed contract
+   * @internal
    */
   public async deploySignatureDrop(
     metadata: NFTContractDeployMetadata,

@@ -82,7 +82,7 @@ export const Signature1155PayloadOutput = Signature721PayloadOutput.extend({
 /**
  * @internal
  */
- export const Signature721WithQuantityInput = Signature721PayloadInput.extend({
+export const Signature721WithQuantityInput = Signature721PayloadInput.extend({
   metadata: NFTInputOrUriSchema.default(""),
   quantity: BigNumberishSchema,
 });
@@ -145,8 +145,8 @@ export type FilledSignaturePayload1155 = z.output<
 /**
  * @public
  */
- export type FilledSignature721WithQuantity = z.output<
- typeof Signature721WithQuantityInput
+export type FilledSignature721WithQuantity = z.output<
+  typeof Signature721WithQuantityInput
 >;
 /**
  * @public
@@ -155,7 +155,9 @@ export type PayloadWithUri1155 = z.output<typeof Signature1155PayloadOutput>;
 /**
  * @public
  */
-export type PayloadWithUri721withQuantity = z.output<typeof Signature721WithQuantityOutput>;
+export type PayloadWithUri721withQuantity = z.output<
+  typeof Signature721WithQuantityOutput
+>;
 /**
  * @public
  */
@@ -163,7 +165,9 @@ export type PayloadToSign1155 = z.input<typeof Signature1155PayloadInput>;
 /**
  * @public
  */
-export type PayloadToSign721withQuantity = z.input<typeof Signature721WithQuantityInput>;
+export type PayloadToSign721withQuantity = z.input<
+  typeof Signature721WithQuantityInput
+>;
 /**
  * @public
  */
