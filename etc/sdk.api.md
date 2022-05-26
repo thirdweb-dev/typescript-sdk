@@ -1630,15 +1630,11 @@ export class Erc20BatchMintable implements DetectableFeature {
 }
 
 // @public
-export class Erc20Mintable implements DetectableFeature, UpdateableNetwork {
+export class Erc20Mintable implements DetectableFeature {
     constructor(erc20: Erc20, contractWrapper: ContractWrapper<IMintableERC20>);
     batch: Erc20BatchMintable | undefined;
     // (undocumented)
     featureName: "ERC20Mintable";
-    // (undocumented)
-    getAddress(): string;
-    // @internal (undocumented)
-    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     to(to: string, amount: Amount): Promise<TransactionResult>;
 }
 
