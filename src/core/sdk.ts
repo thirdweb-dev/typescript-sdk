@@ -170,8 +170,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public getSignatureDrop(contractAddress: string): SignatureDrop {
     return this.getBuiltInContract(
-        contractAddress,
-        SignatureDrop.contractType,
+      contractAddress,
+      SignatureDrop.contractType,
     ) as SignatureDrop;
   }
 
