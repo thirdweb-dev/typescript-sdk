@@ -16,12 +16,9 @@ import {
 import ERC721MetadataAbi from "../../abis/IERC721Metadata.json";
 import ERC1155MetadataAbi from "../../abis/IERC1155Metadata.json";
 import ERC165MetadataAbi from "../../abis/IERC165.json";
-import { replaceHashWithGatewayUrl } from "../core/helpers/storage";
 
 const FALLBACK_METADATA = {
   name: "Failed to load NFT metadata",
-  description: "This token exists on-chain but the metadata is not accessible.",
-  image: "ipfs://QmfCbqqDLJqH1YncGP4Ci4Mm6s4Pf1qwTBWYSTGvM6PBeL/0.png",
 };
 
 /**
@@ -52,11 +49,7 @@ export async function fetchTokenMetadata(
       })} -- falling back to default metadata`,
       err,
     );
-    jsonMetadata = replaceHashWithGatewayUrl(
-      FALLBACK_METADATA,
-      "ipfs://",
-      storage.gatewayUrl,
-    );
+    jsonMetadata = FALLBACK_METADATA;
   }
 
   return CommonNFTOutput.parse({

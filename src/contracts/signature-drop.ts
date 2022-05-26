@@ -63,7 +63,7 @@ import { Erc721WithQuantitySignatureMinting } from "../core/classes/erc-721-with
  * const contract = sdk.getSignatureDrop("{{contract_address}}");
  * ```
  *
- * @public
+ * @internal
  */
 export class SignatureDrop extends Erc721<SignatureDropContract> {
   static contractType = "signature-drop" as const;
