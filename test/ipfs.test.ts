@@ -33,6 +33,44 @@ describe("IPFS Uploads", async () => {
     return response;
   }
 
+  describe("SDK storage interface", async () => {
+    it("Should single upload and fetch", async () => {
+      const {
+        uris: [uri],
+      } = await sdk.storage.upload({
+        name: "Test Name",
+        description: "Test Description",
+      });
+
+      const data = await sdk.storage.fetch(uri);
+
+      expect(data.name).to.equal("Test Name");
+      expect(data.description).to.equal("Test Description");
+    });
+
+    it("Should batch upload and fetch", async () => {
+      const { uris } = await sdk.storage.upload([
+        {
+          name: "Test Name 1",
+          description: "Test Description 1",
+        },
+        {
+          name: "Test Name 2",
+          description: "Test Description 2",
+        },
+      ]);
+
+      const data1 = await sdk.storage.fetch(uris[0]);
+      const data2 = await sdk.storage.fetch(uris[1]);
+
+      expect(data1.name).to.equal("Test Name 1");
+      expect(data1.description).to.equal("Test Description 1");
+
+      expect(data2.name).to.equal("Test Name 2");
+      expect(data2.description).to.equal("Test Description 2");
+    });
+  });
+
   describe("Custom contract metadata", async () => {
     it("Should extract constructor params", async () => {
       const params = await extractConstructorParams(
