@@ -16,3 +16,9 @@ export type ERC1155Wrappable = {
   tokenAmount: Amount;
   tokenId: BigNumberish;
 };
+
+export type TokensToWrap = {
+  erc20Tokens?: ERC20Wrappable[];
+  erc721Tokens?: ERC721Wrappable[];
+  erc1155Tokens?: ERC1155Wrappable[];
+};

@@ -2264,7 +2264,9 @@ export class MissingRoleError extends Error {
     constructor(address: string, role: string);
 }
 
-// @public
+// Warning: (ae-internal-missing-underscore) The name "Multiwrap" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
 export class Multiwrap extends Erc721<Multiwrap_2> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Multiwrap_2>);
     // (undocumented)
@@ -2280,11 +2282,13 @@ export class Multiwrap extends Erc721<Multiwrap_2> {
     // (undocumented)
     events: ContractEvents<Multiwrap_2>;
     // (undocumented)
+    getWrappedContents(wrappedTokenId: BigNumberish): Promise<TokensToWrap>;
+    // (undocumented)
     metadata: ContractMetadata<Multiwrap_2, typeof Multiwrap.schema>;
     // (undocumented)
     roles: ContractRoles<Multiwrap_2, typeof Multiwrap.contractRoles[number]>;
     royalty: ContractRoyalty<Multiwrap_2, typeof Multiwrap.schema>;
-    // @internal (undocumented)
+    // (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -2377,11 +2381,11 @@ export class Multiwrap extends Erc721<Multiwrap_2> {
         }>;
     };
     // (undocumented)
-    wrap(contents: {
-        erc20tokens?: ERC20Wrappable[];
-        erc721tokens?: ERC721Wrappable[];
-        erc1155tokens?: ERC1155Wrappable[];
-    }, wrappedTokenMetadata: NFTMetadataOrUri, recipientAddress?: string): Promise<TransactionResult>;
+    unwrap(wrappedTokenId: BigNumberish, recipientAddress?: string): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "TokensToWrap" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    wrap(contents: TokensToWrap, wrappedTokenMetadata: NFTMetadataOrUri, recipientAddress?: string): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 }
 
 // @public
@@ -4817,6 +4821,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getEdition(address: string): Edition;
     getEditionDrop(address: string): EditionDrop;
     getMarketplace(address: string): Marketplace;
+    // Warning: (ae-incompatible-release-tags) The symbol "getMultiwrap" is marked as @public, but its signature references "Multiwrap" which is marked as @internal
     getMultiwrap(address: string): Multiwrap;
     getNFTCollection(address: string): NFTCollection;
     getNFTDrop(contractAddress: string): NFTDrop;
@@ -5422,12 +5427,6 @@ export enum VoteType {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
-
-// Warnings were encountered during analysis:
-//
-// dist/src/contracts/multiwrap.d.ts:150:9 - (ae-forgotten-export) The symbol "ERC20Wrappable" needs to be exported by the entry point index.d.ts
-// dist/src/contracts/multiwrap.d.ts:151:9 - (ae-forgotten-export) The symbol "ERC721Wrappable" needs to be exported by the entry point index.d.ts
-// dist/src/contracts/multiwrap.d.ts:152:9 - (ae-forgotten-export) The symbol "ERC1155Wrappable" needs to be exported by the entry point index.d.ts
 
 // (No @packageDocumentation comment for this package)
 

@@ -2,7 +2,6 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { sdk, signers } from "./before-setup";
 import { Edition, Multiwrap, NFTCollection, Token } from "../src/contracts";
 import { expect } from "chai";
-import { BigNumber } from "ethers";
 
 describe("Multiwrap Contract", async () => {
   let multiwrapContract: Multiwrap;
@@ -240,7 +239,7 @@ describe("Multiwrap Contract", async () => {
   });
 
   it("get wrapped contents", async () => {
-    await multiwrapContract.wrap(
+    const tx = await multiwrapContract.wrap(
       {
         erc20tokens: [
           {
@@ -270,11 +269,58 @@ describe("Multiwrap Contract", async () => {
         name: "Wrapped token",
       },
     );
-    const wrappedTokens = await multiwrapContract.getWrappedContents();
+    const wrappedMeta = await tx.data();
+    expect(wrappedMeta.metadata.name).to.equal("Wrapped token");
+    const wrappedTokens = await multiwrapContract.getWrappedContents(tx.id);
     expect(wrappedTokens.erc20Tokens.length).to.eq(2);
     expect(wrappedTokens.erc20Tokens[0].contractAddress).to.eq(
       tokenContract.getAddress(),
     );
     expect(wrappedTokens.erc1155Tokens[0].tokenAmount).to.eq("10");
+  });
+
+  it("unwrapped contents", async () => {
+    const tx = await multiwrapContract.wrap(
+      {
+        erc20tokens: [
+          {
+            contractAddress: tokenContract.getAddress(),
+            tokenAmount: 100.5,
+          },
+        ],
+        erc721tokens: [
+          {
+            contractAddress: nftContract.getAddress(),
+            tokenId: "0",
+          },
+        ],
+        erc1155tokens: [
+          {
+            contractAddress: editionContract.getAddress(),
+            tokenId: "0",
+            tokenAmount: 10,
+          },
+        ],
+      },
+      {
+        name: "Wrapped token",
+      },
+    );
+    const balanceT = await tokenContract.balanceOf(adminWallet.address);
+    expect(balanceT.displayValue).to.equal("899.5");
+    const balanceN = await nftContract.balanceOf(adminWallet.address);
+    expect(balanceN.toNumber()).to.eq(3);
+    const balanceE = await editionContract.balanceOf(adminWallet.address, 0);
+    expect(balanceE.toNumber()).to.eq(90);
+
+    const wrappedTokenId = tx.id;
+    await multiwrapContract.unwrap(wrappedTokenId);
+
+    const balanceT2 = await tokenContract.balanceOf(adminWallet.address);
+    expect(balanceT2.displayValue).to.equal("1000.0");
+    const balanceN2 = await nftContract.balanceOf(adminWallet.address);
+    expect(balanceN2.toNumber()).to.eq(4);
+    const balanceE2 = await editionContract.balanceOf(adminWallet.address, 0);
+    expect(balanceE2.toNumber()).to.eq(100);
   });
 });

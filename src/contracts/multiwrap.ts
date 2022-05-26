@@ -2,6 +2,7 @@ import {
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
+  TransactionResultWithId,
 } from "../core";
 import { Erc721 } from "../core/classes/erc-721";
 import { ContractMetadata } from "../core/classes/contract-metadata";
@@ -10,7 +11,7 @@ import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { NFTMetadataOrUri, SDKOptions } from "../schema";
+import { NFTMetadataOrUri, NFTMetadataOwner, SDKOptions } from "../schema";
 import { Multiwrap as MultiwrapContract } from "contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { uploadOrExtractURI } from "../common/nft";
@@ -18,11 +19,12 @@ import {
   ERC1155Wrappable,
   ERC20Wrappable,
   ERC721Wrappable,
+  TokensToWrap,
 } from "../types/multiwrap";
 import { normalizePriceValue } from "../common/currency";
-import { ITokenBundle } from "contracts/Multiwrap";
+import { ITokenBundle, TokensWrappedEvent } from "contracts/Multiwrap";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 import TokenStruct = ITokenBundle.TokenStruct;
 
 /**
@@ -37,7 +39,7 @@ import TokenStruct = ITokenBundle.TokenStruct;
  * const contract = sdk.getMultiwrap("{{contract_address}}");
  * ```
  *
- * @public
+ * @internal
  */
 export class Multiwrap extends Erc721<MultiwrapContract> {
   static contractType = "multiwrap" as const;
@@ -107,17 +109,13 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
   }
 
   public async wrap(
-    contents: {
-      erc20tokens?: ERC20Wrappable[];
-      erc721tokens?: ERC721Wrappable[];
-      erc1155tokens?: ERC1155Wrappable[];
-    },
+    contents: TokensToWrap,
     wrappedTokenMetadata: NFTMetadataOrUri,
     recipientAddress?: string,
-  ): Promise<TransactionResult> {
+  ): Promise<TransactionResultWithId<NFTMetadataOwner>> {
     const uri = await uploadOrExtractURI(wrappedTokenMetadata, this.storage);
 
-    const recepient = recipientAddress
+    const recipient = recipientAddress
       ? recipientAddress
       : await this.contractWrapper.getSignerAddress();
 
@@ -125,8 +123,8 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
 
     const provider = this.contractWrapper.getProvider();
 
-    if (contents.erc20tokens) {
-      for (const erc20 of contents.erc20tokens) {
+    if (contents.erc20Tokens) {
+      for (const erc20 of contents.erc20Tokens) {
         tokens.push({
           assetContract: erc20.contractAddress,
           totalAmount: await normalizePriceValue(
@@ -140,8 +138,8 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
       }
     }
 
-    if (contents.erc721tokens) {
-      for (const erc721 of contents.erc721tokens) {
+    if (contents.erc721Tokens) {
+      for (const erc721 of contents.erc721Tokens) {
         tokens.push({
           assetContract: erc721.contractAddress,
           totalAmount: 0,
@@ -151,8 +149,8 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
       }
     }
 
-    if (contents.erc1155tokens) {
-      for (const erc1155 of contents.erc1155tokens) {
+    if (contents.erc1155Tokens) {
+      for (const erc1155 of contents.erc1155Tokens) {
         tokens.push({
           assetContract: erc1155.contractAddress,
           totalAmount: erc1155.tokenAmount,
@@ -165,21 +163,31 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
     const receipt = await this.contractWrapper.sendTransaction("wrap", [
       tokens,
       uri,
-      recepient,
+      recipient,
     ]);
 
+    const event = this.contractWrapper.parseLogs<TokensWrappedEvent>(
+      "TokensWrapped",
+      receipt?.logs,
+    );
+    if (event.length === 0) {
+      throw new Error("TokenMinted event not found");
+    }
+    const tokenId = event[0].args.tokenIdOfWrappedToken;
     return {
+      id: tokenId,
       receipt,
+      data: () => this.get(tokenId),
     };
   }
 
-  public async getWrappedContents(wrappedTokenId: BigNumberish = 0) {
+  public async getWrappedContents(
+    wrappedTokenId: BigNumberish,
+  ): Promise<TokensToWrap> {
     const wrappedTokens =
       await this.contractWrapper.readContract.getWrappedContents(
         wrappedTokenId,
       );
-
-    // console.log(wrappedTokens[0].totalAmount);
 
     const erc20Tokens: ERC20Wrappable[] = [];
     const erc721Tokens: ERC721Wrappable[] = [];
@@ -211,7 +219,6 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
         }
       }
     }
-
     return {
       erc20Tokens,
       erc721Tokens,
@@ -219,5 +226,19 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
     };
   }
 
-  // public async unwrap(wrappedTokenId: BigNumber): Promise<TransactionResult> {}
+  public async unwrap(
+    wrappedTokenId: BigNumberish,
+    recipientAddress?: string,
+  ): Promise<TransactionResult> {
+    const recipient = recipientAddress
+      ? recipientAddress
+      : await this.contractWrapper.getSignerAddress();
+    const receipt = await this.contractWrapper.sendTransaction("unwrap", [
+      wrappedTokenId,
+      recipient,
+    ]);
+    return {
+      receipt,
+    };
+  }
 }
