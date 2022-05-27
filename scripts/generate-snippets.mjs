@@ -46,12 +46,15 @@ function languageNameToKey(languageName) {
   }
 }
 
+const additionalClassesToParse = ["ContractDeployer"];
+
 const modules = json.members[0].members.filter(
   (m) =>
-    m.kind === "Class" &&
-    m.members
-      .filter((cMember) => cMember.kind === "Property")
-      .findIndex((property) => property.name === "contractType") > -1,
+    (m.kind === "Class" &&
+      m.members
+        .filter((cMember) => cMember.kind === "Property")
+        .findIndex((property) => property.name === "contractType") > -1) ||
+    additionalClassesToParse.includes(m.name),
 );
 
 const bases = ["Erc20", "Erc721", "Erc1155"];
@@ -132,21 +135,17 @@ const moduleMap = modules.reduce((acc, m) => {
   const baseClassMembers = baseClassCode
     ? parseMembers(baseClassCode.members, "Method", baseClassCode.name)
     : [];
-  if (Object.keys(examples).length > 0) {
-    acc[m.name] = {
-      name: m.name,
-      summary: Formatter.renderDocNode(docComment.summarySection),
-      remarks: docComment.remarksBlock
-        ? Formatter.renderDocNode(docComment.remarksBlock.content)
-        : null,
-      examples,
-      methods: parseMembers(m.members, "Method", m.name).concat(
-        baseClassMembers,
-      ),
-      properties: parseMembers(m.members, "Property", m.name),
-      reference: extractReferenceLink(m),
-    };
-  }
+  acc[m.name] = {
+    name: m.name,
+    summary: Formatter.renderDocNode(docComment.summarySection),
+    remarks: docComment.remarksBlock
+      ? Formatter.renderDocNode(docComment.remarksBlock.content)
+      : null,
+    examples,
+    methods: parseMembers(m.members, "Method", m.name).concat(baseClassMembers),
+    properties: parseMembers(m.members, "Property", m.name),
+    reference: extractReferenceLink(m),
+  };
 
   return acc;
 }, {});

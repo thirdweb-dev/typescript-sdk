@@ -8,4 +8,8 @@ export * from "./packs";
 export * from "./SplitRecipient";
 export * from "./QueryParams";
 export * from "./deploy";
+<<<<<<< HEAD
 export * from "./events";
+=======
+export * from "./multiwrap";
+>>>>>>> main

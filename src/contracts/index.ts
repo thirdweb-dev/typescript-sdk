@@ -11,3 +11,4 @@ export * from "./nft-drop";
 export * from "./signature-drop";
 export * from "./maps";
 export * from "./smart-contract";
+export * from "./multiwrap";

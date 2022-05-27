@@ -1,4 +1,113 @@
 {
+  "ContractDeployer": {
+    "name": "ContractDeployer",
+    "summary": "Handles deploying new contracts\n\n\n",
+    "remarks": null,
+    "examples": {},
+    "methods": [
+      {
+        "name": "deployEdition",
+        "summary": "Deploys a new Edition contract\n\n",
+        "remarks": "\n\nDeploys an Edition contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployEdition({\n  name: \"My Edition\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployEdition"
+      },
+      {
+        "name": "deployEditionDrop",
+        "summary": "Deploys a new EditionDrop contract\n\n",
+        "remarks": "\n\nDeploys an Edition Drop contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployEditionDrop({\n  name: \"My Edition Drop\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployEditionDrop"
+      },
+      {
+        "name": "deployMarketplace",
+        "summary": "Deploys a new Marketplace contract\n\n",
+        "remarks": "\n\nDeploys a Marketplace contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployMarketplace({\n  name: \"My Marketplace\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployMarketplace"
+      },
+      {
+        "name": "deployMultiwrap",
+        "summary": "Deploys a new Multiwrap contract\n\n",
+        "remarks": "\n\nDeploys a Multiwrap contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployMultiwrap({\n  name: \"My Multiwrap\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployMultiwrap"
+      },
+      {
+        "name": "deployNFTCollection",
+        "summary": "Deploys an NFT Collection contract\n\n",
+        "remarks": "\n\nDeploys an NFT Collection contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployNFTCollection({\n  name: \"My Collection\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployNFTCollection"
+      },
+      {
+        "name": "deployNFTDrop",
+        "summary": "Deploys a new NFTDrop contract\n\n",
+        "remarks": "\n\nDeploys an NFT Drop contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployNFTDrop({\n  name: \"My Drop\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployNFTDrop"
+      },
+      {
+        "name": "deployPack",
+        "summary": "Deploys a new Pack contract\n\n",
+        "remarks": "\n\nDeploys a Pack contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployPack({\n  name: \"My Pack\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployPack"
+      },
+      {
+        "name": "deploySplit",
+        "summary": "Deploys a new Split contract\n\n",
+        "remarks": "\n\nDeploys a Split contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deploySplit({\n  name: \"My Split\",\n  primary_sale_recipient: \"your-address\",\n  recipients: [\n   {\n     address: \"your-address\",\n     sharesBps: 80 * 100, // 80%\n   },\n   {\n     address: \"another-address\",\n     sharesBps: 20 * 100, // 20%\n   },\n  ],\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deploySplit"
+      },
+      {
+        "name": "deployToken",
+        "summary": "Deploys a new Token contract\n\n",
+        "remarks": "\n\nDeploys a Token contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployToken({\n  name: \"My Token\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployToken"
+      },
+      {
+        "name": "deployTokenDrop",
+        "summary": "Deploys a new Token Drop contract\n\n",
+        "remarks": "\n\nDeploys a Token Drop contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployTokenDrop({\n  name: \"My Token Drop\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployTokenDrop"
+      },
+      {
+        "name": "deployVote",
+        "summary": "Deploys a new Vote contract\n\n",
+        "remarks": "\n\nDeploys an Vote contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployVote({\n  name: \"My Vote\",\n  primary_sale_recipient: \"your-address\",\n  voting_token_address: \"your-token-contract-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployVote"
+      }
+    ],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer"
+  },
   "Edition": {
     "name": "Edition",
     "summary": "Create a collection of NFTs that lets you mint multiple copies of each NFT.\n\n",
@@ -298,6 +407,91 @@
       }
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace"
+  },
+  "Multiwrap": {
+    "name": "Multiwrap",
+    "summary": "Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getMultiwrap(\"{{contract_address}}\");"
+    },
+    "methods": [
+      {
+        "name": "getAll",
+        "summary": "Get All Wrapped Token Bundles\n\n",
+        "remarks": "\n\nGet all the data associated with every token bundle in this contract.\n\nBy default, returns the first 100 NFTs, use queryParams to fetch more.\n\n",
+        "examples": {
+          "javascript": "const wrappedBundles = await contract.getAll();\nconsole.log(wrappedBundles);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Multiwrap.getAll"
+      },
+      {
+        "name": "getWrappedContents",
+        "summary": "Get the contents of a wrapped token bundle\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const contents = await contract.getContents(wrappedTokenId);\nconsole.log(contents.erc20Tokens);\nconsole.log(contents.erc721Tokens);\nconsole.log(contents.erc1155Tokens);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Multiwrap.getWrappedContents"
+      },
+      {
+        "name": "unwrap",
+        "summary": "Unwrap a wrapped token bundle, and retrieve its contents\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "await contract.unwrap(wrappedTokenId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Multiwrap.unwrap"
+      },
+      {
+        "name": "wrap",
+        "summary": "Wrap any number of ERC20/ERC721/ERC1155 tokens into a single wrapped token\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const tx = await contract.wrap({\n  erc20Tokens: [{\n    contractAddress: \"0x...\",\n    quantity: \"0.8\"\n  }],\n  erc721Tokens: [{\n    contractAddress: \"0x...\",\n    tokenId: \"0\"\n  }],\n  erc1155Tokens: [{\n    contractAddress: \"0x...\",\n    tokenId: \"1\",\n    quantity: \"2\"\n  }]\n}, {\n    name: \"Wrapped bundle\",\n    description: \"This is a wrapped bundle of tokens and NFTs\",\n    image: \"ipfs://...\",\n});\nconst receipt = tx.receipt(); // the transaction receipt\nconst wrappedTokenId = tx.id; // the id of the wrapped token bundle"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Multiwrap.wrap"
+      },
+      {
+        "name": "balanceOf",
+        "summary": "Get NFT Balance\n\n",
+        "remarks": "\n\nGet a wallets NFT balance (number of NFTs in this contract owned by the wallet).\n\n",
+        "examples": {
+          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst balance = await contract.nft.balanceOf(walletAddress);\nconsole.log(balance);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.balanceOf"
+      },
+      {
+        "name": "get",
+        "summary": "Get a single NFT Metadata\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const tokenId = 0;\nconst nft = await contract.nft.get(tokenId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.get"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer a single NFT\n\n",
+        "remarks": "\n\nTransfer an NFT from the connected wallet to another wallet.\n\n",
+        "examples": {
+          "javascript": "const walletAddress = \"{{wallet_address}}\";\nconst tokenId = 0;\nawait contract.nft.transfer(walletAddress, tokenId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Erc721.transfer"
+      }
+    ],
+    "properties": [
+      {
+        "name": "royalty",
+        "summary": "Configure royalties\n\n",
+        "remarks": "\n\nSet your own royalties for the entire contract or per token\n\n",
+        "examples": {
+          "javascript": "// royalties on the whole contract\ncontract.royalty.setDefaultRoyaltyInfo({\n  seller_fee_basis_points: 100, // 1%\n  fee_recipient: \"0x...\"\n});\n// override royalty for a particular token\ncontract.royalty.setTokenRoyaltyInfo(tokenId, {\n  seller_fee_basis_points: 500, // 5%\n  fee_recipient: \"0x...\"\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.contractroyalty"
+      }
+    ],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.Multiwrap"
   },
   "NFTCollection": {
     "name": "NFTCollection",
