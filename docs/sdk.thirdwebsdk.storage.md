@@ -9,5 +9,5 @@ Upload and download files from IPFS or from your own storage service
 <b>Signature:</b>
 
 ```typescript
-storage: Storage;
+storage: StorageHandler;
 ```

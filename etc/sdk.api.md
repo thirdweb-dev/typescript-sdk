@@ -4695,14 +4695,13 @@ export interface SplitRecipientInput {
 }
 
 // @public
-class Storage_2 {
+export class StorageHandler {
     constructor(storage: IStorage);
     fetch(hash: string): Promise<Record<string, any>>;
     upload(data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject, options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<UploadResult>;
 }
-export { Storage_2 as Storage }
 
 // @public (undocumented)
 export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet;
@@ -4752,7 +4751,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getVote(address: string): Vote;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
-    storage: Storage_2;
+    storage: StorageHandler;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
     wallet: UserWallet;
 }

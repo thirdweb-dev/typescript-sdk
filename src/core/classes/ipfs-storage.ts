@@ -7,7 +7,7 @@ import {
   replaceHashWithGatewayUrl,
   resolveGatewayUrl,
 } from "../helpers/storage";
-import { IpfsUploader } from "../storage/ipfs-uploader";
+import { IpfsUploader } from "../uploaders/ipfs-uploader";
 import { UploadProgressEvent } from "../../types/events";
 
 /**
