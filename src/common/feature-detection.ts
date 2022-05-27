@@ -109,6 +109,7 @@ export function extractFunctionsFromAbi(
       outputs: f.outputs ?? [],
       name: f.name ?? "unknown",
       signature,
+      stateMutability: f.stateMutability ?? "",
     });
   }
   return parsed;

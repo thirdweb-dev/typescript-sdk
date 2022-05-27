@@ -1770,6 +1770,7 @@ export enum EventType {
 // @internal (undocumented)
 export function extractConstructorParams(metadataUri: string, storage: IStorage): Promise<{
     [x: string]: any;
+    stateMutability?: string | undefined;
     name: string;
     type: string;
 }[]>;
@@ -1779,6 +1780,7 @@ export function extractConstructorParams(metadataUri: string, storage: IStorage)
 // @internal (undocumented)
 export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>): {
     [x: string]: any;
+    stateMutability?: string | undefined;
     name: string;
     type: string;
 }[];
@@ -4302,6 +4304,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
     // @internal (undocumented)
     analytics: ContractAnalytics<TContract>;
+    call(functionName: string, args?: any[]): Promise<any>;
     // (undocumented)
     static contractType: "custom";
     edition: Erc1155 | undefined;
@@ -4309,7 +4312,6 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     estimator: GasCostEstimator<TContract>;
     // (undocumented)
     events: ContractEvents<TContract>;
-    readonly functions: any;
     // (undocumented)
     getAddress(): string;
     // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @beta, but its signature references "ContractInterceptor" which is marked as @internal

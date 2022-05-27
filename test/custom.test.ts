@@ -76,9 +76,14 @@ describe("Custom Contracts", async () => {
   it("should call raw ABI functions and read deployer address", async () => {
     const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
-    expect(await c.functions.decimals()).to.eq(18);
-    const owner = await c.functions.owner();
+    expect(await c.call("decimals")).to.eq(18);
+    const owner = await c.call("owner");
     expect(owner).to.eq(adminWallet.address);
+
+    const tx = await c.call("setOwner", samWallet.address);
+    expect(tx.receipt).to.not.eq(undefined);
+    const owner2 = await c.call("owner");
+    expect(owner2).to.eq(samWallet.address);
   });
 
   it("should fetch published metadata", async () => {
@@ -91,7 +96,7 @@ describe("Custom Contracts", async () => {
   it("should extract functions", async () => {
     const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
-    const functions = await c.publishedMetadata.extractFunctions();
+    const functions = c.publishedMetadata.extractFunctions();
     expect(functions.length).gt(0);
   });
 
