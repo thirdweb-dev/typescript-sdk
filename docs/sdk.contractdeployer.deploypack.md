@@ -24,3 +24,17 @@ Promise&lt;string&gt;
 
 the address of the deployed contract
 
+## Remarks
+
+Deploys a Pack contract and returns the address of the deployed contract
+
+## Example
+
+
+```javascript
+const contractAddress = await sdk.deployer.deployPack({
+  name: "My Pack",
+  primary_sale_recipient: "your-address",
+});
+```
+

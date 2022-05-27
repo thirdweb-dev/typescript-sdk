@@ -24,3 +24,27 @@ Promise&lt;string&gt;
 
 the address of the deployed contract
 
+## Remarks
+
+Deploys a Split contract and returns the address of the deployed contract
+
+## Example
+
+
+```javascript
+const contractAddress = await sdk.deployer.deploySplit({
+  name: "My Split",
+  primary_sale_recipient: "your-address",
+  recipients: [
+   {
+     address: "your-address",
+     sharesBps: 80 * 100, // 80%
+   },
+   {
+     address: "another-address",
+     sharesBps: 20 * 100, // 20%
+   },
+  ],
+});
+```
+
