@@ -1,4 +1,17 @@
 {
+  "ContractMetadata": {
+    "name": "ContractMetadata",
+    "summary": "Handles metadata for a Contract\n\n",
+    "remarks": "\n\nRead and update metadata for this contract\n\n",
+    "examples": {
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nconst metadata = await contract.metadata.get();\nawait contract.metadata.set({\n  name: \"My Contract\",\n  description: \"My contract description\"\n})"
+    },
+    "methods": [],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.ContractMetadata"
+    }
+  },
   "PlatformFee": {
     "name": "ContractPlatformFee",
     "summary": "Handle platform fees and recipients\n\n",

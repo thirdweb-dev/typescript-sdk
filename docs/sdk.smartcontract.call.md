@@ -12,7 +12,7 @@ Call any function on this contract
 <b>Signature:</b>
 
 ```typescript
-call(functionName: string, args?: any[]): Promise<any>;
+call(functionName: string, ...args: any[]): Promise<any>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ call(functionName: string, args?: any[]): Promise<any>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  functionName | string | the name of the function to call |
-|  args | any\[\] | <i>(Optional)</i> the arguments of the function |
+|  args | any\[\] | the arguments of the function |
 
 <b>Returns:</b>
 
