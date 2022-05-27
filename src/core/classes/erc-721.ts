@@ -199,6 +199,25 @@ export class Erc721<
     };
   }
 
+  /**
+   * Approve an operator for the NFT owner. Operators can call transferFrom or safeTransferFrom for the specified token.
+   * @param operator - the operator's address
+   * @param tokenId - the tokenId to give approval for
+   *
+   * @internal
+   */
+  public async setApprovalForToken(
+    operator: string,
+    tokenId: BigNumberish,
+  ): Promise<TransactionResult> {
+    return {
+      receipt: await this.contractWrapper.sendTransaction("approve", [
+        operator,
+        tokenId,
+      ]),
+    };
+  }
+
   /** ******************************
    * PRIVATE FUNCTIONS
    *******************************/
