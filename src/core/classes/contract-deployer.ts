@@ -263,7 +263,11 @@ export class ContractDeployer extends RPCConnectionHandler {
    *   recipients: [
    *    {
    *      address: "your-address",
-   *      sharesBps: 100 * 100, // 100%
+   *      sharesBps: 80 * 100, // 80%
+   *    },
+   *    {
+   *      address: "another-address",
+   *      sharesBps: 20 * 100, // 20%
    *    },
    *   ],
    * });
