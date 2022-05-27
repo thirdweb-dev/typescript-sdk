@@ -1,13 +1,15 @@
-import { readFileSync } from "fs";
-import { ipfsGatewayUrl } from "./before-setup";
+import { readFile, readFileSync } from "fs";
+import { ipfsGatewayUrl, sdk } from "./before-setup";
 
 import { assert, expect } from "chai";
 import { BufferOrStringWithName } from "../src/types/BufferOrStringWithName";
 import {
   DuplicateFileNameError,
+  EventType,
   FileOrBuffer,
   IpfsStorage,
   NFTMetadataInput,
+  UploadProgressEvent,
 } from "../src";
 import {
   extractConstructorParams,
@@ -16,7 +18,7 @@ import {
 
 global.fetch = require("cross-fetch");
 
-describe.skip("IPFS Uploads", async () => {
+describe("IPFS Uploads", async () => {
   const storage: IpfsStorage = new IpfsStorage(ipfsGatewayUrl);
 
   async function getFile(upload: string): Promise<Response> {
@@ -31,6 +33,44 @@ describe.skip("IPFS Uploads", async () => {
       });
     return response;
   }
+
+  describe("SDK storage interface", async () => {
+    it("Should single upload and fetch", async () => {
+      const {
+        uris: [uri],
+      } = await sdk.storage.upload({
+        name: "Test Name",
+        description: "Test Description",
+      });
+
+      const data = await sdk.storage.fetch(uri);
+
+      expect(data.name).to.equal("Test Name");
+      expect(data.description).to.equal("Test Description");
+    });
+
+    it("Should batch upload and fetch", async () => {
+      const { uris } = await sdk.storage.upload([
+        {
+          name: "Test Name 1",
+          description: "Test Description 1",
+        },
+        {
+          name: "Test Name 2",
+          description: "Test Description 2",
+        },
+      ]);
+
+      const data1 = await sdk.storage.fetch(uris[0]);
+      const data2 = await sdk.storage.fetch(uris[1]);
+
+      expect(data1.name).to.equal("Test Name 1");
+      expect(data1.description).to.equal("Test Description 1");
+
+      expect(data2.name).to.equal("Test Name 2");
+      expect(data2.description).to.equal("Test Description 2");
+    });
+  });
 
   describe("Custom contract metadata", async () => {
     it("Should extract constructor params", async () => {
@@ -50,6 +90,37 @@ describe.skip("IPFS Uploads", async () => {
         storage,
       );
     });
+  });
+
+  it("should upload null metadata", async () => {
+    try {
+      const metadata = JSON.parse(readFileSync("test/metadata.json", "utf8"));
+      const upload = await storage.uploadMetadataBatch([metadata]);
+      assert.isTrue(upload.uris.length > 0);
+    } catch (err) {
+      assert.fail(err as string);
+    }
+  });
+
+  it.skip("should expose upload progress", async () => {
+    let updates = 0;
+    await storage.uploadBatch(
+      [
+        readFileSync("test/images/0.jpg"),
+        readFileSync("test/images/1.jpg"),
+        readFileSync("test/test.mp4"),
+      ],
+      undefined,
+      undefined,
+      undefined,
+      {
+        onProgress: () => {
+          updates += 1;
+        },
+      },
+    );
+
+    expect(updates).to.be.greaterThan(0);
   });
 
   it("should upload a file through any property, even when it is in an object nested inside another object", async () => {
@@ -124,7 +195,7 @@ describe.skip("IPFS Uploads", async () => {
       },
     ];
     const serialized = sampleObjects.map((o) => Buffer.from(JSON.stringify(o)));
-    const cid = await storage.uploadBatch(serialized);
+    const { baseUri: cid } = await storage.uploadBatch(serialized);
     for (const object of sampleObjects) {
       const parsed = await storage.get(`${cid}${object.id}`);
       assert.equal(parsed.description, object.description);
@@ -152,7 +223,7 @@ describe.skip("IPFS Uploads", async () => {
         name: "test.jpeg",
       },
     ];
-    const cid = await storage.uploadBatch(sampleObjects);
+    const { baseUri: cid } = await storage.uploadBatch(sampleObjects);
     assert(
       (await getFile(`${cid}test.jpeg`)).headers
         ?.get("content-type")
@@ -166,7 +237,7 @@ describe.skip("IPFS Uploads", async () => {
       readFileSync("test/test.mp4"),
       readFileSync("test/3510820011_4f558b6dea_b.jpg"),
     ];
-    const cid = await storage.uploadBatch(sampleObjects, 1);
+    const { baseUri: cid } = await storage.uploadBatch(sampleObjects, 1);
     assert(
       (await getFile(`${cid}2`)).headers?.get("content-type")?.toString() ===
         "image/jpeg",
@@ -178,7 +249,7 @@ describe.skip("IPFS Uploads", async () => {
       readFileSync("test/3510820011_4f558b6dea_b.jpg"),
       readFileSync("test/test.mp4"),
     ];
-    const cid = await storage.uploadBatch(sampleObjects);
+    const { baseUri: cid } = await storage.uploadBatch(sampleObjects);
     assert(
       (await getFile(`${cid}0`)).headers?.get("content-type")?.toString() ===
         "image/jpeg",
@@ -209,14 +280,12 @@ describe.skip("IPFS Uploads", async () => {
         },
       },
     ];
-    const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
-      sampleObjects,
-    );
+    const { baseUri, uris } = await storage.uploadMetadataBatch(sampleObjects);
     assert(baseUri.startsWith("ipfs://") && baseUri.endsWith("/"));
-    assert(metadataUris.length === sampleObjects.length);
+    assert(uris.length === sampleObjects.length);
     const [metadata1, metadata2, metadata3] = await Promise.all(
       (
-        await Promise.all(metadataUris.map((m) => getFile(m)))
+        await Promise.all(uris.map((m) => getFile(m)))
       ).map((m: any) => m.json()),
     );
     assert(
@@ -242,13 +311,11 @@ describe.skip("IPFS Uploads", async () => {
       };
       sampleObjects.push(nft);
     }
-    const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
-      sampleObjects,
-    );
+    const { baseUri, uris } = await storage.uploadMetadataBatch(sampleObjects);
     assert(baseUri.startsWith("ipfs://") && baseUri.endsWith("/"));
-    assert(metadataUris.length === sampleObjects.length);
+    assert(uris.length === sampleObjects.length);
     const metadatas = await Promise.all(
-      metadataUris.map(async (m) => await storage.get(m)),
+      uris.map(async (m) => await storage.get(m)),
     );
     for (let i = 0; i < metadatas.length; i++) {
       const expected = sampleObjects[i];
@@ -256,38 +323,6 @@ describe.skip("IPFS Uploads", async () => {
       expect(downloaded.name).to.be.eq(expected.name);
       expect(downloaded.image.endsWith(`${i}`)).to.eq(true);
     }
-  });
-
-  // TODO make passing straight urls passthrough storage or handled at higher level
-  it.skip("should properly parse ipfs urls in uploadMetadataBatch", async () => {
-    // TODO this mismatches urls/objects - can probably restrict to either or
-    const sampleObjects: any[] = [
-      "ipfs://QmTaWb3L89Deg8fxW8snWPULX6iNh5t7vfXa68sVeAfrHJ",
-      { test: "should pass" },
-      "https://ipfs.io",
-      { test: "maybe pass" },
-    ];
-    const { baseUri, metadataUris } = await storage.uploadMetadataBatch(
-      sampleObjects,
-    );
-    assert(metadataUris.length === sampleObjects.length);
-    assert(
-      metadataUris[0] === sampleObjects[0],
-      `Got ${metadataUris[0]}, expected ${sampleObjects[0]}`,
-    );
-    assert(
-      metadataUris[1].startsWith(baseUri) && metadataUris[1].endsWith("/0"),
-    );
-    assert(metadataUris[2] === sampleObjects[2]);
-    assert(
-      metadataUris[3].startsWith(baseUri) && metadataUris[3].endsWith("/1"),
-    );
-    assert(
-      (await (await getFile(`${baseUri}0`)).text()).includes("should pass"),
-    );
-    assert(
-      (await (await getFile(`${baseUri}1`)).text()).includes("maybe pass"),
-    );
   });
 
   it("should upload properly with same file names but one with capitalized letters", async () => {
@@ -301,7 +336,7 @@ describe.skip("IPFS Uploads", async () => {
         name: "TEST",
       },
     ];
-    const cid = await storage.uploadBatch(sampleObjects);
+    const { baseUri: cid } = await storage.uploadBatch(sampleObjects);
     assert(
       (await getFile(`${cid}TEST`)).headers?.get("content-type")?.toString() ===
         "image/jpeg",

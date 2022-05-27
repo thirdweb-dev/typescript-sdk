@@ -1,6 +1,7 @@
 import { FileOrBuffer, JsonObject } from "../../src/core/types";
 import { v4 as uuidv4 } from "uuid";
-import { IStorage, NotFoundError, UploadMetadataBatchResult } from "../../src";
+import { IStorage, NotFoundError } from "../../src";
+import { UploadResult } from "../../src/core/interfaces/IStorageUpload";
 
 export class MockStorage implements IStorage {
   private objects: { [key: string]: any } = {};
@@ -98,13 +99,13 @@ export class MockStorage implements IStorage {
     _signerAddress?: string,
   ): Promise<string> {
     // since there's only single object, always use the first index
-    const { metadataUris } = await this.uploadMetadataBatch(
+    const { uris } = await this.uploadMetadataBatch(
       [metadata],
       0,
       contractAddress,
     );
 
-    return metadataUris[0];
+    return uris[0];
   }
 
   public async uploadMetadataBatch(
@@ -112,7 +113,7 @@ export class MockStorage implements IStorage {
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
-  ): Promise<UploadMetadataBatchResult> {
+  ): Promise<UploadResult> {
     await this.batchUploadProperties(metadatas);
 
     const metadataToUpload: string[] = metadatas.map((m: any) =>
@@ -127,7 +128,7 @@ export class MockStorage implements IStorage {
     );
     const baseUri = `${cid}/`;
     return {
-      metadataUris: metadataToUpload.map((_, i) => `${baseUri}${i}`),
+      uris: metadataToUpload.map((_, i) => `${baseUri}${i}`),
       baseUri,
     };
   }
