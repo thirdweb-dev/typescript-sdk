@@ -15,7 +15,11 @@ import { UploadProgressEvent } from "../../types/events";
  * @public
  */
 export class IpfsStorage implements IStorage {
-  private gatewayUrl: string;
+  /**
+   * {@inheritdoc IStorage.gatewayUrl}
+   * @internal
+   */
+  public gatewayUrl: string;
   private failedUrls: string[] = [];
   private uploader: IStorageUpload;
 

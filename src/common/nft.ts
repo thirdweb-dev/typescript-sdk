@@ -6,7 +6,7 @@ import {
   NFTMetadataInput,
   NFTMetadataOrUri,
 } from "../schema/tokens/common";
-import { IStorage } from "../core";
+import type { IStorage } from "../core";
 import { IERC1155Metadata, IERC165, IERC721Metadata } from "contracts";
 import { NotFoundError } from "./error";
 import {
@@ -16,6 +16,10 @@ import {
 import ERC721MetadataAbi from "../../abis/IERC721Metadata.json";
 import ERC1155MetadataAbi from "../../abis/IERC1155Metadata.json";
 import ERC165MetadataAbi from "../../abis/IERC165.json";
+
+const FALLBACK_METADATA = {
+  name: "Failed to load NFT metadata",
+};
 
 /**
  * fetches the token metadata
@@ -34,7 +38,20 @@ export async function fetchTokenMetadata(
     "{id}",
     ethers.utils.hexZeroPad(BigNumber.from(tokenId).toHexString(), 32).slice(2),
   );
-  const jsonMetadata = await storage.get(parsedUri);
+  let jsonMetadata;
+  try {
+    jsonMetadata = await storage.get(parsedUri);
+  } catch (err) {
+    console.warn(
+      `failed to get token metadata: ${JSON.stringify({
+        tokenId,
+        tokenUri,
+      })} -- falling back to default metadata`,
+      err,
+    );
+    jsonMetadata = FALLBACK_METADATA;
+  }
+
   return CommonNFTOutput.parse({
     id: BigNumber.from(tokenId),
     uri: tokenUri,
