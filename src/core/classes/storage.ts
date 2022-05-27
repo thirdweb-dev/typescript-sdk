@@ -1,8 +1,7 @@
-import { JsonObject } from "..";
-import { FileOrBuffer } from "../..";
 import { UploadProgressEvent } from "../../types/events";
 import { IStorage } from "../interfaces/IStorage";
 import { UploadResult } from "../interfaces/IStorageUpload";
+import { FileOrBuffer, JsonObject } from "../types";
 
 /**
  * Fetch and upload files to IPFS or any other storage.
