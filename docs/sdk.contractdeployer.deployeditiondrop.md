@@ -24,3 +24,17 @@ Promise&lt;string&gt;
 
 the address of the deployed contract
 
+## Remarks
+
+Deploys an Edition Drop contract and returns the address of the deployed contract
+
+## Example
+
+
+```javascript
+const contractAddress = await sdk.deployer.deployEditionDrop({
+  name: "My Edition Drop",
+  primary_sale_recipient: "your-address",
+});
+```
+

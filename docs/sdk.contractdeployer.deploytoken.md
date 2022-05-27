@@ -24,3 +24,17 @@ Promise&lt;string&gt;
 
 the address of the deployed contract
 
+## Remarks
+
+Deploys a Token contract and returns the address of the deployed contract
+
+## Example
+
+
+```javascript
+const contractAddress = await sdk.deployer.deployToken({
+  name: "My Token",
+  primary_sale_recipient: "your-address",
+});
+```
+

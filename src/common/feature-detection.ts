@@ -1,4 +1,4 @@
-import { BaseContract, ethers, utils } from "ethers";
+import { BaseContract, ethers } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core";
 import {
@@ -16,38 +16,6 @@ import {
 } from "../constants/contract-features";
 import { decodeFirstSync } from "cbor";
 import { toB58String } from "multihashes";
-
-/**
- * Type guards a contract to a known type if it matches the corresponding interface
- * @internal
- * @param contractWrapper
- * @param interfaceToMatch
- */
-export function implementsInterface<C extends BaseContract>(
-  contractWrapper: ContractWrapper<BaseContract>,
-  interfaceToMatch: utils.Interface,
-): contractWrapper is ContractWrapper<C> {
-  return matchesInterface(contractWrapper.readContract, interfaceToMatch);
-}
-
-/**
- * Checks the intersection of the 'functions' objects of a given contract and interface
- * @internal
- * @param contract
- * @param interfaceToMatch
- */
-function matchesInterface(
-  contract: BaseContract,
-  interfaceToMatch: utils.Interface,
-) {
-  // returns true if all the functions in `interfaceToMatch` are found in `contract`
-  const contractFn = contract.interface.functions;
-  const interfaceFn = interfaceToMatch.functions;
-  return (
-    Object.keys(contractFn).filter((k) => k in interfaceFn).length ===
-    Object.keys(interfaceFn).length
-  );
-}
 
 /**
  * @internal
@@ -375,4 +343,16 @@ function _featureEnabled(
   }
   const feature = features[featureName];
   return feature.enabled;
+}
+
+/**
+ * @internal
+ * @param contractWrapper
+ * @param functionName
+ */
+export function hasFunction<TContract extends BaseContract>(
+  functionName: string,
+  contractWrapper: ContractWrapper<any>,
+): contractWrapper is ContractWrapper<TContract> {
+  return functionName in contractWrapper.readContract.functions;
 }
