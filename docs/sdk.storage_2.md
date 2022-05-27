@@ -4,6 +4,8 @@
 
 ## Storage\_2 class
 
+Fetch and upload files to IPFS or any other storage.
+
 <b>Signature:</b>
 
 ```typescript

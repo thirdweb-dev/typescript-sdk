@@ -47,14 +47,10 @@ export class IpfsUploader implements IStorageUpload {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<CidWithFileName> {
-    if (typeof window === "undefined" && options?.onProgress) {
-      console.warn("The onProgress option is only supported in the browser");
-    }
-
     const token = await this.getUploadToken(contractAddress || "");
 
     const formData = new FormData();
-    const { data, fileNames } = await this.buildFormData(
+    const { data, fileNames } = this.buildFormData(
       formData,
       files,
       fileStartNumber,
@@ -63,6 +59,9 @@ export class IpfsUploader implements IStorageUpload {
     );
 
     if (typeof window === "undefined") {
+      if (options?.onProgress) {
+        console.warn("The onProgress option is only supported in the browser");
+      }
       const res = await fetch(PINATA_IPFS_URL, {
         method: "POST",
         headers: {

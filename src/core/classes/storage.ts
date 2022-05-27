@@ -1,9 +1,12 @@
-import { JsonObject } from "..";
-import { FileOrBuffer } from "../..";
 import { UploadProgressEvent } from "../../types/events";
 import { IStorage } from "../interfaces/IStorage";
 import { UploadResult } from "../interfaces/IStorageUpload";
+import { FileOrBuffer, JsonObject } from "../types";
 
+/**
+ * Fetch and upload files to IPFS or any other storage.
+ * @public
+ */
 export class Storage {
   private storage: IStorage;
 
@@ -35,35 +38,31 @@ export class Storage {
    *
    * @example
    * ```javascript
-   * // Add all your data here
+   * // File upload
    * const files = [
    *   fs.readFileSync("file1.png"),
    *   fs.readFileSync("file2.png"),
-   *   fs.readFileSync("file3.png"),
    * ]
-   * const uri = await sdk.storage.upload(files);
-   * // uri will look like something like: ipfs://<hash>/0
-   * ```
+   * const result = await sdk.storage.upload(files);
+   * // uri for each uploaded file will look like something like: ipfs://<hash>/0
    *
-   * @example
-   * ```javascript
-   * // Add all your metadata here
-   * const metadatas = [
-   *   {
-   *     name: "Name 1",
-   *     description: "Description 1",
-   *   },
-   *   {
-   *     name: "Name 2",
-   *     description: "Description 2",
-   *   },
-   * ]
+   * // JSON metadata upload
+   * const jsonMetadata = {
+   *   name: "Name",
+   *   description: "Description",
+   * }
+   * const result = await sdk.storage.upload(jsonMetadata);
    *
-   * const uri = await sdk.storage.upload(metadatas);
-   * // uri will look like something like: ipfs://<hash>/0
+   * // Upload progress (browser only)
+   * const result = await sdk.storage.upload(files, {
+   *   onProgress: (event: UploadProgressEvent) => {
+   *     console.log(`Downloaded ${event.progress} / ${event.total}`);
+   *   },
+   * });
    * ```
    *
    * @param data - An array of file data or an array of JSON metadata to upload to IPFS
+   * @param options - Optional. Upload progress callback.
    * @returns The IPFS hash of the directory that holds all the uploaded data
    */
   public async upload(

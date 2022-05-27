@@ -4,6 +4,7 @@
 
 ## IStorage interface
 
+Interface for any storage provider
 
 <b>Signature:</b>
 

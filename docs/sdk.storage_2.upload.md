@@ -19,7 +19,7 @@ upload(data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject, options?
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  data | [FileOrBuffer](./sdk.fileorbuffer.md)<!-- -->\[\] \| [JsonObject](./sdk.jsonobject.md)<!-- -->\[\] \| [FileOrBuffer](./sdk.fileorbuffer.md) \| [JsonObject](./sdk.jsonobject.md) | An array of file data or an array of JSON metadata to upload to IPFS |
-|  options | { onProgress: (event: [UploadProgressEvent](./sdk.uploadprogressevent.md)<!-- -->) =&gt; void; } | <i>(Optional)</i> |
+|  options | { onProgress: (event: [UploadProgressEvent](./sdk.uploadprogressevent.md)<!-- -->) =&gt; void; } | <i>(Optional)</i> Optional. Upload progress callback. |
 
 <b>Returns:</b>
 
@@ -27,37 +27,30 @@ Promise&lt;[UploadResult](./sdk.uploadresult.md)<!-- -->&gt;
 
 The IPFS hash of the directory that holds all the uploaded data
 
-## Example 1
+## Example
 
 
 ```javascript
-// Add all your data here
+// File upload
 const files = [
   fs.readFileSync("file1.png"),
   fs.readFileSync("file2.png"),
-  fs.readFileSync("file3.png"),
 ]
-const uri = await sdk.storage.upload(files);
-// uri will look like something like: ipfs://<hash>/0
-```
+const result = await sdk.storage.upload(files);
+// uri for each uploaded file will look like something like: ipfs://<hash>/0
 
-## Example 2
+// JSON metadata upload
+const jsonMetadata = {
+  name: "Name",
+  description: "Description",
+}
+const result = await sdk.storage.upload(jsonMetadata);
 
-
-```javascript
-// Add all your metadata here
-const metadatas = [
-  {
-    name: "Name 1",
-    description: "Description 1",
+// Upload progress (browser only)
+const result = await sdk.storage.upload(files, {
+  onProgress: (event: UploadProgressEvent) => {
+    console.log(`Downloaded ${event.progress} / ${event.total}`);
   },
-  {
-    name: "Name 2",
-    description: "Description 2",
-  },
-]
-
-const uri = await sdk.storage.upload(metadatas);
-// uri will look like something like: ipfs://<hash>/0
+});
 ```
 

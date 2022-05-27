@@ -2008,7 +2008,7 @@ export class IpfsStorage implements IStorage {
 // @internal
 export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: FeatureName): boolean;
 
-// @public (undocumented)
+// @public
 export interface IStorage {
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
@@ -4694,7 +4694,7 @@ export interface SplitRecipientInput {
     sharesBps: number;
 }
 
-// @public (undocumented)
+// @public
 class Storage_2 {
     constructor(storage: IStorage);
     fetch(hash: string): Promise<Record<string, any>>;

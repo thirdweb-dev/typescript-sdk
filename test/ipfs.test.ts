@@ -9,6 +9,7 @@ import {
   FileOrBuffer,
   IpfsStorage,
   NFTMetadataInput,
+  UploadProgressEvent,
 } from "../src";
 import {
   extractConstructorParams,
