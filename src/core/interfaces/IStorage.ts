@@ -3,6 +3,7 @@ import { FileOrBuffer, JsonObject } from "../types";
 import { UploadResult } from "./IStorageUpload";
 
 /**
+ * Interface for any storage provider
  * @public
  */
 export interface IStorage {
