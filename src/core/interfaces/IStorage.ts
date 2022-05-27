@@ -28,7 +28,7 @@ export interface IStorage {
    * @param data - The data to be uploaded. Can be a file/buffer (which will be loaded), or a string.
    * @param contractAddress - Optional. The contract address the data belongs to.
    * @param signerAddress - Optional. The address of the signer.
-   *
+   * @param options - Optional. Upload progress callback.
    * @returns - The hash of the uploaded data.
    */
   upload(
@@ -47,7 +47,7 @@ export interface IStorage {
    * @param fileStartNumber - Optional. The first file file name begins with.
    * @param contractAddress - Optional. The contract address the data belongs to.
    * @param signerAddress - Optional. The address of the signer.
-   *
+   * @param options - Optional. Upload progress callback.
    * @returns - The CID of the uploaded folder.
    */
   uploadBatch(
@@ -67,6 +67,7 @@ export interface IStorage {
    * @param metadata - The metadata to be uploaded.
    * @param contractAddress - Optional. The contract address the data belongs to.
    * @param signerAddress - Optional. The address of the signer.
+   * @param options - Optional. Upload progress callback.
    */
 
   uploadMetadata(

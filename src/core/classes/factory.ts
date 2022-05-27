@@ -29,6 +29,7 @@ import {
 } from "../../constants";
 import { TokenDrop } from "../../contracts/token-drop";
 import { ProxyDeployedEvent } from "contracts/TWFactory";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * @internal
@@ -126,6 +127,10 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         const signatureDropmetadata =
           SignatureDrop.schema.deploy.parse(metadata);
         const chainId = await this.getChainID();
+        const signMintAddress = getContractAddressByChainId(chainId, "sigMint");
+        if (signMintAddress === AddressZero) {
+          throw new Error("SignatureDrop contract not deployable yet");
+        }
         return [
           await this.getSignerAddress(),
           signatureDropmetadata.name,
@@ -137,7 +142,7 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           signatureDropmetadata.seller_fee_basis_points,
           signatureDropmetadata.platform_fee_basis_points,
           signatureDropmetadata.platform_fee_recipient,
-          getContractAddressByChainId(chainId, "sigMint"),
+          signMintAddress,
         ];
       case EditionDrop.contractType:
       case Edition.contractType:

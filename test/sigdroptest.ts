@@ -16,7 +16,7 @@ import keccak256 from "keccak256";
 
 global.fetch = require("cross-fetch");
 
-describe("ERC 721 with Signature minting", async () => {
+describe("Signature drop tests", async () => {
   let signatureDropContract: SignatureDrop;
   let customTokenContract: Token;
   let tokenAddress: string;

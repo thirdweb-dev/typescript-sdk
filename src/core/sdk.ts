@@ -168,6 +168,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * Get an instance of a SignatureDrop contract
    * @param contractAddress - the address of the deployed contract
    * @returns the contract
+   * @internal
    */
   public getSignatureDrop(contractAddress: string): SignatureDrop {
     return this.getBuiltInContract(
