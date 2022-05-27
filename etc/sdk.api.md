@@ -210,6 +210,16 @@ export const ChainlinkVrf: Record<number, ChainlinkInfo>;
 // @internal (undocumented)
 export type ChainOrRpc = "mumbai" | "polygon" | "rinkeby" | "goerli" | "mainnet" | "fantom" | "avalanche" | (string & {});
 
+// Warning: (ae-internal-missing-underscore) The name "CidWithFileName" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export interface CidWithFileName {
+    // (undocumented)
+    cid: string;
+    // (undocumented)
+    fileNames: string[];
+}
+
 // Warning: (ae-incompatible-release-tags) The symbol "ClaimCondition" is marked as @public, but its signature references "ClaimConditionOutputSchema" which is marked as @internal
 //
 // @public
@@ -1964,7 +1974,7 @@ export interface IPackCreateArgs {
 
 // @public
 export class IpfsStorage implements IStorage {
-    // Warning: (ae-forgotten-export) The symbol "IStorageUpload" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "IStorageUpload" which is marked as @internal
     constructor(gatewayUrl?: string, uploader?: IStorageUpload);
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
@@ -2000,16 +2010,25 @@ export interface IStorage {
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<string>;
-    // Warning: (ae-forgotten-export) The symbol "StorageUpload" needs to be exported by the entry point index.d.ts
     uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<StorageUpload>;
+    }): Promise<UploadResult>;
     uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<string>;
     uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<StorageUpload>;
+    }): Promise<UploadResult>;
+}
+
+// Warning: (ae-internal-missing-underscore) The name "IStorageUpload" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export interface IStorageUpload {
+    // (undocumented)
+    uploadBatchWithCid(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<CidWithFileName>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "JsonLiteralOrFileOrBuffer" needs to be exported by the entry point index.d.ts
@@ -4669,6 +4688,16 @@ export interface SplitRecipientInput {
 }
 
 // @public (undocumented)
+class Storage_2 {
+    constructor(storage: IStorage);
+    fetch(hash: string): Promise<Record<string, any>>;
+    upload(data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadResult>;
+}
+export { Storage_2 as Storage }
+
+// @public (undocumented)
 export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet;
 
 // @public (undocumented)
@@ -4715,7 +4744,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getVote(address: string): Vote;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
-    // Warning: (ae-forgotten-export) The symbol "Storage" needs to be exported by the entry point index.d.ts
     storage: Storage_2;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
     wallet: UserWallet;
@@ -5085,6 +5113,12 @@ export interface UploadProgressEvent {
     progress: number;
     total: number;
 }
+
+// @public
+export type UploadResult = {
+    baseUri: string;
+    uris: string[];
+};
 
 // @public
 export class UserWallet {

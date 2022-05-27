@@ -1,7 +1,7 @@
 import { FileOrBuffer, JsonObject } from "../../src/core/types";
 import { v4 as uuidv4 } from "uuid";
 import { IStorage, NotFoundError } from "../../src";
-import { StorageUpload } from "../../src/core/interfaces/IStorageUpload";
+import { UploadResult } from "../../src/core/interfaces/IStorageUpload";
 
 export class MockStorage implements IStorage {
   private objects: { [key: string]: any } = {};
@@ -113,7 +113,7 @@ export class MockStorage implements IStorage {
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
-  ): Promise<StorageUpload> {
+  ): Promise<UploadResult> {
     await this.batchUploadProperties(metadatas);
 
     const metadataToUpload: string[] = metadatas.map((m: any) =>

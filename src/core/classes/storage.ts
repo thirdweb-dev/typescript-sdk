@@ -2,7 +2,7 @@ import { JsonObject } from "..";
 import { FileOrBuffer } from "../..";
 import { UploadProgressEvent } from "../../types/events";
 import { IStorage } from "../interfaces/IStorage";
-import { StorageUpload } from "../interfaces/IStorageUpload";
+import { UploadResult } from "../interfaces/IStorageUpload";
 
 export class Storage {
   private storage: IStorage;
@@ -45,6 +45,24 @@ export class Storage {
    * // uri will look like something like: ipfs://<hash>/0
    * ```
    *
+   * @example
+   * ```javascript
+   * // Add all your metadata here
+   * const metadatas = [
+   *   {
+   *     name: "Name 1",
+   *     description: "Description 1",
+   *   },
+   *   {
+   *     name: "Name 2",
+   *     description: "Description 2",
+   *   },
+   * ]
+   *
+   * const uri = await sdk.storage.upload(metadatas);
+   * // uri will look like something like: ipfs://<hash>/0
+   * ```
+   *
    * @param data - An array of file data or an array of JSON metadata to upload to IPFS
    * @returns The IPFS hash of the directory that holds all the uploaded data
    */
@@ -53,7 +71,7 @@ export class Storage {
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
-  ): Promise<StorageUpload> {
+  ): Promise<UploadResult> {
     if (!Array.isArray(data)) {
       if (
         data instanceof File ||
@@ -91,7 +109,7 @@ export class Storage {
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
-  ): Promise<StorageUpload> {
+  ): Promise<UploadResult> {
     return await this.storage.uploadBatch(
       files,
       undefined,
@@ -106,7 +124,7 @@ export class Storage {
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
-  ): Promise<StorageUpload> {
+  ): Promise<UploadResult> {
     return await this.storage.uploadMetadataBatch(
       metadatas,
       undefined,

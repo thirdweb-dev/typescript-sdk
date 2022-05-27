@@ -48,6 +48,7 @@
 |  [SignatureDrop](./sdk.signaturedrop.md) | Setup a collection of NFTs where when it comes to minting, you can authorize some external party to mint tokens on your contract, and specify what exactly will be minted by that external party.. |
 |  [SmartContract](./sdk.smartcontract.md) | <b><i>(BETA)</i></b> Custom contract dynamic class with feature detection |
 |  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
+|  [Storage\_2](./sdk.storage_2.md) |  |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The main entry point for the thirdweb SDK |
 |  [Token](./sdk.token.md) | Create a standard crypto token or cryptocurrency. |
 |  [TokenDrop](./sdk.tokendrop.md) | Create a Drop contract for a standard crypto token or cryptocurrency. |
@@ -179,6 +180,7 @@
 |  [TransactionResult](./sdk.transactionresult.md) |  |
 |  [TransactionResultWithAddress](./sdk.transactionresultwithaddress.md) |  |
 |  [TransactionResultWithId](./sdk.transactionresultwithid.md) |  |
+|  [UploadResult](./sdk.uploadresult.md) | The result of an IPFS upload, including the URI of the upload director and the URIs of the uploaded files. |
 |  [ValidContractClass](./sdk.validcontractclass.md) |  |
 |  [ValidContractInstance](./sdk.validcontractinstance.md) |  |
 |  [ValueOf](./sdk.valueof.md) |  |

@@ -1,6 +1,6 @@
 import { UploadProgressEvent } from "../../types/events";
 import { FileOrBuffer, JsonObject } from "../types";
-import { StorageUpload } from "./IStorageUpload";
+import { UploadResult } from "./IStorageUpload";
 
 /**
  * @public
@@ -58,7 +58,7 @@ export interface IStorage {
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
-  ): Promise<StorageUpload>;
+  ): Promise<UploadResult>;
 
   /**
    *
@@ -95,5 +95,5 @@ export interface IStorage {
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
-  ): Promise<StorageUpload>;
+  ): Promise<UploadResult>;
 }

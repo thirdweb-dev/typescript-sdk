@@ -11,7 +11,7 @@ Uploads JSON metadata to IPFS
 ```typescript
 uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<StorageUpload>;
+    }): Promise<UploadResult>;
 ```
 
 ## Parameters
@@ -26,5 +26,5 @@ uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractA
 
 <b>Returns:</b>
 
-Promise&lt;StorageUpload&gt;
+Promise&lt;[UploadResult](./sdk.uploadresult.md)<!-- -->&gt;
 

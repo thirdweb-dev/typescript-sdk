@@ -17,7 +17,7 @@ export interface CidWithFileName {
  * director and the URIs of the uploaded files.
  * @public
  */
-export type StorageUpload = {
+export type UploadResult = {
   /**
    * Base URI of the directory that all files are uploaded to.
    */
