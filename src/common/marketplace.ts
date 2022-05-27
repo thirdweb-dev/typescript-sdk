@@ -19,24 +19,23 @@ import ERC721Abi from "../../abis/IERC721.json";
 import ERC165Abi from "../../abis/IERC165.json";
 
 /**
- * This method checks if the given token is approved for the marketplace contract.
- * This is particularly useful for direct listings where the token
- * being listed may be moved before the listing is actually closed.
+ * This method checks if the given token is approved for the transferrerContractAddress contract.
+ * This is particularly useful for contracts that need to transfer NFTs on the users' behalf
  *
  * @internal
  * @param provider - The connected provider
- * @param marketplaceAddress - The address of the marketplace contract
+ * @param transferrerContractAddress - The address of the marketplace contract
  * @param assetContract - The address of the asset contract.
  * @param tokenId - The token id of the token.
- * @param from - The address of the account that owns the token.
- * @returns - True if the marketplace is approved on the token, false otherwise.
+ * @param owner - The address of the account that owns the token.
+ * @returns - True if the transferrerContractAddress is approved on the token, false otherwise.
  */
-export async function isTokenApprovedForMarketplace(
+export async function isTokenApprovedForTransfer(
   provider: providers.Provider,
-  marketplaceAddress: string,
+  transferrerContractAddress: string,
   assetContract: string,
   tokenId: BigNumberish,
-  from: string,
+  owner: string,
 ): Promise<boolean> {
   try {
     const erc165 = new Contract(assetContract, ERC165Abi, provider) as IERC165;
@@ -45,13 +44,16 @@ export async function isTokenApprovedForMarketplace(
     if (isERC721) {
       const asset = new Contract(assetContract, ERC721Abi, provider) as IERC721;
 
-      const approved = await asset.isApprovedForAll(from, marketplaceAddress);
+      const approved = await asset.isApprovedForAll(
+        owner,
+        transferrerContractAddress,
+      );
       if (approved) {
         return true;
       }
       return (
         (await asset.getApproved(tokenId)).toLowerCase() ===
-        marketplaceAddress.toLowerCase()
+        transferrerContractAddress.toLowerCase()
       );
     } else if (isERC1155) {
       const asset = new Contract(
@@ -59,7 +61,7 @@ export async function isTokenApprovedForMarketplace(
         ERC1155Abi,
         provider,
       ) as IERC1155;
-      return await asset.isApprovedForAll(from, marketplaceAddress);
+      return await asset.isApprovedForAll(owner, transferrerContractAddress);
     } else {
       console.error("Contract does not implement ERC 1155 or ERC 721.");
       return false;

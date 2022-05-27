@@ -1706,6 +1706,8 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     query: Erc721Supply | undefined;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
+    // @internal
+    setApprovalForToken(operator: string, tokenId: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     protected storage: IStorage;
     transfer(to: string, tokenId: BigNumberish): Promise<TransactionResult>;
