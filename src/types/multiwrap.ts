@@ -6,7 +6,7 @@ import { BigNumberish } from "ethers";
  */
 export type ERC20Wrappable = {
   contractAddress: string;
-  tokenAmount: Amount;
+  quantity: Amount;
 };
 
 /**
@@ -22,7 +22,7 @@ export type ERC721Wrappable = {
  */
 export type ERC1155Wrappable = {
   contractAddress: string;
-  tokenAmount: Amount;
+  quantity: Amount;
   tokenId: BigNumberish;
 };
 

@@ -137,11 +137,11 @@ describe("Multiwrap Contract", async () => {
         erc20Tokens: [
           {
             contractAddress: tokenContract.getAddress(),
-            tokenAmount: 100.5,
+            quantity: 100.5,
           },
           {
             contractAddress: tokenContract2.getAddress(),
-            tokenAmount: "200.1",
+            quantity: "200.1",
           },
         ],
       },
@@ -184,12 +184,12 @@ describe("Multiwrap Contract", async () => {
           {
             contractAddress: editionContract.getAddress(),
             tokenId: "0",
-            tokenAmount: 10,
+            quantity: 10,
           },
           {
             contractAddress: editionContract.getAddress(),
             tokenId: 1,
-            tokenAmount: 20,
+            quantity: 20,
           },
         ],
       },
@@ -209,7 +209,7 @@ describe("Multiwrap Contract", async () => {
         erc20Tokens: [
           {
             contractAddress: tokenContract.getAddress(),
-            tokenAmount: 100.5,
+            quantity: 100.5,
           },
         ],
         erc721Tokens: [
@@ -222,7 +222,7 @@ describe("Multiwrap Contract", async () => {
           {
             contractAddress: editionContract.getAddress(),
             tokenId: "0",
-            tokenAmount: 10,
+            quantity: 10,
           },
         ],
       },
@@ -244,11 +244,11 @@ describe("Multiwrap Contract", async () => {
         erc20Tokens: [
           {
             contractAddress: tokenContract.getAddress(),
-            tokenAmount: 100.5,
+            quantity: 100.5,
           },
           {
             contractAddress: tokenContract2.getAddress(),
-            tokenAmount: 19.5,
+            quantity: 19.5,
           },
         ],
         erc721Tokens: [
@@ -261,7 +261,7 @@ describe("Multiwrap Contract", async () => {
           {
             contractAddress: editionContract.getAddress(),
             tokenId: "0",
-            tokenAmount: 10,
+            quantity: 10,
           },
         ],
       },
@@ -276,7 +276,7 @@ describe("Multiwrap Contract", async () => {
     expect(wrappedTokens.erc20Tokens[0].contractAddress).to.eq(
       tokenContract.getAddress(),
     );
-    expect(wrappedTokens.erc1155Tokens[0].tokenAmount).to.eq("10");
+    expect(wrappedTokens.erc1155Tokens[0].quantity).to.eq("10");
   });
 
   it("unwrapped contents", async () => {
@@ -285,7 +285,7 @@ describe("Multiwrap Contract", async () => {
         erc20Tokens: [
           {
             contractAddress: tokenContract.getAddress(),
-            tokenAmount: 100.5,
+            quantity: 100.5,
           },
         ],
         erc721Tokens: [
@@ -298,7 +298,7 @@ describe("Multiwrap Contract", async () => {
           {
             contractAddress: editionContract.getAddress(),
             tokenId: "0",
-            tokenAmount: 10,
+            quantity: 10,
           },
         ],
       },
@@ -330,7 +330,7 @@ describe("Multiwrap Contract", async () => {
         erc20Tokens: [
           {
             contractAddress: tokenContract.getAddress(),
-            tokenAmount: 100.5,
+            quantity: 100.5,
           },
         ],
       },
@@ -357,7 +357,7 @@ describe("Multiwrap Contract", async () => {
           {
             contractAddress: editionContract.getAddress(),
             tokenId: "0",
-            tokenAmount: 10,
+            quantity: 10,
           },
         ],
       },

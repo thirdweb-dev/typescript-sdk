@@ -11,7 +11,7 @@ Represents a certain amount of ERC20 tokens that can be wrapped
 ```typescript
 export declare type ERC20Wrappable = {
     contractAddress: string;
-    tokenAmount: Amount;
+    quantity: Amount;
 };
 ```
 <b>References:</b> [Amount](./sdk.amount.md)

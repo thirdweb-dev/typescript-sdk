@@ -31,7 +31,7 @@ import TokenStruct = ITokenBundle.TokenStruct;
 import { QueryAllParams } from "../types";
 
 /**
- * Multiwrap lets you wrap arbitrary ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token / NFT.
+ * Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.
  *
  * @example
  *
@@ -126,8 +126,8 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
    *
    * @example
    * ```javascript
-   * const nfts = await contract.getAll();
-   * console.log(nfts);
+   * const wrappedBundles = await contract.getAll();
+   * console.log(wrappedBundles);
    * ```
    * @param queryParams - optional filtering to only fetch a subset of results.
    * @returns The NFT metadata for all NFTs queried.
@@ -138,6 +138,17 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
     return this._query.all(queryParams);
   }
 
+  /**
+   * Get the contents of a wrapped token bundle
+   * @example
+   * ```javascript
+   * const contents = await contract.getContents(wrappedTokenId);
+   * console.log(contents.erc20Tokens);
+   * console.log(contents.erc721Tokens);
+   * console.log(contents.erc1155Tokens);
+   * ```
+   * @param wrappedTokenId - the id of the wrapped token bundle
+   */
   public async getWrappedContents(
     wrappedTokenId: BigNumberish,
   ): Promise<WrappedTokens> {
@@ -155,7 +166,7 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
         case 0: {
           erc20Tokens.push({
             contractAddress: token.assetContract,
-            tokenAmount: ethers.utils.formatEther(token.totalAmount),
+            quantity: ethers.utils.formatEther(token.totalAmount),
           });
           break;
         }
@@ -170,7 +181,7 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
           erc1155Tokens.push({
             contractAddress: token.assetContract,
             tokenId: token.tokenId,
-            tokenAmount: token.totalAmount.toString(),
+            quantity: token.totalAmount.toString(),
           });
           break;
         }
@@ -187,6 +198,36 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
    * WRITE FUNCTIONS
    *******************************/
 
+  /**
+   * Wrap any number of ERC20/ERC721/ERC1155 tokens into a single wrapped token
+   * @example
+   * ```javascript
+   * const tx = await contract.wrap({
+   *   erc20Tokens: [{
+   *     contractAddress: "0x...",
+   *     quantity: "0.8"
+   *   }],
+   *   erc721Tokens: [{
+   *     contractAddress: "0x...",
+   *     tokenId: "0"
+   *   }],
+   *   erc1155Tokens: [{
+   *     contractAddress: "0x...",
+   *     tokenId: "1",
+   *     quantity: "2"
+   *   }]
+   * }, {
+   *     name: "Wrapped bundle",
+   *     description: "This is a wrapped bundle of tokens and NFTs",
+   *     image: "ipfs://...",
+   * });
+   * const receipt = tx.receipt(); // the transaction receipt
+   * const wrappedTokenId = tx.id; // the id of the wrapped token bundle
+   * ```
+   * @param contents - the contents to wrap
+   * @param wrappedTokenMetadata - metadata to represent the wrapped token bundle
+   * @param recipientAddress - Optional. The address to send the wrapped token bundle to
+   */
   public async wrap(
     contents: TokensToWrap,
     wrappedTokenMetadata: NFTMetadataOrUri,
@@ -220,6 +261,15 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
     };
   }
 
+  /**
+   * Unwrap a wrapped token bundle, and retrieve its contents
+   * @example
+   * ```javascript
+   * await contract.unwrap(wrappedTokenId);
+   * ```
+   * @param wrappedTokenId - the id of the wrapped token bundle
+   * @param recipientAddress - Optional. The address to send the unwrapped tokens to
+   */
   public async unwrap(
     wrappedTokenId: BigNumberish,
     recipientAddress?: string,
@@ -250,7 +300,7 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
           assetContract: erc20.contractAddress,
           totalAmount: await normalizePriceValue(
             provider,
-            erc20.tokenAmount,
+            erc20.quantity,
             erc20.contractAddress,
           ),
           tokenId: 0,
@@ -274,7 +324,7 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
       for (const erc1155 of contents.erc1155Tokens) {
         tokens.push({
           assetContract: erc1155.contractAddress,
-          totalAmount: erc1155.tokenAmount,
+          totalAmount: erc1155.quantity,
           tokenId: erc1155.tokenId,
           tokenType: 2,
         });

@@ -1590,7 +1590,7 @@ export class Erc1155SignatureMinting {
 // @public
 export type ERC1155Wrappable = {
     contractAddress: string;
-    tokenAmount: Amount;
+    quantity: Amount;
     tokenId: BigNumberish;
 };
 
@@ -1660,7 +1660,7 @@ export class Erc20SignatureMinting {
 // @public
 export type ERC20Wrappable = {
     contractAddress: string;
-    tokenAmount: Amount;
+    quantity: Amount;
 };
 
 // Warning: (ae-forgotten-export) The symbol "Multiwrap" needs to be exported by the entry point index.d.ts
@@ -2306,7 +2306,6 @@ export class Multiwrap extends Erc721<Multiwrap_2> {
     // (undocumented)
     events: ContractEvents<Multiwrap_2>;
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
-    // (undocumented)
     getWrappedContents(wrappedTokenId: BigNumberish): Promise<WrappedTokens>;
     // (undocumented)
     metadata: ContractMetadata<Multiwrap_2, typeof Multiwrap.schema>;
@@ -2405,7 +2404,6 @@ export class Multiwrap extends Erc721<Multiwrap_2> {
         name: string;
         }>;
     };
-    // (undocumented)
     unwrap(wrappedTokenId: BigNumberish, recipientAddress?: string): Promise<TransactionResult>;
     wrap(contents: TokensToWrap, wrappedTokenMetadata: NFTMetadataOrUri, recipientAddress?: string): Promise<TransactionResultWithId<NFTMetadataOwner>>;
 }
