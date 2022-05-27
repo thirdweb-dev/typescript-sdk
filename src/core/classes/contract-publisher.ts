@@ -165,11 +165,16 @@ export class ContractPublisher extends RPCConnectionHandler {
     const publisher = await signer.getAddress();
 
     const fullMetadatas = await Promise.all(
-      bytecodeUris.map(async (uri) => ({
-        uri,
-        bytecode: await this.storage.getRaw(uri),
-        fullMetadata: await this.fetchFullContractMetadataFromBytecodeUri(uri),
-      })),
+      bytecodeUris.map(async (bytecodeUri) => {
+        const bytecode = await this.storage.getRaw(bytecodeUri);
+        const fullMetadata =
+          await this.fetchFullContractMetadataFromBytecodeUri(bytecodeUri);
+        return {
+          bytecode: bytecode.startsWith("0x") ? bytecode : `0x${bytecode}`,
+          bytecodeUri,
+          fullMetadata,
+        };
+      }),
     );
 
     const encoded = fullMetadatas.map((meta) => {
@@ -177,7 +182,13 @@ export class ContractPublisher extends RPCConnectionHandler {
       const contractId = meta.fullMetadata.name;
       return this.publisher.readContract.interface.encodeFunctionData(
         "publishContract",
-        [publisher, meta.uri, bytecodeHash, constants.AddressZero, contractId],
+        [
+          publisher,
+          meta.bytecodeUri,
+          bytecodeHash,
+          constants.AddressZero,
+          contractId,
+        ],
       );
     });
     const receipt = await this.publisher.multiCall(encoded);

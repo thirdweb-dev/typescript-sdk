@@ -1773,11 +1773,6 @@ export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>): AbiFunc
 // @internal (undocumented)
 export function fetchContractBytecodeMetadata(bytecodeUri: string, storage: IStorage): Promise<PublishedMetadata>;
 
-// Warning: (ae-internal-missing-underscore) The name "fetchContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export function fetchContractMetadata(metadataUri: string, storage: IStorage): Promise<PublishedMetadata>;
-
 // Warning: (ae-internal-missing-underscore) The name "fetchContractMetadataFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)

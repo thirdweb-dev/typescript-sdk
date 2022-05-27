@@ -44,14 +44,6 @@ describe.skip("IPFS Uploads", async () => {
       expect(params[1].name === "someId");
     });
 
-    it("Should parse abi and bytecode", async () => {
-      const metadata = await fetchContractMetadata(
-        "ipfs://QmbLjvQqCVhjsvGxh9u2pv89sg8g7psTscZJ9spNyHn9GH/0",
-        storage,
-      );
-    });
-  });
-
   it("should upload a file through any property, even when it is in an object nested inside another object", async () => {
     try {
       const upload = await storage.uploadMetadata({

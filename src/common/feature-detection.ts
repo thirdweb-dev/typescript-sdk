@@ -252,7 +252,7 @@ export async function fetchContractMetadataFromAddress(
  * @param metadataUri
  * @param storage
  */
-export async function fetchContractMetadata(
+async function fetchContractMetadata(
   metadataUri: string,
   storage: IStorage,
 ): Promise<PublishedMetadata> {
