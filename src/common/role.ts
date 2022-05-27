@@ -12,6 +12,7 @@ const roleMap = {
   editor: "EDITOR_ROLE",
   lister: "LISTER_ROLE",
   asset: "ASSET_ROLE",
+  unwrap: "UNWRAP_ROLE",
 } as const;
 
 /**
