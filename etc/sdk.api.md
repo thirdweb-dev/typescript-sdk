@@ -210,6 +210,16 @@ export const ChainlinkVrf: Record<number, ChainlinkInfo>;
 // @internal (undocumented)
 export type ChainOrRpc = "mumbai" | "polygon" | "rinkeby" | "goerli" | "mainnet" | "fantom" | "avalanche" | (string & {});
 
+// Warning: (ae-internal-missing-underscore) The name "CidWithFileName" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export interface CidWithFileName {
+    // (undocumented)
+    cid: string;
+    // (undocumented)
+    fileNames: string[];
+}
+
 // Warning: (ae-incompatible-release-tags) The symbol "ClaimCondition" is marked as @public, but its signature references "ClaimConditionOutputSchema" which is marked as @internal
 //
 // @public
@@ -847,7 +857,9 @@ export const DEFAULT_QUERY_ALL_COUNT = 100;
 // @public
 export class DelayedReveal<T extends SignatureDrop_2 | DropERC721> {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage);
-    createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string): Promise<TransactionResultWithId[]>;
+    createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId[]>;
     getBatchesToReveal(): Promise<BatchToReveal[]>;
     reveal(batchId: BigNumberish, password: string): Promise<TransactionResult>;
 }
@@ -1988,18 +2000,31 @@ export interface IPackCreateArgs {
 
 // @public
 export class IpfsStorage implements IStorage {
-    constructor(gatewayUrl?: string);
+    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "IStorageUpload" which is marked as @internal
+    constructor(gatewayUrl?: string, uploader?: IStorageUpload);
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "gatewayUrl"
+    //
     // @internal (undocumented)
     gatewayUrl: string;
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
-    getUploadToken(contractAddress: string): Promise<string>;
-    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<{
+    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<{
         baseUri: string;
-        metadataUris: string[];
+        uris: string[];
+    }>;
+    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<{
+        baseUri: string;
+        uris: string[];
     }>;
 }
 
@@ -2008,18 +2033,32 @@ export class IpfsStorage implements IStorage {
 // @internal
 export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: FeatureName): boolean;
 
-// @public (undocumented)
+// @public
 export interface IStorage {
-    // @internal (undocumented)
-    gatewayUrl: string;
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
-    getUploadToken(contractAddress: string): Promise<string>;
-    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
-    // Warning: (ae-incompatible-release-tags) The symbol "uploadMetadataBatch" is marked as @public, but its signature references "UploadMetadataBatchResult" which is marked as @internal
-    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<UploadMetadataBatchResult>;
+    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadResult>;
+    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadResult>;
+}
+
+// Warning: (ae-internal-missing-underscore) The name "IStorageUpload" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export interface IStorageUpload {
+    // (undocumented)
+    uploadBatchWithCid(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<CidWithFileName>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "JsonLiteralOrFileOrBuffer" needs to be exported by the entry point index.d.ts
@@ -2641,7 +2680,9 @@ export class NFTDrop extends Erc721<DropERC721> {
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "nft-drop";
-    createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    createBatch(metadatas: NFTMetadataInput[], options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC721>;
     // (undocumented)
@@ -3242,6 +3283,15 @@ export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
     readonly Pack: "pack";
     readonly Multiwrap: "multiwrap";
 };
+
+// @public
+export class RemoteStorage {
+    constructor(storage: IStorage);
+    fetch(hash: string): Promise<Record<string, any>>;
+    upload(data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadResult>;
+}
 
 // Warning: (ae-internal-missing-underscore) The name "resolveContractUriFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -4861,7 +4911,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getVote(address: string): Vote;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
-    storage: IStorage;
+    storage: RemoteStorage;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
     wallet: UserWallet;
 }
@@ -5232,15 +5282,17 @@ export class UploadError extends Error {
     constructor(message: string);
 }
 
-// Warning: (ae-internal-missing-underscore) The name "UploadMetadataBatchResult" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export interface UploadMetadataBatchResult {
-    // (undocumented)
-    baseUri: string;
-    // (undocumented)
-    metadataUris: string[];
+// @public (undocumented)
+export interface UploadProgressEvent {
+    progress: number;
+    total: number;
 }
+
+// @public
+export type UploadResult = {
+    baseUri: string;
+    uris: string[];
+};
 
 // @public
 export class UserWallet {

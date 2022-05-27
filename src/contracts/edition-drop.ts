@@ -266,7 +266,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       await this.contractWrapper.getSigner()?.getAddress(),
     );
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.metadataUris.length,
+      batch.uris.length,
       `${batch.baseUri.endsWith("/") ? batch.baseUri : `${batch.baseUri}/`}`,
     ]);
     const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(

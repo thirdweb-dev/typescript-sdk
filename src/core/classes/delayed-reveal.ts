@@ -10,6 +10,7 @@ import { IStorage, TransactionResult, TransactionResultWithId } from "../index";
 import { fetchTokenMetadata } from "../../common/nft";
 import { BatchToReveal } from "../../types/delayed-reveal";
 import { TokensLazyMintedEvent } from "contracts/DropERC721";
+import { UploadProgressEvent } from "../../types/events";
 
 /**
  * Handles delayed reveal logic
@@ -61,6 +62,9 @@ export class DelayedReveal<T extends SignatureDrop | DropERC721> {
     placeholder: NFTMetadataInput,
     metadatas: NFTMetadataInput[],
     password: string,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<TransactionResultWithId[]> {
     if (!password) {
       throw new Error("Password is required");
@@ -81,6 +85,7 @@ export class DelayedReveal<T extends SignatureDrop | DropERC721> {
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
+      options,
     );
 
     const baseUri = batch.baseUri;
@@ -94,7 +99,7 @@ export class DelayedReveal<T extends SignatureDrop | DropERC721> {
       );
 
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.metadataUris.length,
+      batch.uris.length,
       placeholderUri.endsWith("/") ? placeholderUri : `${placeholderUri}/`,
       encryptedBaseUri,
     ]);
