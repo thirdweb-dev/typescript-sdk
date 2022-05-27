@@ -1,4 +1,104 @@
 {
+  "ContractDeployer": {
+    "name": "ContractDeployer",
+    "summary": "Handles deploying new contracts\n\n\n",
+    "remarks": null,
+    "examples": {},
+    "methods": [
+      {
+        "name": "deployEdition",
+        "summary": "Deploys a new Edition contract\n\n",
+        "remarks": "\n\nDeploys an Edition contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployEdition({\n  name: \"My Edition\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployEdition"
+      },
+      {
+        "name": "deployEditionDrop",
+        "summary": "Deploys a new EditionDrop contract\n\n",
+        "remarks": "\n\nDeploys an Edition Drop contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployEditionDrop({\n  name: \"My Edition Drop\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployEditionDrop"
+      },
+      {
+        "name": "deployMarketplace",
+        "summary": "Deploys a new Marketplace contract\n\n",
+        "remarks": "\n\nDeploys a Marketplace contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployMarketplace({\n  name: \"My Marketplace\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployMarketplace"
+      },
+      {
+        "name": "deployNFTCollection",
+        "summary": "Deploys an NFT Collection contract\n\n",
+        "remarks": "\n\nDeploys an NFT Collection contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployNFTCollection({\n  name: \"My Collection\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployNFTCollection"
+      },
+      {
+        "name": "deployNFTDrop",
+        "summary": "Deploys a new NFTDrop contract\n\n",
+        "remarks": "\n\nDeploys an NFT Drop contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployNFTDrop({\n  name: \"My Drop\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployNFTDrop"
+      },
+      {
+        "name": "deployPack",
+        "summary": "Deploys a new Pack contract\n\n",
+        "remarks": "\n\nDeploys a Pack contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployPack({\n  name: \"My Pack\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployPack"
+      },
+      {
+        "name": "deploySplit",
+        "summary": "Deploys a new Split contract\n\n",
+        "remarks": "\n\nDeploys a Split contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deploySplit({\n  name: \"My Split\",\n  primary_sale_recipient: \"your-address\",\n  recipients: [\n   {\n     address: \"your-address\",\n     sharesBps: 80 * 100, // 80%\n   },\n   {\n     address: \"another-address\",\n     sharesBps: 20 * 100, // 20%\n   },\n  ],\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deploySplit"
+      },
+      {
+        "name": "deployToken",
+        "summary": "Deploys a new Token contract\n\n",
+        "remarks": "\n\nDeploys a Token contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployToken({\n  name: \"My Token\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployToken"
+      },
+      {
+        "name": "deployTokenDrop",
+        "summary": "Deploys a new Token Drop contract\n\n",
+        "remarks": "\n\nDeploys a Token Drop contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployTokenDrop({\n  name: \"My Token Drop\",\n  primary_sale_recipient: \"your-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployTokenDrop"
+      },
+      {
+        "name": "deployVote",
+        "summary": "Deploys a new Vote contract\n\n",
+        "remarks": "\n\nDeploys an Vote contract and returns the address of the deployed contract\n\n",
+        "examples": {
+          "javascript": "const contractAddress = await sdk.deployer.deployVote({\n  name: \"My Vote\",\n  primary_sale_recipient: \"your-address\",\n  voting_token_address: \"your-token-contract-address\",\n});"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer.deployVote"
+      }
+    ],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.ContractDeployer"
+  },
   "Edition": {
     "name": "Edition",
     "summary": "Create a collection of NFTs that lets you mint multiple copies of each NFT.\n\n",
