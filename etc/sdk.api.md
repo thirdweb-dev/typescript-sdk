@@ -1975,14 +1975,12 @@ export interface IPackCreateArgs {
 
 // @public
 export class IpfsStorage implements IStorage {
-<<<<<<< HEAD
     // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "IStorageUpload" which is marked as @internal
     constructor(gatewayUrl?: string, uploader?: IStorageUpload);
-=======
-    constructor(gatewayUrl?: string);
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "gatewayUrl"
+    //
     // @internal (undocumented)
     gatewayUrl: string;
->>>>>>> main
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
@@ -2012,8 +2010,6 @@ export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: Fe
 
 // @public (undocumented)
 export interface IStorage {
-    // @internal (undocumented)
-    gatewayUrl: string;
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
     upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
