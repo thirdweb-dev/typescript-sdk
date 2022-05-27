@@ -268,6 +268,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * Get an instance of a Multiwrap contract
    * @param address - the address of the deployed contract
    * @returns the contract
+   * @beta
    */
   public getMultiwrap(address: string): Multiwrap {
     return this.getBuiltInContract(

@@ -42,7 +42,7 @@ import { QueryAllParams } from "../types";
  * const contract = sdk.getMultiwrap("{{contract_address}}");
  * ```
  *
- * @internal
+ * @beta
  */
 export class Multiwrap extends Erc721<MultiwrapContract> {
   static contractType = "multiwrap" as const;

@@ -4,6 +4,9 @@
 
 ## ThirdwebSDK.getMultiwrap() method
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
 Get an instance of a Multiwrap contract
 
 <b>Signature:</b>
@@ -20,7 +23,7 @@ getMultiwrap(address: string): Multiwrap;
 
 <b>Returns:</b>
 
-Multiwrap
+[Multiwrap](./sdk.multiwrap.md)
 
 the contract
 

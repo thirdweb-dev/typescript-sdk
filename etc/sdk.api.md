@@ -573,6 +573,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     deployEdition(metadata: NFTContractDeployMetadata): Promise<string>;
     deployEditionDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deployMarketplace(metadata: MarketplaceContractDeployMetadata): Promise<string>;
+    // @beta
     deployMultiwrap(metadata: MultiwrapContractDeployMetadata): Promise<string>;
     deployNFTCollection(metadata: NFTContractDeployMetadata): Promise<string>;
     deployNFTDrop(metadata: NFTContractDeployMetadata): Promise<string>;
@@ -2288,9 +2289,7 @@ export class MissingRoleError extends Error {
     constructor(address: string, role: string);
 }
 
-// Warning: (ae-internal-missing-underscore) The name "Multiwrap" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @beta
 export class Multiwrap extends Erc721<Multiwrap_2> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Multiwrap_2>);
     // (undocumented)
@@ -2312,7 +2311,7 @@ export class Multiwrap extends Erc721<Multiwrap_2> {
     // (undocumented)
     roles: ContractRoles<Multiwrap_2, typeof Multiwrap.contractRoles[number]>;
     royalty: ContractRoyalty<Multiwrap_2, typeof Multiwrap.schema>;
-    // (undocumented)
+    // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -4843,7 +4842,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getEdition(address: string): Edition;
     getEditionDrop(address: string): EditionDrop;
     getMarketplace(address: string): Marketplace;
-    // Warning: (ae-incompatible-release-tags) The symbol "getMultiwrap" is marked as @public, but its signature references "Multiwrap" which is marked as @internal
+    // @beta
     getMultiwrap(address: string): Multiwrap;
     getNFTCollection(address: string): NFTCollection;
     getNFTDrop(contractAddress: string): NFTDrop;

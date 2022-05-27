@@ -126,8 +126,19 @@ export class ContractDeployer extends RPCConnectionHandler {
   }
 
   /**
-   * Deploys a new SignatureDrop contract
-   * @param metadata
+   * Deploys a new Multiwrap contract
+   *
+   * @remarks Deploys a Multiwrap contract and returns the address of the deployed contract
+   *
+   * @example
+   * ```javascript
+   * const contractAddress = await sdk.deployer.deployMultiwrap({
+   *   name: "My Multiwrap",
+   * });
+   * ```
+   * @param metadata - the contract metadata
+   * @returns the address of the deployed contract
+   * @beta
    */
   public async deployMultiwrap(
     metadata: MultiwrapContractDeployMetadata,
