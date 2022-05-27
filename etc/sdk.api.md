@@ -3282,6 +3282,15 @@ export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
     readonly Multiwrap: "multiwrap";
 };
 
+// @public
+export class RemoteStorage {
+    constructor(storage: IStorage);
+    fetch(hash: string): Promise<Record<string, any>>;
+    upload(data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadResult>;
+}
+
 // Warning: (ae-internal-missing-underscore) The name "resolveContractUriFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -4850,15 +4859,6 @@ export interface SplitRecipientInput {
     sharesBps: number;
 }
 
-// @public
-export class StorageHandler {
-    constructor(storage: IStorage);
-    fetch(hash: string): Promise<Record<string, any>>;
-    upload(data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<UploadResult>;
-}
-
 // @public (undocumented)
 export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet;
 
@@ -4909,7 +4909,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getVote(address: string): Vote;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
-    storage: StorageHandler;
+    storage: RemoteStorage;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
     wallet: UserWallet;
 }

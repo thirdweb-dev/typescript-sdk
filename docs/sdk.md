@@ -46,9 +46,9 @@
 |  [NFTCollection](./sdk.nftcollection.md) | Create a collection of one-of-one NFTs. |
 |  [NFTDrop](./sdk.nftdrop.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [Pack](./sdk.pack.md) | Create lootboxes of NFTs with rarity based open mechanics. |
+|  [RemoteStorage](./sdk.remotestorage.md) | Fetch and upload files to IPFS or any other storage. |
 |  [SmartContract](./sdk.smartcontract.md) | <b><i>(BETA)</i></b> Custom contract dynamic class with feature detection |
 |  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
-|  [StorageHandler](./sdk.storagehandler.md) | Fetch and upload files to IPFS or any other storage. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The main entry point for the thirdweb SDK |
 |  [Token](./sdk.token.md) | Create a standard crypto token or cryptocurrency. |
 |  [TokenDrop](./sdk.tokendrop.md) | Create a Drop contract for a standard crypto token or cryptocurrency. |

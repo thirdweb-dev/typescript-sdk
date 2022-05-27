@@ -1,6 +1,6 @@
 import { ContractInterface, ethers, Signer } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
-import { StorageHandler } from "./classes/storage-handler";
+import { RemoteStorage } from "./classes/remote-storage";
 import {
   Edition,
   EditionDrop,
@@ -138,7 +138,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * Upload and download files from IPFS or from your own storage service
    */
-  public storage: StorageHandler;
+  public storage: RemoteStorage;
 
   constructor(
     network: ChainOrRpc | SignerOrProvider,
@@ -148,7 +148,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     const signerOrProvider = getProviderForNetwork(network);
     super(signerOrProvider, options);
     this.storageHandler = storage;
-    this.storage = new StorageHandler(storage);
+    this.storage = new RemoteStorage(storage);
     this.deployer = new ContractDeployer(signerOrProvider, options, storage);
     this.wallet = new UserWallet(signerOrProvider, options);
   }

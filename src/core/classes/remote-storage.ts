@@ -7,7 +7,7 @@ import { FileOrBuffer, JsonObject } from "../types";
  * Fetch and upload files to IPFS or any other storage.
  * @public
  */
-export class StorageHandler {
+export class RemoteStorage {
   private storage: IStorage;
 
   constructor(storage: IStorage) {
