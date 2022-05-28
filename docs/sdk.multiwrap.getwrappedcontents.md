@@ -29,7 +29,7 @@ Promise&lt;[WrappedTokens](./sdk.wrappedtokens.md)<!-- -->&gt;
 
 
 ```javascript
-const contents = await contract.getContents(wrappedTokenId);
+const contents = await contract.getWrappedContents(wrappedTokenId);
 console.log(contents.erc20Tokens);
 console.log(contents.erc721Tokens);
 console.log(contents.erc1155Tokens);

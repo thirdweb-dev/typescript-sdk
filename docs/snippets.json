@@ -430,7 +430,7 @@
         "summary": "Get the contents of a wrapped token bundle\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const contents = await contract.getContents(wrappedTokenId);\nconsole.log(contents.erc20Tokens);\nconsole.log(contents.erc721Tokens);\nconsole.log(contents.erc1155Tokens);"
+          "javascript": "const contents = await contract.getWrappedContents(wrappedTokenId);\nconsole.log(contents.erc20Tokens);\nconsole.log(contents.erc721Tokens);\nconsole.log(contents.erc1155Tokens);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Multiwrap.getWrappedContents"
       },
