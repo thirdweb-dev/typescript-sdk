@@ -26,7 +26,7 @@ const sdk = new ThirdwebSDK(provider);
 const contract = await sdk.getContract("{{contract_address}}");
 
 // call any function in your contract
-await contract.functions.myCustomFunction(params);
+await contract.call("myCustomFunction", param1, param2);
 
 // if your contract follows the ERC721 standard, contract.nft will be present
 const allNFTs = await contract.nft.query.all()
