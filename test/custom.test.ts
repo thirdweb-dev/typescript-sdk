@@ -9,6 +9,7 @@ import {
 } from "contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { uploadContractMetadata } from "./publisher.test";
+import { IpfsStorage, ThirdwebSDK } from "../src";
 
 require("./before-setup");
 
@@ -22,19 +23,18 @@ describe("Custom Contracts", async () => {
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
+  let sdk: ThirdwebSDK;
+  let storage: IpfsStorage;
 
   before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    const simpleContractUri = await uploadContractMetadata(
-      "test/abis/greeter.json",
-    );
+    sdk = new ThirdwebSDK(adminWallet);
+    storage = new IpfsStorage();
+    const simpleContractUri = await uploadContractMetadata("Greeter", storage);
     const publisher = await sdk.getPublisher();
     customContractAddress = await publisher.deployContract(
       simpleContractUri,
       [],
-      {
-        name: "CustomContract",
-      },
     );
   });
 
@@ -105,7 +105,7 @@ describe("Custom Contracts", async () => {
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Contract undefined");
     const meta = await c.metadata.get();
-    expect(meta.name).to.eq("CustomContract");
+    expect(meta.name).to.eq("Greeter");
   });
 
   it("should detect feature: roles", async () => {

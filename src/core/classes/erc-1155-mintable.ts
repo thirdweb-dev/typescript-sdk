@@ -7,10 +7,10 @@ import { EditionMetadata, EditionMetadataOrUri } from "../../schema";
 import { TransactionResultWithId } from "../types";
 import { uploadOrExtractURI } from "../../common/nft";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { TokensMintedEvent } from "contracts/TokenERC1155";
 import { IStorage } from "../interfaces";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
+import { TransferSingleEvent } from "contracts/ITokenERC1155";
 
 /**
  * Mint ERC1155 NFTs
@@ -86,14 +86,15 @@ export class Erc1155Mintable implements DetectableFeature {
       uri,
       metadataWithSupply.supply,
     ]);
-    const event = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
+    const event = this.contractWrapper.parseLogs<TransferSingleEvent>(
+      "TransferSingle",
       receipt?.logs,
     );
+    console.log(event);
     if (event.length === 0) {
       throw new Error("TokenMinted event not found");
     }
-    const id = event[0].args.tokenIdMinted;
+    const id = event[0].args.id;
     return {
       id,
       receipt,

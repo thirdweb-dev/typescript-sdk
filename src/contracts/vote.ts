@@ -19,7 +19,6 @@ import {
 import { fetchCurrencyMetadata, fetchCurrencyValue } from "../common/currency";
 import { BigNumber, BigNumberish, Contract, ethers } from "ethers";
 import { VoteType } from "../enums";
-import deepEqual from "deep-equal";
 import { CurrencyValue } from "../types/currency";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractEncoder } from "../core/classes/contract-encoder";
@@ -114,7 +113,7 @@ export class Vote implements UpdateableNetwork {
   public async get(proposalId: BigNumberish): Promise<Proposal> {
     const all = await this.getAll();
     const proposals = all.filter((p) =>
-      deepEqual(BigNumber.from(p.proposalId), BigNumber.from(proposalId)),
+      p.proposalId.eq(BigNumber.from(proposalId)),
     );
     if (proposals.length === 0) {
       throw new Error("proposal not found");

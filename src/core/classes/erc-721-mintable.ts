@@ -5,11 +5,11 @@ import { TransactionResultWithId } from "../types";
 import { uploadOrExtractURI } from "../../common/nft";
 import { IStorage } from "../interfaces";
 import { Erc721 } from "./erc-721";
-import { TokensMintedEvent } from "contracts/IMintableERC721";
 import { Erc721BatchMintable } from "./erc-721-batch-mintable";
 import { detectContractFeature } from "../../common";
 import { FEATURE_NFT_MINTABLE } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { TransferEvent } from "contracts/ITokenERC721";
 
 /**
  * Mint ERC721 NFTs
@@ -72,15 +72,14 @@ export class Erc721Mintable implements DetectableFeature {
       to,
       uri,
     ]);
-    // TODO switch to Transfer event!
-    const event = this.contractWrapper.parseLogs<TokensMintedEvent>(
-      "TokensMinted",
+    const event = this.contractWrapper.parseLogs<TransferEvent>(
+      "Transfer",
       receipt?.logs,
     );
     if (event.length === 0) {
       throw new Error("TokenMinted event not found");
     }
-    const id = event[0].args.tokenIdMinted;
+    const id = event[0].args.tokenId;
     return {
       id,
       receipt,

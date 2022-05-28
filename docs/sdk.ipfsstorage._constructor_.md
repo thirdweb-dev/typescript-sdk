@@ -9,7 +9,7 @@ Constructs a new instance of the `IpfsStorage` class
 <b>Signature:</b>
 
 ```typescript
-constructor(gatewayUrl?: string, uploader?: IStorageUpload);
+constructor(gatewayUrl?: string, uploader?: IpfsUploader);
 ```
 
 ## Parameters
@@ -17,5 +17,5 @@ constructor(gatewayUrl?: string, uploader?: IStorageUpload);
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  gatewayUrl | string | <i>(Optional)</i> |
-|  uploader | IStorageUpload | <i>(Optional)</i> |
+|  uploader | IpfsUploader | <i>(Optional)</i> |
 

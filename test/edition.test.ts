@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 
 global.fetch = require("cross-fetch");
 
-describe("Bundle Contract (aka Collection Contract)", async () => {
+describe("Edition Contract", async () => {
   let bundleContract: Edition;
   // let nftContract: NFTContract;
   // let currencyContract: CurrencyContract;
@@ -92,11 +92,11 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     const uri = await storage.uploadMetadata({
       name: "Test1",
     });
-    await bundleContract.mintToSelf({
+    const tx = await bundleContract.mintToSelf({
       metadata: uri,
       supply: 10,
     });
-    const nft = await bundleContract.get("0");
+    const nft = await bundleContract.get(tx.id);
     assert.isNotNull(nft);
     assert.equal(nft.metadata.name, "Test1");
   });

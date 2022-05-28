@@ -1,5 +1,8 @@
-import { DEFAULT_IPFS_GATEWAY, PUBLIC_GATEWAYS } from "../../constants/urls";
-import { IStorageUpload } from "../interfaces/IStorageUpload";
+import {
+  DEFAULT_IPFS_GATEWAY,
+  PINATA_IPFS_URL,
+  PUBLIC_GATEWAYS,
+} from "../../constants/urls";
 import { IStorage } from "../interfaces/IStorage";
 import { FileOrBuffer, JsonObject } from "../types";
 import {
@@ -21,11 +24,11 @@ export class IpfsStorage implements IStorage {
    */
   public gatewayUrl: string;
   private failedUrls: string[] = [];
-  private uploader: IStorageUpload;
+  private uploader: IpfsUploader;
 
   constructor(
     gatewayUrl: string = DEFAULT_IPFS_GATEWAY,
-    uploader: IStorageUpload = new IpfsUploader(),
+    uploader: IpfsUploader = new IpfsUploader(),
   ) {
     this.gatewayUrl = `${gatewayUrl.replace(/\/$/, "")}/`;
     this.uploader = uploader;
@@ -259,5 +262,51 @@ export class IpfsStorage implements IStorage {
       }
     }
     return files;
+  }
+
+  /**
+   * FOR TESTING ONLY
+   * @internal
+   * @param data
+   * @param contractAddress
+   * @param signerAddress
+   */
+  public async uploadSingle(
+    data: string | Record<string, any>,
+    contractAddress?: string,
+    signerAddress?: string,
+  ): Promise<string> {
+    const token = await this.uploader.getUploadToken(contractAddress || "");
+    const metadata = {
+      name: `CONSOLE-TS-SDK-${contractAddress}`,
+      keyvalues: {
+        sdk: "typescript",
+        contractAddress,
+        signerAddress,
+      },
+    };
+    const formData = new FormData();
+    const filepath = `files`; // Root directory
+    formData.append("file", data as any, filepath as any);
+    formData.append("pinataMetadata", JSON.stringify(metadata));
+    formData.append(
+      "pinataOptions",
+      JSON.stringify({
+        wrapWithDirectory: false,
+      }),
+    );
+    const res = await fetch(PINATA_IPFS_URL, {
+      method: "POST",
+      headers: {
+        Authorization: `Bearer ${token}`,
+      },
+      body: formData as any,
+    });
+    if (!res.ok) {
+      throw new Error(`Failed to upload to IPFS [status code = ${res.status}]`);
+    }
+
+    const body = await res.json();
+    return body.IpfsHash;
   }
 }

@@ -1,25 +1,26 @@
-import { sdk, signers, storage } from "./before-setup";
+import { signers } from "./before-setup";
 import { readFileSync } from "fs";
 import { expect } from "chai";
-import { isFeatureEnabled, ThirdwebSDK } from "../src";
+import { IpfsStorage, isFeatureEnabled, ThirdwebSDK } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../typechain";
 
 global.fetch = require("cross-fetch");
 
-export const uploadContractMetadata = async (filename) => {
-  const greeterJson = JSON.parse(readFileSync(filename, "utf-8"));
-  const abi = greeterJson.abi;
-  const bytecode = greeterJson.bytecode;
-  const abiUri = await storage.uploadMetadata(abi);
-  const bytecodeUri = await storage.upload(bytecode);
-  const contractData = {
-    name: greeterJson.contractName,
-    abiUri,
-    bytecodeUri,
-  };
-  return await storage.uploadMetadata(contractData);
+export const uploadContractMetadata = async (
+  contractName: string,
+  storage: IpfsStorage,
+) => {
+  const buildinfo = JSON.parse(
+    readFileSync("test/test_abis/hardhat-build-info.json", "utf-8"),
+  );
+  const info =
+    buildinfo.output.contracts[`contracts/${contractName}.sol`][contractName];
+  const bytecode = `0x${info.evm.bytecode.object}`;
+  await storage.uploadSingle(info.metadata);
+  const bytecodeUri = await storage.uploadSingle(bytecode);
+  return `ipfs://${bytecodeUri}`;
 };
 
 describe("Publishing", async () => {
@@ -28,12 +29,17 @@ describe("Publishing", async () => {
   let adminWallet: SignerWithAddress;
   let samWallet: SignerWithAddress;
   let bobWallet: SignerWithAddress;
+  let sdk: ThirdwebSDK;
+  let storage: IpfsStorage;
 
   before("Upload abis", async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    simpleContractUri = await uploadContractMetadata("test/abis/greeter.json");
+    sdk = new ThirdwebSDK(adminWallet);
+    storage = new IpfsStorage();
+    simpleContractUri = await uploadContractMetadata("Greeter", storage);
     contructorParamsContractUri = await uploadContractMetadata(
-      "test/abis/constructor_params.json",
+      "ConstructorParams",
+      storage,
     );
   });
 
@@ -44,7 +50,6 @@ describe("Publishing", async () => {
   it("should extract functions", async () => {
     const publisher = await sdk.getPublisher();
     const functions = await publisher.extractFunctions(simpleContractUri);
-    console.log(functions);
     expect(functions.length).gt(0);
   });
 
@@ -79,9 +84,6 @@ describe("Publishing", async () => {
       adminWallet.address,
       contract.id,
       [],
-      {
-        name: "CustomContract",
-      },
     );
     expect(deployedAddr.length).to.be.gt(0);
     const all = await publisher.getAll(adminWallet.address);
@@ -89,7 +91,7 @@ describe("Publishing", async () => {
     // fetch metadata back
     const c = await sdk.getContract(deployedAddr);
     const meta = await c.metadata.get();
-    expect(meta.name).to.eq("CustomContract");
+    expect(meta.name).to.eq("Greeter");
   });
 
   it("should publish multiple versions", async () => {
@@ -142,7 +144,7 @@ describe("Publishing", async () => {
   it("SimpleAzuki enumerable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmPoEDD6EdjMZ6U5pDdLbZnLhcNuMzyEFFEMVqVDw5JAJX/0";
+    const ipfsUri = "ipfs://QmRMLC1QY1WihttMW1XeLwqfsRdW2A8uftuTjytV6tJSok/0";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
     const deployedAddr = await pub.deployPublishedContract(
@@ -160,7 +162,7 @@ describe("Publishing", async () => {
   it("AzukiWithMinting mintable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmPoEDD6EdjMZ6U5pDdLbZnLhcNuMzyEFFEMVqVDw5JAJX/1";
+    const ipfsUri = "ipfs://QmRMLC1QY1WihttMW1XeLwqfsRdW2A8uftuTjytV6tJSok/1";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
     const deployedAddr = await pub.deployPublishedContract(

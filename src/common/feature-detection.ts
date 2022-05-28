@@ -1,4 +1,4 @@
-import { BaseContract, Contract, ethers } from "ethers";
+import { BaseContract, ethers } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core";
 import {
@@ -14,9 +14,8 @@ import {
   FeatureWithEnabled,
   SUPPORTED_FEATURES,
 } from "../constants/contract-features";
-import ContractMetadataRegistryAbi from "../../abis/ContractMetadataRegistry.json";
-import { ContractMetadataRegistry } from "contracts";
-import { getContractAddressByChainId } from "../constants";
+import { decodeFirstSync } from "cbor";
+import { toB58String } from "multihashes";
 
 /**
  * @internal
@@ -59,15 +58,12 @@ export async function extractConstructorParams(
  * @param storage
  */
 export async function extractFunctions(
-  metadataUri: string,
+  bytecodeUri: string,
   storage: IStorage,
 ): Promise<AbiFunction[]> {
-  const metadata = CustomContractMetadataSchema.parse(
-    await storage.get(metadataUri),
-  );
-  const abiRaw = await storage.get(metadata.abiUri);
-  const abi = AbiSchema.parse(abiRaw);
-  return extractFunctionsFromAbi(abi);
+  const bytecode = await storage.getRaw(bytecodeUri);
+  const metadata = await fetchContractMetadataFromBytecode(bytecode, storage);
+  return extractFunctionsFromAbi(metadata.abi);
 }
 
 /**
@@ -144,18 +140,63 @@ function toJSType(contractType: string, isReturnType = false): string {
 export async function resolveContractUriFromAddress(
   address: string,
   provider: ethers.providers.Provider,
-): Promise<string> {
-  const chainId = (await provider.getNetwork()).chainId;
-  const metadataRegistryAddress = getContractAddressByChainId(
-    chainId,
-    "contractMetadataRegistry",
+): Promise<string | undefined> {
+  const bytecode = await provider.getCode(address);
+  return extractIPFSHashFromBytecode(bytecode);
+}
+
+/**
+ * @internal
+ * @param bytecode
+ */
+function extractIPFSHashFromBytecode(bytecode: string): string | undefined {
+  try {
+    const numericBytecode = hexToBytes(bytecode);
+    const cborLength: number =
+      numericBytecode[numericBytecode.length - 2] * 0x100 +
+      numericBytecode[numericBytecode.length - 1];
+    const bytecodeBuffer = Buffer.from(
+      numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
+    );
+    const cborData = decodeFirstSync(bytecodeBuffer);
+    if (cborData["ipfs"]) {
+      return `ipfs://${toB58String(cborData["ipfs"])}`;
+    }
+  } catch (e) {
+    console.log(e);
+  }
+  return undefined;
+}
+
+/**
+ * @internal
+ * @param hex
+ */
+function hexToBytes(hex: string | number) {
+  hex = hex.toString(16);
+  if (!hex.startsWith("0x")) {
+    hex = `0x${hex}`;
+  }
+  if (!isHexStrict(hex)) {
+    throw new Error(`Given value "${hex}" is not a valid hex string.`);
+  }
+  hex = hex.replace(/^0x/i, "");
+  const bytes = [];
+  for (let c = 0; c < hex.length; c += 2) {
+    bytes.push(parseInt(hex.slice(c, c + 2), 16));
+  }
+  return bytes;
+}
+
+/**
+ * @internal
+ * @param hex
+ */
+function isHexStrict(hex: string | number) {
+  return (
+    (typeof hex === "string" || typeof hex === "number") &&
+    /^(-)?0x[0-9a-f]*$/i.test(hex.toString())
   );
-  const contract = new Contract(
-    metadataRegistryAddress,
-    ContractMetadataRegistryAbi,
-    provider,
-  ) as ContractMetadataRegistry;
-  return await contract.getMetadataUri(address);
 }
 
 /**
@@ -170,6 +211,9 @@ export async function fetchContractMetadataFromAddress(
   storage: IStorage,
 ) {
   const metadataUri = await resolveContractUriFromAddress(address, provider);
+  if (!metadataUri) {
+    throw new Error(`Could not resolve metadata for contract at ${address}`);
+  }
   return await fetchContractMetadata(metadataUri, storage);
 }
 
@@ -178,20 +222,48 @@ export async function fetchContractMetadataFromAddress(
  * @param metadataUri
  * @param storage
  */
-export async function fetchContractMetadata(
+async function fetchContractMetadata(
   metadataUri: string,
   storage: IStorage,
 ): Promise<PublishedMetadata> {
-  const metadata = CustomContractMetadataSchema.parse(
-    await storage.get(metadataUri),
-  );
-  const abi = AbiSchema.parse(await storage.get(metadata.abiUri));
-  const bytecode = await storage.getRaw(metadata.bytecodeUri);
+  const metadata = await storage.get(metadataUri);
+  const abi = AbiSchema.parse(metadata.output.abi);
+  const compilationTarget = metadata.settings.compilationTarget;
+  const keys = Object.keys(compilationTarget);
+  const name = compilationTarget[keys[0]];
   return {
-    name: metadata.name,
+    name,
     abi,
-    bytecode,
   };
+}
+
+/**
+ * @internal
+ * @param bytecodeUri
+ * @param storage
+ */
+export async function fetchContractBytecodeMetadata(
+  bytecodeUri: string,
+  storage: IStorage,
+): Promise<PublishedMetadata> {
+  const bytecode = await storage.getRaw(bytecodeUri);
+  return await fetchContractMetadataFromBytecode(bytecode, storage);
+}
+
+/**
+ * @internal
+ * @param bytecode
+ * @param storage
+ */
+export async function fetchContractMetadataFromBytecode(
+  bytecode: string,
+  storage: IStorage,
+) {
+  const metadataUri = extractIPFSHashFromBytecode(bytecode);
+  if (!metadataUri) {
+    throw new Error("No metadata found in bytecode");
+  }
+  return await fetchContractMetadata(metadataUri, storage);
 }
 
 /**

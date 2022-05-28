@@ -1624,7 +1624,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20> imp
     // (undocumented)
     featureName: "ERC20";
     get(): Promise<Currency>;
-    // (undocumented)
+    // @internal (undocumented)
     getAddress(): string;
     // @internal (undocumented)
     protected getValue(value: BigNumberish): Promise<CurrencyValue>;
@@ -1802,22 +1802,27 @@ export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>):
 // Warning: (ae-internal-missing-underscore) The name "extractFunctions" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function extractFunctions(metadataUri: string, storage: IStorage): Promise<AbiFunction[]>;
+export function extractFunctions(bytecodeUri: string, storage: IStorage): Promise<AbiFunction[]>;
 
 // Warning: (ae-internal-missing-underscore) The name "extractFunctionsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>): AbiFunction[];
 
-// Warning: (ae-internal-missing-underscore) The name "fetchContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-internal-missing-underscore) The name "fetchContractBytecodeMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function fetchContractMetadata(metadataUri: string, storage: IStorage): Promise<PublishedMetadata>;
+export function fetchContractBytecodeMetadata(bytecodeUri: string, storage: IStorage): Promise<PublishedMetadata>;
 
 // Warning: (ae-internal-missing-underscore) The name "fetchContractMetadataFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export function fetchContractMetadataFromAddress(address: string, provider: ethers.providers.Provider, storage: IStorage): Promise<PublishedMetadata>;
+
+// Warning: (ae-internal-missing-underscore) The name "fetchContractMetadataFromBytecode" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function fetchContractMetadataFromBytecode(bytecode: string, storage: IStorage): Promise<PublishedMetadata>;
 
 // Warning: (ae-internal-missing-underscore) The name "FetchError" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -2004,8 +2009,8 @@ export interface IPackCreateArgs {
 
 // @public
 export class IpfsStorage implements IStorage {
-    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "IStorageUpload" which is marked as @internal
-    constructor(gatewayUrl?: string, uploader?: IStorageUpload);
+    // Warning: (ae-forgotten-export) The symbol "IpfsUploader" needs to be exported by the entry point index.d.ts
+    constructor(gatewayUrl?: string, uploader?: IpfsUploader);
     // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "gatewayUrl"
     //
     // @internal (undocumented)
@@ -2030,6 +2035,8 @@ export class IpfsStorage implements IStorage {
         baseUri: string;
         uris: string[];
     }>;
+    // @internal
+    uploadSingle(data: string | Record<string, any>, contractAddress?: string, signerAddress?: string): Promise<string>;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "isFeatureEnabled" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3300,7 +3307,7 @@ export class RemoteStorage {
 // Warning: (ae-internal-missing-underscore) The name "resolveContractUriFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function resolveContractUriFromAddress(address: string, provider: ethers.providers.Provider): Promise<string>;
+export function resolveContractUriFromAddress(address: string, provider: ethers.providers.Provider): Promise<string | undefined>;
 
 // Warning: (ae-internal-missing-underscore) The name "RestrictedTransferError" should be prefixed with an underscore because the declaration is marked as @internal
 //
