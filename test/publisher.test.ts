@@ -44,6 +44,7 @@ describe("Publishing", async () => {
   it("should extract functions", async () => {
     const publisher = await sdk.getPublisher();
     const functions = await publisher.extractFunctions(simpleContractUri);
+    console.log(functions);
     expect(functions.length).gt(0);
   });
 

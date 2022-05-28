@@ -42,7 +42,7 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * const contract = await sdk.getContract("{{contract_address}}");
  *
  * // call any function in your contract
- * await contract.functions.myCustomFunction(params);
+ * await contract.call("myCustomFunction", param1, param2);
  *
  * // if your contract follows the ERC721 standard, contract.nft will be present
  * const allNFTs = await contract.nft.query.all()
@@ -69,13 +69,6 @@ export class SmartContract<
   private contractWrapper;
   private storage;
   private options;
-
-  // raw contract
-  /**
-   * Call any function in this contract using the function signature
-   * ex: contract.functions.mint(address, quantity)
-   */
-  public readonly functions: any;
 
   // utilities
   public events: ContractEvents<TContract>;
@@ -124,7 +117,6 @@ export class SmartContract<
     this.options = options;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
-    this.functions = contractWrapper.writeContract;
 
     this.events = new ContractEvents(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
@@ -151,9 +143,6 @@ export class SmartContract<
     this.token = this.detectErc20();
     this.nft = this.detectErc721();
     this.edition = this.detectErc1155();
-
-    // TODO detect sigmint
-    // this.sigmint = this.detectSigmint();
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
@@ -162,6 +151,51 @@ export class SmartContract<
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  /**
+   * Call any function on this contract
+   * @example
+   * ```javascript
+   * // read functions will return the data from the contract
+   * const myValue = await contract.call("myReadFunction");
+   * console.log(myValue);
+   *
+   * // write functions will return the transaction receipt
+   * const tx = await contract.call("myWriteFunction", [arg1, arg2]);
+   * const receipt = tx.receipt;
+   * ```
+   * @param functionName - the name of the function to call
+   * @param args - the arguments of the function
+   */
+  public async call(functionName: string, ...args: any[]): Promise<any> {
+    const functions = this.publishedMetadata.extractFunctions();
+    const fn = functions.find((f) => f.name === functionName);
+    if (!fn) {
+      throw new Error(
+        `Function "${functionName}" not found in contract. Check your dashboard for the list of functions available`,
+      );
+    }
+    // TODO extract this and re-use for deploy function to check constructor args
+    if (fn.inputs.length !== args.length) {
+      throw new Error(
+        `Function "${functionName}" requires ${fn.inputs.length} arguments, but ${args.length} were provided.\nExpected function signature: ${fn.signature}`,
+      );
+    }
+    // TODO validate each argument
+    if (fn.stateMutability === "view") {
+      // read function
+      return (this.contractWrapper.readContract as any)[functionName](...args);
+    } else {
+      // write function
+      const receipt = await this.contractWrapper.sendTransaction(
+        functionName,
+        args,
+      );
+      return {
+        receipt,
+      };
+    }
   }
 
   /** ********************

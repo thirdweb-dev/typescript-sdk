@@ -11,6 +11,8 @@ import {
   detectContractFeature,
   resolveContractUriFromAddress,
 } from "../../common";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { FEATURE_METADATA } from "../../constants/thirdweb-features";
 
 /**
  * @internal
@@ -23,12 +25,24 @@ export interface IGenericSchemaType {
 
 /**
  * Handles metadata for a Contract
+ * @remarks Read and update metadata for this contract
+ * @example
+ * ```javascript
+ * const contract = await sdk.getContract("{{contract_address}}");
+ * const metadata = await contract.metadata.get();
+ * await contract.metadata.set({
+ *   name: "My Contract",
+ *   description: "My contract description"
+ * })
+ * ```
  * @public
  */
 export class ContractMetadata<
   TContract extends IThirdwebContract | ThirdwebContract,
   TSchema extends IGenericSchemaType,
-> {
+> implements DetectableFeature
+{
+  featureName = FEATURE_METADATA.name;
   private contractWrapper;
   private schema;
   private storage;

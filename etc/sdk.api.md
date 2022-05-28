@@ -637,11 +637,14 @@ export class ContractInterceptor<TContract extends BaseContract> {
 
 // Warning: (ae-forgotten-export) The symbol "IThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "ThirdwebContract" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "DetectableFeature" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractMetadata" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
-export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebContract, TSchema extends IGenericSchemaType> {
+export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebContract, TSchema extends IGenericSchemaType> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>, schema: TSchema, storage: IStorage);
+    // (undocumented)
+    featureName: "ContractMetadata";
     // (undocumented)
     get(): Promise<z.output<TSchema["output"]>>;
     // @internal (undocumented)
@@ -669,7 +672,6 @@ export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebCont
 }
 
 // Warning: (ae-forgotten-export) The symbol "IPlatformFee" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "DetectableFeature" needs to be exported by the entry point index.d.ts
 //
 // @public
 export class ContractPlatformFee<TContract extends IPlatformFee> implements DetectableFeature {
@@ -1782,6 +1784,7 @@ export enum EventType {
 // @internal (undocumented)
 export function extractConstructorParams(metadataUri: string, storage: IStorage): Promise<{
     [x: string]: any;
+    stateMutability?: string | undefined;
     name: string;
     type: string;
 }[]>;
@@ -1791,6 +1794,7 @@ export function extractConstructorParams(metadataUri: string, storage: IStorage)
 // @internal (undocumented)
 export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>): {
     [x: string]: any;
+    stateMutability?: string | undefined;
     name: string;
     type: string;
 }[];
@@ -4352,6 +4356,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
     // @internal (undocumented)
     analytics: ContractAnalytics<TContract>;
+    call(functionName: string, ...args: any[]): Promise<any>;
     // (undocumented)
     static contractType: "custom";
     edition: Erc1155 | undefined;
@@ -4359,7 +4364,6 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     estimator: GasCostEstimator<TContract>;
     // (undocumented)
     events: ContractEvents<TContract>;
-    readonly functions: any;
     // (undocumented)
     getAddress(): string;
     // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @beta, but its signature references "ContractInterceptor" which is marked as @internal

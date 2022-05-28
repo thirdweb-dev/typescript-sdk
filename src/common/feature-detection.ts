@@ -101,14 +101,16 @@ export function extractFunctionsFromAbi(
       f.inputs
         ?.map((i) => `${i.name || "key"}: ${toJSType(i.type)}`)
         ?.join(", ") || "";
+    const fargs = args ? `, ${args}` : "";
     const out = f.outputs?.map((o) => toJSType(o.type, true))?.join(", ");
-    const promise = out ? `: Promise<${out}>` : "";
-    const signature = `${f.name}(${args})${promise}`;
+    const promise = out ? `: Promise<${out}>` : `: Promise<TransactionResult>`;
+    const signature = `contract.call("${f.name}"${fargs})${promise}`;
     parsed.push({
       inputs: f.inputs ?? [],
       outputs: f.outputs ?? [],
       name: f.name ?? "unknown",
       signature,
+      stateMutability: f.stateMutability ?? "",
     });
   }
   return parsed;
