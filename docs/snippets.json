@@ -825,9 +825,19 @@
     "summary": "Custom contract dynamic class with feature detection\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(provider);\nconst contract = await sdk.getContract(\"{{contract_address}}\");\n\n// call any function in your contract\nawait contract.functions.myCustomFunction(params);\n\n// if your contract follows the ERC721 standard, contract.nft will be present\nconst allNFTs = await contract.nft.query.all()\n\n// if your contract extends IMintableERC721, contract.nft.mint will be present\nconst tx = await contract.nft.mint.to(\"0x...\", {\n    name: \"Cool NFT\",\n    image: readFileSync(\"some_image.png\"),\n  });"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(provider);\nconst contract = await sdk.getContract(\"{{contract_address}}\");\n\n// call any function in your contract\nawait contract.call(\"myCustomFunction\", param1, param2);\n\n// if your contract follows the ERC721 standard, contract.nft will be present\nconst allNFTs = await contract.nft.query.all()\n\n// if your contract extends IMintableERC721, contract.nft.mint will be present\nconst tx = await contract.nft.mint.to(\"0x...\", {\n    name: \"Cool NFT\",\n    image: readFileSync(\"some_image.png\"),\n  });"
     },
-    "methods": [],
+    "methods": [
+      {
+        "name": "call",
+        "summary": "Call any function on this contract\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "// read functions will return the data from the contract\nconst myValue = await contract.call(\"myReadFunction\");\nconsole.log(myValue);\n\n// write functions will return the transaction receipt\nconst tx = await contract.call(\"myWriteFunction\", [arg1, arg2]);\nconst receipt = tx.receipt;"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.SmartContract.call"
+      }
+    ],
     "properties": [],
     "reference": "https://docs.thirdweb.com/typescript/sdk.SmartContract"
   },

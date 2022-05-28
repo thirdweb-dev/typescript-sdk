@@ -23,12 +23,13 @@ import {
   TokensToWrap,
   WrappedTokens,
 } from "../types/multiwrap";
-import { normalizePriceValue } from "../common/currency";
+import { hasERC20Allowance, normalizePriceValue } from "../common/currency";
 import { ITokenBundle, TokensWrappedEvent } from "contracts/Multiwrap";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { BigNumberish, ethers } from "ethers";
 import TokenStruct = ITokenBundle.TokenStruct;
 import { QueryAllParams } from "../types";
+import { isTokenApprovedForTransfer } from "../common/marketplace";
 
 /**
  * Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.
@@ -293,16 +294,32 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
     const tokens: TokenStruct[] = [];
 
     const provider = this.contractWrapper.getProvider();
+    const owner = await this.contractWrapper.getSignerAddress();
 
     if (contents.erc20Tokens) {
       for (const erc20 of contents.erc20Tokens) {
+        const normalizedQuantity = await normalizePriceValue(
+          provider,
+          erc20.quantity,
+          erc20.contractAddress,
+        );
+        const hasAllowance = await hasERC20Allowance(
+          this.contractWrapper,
+          erc20.contractAddress,
+          normalizedQuantity,
+        );
+        if (!hasAllowance) {
+          throw new Error(
+            `ERC20 token with contract address "${
+              erc20.contractAddress
+            }" does not have enough allowance to transfer.\n\nYou can set allowance to the multiwrap contract to transfer these tokens by running:\n\nawait sdk.getToken("${
+              erc20.contractAddress
+            }").setAllowance("${this.getAddress()}", ${erc20.quantity});\n\n`,
+          );
+        }
         tokens.push({
           assetContract: erc20.contractAddress,
-          totalAmount: await normalizePriceValue(
-            provider,
-            erc20.quantity,
-            erc20.contractAddress,
-          ),
+          totalAmount: normalizedQuantity,
           tokenId: 0,
           tokenType: 0,
         });
@@ -311,6 +328,26 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
 
     if (contents.erc721Tokens) {
       for (const erc721 of contents.erc721Tokens) {
+        const isApproved = await isTokenApprovedForTransfer(
+          this.contractWrapper.getProvider(),
+          this.getAddress(),
+          erc721.contractAddress,
+          erc721.tokenId,
+          owner,
+        );
+
+        if (!isApproved) {
+          throw new Error(
+            `ERC721 token "${erc721.tokenId}" with contract address "${
+              erc721.contractAddress
+            }" is not approved for transfer.\n\nYou can give approval the multiwrap contract to transfer this token by running:\n\nawait sdk.getNFTCollection("${
+              erc721.contractAddress
+            }").setApprovalForToken("${this.getAddress()}", ${
+              erc721.tokenId
+            });\n\n`,
+          );
+        }
+
         tokens.push({
           assetContract: erc721.contractAddress,
           totalAmount: 0,
@@ -322,6 +359,23 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
 
     if (contents.erc1155Tokens) {
       for (const erc1155 of contents.erc1155Tokens) {
+        const isApproved = await isTokenApprovedForTransfer(
+          this.contractWrapper.getProvider(),
+          this.getAddress(),
+          erc1155.contractAddress,
+          erc1155.tokenId,
+          owner,
+        );
+
+        if (!isApproved) {
+          throw new Error(
+            `ERC1155 token "${erc1155.tokenId}" with contract address "${
+              erc1155.contractAddress
+            }" is not approved for transfer.\n\nYou can give approval the multiwrap contract to transfer this token by running:\n\nawait sdk.getEdition("${
+              erc1155.contractAddress
+            }").setApprovalForAll("${this.getAddress()}", true);\n\n`,
+          );
+        }
         tokens.push({
           assetContract: erc1155.contractAddress,
           totalAmount: erc1155.quantity,

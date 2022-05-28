@@ -68,6 +68,7 @@ export const AbiTypeSchema = z
   .object({
     type: z.string(),
     name: z.string(),
+    stateMutability: z.string().optional(),
   })
   .catchall(z.any());
 
@@ -104,6 +105,7 @@ export type AbiFunction = {
   inputs: z.infer<typeof AbiTypeSchema>[];
   outputs: z.infer<typeof AbiTypeSchema>[];
   signature: string;
+  stateMutability: string;
 };
 export type PublishedMetadata = {
   name: string;

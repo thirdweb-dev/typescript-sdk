@@ -210,6 +210,16 @@ export const ChainlinkVrf: Record<number, ChainlinkInfo>;
 // @internal (undocumented)
 export type ChainOrRpc = "mumbai" | "polygon" | "rinkeby" | "goerli" | "mainnet" | "fantom" | "avalanche" | (string & {});
 
+// Warning: (ae-internal-missing-underscore) The name "CidWithFileName" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export interface CidWithFileName {
+    // (undocumented)
+    cid: string;
+    // (undocumented)
+    fileNames: string[];
+}
+
 // Warning: (ae-incompatible-release-tags) The symbol "ClaimCondition" is marked as @public, but its signature references "ClaimConditionOutputSchema" which is marked as @internal
 //
 // @public
@@ -627,11 +637,14 @@ export class ContractInterceptor<TContract extends BaseContract> {
 
 // Warning: (ae-forgotten-export) The symbol "IThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "ThirdwebContract" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "DetectableFeature" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractMetadata" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
-export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebContract, TSchema extends IGenericSchemaType> {
+export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebContract, TSchema extends IGenericSchemaType> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>, schema: TSchema, storage: IStorage);
+    // (undocumented)
+    featureName: "ContractMetadata";
     // (undocumented)
     get(): Promise<z.output<TSchema["output"]>>;
     // @internal (undocumented)
@@ -659,7 +672,6 @@ export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebCont
 }
 
 // Warning: (ae-forgotten-export) The symbol "IPlatformFee" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "DetectableFeature" needs to be exported by the entry point index.d.ts
 //
 // @public
 export class ContractPlatformFee<TContract extends IPlatformFee> implements DetectableFeature {
@@ -847,7 +859,9 @@ export const DEFAULT_QUERY_ALL_COUNT = 100;
 // @public
 export class DelayedReveal<T extends SignatureDrop_2 | DropERC721> {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage);
-    createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string): Promise<TransactionResultWithId[]>;
+    createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId[]>;
     getBatchesToReveal(): Promise<BatchToReveal[]>;
     reveal(batchId: BigNumberish, password: string): Promise<TransactionResult>;
 }
@@ -1694,6 +1708,8 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     query: Erc721Supply | undefined;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
+    // @internal
+    setApprovalForToken(operator: string, tokenId: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     protected storage: IStorage;
     transfer(to: string, tokenId: BigNumberish): Promise<TransactionResult>;
@@ -1768,6 +1784,7 @@ export enum EventType {
 // @internal (undocumented)
 export function extractConstructorParams(metadataUri: string, storage: IStorage): Promise<{
     [x: string]: any;
+    stateMutability?: string | undefined;
     name: string;
     type: string;
 }[]>;
@@ -1777,6 +1794,7 @@ export function extractConstructorParams(metadataUri: string, storage: IStorage)
 // @internal (undocumented)
 export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>): {
     [x: string]: any;
+    stateMutability?: string | undefined;
     name: string;
     type: string;
 }[];
@@ -1991,20 +2009,33 @@ export interface IPackCreateArgs {
 
 // @public
 export class IpfsStorage implements IStorage {
-    constructor(gatewayUrl?: string);
+    // Warning: (ae-forgotten-export) The symbol "IpfsUploader" needs to be exported by the entry point index.d.ts
+    constructor(gatewayUrl?: string, uploader?: IpfsUploader);
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "gatewayUrl"
+    //
     // @internal (undocumented)
     gatewayUrl: string;
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
-    getUploadToken(contractAddress: string): Promise<string>;
-    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<{
+    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<{
         baseUri: string;
-        metadataUris: string[];
+        uris: string[];
     }>;
-    // @internal (undocumented)
+    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<{
+        baseUri: string;
+        uris: string[];
+    }>;
+    // @internal
     uploadSingle(data: string | Record<string, any>, contractAddress?: string, signerAddress?: string): Promise<string>;
 }
 
@@ -2013,18 +2044,32 @@ export class IpfsStorage implements IStorage {
 // @internal
 export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: FeatureName): boolean;
 
-// @public (undocumented)
+// @public
 export interface IStorage {
-    // @internal (undocumented)
-    gatewayUrl: string;
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
-    getUploadToken(contractAddress: string): Promise<string>;
-    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
-    // Warning: (ae-incompatible-release-tags) The symbol "uploadMetadataBatch" is marked as @public, but its signature references "UploadMetadataBatchResult" which is marked as @internal
-    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<UploadMetadataBatchResult>;
+    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadResult>;
+    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadResult>;
+}
+
+// Warning: (ae-internal-missing-underscore) The name "IStorageUpload" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export interface IStorageUpload {
+    // (undocumented)
+    uploadBatchWithCid(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<CidWithFileName>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "JsonLiteralOrFileOrBuffer" needs to be exported by the entry point index.d.ts
@@ -2646,7 +2691,9 @@ export class NFTDrop extends Erc721<DropERC721> {
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "nft-drop";
-    createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    createBatch(metadatas: NFTMetadataInput[], options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC721>;
     // (undocumented)
@@ -3247,6 +3294,15 @@ export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
     readonly Pack: "pack";
     readonly Multiwrap: "multiwrap";
 };
+
+// @public
+export class RemoteStorage {
+    constructor(storage: IStorage);
+    fetch(hash: string): Promise<Record<string, any>>;
+    upload(data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadResult>;
+}
 
 // Warning: (ae-internal-missing-underscore) The name "resolveContractUriFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -4307,6 +4363,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
     // @internal (undocumented)
     analytics: ContractAnalytics<TContract>;
+    call(functionName: string, ...args: any[]): Promise<any>;
     // (undocumented)
     static contractType: "custom";
     edition: Erc1155 | undefined;
@@ -4314,7 +4371,6 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     estimator: GasCostEstimator<TContract>;
     // (undocumented)
     events: ContractEvents<TContract>;
-    readonly functions: any;
     // (undocumented)
     getAddress(): string;
     // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @beta, but its signature references "ContractInterceptor" which is marked as @internal
@@ -4866,7 +4922,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getVote(address: string): Vote;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
-    storage: IStorage;
+    storage: RemoteStorage;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
     wallet: UserWallet;
 }
@@ -5237,15 +5293,17 @@ export class UploadError extends Error {
     constructor(message: string);
 }
 
-// Warning: (ae-internal-missing-underscore) The name "UploadMetadataBatchResult" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export interface UploadMetadataBatchResult {
-    // (undocumented)
-    baseUri: string;
-    // (undocumented)
-    metadataUris: string[];
+// @public (undocumented)
+export interface UploadProgressEvent {
+    progress: number;
+    total: number;
 }
+
+// @public
+export type UploadResult = {
+    baseUri: string;
+    uris: string[];
+};
 
 // @public
 export class UserWallet {

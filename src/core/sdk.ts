@@ -1,5 +1,6 @@
 import { ContractInterface, ethers, Signer } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
+import { RemoteStorage } from "./classes/remote-storage";
 import {
   Edition,
   EditionDrop,
@@ -98,12 +99,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     network: ChainOrRpc,
     options: SDKOptions = {},
   ): ThirdwebSDK {
-    const rpc = getProviderForNetwork(network);
-    const provider = Signer.isSigner(rpc)
-      ? rpc.provider
-      : typeof rpc === "string"
-      ? getReadOnlyProvider(rpc)
-      : rpc;
+    const signerOrProvider = getProviderForNetwork(network);
+    const provider = Signer.isSigner(signerOrProvider)
+      ? signerOrProvider.provider
+      : typeof signerOrProvider === "string"
+      ? getReadOnlyProvider(signerOrProvider)
+      : signerOrProvider;
     const signer = new ethers.Wallet(privateKey, provider);
     return ThirdwebSDK.fromSigner(signer, network, options);
   }
@@ -122,9 +123,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   private _publisher: Promise<ContractPublisher> | undefined;
   /**
-   * Upload and download files
+   * Internal handler for uploading and downloading files
    */
-  public storage: IStorage;
+  private storageHandler: IStorage;
   /**
    * New contract deployer
    */
@@ -134,16 +135,22 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public wallet: UserWallet;
 
+  /**
+   * Upload and download files from IPFS or from your own storage service
+   */
+  public storage: RemoteStorage;
+
   constructor(
     network: ChainOrRpc | SignerOrProvider,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ) {
-    const rpc = getProviderForNetwork(network);
-    super(rpc, options);
-    this.storage = storage;
-    this.deployer = new ContractDeployer(rpc, options, storage);
-    this.wallet = new UserWallet(rpc, options);
+    const signerOrProvider = getProviderForNetwork(network);
+    super(signerOrProvider, options);
+    this.storageHandler = storage;
+    this.storage = new RemoteStorage(storage);
+    this.deployer = new ContractDeployer(signerOrProvider, options, storage);
+    this.wallet = new UserWallet(signerOrProvider, options);
   }
 
   /**
@@ -304,7 +311,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     const newContract = new KNOWN_CONTRACTS_MAP[
       contractType as keyof typeof KNOWN_CONTRACTS_MAP
-    ](this.getSignerOrProvider(), address, this.storage, this.options);
+    ](this.getSignerOrProvider(), address, this.storageHandler, this.options);
 
     this.contractCache.set(address, newContract);
 
@@ -442,7 +449,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       this.getSignerOrProvider(),
       address,
       abi,
-      this.storage,
+      this.storageHandler,
       this.options,
     );
     this.contractCache.set(address, contract);
@@ -473,7 +480,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           factoryAddress,
           this.getSignerOrProvider(),
           this.options,
-          this.storage,
+          this.storageHandler,
         );
       }));
   }

@@ -137,6 +137,24 @@ export async function approveErc20Allowance(
   }
 }
 
+export async function hasERC20Allowance(
+  contractToApprove: ContractWrapper<any>,
+  currencyAddress: string,
+  value: BigNumber,
+) {
+  const provider = contractToApprove.getProvider();
+  const erc20 = new ContractWrapper<IERC20>(
+    provider,
+    currencyAddress,
+    ERC20Abi,
+    {},
+  );
+  const owner = await contractToApprove.getSignerAddress();
+  const spender = contractToApprove.readContract.address;
+  const allowance = await erc20.readContract.allowance(owner, spender);
+  return allowance.gte(value);
+}
+
 export async function normalizeAmount(
   contractWrapper: ContractWrapper<BaseERC20>,
   amount: Amount,

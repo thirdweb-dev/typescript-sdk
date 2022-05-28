@@ -36,7 +36,7 @@ import {
 } from "../../constants/contract";
 import {
   handleTokenApproval,
-  isTokenApprovedForMarketplace,
+  isTokenApprovedForTransfer,
   mapOffer,
   validateNewListingParam,
 } from "../../common/marketplace";
@@ -465,7 +465,7 @@ export class MarketplaceDirect {
     listing: DirectListing,
     quantity?: BigNumberish,
   ): Promise<boolean> {
-    const approved = await isTokenApprovedForMarketplace(
+    const approved = await isTokenApprovedForTransfer(
       this.contractWrapper.getProvider(),
       this.getAddress(),
       listing.assetContractAddress,

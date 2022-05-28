@@ -259,7 +259,7 @@ export class ContractWrapper<
    * @internal
    */
   public async sendTransaction(
-    fn: keyof TContract["functions"],
+    fn: keyof TContract["functions"] | (string & {}),
     args: any[],
     callOverrides?: CallOverrides,
   ): Promise<providers.TransactionReceipt> {

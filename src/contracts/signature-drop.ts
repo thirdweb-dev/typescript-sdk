@@ -473,7 +473,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     );
     const baseUri = batch.baseUri;
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.metadataUris.length,
+      batch.uris.length,
       baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
       ethers.utils.toUtf8Bytes(""),
     ]);
