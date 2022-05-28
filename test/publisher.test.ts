@@ -1,7 +1,7 @@
 import { signers } from "./before-setup";
 import { readFileSync } from "fs";
 import { expect } from "chai";
-import { IpfsStorage, isFeatureEnabled, IStorage, ThirdwebSDK } from "../src";
+import { IpfsStorage, isFeatureEnabled, ThirdwebSDK } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../typechain";
@@ -35,7 +35,7 @@ describe("Publishing", async () => {
   before("Upload abis", async () => {
     [adminWallet, samWallet, bobWallet] = signers;
     sdk = new ThirdwebSDK(adminWallet);
-    storage = sdk.storage as IpfsStorage;
+    storage = new IpfsStorage();
     simpleContractUri = await uploadContractMetadata("Greeter", storage);
     contructorParamsContractUri = await uploadContractMetadata(
       "ConstructorParams",
