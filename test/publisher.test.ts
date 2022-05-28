@@ -13,7 +13,7 @@ export const uploadContractMetadata = async (
   storage: IpfsStorage,
 ) => {
   const buildinfo = JSON.parse(
-    readFileSync("test/abis/hardhat-build-info.json", "utf-8"),
+    readFileSync("test/test_abis/hardhat-build-info.json", "utf-8"),
   );
   const info =
     buildinfo.output.contracts[`contracts/${contractName}.sol`][contractName];

@@ -5,12 +5,11 @@ import {
   TokenERC1155__factory,
   TokenERC20__factory,
   TokenERC721__factory,
-  TWFee__factory,
   VoteERC20__factory,
 } from "contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { uploadContractMetadata } from "./publisher.test";
-import { IpfsStorage, IStorage, ThirdwebSDK } from "../src";
+import { IpfsStorage, ThirdwebSDK } from "../src";
 
 require("./before-setup");
 
