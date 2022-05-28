@@ -32,7 +32,7 @@ export const FEATURE_EDITION_ENUMERABLE = {
   namespace: "edition.query",
   docLinks: {
     sdk: "sdk.erc1155",
-    contracts: "ERC1155",
+    contracts: "IERC1155",
   },
   abis: [Erc1155Abi, Erc1155EnumerableAbi],
   features: {},
@@ -43,7 +43,7 @@ export const FEATURE_EDITION = {
   namespace: "edition",
   docLinks: {
     sdk: "sdk.erc1155enumerable",
-    contracts: "ERC1155Enumerable",
+    contracts: "IERC1155Enumerable",
   },
   abis: [Erc1155Abi],
   features: {

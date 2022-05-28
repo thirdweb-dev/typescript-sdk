@@ -33,7 +33,7 @@ export const FEATURE_NFT_ENUMERABLE = {
   namespace: "nft.query.owned",
   docLinks: {
     sdk: "sdk.erc721enumerable",
-    contracts: "ERC721Enumerable",
+    contracts: "IERC721Enumerable",
   },
   abis: [Erc721Abi, Erc721EnumerableAbi],
   features: {},
@@ -44,7 +44,7 @@ export const FEATURE_NFT_SUPPLY = {
   namespace: "nft.query",
   docLinks: {
     sdk: "sdk.erc721supply",
-    contracts: "ERC721Supply",
+    contracts: "IERC721Supply",
   },
   abis: [Erc721Abi, Erc721SupplyAbi],
   features: {
@@ -57,7 +57,7 @@ export const FEATURE_NFT = {
   namespace: "nft",
   docLinks: {
     sdk: "sdk.erc721",
-    contracts: "ERC721",
+    contracts: "IERC721",
   },
   abis: [Erc721Abi],
   features: {
