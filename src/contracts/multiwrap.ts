@@ -23,7 +23,11 @@ import {
   TokensToWrap,
   WrappedTokens,
 } from "../types/multiwrap";
-import { hasERC20Allowance, normalizePriceValue } from "../common/currency";
+import {
+  fetchCurrencyMetadata,
+  hasERC20Allowance,
+  normalizePriceValue,
+} from "../common/currency";
 import { ITokenBundle, TokensWrappedEvent } from "contracts/Multiwrap";
 import { MultiwrapContractSchema } from "../schema/contracts/multiwrap";
 import { BigNumberish, ethers } from "ethers";
@@ -143,7 +147,7 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
    * Get the contents of a wrapped token bundle
    * @example
    * ```javascript
-   * const contents = await contract.getContents(wrappedTokenId);
+   * const contents = await contract.getWrappedContents(wrappedTokenId);
    * console.log(contents.erc20Tokens);
    * console.log(contents.erc721Tokens);
    * console.log(contents.erc1155Tokens);
@@ -165,9 +169,16 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
     for (const token of wrappedTokens) {
       switch (token.tokenType) {
         case 0: {
+          const tokenMetadata = await fetchCurrencyMetadata(
+            this.contractWrapper.getProvider(),
+            token.assetContract,
+          );
           erc20Tokens.push({
             contractAddress: token.assetContract,
-            quantity: ethers.utils.formatEther(token.totalAmount),
+            quantity: ethers.utils.formatUnits(
+              token.totalAmount,
+              tokenMetadata.decimals,
+            ),
           });
           break;
         }
