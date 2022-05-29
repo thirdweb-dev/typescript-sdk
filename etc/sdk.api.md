@@ -1782,7 +1782,7 @@ export enum EventType {
 // Warning: (ae-internal-missing-underscore) The name "extractConstructorParams" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function extractConstructorParams(metadataUri: string, storage: IStorage): Promise<{
+export function extractConstructorParams(predeployMetadataUri: string, storage: IStorage): Promise<{
     [x: string]: any;
     stateMutability?: string | undefined;
     name: string;
@@ -1802,17 +1802,12 @@ export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>):
 // Warning: (ae-internal-missing-underscore) The name "extractFunctions" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function extractFunctions(bytecodeUri: string, storage: IStorage): Promise<AbiFunction[]>;
+export function extractFunctions(predeployMetadataUri: string, storage: IStorage): Promise<AbiFunction[]>;
 
 // Warning: (ae-internal-missing-underscore) The name "extractFunctionsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>): AbiFunction[];
-
-// Warning: (ae-internal-missing-underscore) The name "fetchContractBytecodeMetadata" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export function fetchContractBytecodeMetadata(bytecodeUri: string, storage: IStorage): Promise<PublishedMetadata>;
 
 // Warning: (ae-internal-missing-underscore) The name "fetchContractMetadataFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -1832,6 +1827,12 @@ export class FetchError extends Error {
     // (undocumented)
     innerError?: Error;
 }
+
+// Warning: (ae-forgotten-export) The symbol "PreDeployMetadataFetched" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "fetchPreDeployMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function fetchPreDeployMetadata(publishMetadataUri: string, storage: IStorage): Promise<PreDeployMetadataFetched>;
 
 // Warning: (ae-internal-missing-underscore) The name "FileNameMissingError" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -4378,7 +4379,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     // (undocumented)
     interceptor: ContractInterceptor<TContract>;
     // (undocumented)
-    metadata: ContractMetadata<ThirdwebContract, any> | undefined;
+    metadata: ContractMetadata<ThirdwebContract, any>;
     nft: Erc721 | undefined;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;

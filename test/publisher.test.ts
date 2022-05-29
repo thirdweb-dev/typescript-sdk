@@ -18,9 +18,14 @@ export const uploadContractMetadata = async (
   const info =
     buildinfo.output.contracts[`contracts/${contractName}.sol`][contractName];
   const bytecode = `0x${info.evm.bytecode.object}`;
-  await storage.uploadSingle(info.metadata);
+  const metadataUri = await storage.uploadSingle(info.metadata);
   const bytecodeUri = await storage.uploadSingle(bytecode);
-  return `ipfs://${bytecodeUri}`;
+  const model = {
+    name: contractName,
+    metadataUri: `ipfs://${metadataUri}`,
+    bytecodeUri: `ipfs://${bytecodeUri}`,
+  };
+  return await storage.uploadMetadata(model);
 };
 
 describe("Publishing", async () => {
@@ -144,7 +149,7 @@ describe("Publishing", async () => {
   it("SimpleAzuki enumerable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmRMLC1QY1WihttMW1XeLwqfsRdW2A8uftuTjytV6tJSok/0";
+    const ipfsUri = "ipfs://QmTKKUUEU6GnG7VEEAAXpveeirREC1JNYntVJGhHKhqcYZ/0";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
     const deployedAddr = await pub.deployPublishedContract(
@@ -162,7 +167,7 @@ describe("Publishing", async () => {
   it("AzukiWithMinting mintable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmRMLC1QY1WihttMW1XeLwqfsRdW2A8uftuTjytV6tJSok/1";
+    const ipfsUri = "ipfs://QmTKKUUEU6GnG7VEEAAXpveeirREC1JNYntVJGhHKhqcYZ/1";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
     const deployedAddr = await pub.deployPublishedContract(
