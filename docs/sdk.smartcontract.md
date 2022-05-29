@@ -53,7 +53,7 @@ const tx = await contract.nft.mint.to("0x...", {
 |  [estimator](./sdk.smartcontract.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TContract&gt; | <b><i>(BETA)</i></b> |
 |  [events](./sdk.smartcontract.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;TContract&gt; | <b><i>(BETA)</i></b> |
 |  [interceptor](./sdk.smartcontract.interceptor.md) |  | ContractInterceptor&lt;TContract&gt; | <b><i>(BETA)</i></b> |
-|  [metadata](./sdk.smartcontract.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;ThirdwebContract, any&gt; \| undefined | <b><i>(BETA)</i></b> |
+|  [metadata](./sdk.smartcontract.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;ThirdwebContract, any&gt; | <b><i>(BETA)</i></b> |
 |  [nft](./sdk.smartcontract.nft.md) |  | [Erc721](./sdk.erc721.md) \| undefined | <b><i>(BETA)</i></b> Auto-detects ERC721 standard functions. |
 |  [platformFees](./sdk.smartcontract.platformfees.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;IPlatformFee&gt; \| undefined | <b><i>(BETA)</i></b> |
 |  [publishedMetadata](./sdk.smartcontract.publishedmetadata.md) |  | ContractPublishedMetadata&lt;TContract&gt; | <b><i>(BETA)</i></b> |

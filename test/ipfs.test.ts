@@ -68,17 +68,6 @@ describe("IPFS Uploads", async () => {
   });
 
   describe("Custom contract metadata", async () => {
-    it("Should extract constructor params", async () => {
-      const params = await extractConstructorParams(
-        "ipfs://QmbLjvQqCVhjsvGxh9u2pv89sg8g7psTscZJ9spNyHn9GH/0",
-        storage,
-      );
-      expect(params[0].type === "bytes32");
-      expect(params[0].name === "uri");
-      expect(params[1].type === "uint256");
-      expect(params[1].name === "someId");
-    });
-
     it("should upload null metadata", async () => {
       try {
         const metadata = JSON.parse(readFileSync("test/metadata.json", "utf8"));

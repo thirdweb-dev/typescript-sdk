@@ -81,7 +81,7 @@ export class SmartContract<
   public analytics: ContractAnalytics<TContract>;
 
   // features
-  public metadata: ContractMetadata<ThirdwebContract, any> | undefined;
+  public metadata: ContractMetadata<ThirdwebContract, any>;
   public royalties:
     | ContractRoyalty<IRoyalty & ThirdwebContract, any>
     | undefined;

@@ -55,11 +55,16 @@ export const CustomContractSchema = {
 /**
  * @internal
  */
-export const CustomContractMetadataSchema = z.object({
+export const PreDeployMetadata = z.object({
   name: z.string(),
-  abiUri: z.string(),
+  metadataUri: z.string(),
   bytecodeUri: z.string(),
 });
+export type PreDeployMetadataFetched = {
+  name: string;
+  abi: z.infer<typeof AbiSchema>;
+  bytecode: string;
+};
 
 /**
  * @internal

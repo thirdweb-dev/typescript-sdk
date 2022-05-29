@@ -76,9 +76,13 @@ export class ContractMetadata<
   public async get() {
     let uri;
     let data;
-    if (this.supportsContractMetadata(this.contractWrapper)) {
-      uri = await this.contractWrapper.readContract.contractURI();
-      data = await this.storage.get(uri);
+    try {
+      if (this.supportsContractMetadata(this.contractWrapper)) {
+        uri = await this.contractWrapper.readContract.contractURI();
+        data = await this.storage.get(uri);
+      }
+    } catch (e) {
+      // ignore
     }
 
     if (!data) {

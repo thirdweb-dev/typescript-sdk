@@ -15,9 +15,8 @@ import {
   extractConstructorParams,
   extractConstructorParamsFromAbi,
   extractFunctions,
-  fetchContractBytecodeMetadata,
   fetchContractMetadataFromAddress,
-  fetchContractMetadataFromBytecode,
+  fetchPreDeployMetadata,
 } from "../../common/feature-detection";
 import {
   AbiFunction,
@@ -87,14 +86,16 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param metadataUri
+   * @param predeployMetadataUri
    */
-  public async extractFunctions(bytecodeUri: string): Promise<AbiFunction[]> {
-    return extractFunctions(bytecodeUri, this.storage);
+  public async extractFunctions(
+    predeployMetadataUri: string,
+  ): Promise<AbiFunction[]> {
+    return extractFunctions(predeployMetadataUri, this.storage);
   }
 
-  public async fetchFullContractMetadataFromBytecodeUri(bytecodeUri: string) {
-    return fetchContractBytecodeMetadata(bytecodeUri, this.storage);
+  public async fetchFullContractMetadataFromPredeployUri(predeployUri: string) {
+    return fetchPreDeployMetadata(predeployUri, this.storage);
   }
 
   /**
@@ -158,20 +159,21 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   public async publishBatch(
-    bytecodeUris: string[],
+    predeployUris: string[],
   ): Promise<TransactionResult<PublishedContract>[]> {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
     const publisher = await signer.getAddress();
 
     const fullMetadatas = await Promise.all(
-      bytecodeUris.map(async (bytecodeUri) => {
-        const bytecode = await this.storage.getRaw(bytecodeUri);
+      predeployUris.map(async (predeployUri) => {
         const fullMetadata =
-          await this.fetchFullContractMetadataFromBytecodeUri(bytecodeUri);
+          await this.fetchFullContractMetadataFromPredeployUri(predeployUri);
         return {
-          bytecode: bytecode.startsWith("0x") ? bytecode : `0x${bytecode}`,
-          bytecodeUri,
+          bytecode: fullMetadata.bytecode.startsWith("0x")
+            ? fullMetadata.bytecode
+            : `0x${fullMetadata.bytecode}`,
+          predeployUri,
           fullMetadata,
         };
       }),
@@ -184,7 +186,7 @@ export class ContractPublisher extends RPCConnectionHandler {
         "publishContract",
         [
           publisher,
-          meta.bytecodeUri,
+          meta.predeployUri,
           bytecodeHash,
           constants.AddressZero,
           contractId,
@@ -235,24 +237,22 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param bytecodeUri
+   * @param publishMetadataUri
    * @param constructorParamValues
-   * @param contractMetadata
    */
   public async deployContract(
-    bytecodeUri: string,
+    publishMetadataUri: string,
     constructorParamValues: any[],
   ) {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
-    const fetchedBytecode = await this.storage.getRaw(bytecodeUri);
-    const metadata = await fetchContractMetadataFromBytecode(
-      fetchedBytecode,
+    const metadata = await fetchPreDeployMetadata(
+      publishMetadataUri,
       this.storage,
     );
-    const bytecode = fetchedBytecode.startsWith("0x")
-      ? fetchedBytecode
-      : `0x${fetchedBytecode}`;
+    const bytecode = metadata.bytecode.startsWith("0x")
+      ? metadata.bytecode
+      : `0x${metadata.bytecode}`;
     if (!ethers.utils.isHexString(bytecode)) {
       throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
     }

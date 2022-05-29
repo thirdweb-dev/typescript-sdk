@@ -4,7 +4,8 @@ import { IStorage } from "../core";
 import {
   AbiFunction,
   AbiSchema,
-  CustomContractMetadataSchema,
+  PreDeployMetadata,
+  PreDeployMetadataFetched,
   PublishedMetadata,
 } from "../schema/contracts/custom";
 import { z } from "zod";
@@ -41,28 +42,23 @@ function matchesAbiInterface(
  * @internal
  */
 export async function extractConstructorParams(
-  metadataUri: string,
+  predeployMetadataUri: string,
   storage: IStorage,
 ) {
-  const metadata = CustomContractMetadataSchema.parse(
-    await storage.get(metadataUri),
-  );
-  const abiRaw = await storage.get(metadata.abiUri);
-  const abi = AbiSchema.parse(abiRaw);
-  return extractConstructorParamsFromAbi(abi);
+  const meta = await fetchPreDeployMetadata(predeployMetadataUri, storage);
+  return extractConstructorParamsFromAbi(meta.abi);
 }
 
 /**
  * @internal
- * @param metadataUri
+ * @param predeployUri
  * @param storage
  */
 export async function extractFunctions(
-  bytecodeUri: string,
+  predeployMetadataUri: string,
   storage: IStorage,
 ): Promise<AbiFunction[]> {
-  const bytecode = await storage.getRaw(bytecodeUri);
-  const metadata = await fetchContractMetadataFromBytecode(bytecode, storage);
+  const metadata = await fetchPreDeployMetadata(predeployMetadataUri, storage);
   return extractFunctionsFromAbi(metadata.abi);
 }
 
@@ -210,23 +206,26 @@ export async function fetchContractMetadataFromAddress(
   provider: ethers.providers.Provider,
   storage: IStorage,
 ) {
-  const metadataUri = await resolveContractUriFromAddress(address, provider);
-  if (!metadataUri) {
+  const compilerMetadataUri = await resolveContractUriFromAddress(
+    address,
+    provider,
+  );
+  if (!compilerMetadataUri) {
     throw new Error(`Could not resolve metadata for contract at ${address}`);
   }
-  return await fetchContractMetadata(metadataUri, storage);
+  return await fetchContractMetadata(compilerMetadataUri, storage);
 }
 
 /**
  * @internal
- * @param metadataUri
+ * @param compilerMetadataUri
  * @param storage
  */
 async function fetchContractMetadata(
-  metadataUri: string,
+  compilerMetadataUri: string,
   storage: IStorage,
 ): Promise<PublishedMetadata> {
-  const metadata = await storage.get(metadataUri);
+  const metadata = await storage.get(compilerMetadataUri);
   const abi = AbiSchema.parse(metadata.output.abi);
   const compilationTarget = metadata.settings.compilationTarget;
   const keys = Object.keys(compilationTarget);
@@ -239,15 +238,23 @@ async function fetchContractMetadata(
 
 /**
  * @internal
- * @param bytecodeUri
+ * @param publishMetadataUri
  * @param storage
  */
-export async function fetchContractBytecodeMetadata(
-  bytecodeUri: string,
+export async function fetchPreDeployMetadata(
+  publishMetadataUri: string,
   storage: IStorage,
-): Promise<PublishedMetadata> {
-  const bytecode = await storage.getRaw(bytecodeUri);
-  return await fetchContractMetadataFromBytecode(bytecode, storage);
+): Promise<PreDeployMetadataFetched> {
+  const pubMeta = PreDeployMetadata.parse(
+    await storage.get(publishMetadataUri),
+  );
+  const deployBytecode = await storage.getRaw(pubMeta.bytecodeUri);
+  const parsedMeta = await fetchContractMetadata(pubMeta.metadataUri, storage);
+  return {
+    name: parsedMeta.name,
+    abi: parsedMeta.abi,
+    bytecode: deployBytecode,
+  };
 }
 
 /**
