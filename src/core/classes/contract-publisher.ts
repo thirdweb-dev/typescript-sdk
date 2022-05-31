@@ -284,7 +284,7 @@ export class ContractPublisher extends RPCConnectionHandler {
         }
       }
       if (p === "bytes32") {
-        if (!isNaN(constructorParamValues[index])) {
+        if (!isNaN(constructorParamValues[index]) && constructorParamValues[index] > 0) {
           return ethers.utils.hexZeroPad(
             ethers.utils.hexlify(
               ethers.BigNumber.from(constructorParamValues[index]),
