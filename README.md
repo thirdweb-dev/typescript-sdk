@@ -3,7 +3,7 @@
 <a href="https://thirdweb.com"><img src="https://github.com/thirdweb-dev/typescript-sdk/blob/main/logo.svg?raw=true" width="200" alt=""/></a>
 <br />
 </p>
-<h1 align="center">Thirdweb Typescript SDK</h1>
+<h1 align="center">thirdweb TypeScript SDK</h1>
 <p align="center">
 <a href="https://www.npmjs.com/package/@thirdweb-dev/sdk"><img src="https://img.shields.io/github/package-json/v/thirdweb-dev/typescript-sdk?color=red&label=npm&logo=npm" alt="npm version"/></a>
 <a href="https://github.com/thirdweb-dev/typescript-sdk/actions"><img alt="Build Status" src="https://github.com/thirdweb-dev/typescript-sdk/actions/workflows/tests.yml/badge.svg"/></a>
