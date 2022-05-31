@@ -59,7 +59,7 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
       return `https://eth-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "polygon":
       return `https://polygon-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "mainnet":
+    case "mainnet" || "ethereum":
       return `https://eth-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "fantom":
       return "https://rpc.ftm.tools";
