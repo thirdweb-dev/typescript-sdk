@@ -284,8 +284,11 @@ export class ContractPublisher extends RPCConnectionHandler {
         }
       }
       if (p === "bytes32") {
-        return ethers.utils.formatBytes32String(
-          constructorParamValues[index].toString(),
+        return ethers.utils.hexZeroPad(
+          ethers.utils.hexlify(
+            constructorParamValues[index].toString(),
+          ),
+          32,
         );
       }
       if (p.startsWith("bytes")) {
