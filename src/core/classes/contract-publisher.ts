@@ -284,12 +284,18 @@ export class ContractPublisher extends RPCConnectionHandler {
         }
       }
       if (p === "bytes32") {
-        return ethers.utils.hexZeroPad(
-          ethers.utils.hexlify(
+        if (!isNaN(constructorParamValues[index])) {
+          return ethers.utils.hexZeroPad(
+            ethers.utils.hexlify(
+              ethers.BigNumber.from(constructorParamValues[index]),
+            ),
+            32,
+          );
+        } else {
+          return ethers.utils.formatBytes32String(
             constructorParamValues[index].toString(),
-          ),
-          32,
-        );
+          );
+        }
       }
       if (p.startsWith("bytes")) {
         return ethers.utils.toUtf8Bytes(
