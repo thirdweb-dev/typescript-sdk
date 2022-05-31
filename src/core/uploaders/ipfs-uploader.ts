@@ -7,11 +7,8 @@ import {
 import { FileOrBuffer } from "../types";
 import { PINATA_IPFS_URL, TW_IPFS_SERVER_URL } from "../../constants/urls";
 import { UploadProgressEvent } from "../../types/events";
-
-if (!globalThis.FormData) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  globalThis.FormData = require("form-data");
-}
+import { File } from "@web-std/file";
+import FormData from "form-data";
 
 /**
  * @internal

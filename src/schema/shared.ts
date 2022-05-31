@@ -3,11 +3,6 @@ import { z } from "zod";
 import { Json } from "../core/types";
 import { isBrowser } from "../common/utils";
 
-if (!globalThis.File) {
-  // eslint-disable-next-line @typescript-eslint/no-var-requires
-  globalThis.File = require("@web-std/file").File;
-}
-
 export const MAX_BPS = 10_000;
 
 const fileOrBufferUnion = isBrowser()

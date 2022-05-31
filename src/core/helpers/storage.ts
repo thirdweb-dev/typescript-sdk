@@ -1,4 +1,5 @@
 import { Json } from "../types";
+import { File } from "@web-std/file";
 
 /**
  * Given a map of file hashes to ipfs uris, this function will hash
