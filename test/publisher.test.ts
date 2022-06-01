@@ -192,19 +192,26 @@ describe("Publishing", async () => {
   it("Constructor params with tuples", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://Qmbggaa2KNGP6CW3mNsk5ETJpJRV7PZY7j1WfBsrQ7fLhV/0";
+    const ipfsUri = "ipfs://QmZQa56Cj1gFnZgKSkvGE5uzhaQrQV3nU6upDWDusCaCwY/0";
     const addr = await pub.deployContract(ipfsUri, [
       "0x1234",
       "123",
       JSON.stringify(["0x1234", "0x4567"]),
-      JSON.stringify({
-        aNumber: 123,
-        aString: ethers.utils.hexZeroPad("0x1234", 32),
-        anArray: [adminWallet.address, samWallet.address],
-      }),
+      JSON.stringify([
+        213,
+        ethers.utils.hexZeroPad("0x1234", 32),
+        [adminWallet.address, samWallet.address],
+      ]),
     ]);
     const c = await sdk.getContract(addr);
     const uri = await c.call("contractUri");
     expect(uri).to.eq(ethers.utils.hexZeroPad("0x1234", 32));
+
+    const tx = await c.call("updateStruct", {
+      aNumber: 123,
+      aString: ethers.utils.hexZeroPad("0x1234", 32),
+      anArray: [adminWallet.address, samWallet.address],
+    });
+    expect(tx).to.not.eq(undefined);
   });
 });
