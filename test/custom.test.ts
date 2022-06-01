@@ -31,7 +31,7 @@ describe("Custom Contracts", async () => {
     sdk = new ThirdwebSDK(adminWallet);
     storage = new IpfsStorage();
     const simpleContractUri = await uploadContractMetadata("Greeter", storage);
-    const publisher = await sdk.getPublisher();
+    const publisher = sdk.getPublisher();
     customContractAddress = await publisher.deployContract(
       simpleContractUri,
       [],
