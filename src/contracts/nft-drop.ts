@@ -75,8 +75,8 @@ export class NFTDrop extends Erc721<DropERC721> {
   public encoder: ContractEncoder<DropERC721>;
   public estimator: GasCostEstimator<DropERC721>;
   public metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
-  public primarySale: ContractPrimarySale<DropERC721>;
-  public platformFee: ContractPlatformFee<DropERC721>;
+  public sales: ContractPrimarySale<DropERC721>;
+  public platformFees: ContractPlatformFee<DropERC721>;
   public events: ContractEvents<DropERC721>;
   public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
   /**
@@ -93,18 +93,18 @@ export class NFTDrop extends Erc721<DropERC721> {
    * @example
    * ```javascript
    * // royalties on the whole contract
-   * contract.royalty.setDefaultRoyaltyInfo({
+   * contract.royalties.setDefaultRoyaltyInfo({
    *   seller_fee_basis_points: 100, // 1%
    *   fee_recipient: "0x..."
    * });
    * // override royalty for a particular token
-   * contract.royalty.setTokenRoyaltyInfo(tokenId, {
+   * contract.royalties.setTokenRoyaltyInfo(tokenId, {
    *   seller_fee_basis_points: 500, // 5%
    *   fee_recipient: "0x..."
    * });
    * ```
    */
-  public royalty: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
+  public royalties: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
   /**
    * Configure claim conditions
    * @remarks Define who can claim NFTs in the collection, when and how many.
@@ -183,8 +183,8 @@ export class NFTDrop extends Erc721<DropERC721> {
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, NFTDrop.contractRoles);
-    this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    this.primarySale = new ContractPrimarySale(this.contractWrapper);
+    this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
+    this.sales = new ContractPrimarySale(this.contractWrapper);
     this.claimConditions = new DropClaimConditions(
       this.contractWrapper,
       this.metadata,
@@ -194,7 +194,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
-    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.revealer = new DelayedReveal<DropERC721>(
       this.contractWrapper,
       this.storage,

@@ -44,7 +44,7 @@ const contract = sdk.getMultiwrap("{{contract_address}}");
 |  [events](./sdk.multiwrap.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;MultiwrapContract&gt; | <b><i>(BETA)</i></b> |
 |  [metadata](./sdk.multiwrap.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;MultiwrapContract, typeof Multiwrap.schema&gt; | <b><i>(BETA)</i></b> |
 |  [roles](./sdk.multiwrap.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;MultiwrapContract, typeof [Multiwrap.contractRoles](./sdk.multiwrap.contractroles.md)<!-- -->\[number\]&gt; | <b><i>(BETA)</i></b> |
-|  [royalty](./sdk.multiwrap.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;MultiwrapContract, typeof Multiwrap.schema&gt; | <b><i>(BETA)</i></b> Configure royalties |
+|  [royalties](./sdk.multiwrap.royalties.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;MultiwrapContract, typeof Multiwrap.schema&gt; | <b><i>(BETA)</i></b> Configure royalties |
 
 ## Methods
 

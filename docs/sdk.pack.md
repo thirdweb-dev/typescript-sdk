@@ -41,7 +41,7 @@ const contract = sdk.getPack("{{contract_address}}");
 |  [events](./sdk.pack.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;PackContract&gt; |  |
 |  [metadata](./sdk.pack.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;PackContract, typeof Pack.schema&gt; |  |
 |  [roles](./sdk.pack.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;PackContract, typeof [Pack.contractRoles](./sdk.pack.contractroles.md)<!-- -->\[number\]&gt; |  |
-|  [royalty](./sdk.pack.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;PackContract, typeof Pack.schema&gt; | Configure royalties |
+|  [royalties](./sdk.pack.royalties.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;PackContract, typeof Pack.schema&gt; | Configure royalties |
 
 ## Methods
 
