@@ -197,10 +197,10 @@ export class Marketplace implements UpdateableNetwork {
    * @param listingId - the listing id
    * @returns either a direct or auction listing
    *
-   * @remarks Create and manage auctions in your marketplace.
+   * @remarks Get a listing by its listing id
    * @example
    * ```javascript
-   * const listingId = "1";
+   * const listingId = 0;
    * const listing = await contract.getListing(listingId);
    * ```
    */
@@ -364,7 +364,7 @@ export class Marketplace implements UpdateableNetwork {
    * @example
    * ```javascript
    * // the bid buffer in basis points
-   * const bufferBps = 500; // 5%
+   * const bufferBps = 5_00; // 5%
    * await contract.setBidBufferBps(bufferBps);
    * ```
    * @param bufferBps - the bps value

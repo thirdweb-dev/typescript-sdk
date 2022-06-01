@@ -31,7 +31,7 @@ A percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is co
 
 ```javascript
 // the bid buffer in basis points
-const bufferBps = 500; // 5%
+const bufferBps = 5_00; // 5%
 await contract.setBidBufferBps(bufferBps);
 ```
 

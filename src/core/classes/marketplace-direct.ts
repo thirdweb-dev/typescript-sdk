@@ -219,6 +219,8 @@ export class MarketplaceDirect {
    *
    * @example
    * ```javascript
+   * import { ChainId, NATIVE_TOKENS } from "@thirdweb-dev/sdk";
+   *
    * // The listing ID of the asset you want to offer on
    * const listingId = 0;
    * // The price you are willing to offer per token
@@ -232,7 +234,7 @@ export class MarketplaceDirect {
    *   listingId,
    *   quantity,
    *   currencyContractAddress,
-   *   bidAmount
+   *   pricePerToken
    * );
    * ```
    */
