@@ -1785,6 +1785,10 @@ export enum EventType {
 export function extractConstructorParams(predeployMetadataUri: string, storage: IStorage): Promise<{
     [x: string]: any;
     stateMutability?: string | undefined;
+    components?: {
+        name: string;
+        type: string;
+    }[] | undefined;
     name: string;
     type: string;
 }[]>;
@@ -1795,6 +1799,10 @@ export function extractConstructorParams(predeployMetadataUri: string, storage: 
 export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>): {
     [x: string]: any;
     stateMutability?: string | undefined;
+    components?: {
+        name: string;
+        type: string;
+    }[] | undefined;
     name: string;
     type: string;
 }[];

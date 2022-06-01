@@ -276,7 +276,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       throw Error("Passed the wrong number of constructor arguments");
     }
     return constructorParamTypes.map((p, index) => {
-      if (p.endsWith("[]")) {
+      if (p === "tuple" || p.endsWith("[]")) {
         if (typeof constructorParamValues[index] === "string") {
           return JSON.parse(constructorParamValues[index]);
         } else {

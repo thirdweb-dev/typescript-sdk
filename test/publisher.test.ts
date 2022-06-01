@@ -5,6 +5,7 @@ import { IpfsStorage, isFeatureEnabled, ThirdwebSDK } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../typechain";
+import { ethers } from "ethers";
 
 global.fetch = require("cross-fetch");
 
@@ -134,7 +135,6 @@ describe("Publishing", async () => {
     const all = await publisher.getAll(bobWallet.address);
     expect(all.length).to.be.eq(1);
   });
-
   it("should publish batch contracts", async () => {
     const publisher = await sdk.getPublisher();
     const tx = await publisher.publishBatch([
@@ -187,5 +187,24 @@ describe("Publishing", async () => {
     invariant(c.nft.query, "no nft query detected");
     const all = await c.nft.query.all();
     expect(all.length).to.eq(1);
+  });
+
+  it("Constructor params with tuples", async () => {
+    const realSDK = new ThirdwebSDK(adminWallet);
+    const pub = await realSDK.getPublisher();
+    const ipfsUri = "ipfs://Qmbggaa2KNGP6CW3mNsk5ETJpJRV7PZY7j1WfBsrQ7fLhV/0";
+    const addr = await pub.deployContract(ipfsUri, [
+      "0x1234",
+      "123",
+      JSON.stringify(["0x1234", "0x4567"]),
+      JSON.stringify({
+        aNumber: 123,
+        aString: ethers.utils.hexZeroPad("0x1234", 32),
+        anArray: [adminWallet.address, samWallet.address],
+      }),
+    ]);
+    const c = await sdk.getContract(addr);
+    const uri = await c.call("contractUri");
+    expect(uri).to.eq(ethers.utils.hexZeroPad("0x1234", 32));
   });
 });
