@@ -38,33 +38,33 @@ describe("Royalties", async () => {
   });
 
   it("should return default royalty", async () => {
-    const info = await bundleContract.royalty.getDefaultRoyaltyInfo();
+    const info = await bundleContract.royalties.getDefaultRoyaltyInfo();
     expect(info.fee_recipient).to.eq(adminWallet.address);
     expect(info.seller_fee_basis_points).to.eq(1000);
   });
 
   it("should set default royalty", async () => {
-    await bundleContract.royalty.setDefaultRoyaltyInfo({
+    await bundleContract.royalties.setDefaultRoyaltyInfo({
       fee_recipient: samWallet.address,
       seller_fee_basis_points: 500,
     });
-    const info = await bundleContract.royalty.getDefaultRoyaltyInfo();
+    const info = await bundleContract.royalties.getDefaultRoyaltyInfo();
     expect(info.fee_recipient).to.eq(samWallet.address);
     expect(info.seller_fee_basis_points).to.eq(500);
   });
 
   it("should return per token royalty", async () => {
-    const info = await bundleContract.royalty.getTokenRoyaltyInfo("0");
+    const info = await bundleContract.royalties.getTokenRoyaltyInfo("0");
     expect(info.fee_recipient).to.eq(adminWallet.address);
     expect(info.seller_fee_basis_points).to.eq(1000);
   });
 
   it("should set per token royalty", async () => {
-    await bundleContract.royalty.setTokenRoyaltyInfo("0", {
+    await bundleContract.royalties.setTokenRoyaltyInfo("0", {
       fee_recipient: samWallet.address,
       seller_fee_basis_points: 500,
     });
-    const info = await bundleContract.royalty.getTokenRoyaltyInfo("0");
+    const info = await bundleContract.royalties.getTokenRoyaltyInfo("0");
     expect(info.fee_recipient).to.eq(samWallet.address);
     expect(info.seller_fee_basis_points).to.eq(500);
   });

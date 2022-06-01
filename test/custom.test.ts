@@ -1,4 +1,4 @@
-import { sdk, signers } from "./before-setup";
+import { signers } from "./before-setup";
 import { expect } from "chai";
 import invariant from "tiny-invariant";
 import {

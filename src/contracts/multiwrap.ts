@@ -74,18 +74,18 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
    * @example
    * ```javascript
    * // royalties on the whole contract
-   * contract.royalty.setDefaultRoyaltyInfo({
+   * contract.royalties.setDefaultRoyaltyInfo({
    *   seller_fee_basis_points: 100, // 1%
    *   fee_recipient: "0x..."
    * });
    * // override royalty for a particular token
-   * contract.royalty.setTokenRoyaltyInfo(tokenId, {
+   * contract.royalties.setTokenRoyaltyInfo(tokenId, {
    *   seller_fee_basis_points: 500, // 5%
    *   fee_recipient: "0x..."
    * });
    * ```
    */
-  public royalty: ContractRoyalty<MultiwrapContract, typeof Multiwrap.schema>;
+  public royalties: ContractRoyalty<MultiwrapContract, typeof Multiwrap.schema>;
 
   private _query = this.query as Erc721Supply;
 
@@ -115,7 +115,7 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
-    this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
+    this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
   }
 
   /** ******************************

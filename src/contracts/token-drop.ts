@@ -55,7 +55,7 @@ export class TokenDrop extends Erc20<DropERC20> {
   public encoder: ContractEncoder<DropERC20>;
   public estimator: GasCostEstimator<DropERC20>;
   public sales: ContractPrimarySale<DropERC20>;
-  public platformFee: ContractPlatformFee<DropERC20>;
+  public platformFees: ContractPlatformFee<DropERC20>;
   /**
    * @internal
    */
@@ -113,7 +113,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.sales = new ContractPrimarySale(this.contractWrapper);
-    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.analytics = new ContractAnalytics(this.contractWrapper);
     this.claimConditions = new DropClaimConditions<DropERC20>(

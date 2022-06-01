@@ -42,7 +42,7 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 |  [estimator](./sdk.marketplace.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;MarketplaceContract&gt; |  |
 |  [events](./sdk.marketplace.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;MarketplaceContract&gt; |  |
 |  [metadata](./sdk.marketplace.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;MarketplaceContract, typeof Marketplace.schema&gt; |  |
-|  [platformFee](./sdk.marketplace.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;MarketplaceContract&gt; |  |
+|  [platformFees](./sdk.marketplace.platformfees.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;MarketplaceContract&gt; |  |
 |  [roles](./sdk.marketplace.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;MarketplaceContract, typeof [Marketplace.contractRoles](./sdk.marketplace.contractroles.md)<!-- -->\[number\]&gt; |  |
 
 ## Methods

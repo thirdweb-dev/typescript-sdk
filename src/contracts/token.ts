@@ -59,7 +59,7 @@ export class Token extends Erc20<TokenERC20> {
   public estimator: GasCostEstimator<TokenERC20>;
   public history: TokenERC20History;
   public events: ContractEvents<TokenERC20>;
-  public platformFee: ContractPlatformFee<TokenERC20>;
+  public platformFees: ContractPlatformFee<TokenERC20>;
   /**
    * @internal
    */
@@ -107,7 +107,7 @@ export class Token extends Erc20<TokenERC20> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
-    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.signature = new Erc20SignatureMinting(
       this.contractWrapper,

@@ -60,8 +60,8 @@ export class EditionDrop extends Erc1155<DropERC1155> {
 
   private _query = this.query as Erc1155Enumerable;
 
-  public primarySale: ContractPrimarySale<DropERC1155>;
-  public platformFee: ContractPlatformFee<DropERC1155>;
+  public sales: ContractPrimarySale<DropERC1155>;
+  public platformFees: ContractPlatformFee<DropERC1155>;
   public encoder: ContractEncoder<DropERC1155>;
   public estimator: GasCostEstimator<DropERC1155>;
   public events: ContractEvents<DropERC1155>;
@@ -80,18 +80,18 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * @example
    * ```javascript
    * // royalties on the whole contract
-   * contract.royalty.setDefaultRoyaltyInfo({
+   * contract.royalties.setDefaultRoyaltyInfo({
    *   seller_fee_basis_points: 100, // 1%
    *   fee_recipient: "0x..."
    * });
    * // override royalty for a particular token
-   * contract.royalty.setTokenRoyaltyInfo(tokenId, {
+   * contract.royalties.setTokenRoyaltyInfo(tokenId, {
    *   seller_fee_basis_points: 500, // 5%
    *   fee_recipient: "0x..."
    * });
    * ```
    */
-  public royalty: ContractRoyalty<DropERC1155, typeof EditionDrop.schema>;
+  public royalties: ContractRoyalty<DropERC1155, typeof EditionDrop.schema>;
   /**
    * Configure claim conditions for each NFT
    * @remarks Define who can claim each NFT in the edition, when and how many.
@@ -145,8 +145,8 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       this.contractWrapper,
       EditionDrop.contractRoles,
     );
-    this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    this.primarySale = new ContractPrimarySale(this.contractWrapper);
+    this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
+    this.sales = new ContractPrimarySale(this.contractWrapper);
     this.claimConditions = new DropErc1155ClaimConditions(
       this.contractWrapper,
       this.metadata,
@@ -157,7 +157,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
-    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
