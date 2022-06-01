@@ -284,14 +284,18 @@ export class ContractPublisher extends RPCConnectionHandler {
         }
       }
       if (p === "bytes32") {
-        return ethers.utils.formatBytes32String(
-          constructorParamValues[index].toString(),
+        invariant(
+          ethers.utils.isHexString(constructorParamValues[index]),
+          `Could not parse bytes32 value. Expected valid hex string but got "${constructorParamValues[index]}".`,
         );
+        return ethers.utils.hexZeroPad(constructorParamValues[index], 32);
       }
       if (p.startsWith("bytes")) {
-        return ethers.utils.toUtf8Bytes(
-          constructorParamValues[index].toString(),
+        invariant(
+          ethers.utils.isHexString(constructorParamValues[index]),
+          `Could not parse bytes value. Expected valid hex string but got "${constructorParamValues[index]}".`,
         );
+        return ethers.utils.toUtf8Bytes(constructorParamValues[index]);
       }
       if (p.startsWith("uint") || p.startsWith("int")) {
         return BigNumber.from(constructorParamValues[index].toString());
