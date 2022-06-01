@@ -124,7 +124,7 @@ describe("Publishing", async () => {
       contract.id,
       [
         adminWallet.address,
-        "someUri",
+        "0x1234",
         12345,
         [adminWallet.address, samWallet.address],
         [12, 23, 45],
