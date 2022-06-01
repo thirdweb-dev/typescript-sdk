@@ -44,8 +44,8 @@ describe("Wallet", async () => {
 
   it("should fetch addresses", async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    expect(await sdk.wallet.address()).to.eq(adminWallet.address);
+    expect(await sdk.wallet.getAddress()).to.eq(adminWallet.address);
     sdk.updateSignerOrProvider(samWallet);
-    expect(await sdk.wallet.address()).to.eq(samWallet.address);
+    expect(await sdk.wallet.getAddress()).to.eq(samWallet.address);
   });
 });
