@@ -54,7 +54,7 @@ describe("Publishing", async () => {
   });
 
   it("should extract functions", async () => {
-    const publisher = await sdk.getPublisher();
+    const publisher = sdk.getPublisher();
     const functions = await publisher.extractFunctions(simpleContractUri);
     expect(functions.length).gt(0);
   });
@@ -83,7 +83,7 @@ describe("Publishing", async () => {
   });
 
   it("should publish simple greeter contract", async () => {
-    const publisher = await sdk.getPublisher();
+    const publisher = sdk.getPublisher();
     const tx = await publisher.publish(simpleContractUri);
     const contract = await tx.data();
     const deployedAddr = await publisher.deployPublishedContract(
@@ -102,7 +102,7 @@ describe("Publishing", async () => {
 
   it("should publish multiple versions", async () => {
     sdk.updateSignerOrProvider(samWallet);
-    const publisher = await sdk.getPublisher();
+    const publisher = sdk.getPublisher();
     let id = "";
     for (let i = 0; i < 5; i++) {
       const tx = await publisher.publish(simpleContractUri);
@@ -117,7 +117,7 @@ describe("Publishing", async () => {
 
   it("should publish constructor params contract", async () => {
     sdk.updateSignerOrProvider(bobWallet);
-    const publisher = await sdk.getPublisher();
+    const publisher = sdk.getPublisher();
     const tx = await publisher.publish(contructorParamsContractUri);
     const contract = await tx.data();
     const deployedAddr = await publisher.deployPublishedContract(
@@ -136,7 +136,7 @@ describe("Publishing", async () => {
     expect(all.length).to.be.eq(1);
   });
   it("should publish batch contracts", async () => {
-    const publisher = await sdk.getPublisher();
+    const publisher = sdk.getPublisher();
     const tx = await publisher.publishBatch([
       simpleContractUri,
       contructorParamsContractUri,

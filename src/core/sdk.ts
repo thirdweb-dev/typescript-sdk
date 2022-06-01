@@ -426,7 +426,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       return this.contractCache.get(address) as SmartContract;
     }
     try {
-      const publisher = await this.getPublisher();
+      const publisher = this.getPublisher();
       const metadata = await publisher.fetchContractMetadataFromAddress(
         address,
       );
