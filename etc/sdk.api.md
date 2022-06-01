@@ -5313,8 +5313,8 @@ export type UploadResult = {
 // @public
 export class UserWallet {
     constructor(network: NetworkOrSignerOrProvider, options: SDKOptions);
-    address(): Promise<string>;
     balance(currencyAddress?: string): Promise<CurrencyValue>;
+    getAddress(): Promise<string>;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     sendRawTransaction(transactionRequest: providers.TransactionRequest): Promise<TransactionResult>;
