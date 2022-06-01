@@ -4,6 +4,7 @@ import { IStorage } from "../core";
 import {
   AbiFunction,
   AbiSchema,
+  AbiTypeSchema,
   PreDeployMetadata,
   PreDeployMetadataFetched,
   PublishedMetadata,
@@ -90,11 +91,10 @@ export function extractFunctionsFromAbi(
   const parsed = [];
   for (const f of functions) {
     const args =
-      f.inputs
-        ?.map((i) => `${i.name || "key"}: ${toJSType(i.type)}`)
-        ?.join(", ") || "";
+      f.inputs?.map((i) => `${i.name || "key"}: ${toJSType(i)}`)?.join(", ") ||
+      "";
     const fargs = args ? `, ${args}` : "";
-    const out = f.outputs?.map((o) => toJSType(o.type, true))?.join(", ");
+    const out = f.outputs?.map((o) => toJSType(o, true))?.join(", ");
     const promise = out ? `: Promise<${out}>` : `: Promise<TransactionResult>`;
     const signature = `contract.call("${f.name}"${fargs})${promise}`;
     parsed.push({
@@ -108,22 +108,41 @@ export function extractFunctionsFromAbi(
   return parsed;
 }
 
-function toJSType(contractType: string, isReturnType = false): string {
-  let jsType = contractType;
-  if (contractType.startsWith("bytes")) {
+function toJSType(
+  contractType: z.input<typeof AbiTypeSchema>,
+  isReturnType = false,
+  withName = false,
+): string {
+  let jsType = contractType.type;
+  let isArray = false;
+  if (jsType.endsWith("[]")) {
+    isArray = true;
+    jsType = jsType.slice(0, -2);
+  }
+  if (jsType.startsWith("bytes")) {
     jsType = "BytesLike";
   }
-  if (contractType.startsWith("uint") || contractType.startsWith("int")) {
+  if (jsType.startsWith("uint") || jsType.startsWith("int")) {
     jsType = isReturnType ? "BigNumber" : "BigNumberish";
   }
-  if (contractType === "bool") {
+  if (jsType.startsWith("bool")) {
     jsType = "boolean";
   }
-  if (contractType === "address") {
+  if (jsType === "address") {
     jsType = "string";
   }
-  if (contractType.endsWith("[]")) {
+  if (jsType === "tuple") {
+    if (contractType.components) {
+      jsType = `{ ${contractType.components
+        .map((a) => toJSType(a, false, true))
+        .join(", ")} }`;
+    }
+  }
+  if (isArray) {
     jsType += "[]";
+  }
+  if (withName) {
+    jsType = `${contractType.name}: ${jsType}`;
   }
   return jsType;
 }

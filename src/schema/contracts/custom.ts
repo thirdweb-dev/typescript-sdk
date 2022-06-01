@@ -69,13 +69,18 @@ export type PreDeployMetadataFetched = {
 /**
  * @internal
  */
-export const AbiTypeSchema = z
-  .object({
-    type: z.string(),
-    name: z.string(),
-    stateMutability: z.string().optional(),
-  })
-  .catchall(z.any());
+const AbiTypeBaseSchema = z.object({
+  type: z.string(),
+  name: z.string(),
+});
+
+/**
+ * @internal
+ */
+export const AbiTypeSchema = AbiTypeBaseSchema.extend({
+  stateMutability: z.string().optional(),
+  components: z.array(AbiTypeBaseSchema).optional(),
+}).catchall(z.any());
 
 /**
  * @internal

@@ -203,7 +203,6 @@ export class SmartContract<
    * ********************/
 
   private detectRoyalties() {
-    // TODO (byoc) change to ThirdwebContract
     if (
       detectContractFeature<IRoyalty & ThirdwebContract>(
         this.contractWrapper,
