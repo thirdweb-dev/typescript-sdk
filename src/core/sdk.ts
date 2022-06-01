@@ -8,9 +8,9 @@ import {
   Marketplace,
   NFTCollection,
   NFTDrop,
-  SignatureDrop,
   Pack,
   REMOTE_CONTRACT_TO_CONTRACT_TYPE,
+  SignatureDrop,
   Split,
   Token,
   Vote,
@@ -34,7 +34,6 @@ import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
 import {
   ChainOrRpc,
-  getContractAddressByChainId,
   getProviderForNetwork,
   getReadOnlyProvider,
 } from "../constants";
@@ -121,7 +120,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @internal
    * should never be accessed directly, use {@link ThirdwebSDK.getPublisher} instead
    */
-  private _publisher: Promise<ContractPublisher> | undefined;
+  private _publisher: ContractPublisher;
   /**
    * Internal handler for uploading and downloading files
    */
@@ -151,6 +150,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     this.storage = new RemoteStorage(storage);
     this.deployer = new ContractDeployer(signerOrProvider, options, storage);
     this.wallet = new UserWallet(signerOrProvider, options);
+    this._publisher = new ContractPublisher(
+      signerOrProvider,
+      this.options,
+      this.storageHandler,
+    );
   }
 
   /**
@@ -405,9 +409,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   private updateContractSignerOrProvider() {
     this.wallet.onNetworkUpdated(this.getSignerOrProvider());
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
-    this._publisher?.then((publisher) => {
-      publisher.updateSignerOrProvider(this.getSignerOrProvider());
-    });
+    this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
     for (const [, contract] of this.contractCache) {
       contract.onNetworkUpdated(this.getSignerOrProvider());
     }
@@ -424,7 +426,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       return this.contractCache.get(address) as SmartContract;
     }
     try {
-      const publisher = await this.getPublisher();
+      const publisher = this.getPublisher();
       const metadata = await publisher.fetchContractMetadataFromAddress(
         address,
       );
@@ -459,29 +461,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * @internal
    */
-  public async getPublisher(): Promise<ContractPublisher> {
-    // if we already have a registry just return it back
-    if (this._publisher) {
-      return this._publisher;
-    }
-
-    // otherwise get the factory address for the active chain and get a new one
-
-    // have to do it like this otherwise we run it over and over and over
-    // "this._publisher" has to be assigned to the promise upfront.
-    return (this._publisher = this.getProvider()
-      .getNetwork()
-      .then(async ({ chainId }) => {
-        const factoryAddress = getContractAddressByChainId(
-          chainId,
-          "contractDeployer",
-        );
-        return new ContractPublisher(
-          factoryAddress,
-          this.getSignerOrProvider(),
-          this.options,
-          this.storageHandler,
-        );
-      }));
+  public getPublisher(): ContractPublisher {
+    return this._publisher;
   }
 }

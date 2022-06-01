@@ -257,10 +257,8 @@ before(async () => {
   }
 
   process.env.registryAddress = thirdwebRegistryAddress;
-  process.env.byocRegistryAddress = thirdwebRegistryAddress;
   process.env.factoryAddress = thirdwebFactoryDeployer.address;
   process.env.contractPublisherAddress = contractPublisher.address;
-  process.env.contractDeployerAddress = contactDeployer.address;
   process.env.contractMetadataRegistryAddress = metadataRegistry.address;
   process.env.sigMintDeployerAddress = sigMintDeployer.address;
 

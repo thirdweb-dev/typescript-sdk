@@ -14,6 +14,7 @@ import { IpfsUploader } from "../uploaders/ipfs-uploader";
 import { UploadProgressEvent } from "../../types/events";
 import { File } from "@web-std/file";
 import FormData from "form-data";
+import { UploadResult } from "../interfaces";
 
 /**
  * IPFS Storage implementation, accepts custom IPFS gateways
@@ -149,7 +150,7 @@ export class IpfsStorage implements IStorage {
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
-  ) {
+  ): Promise<UploadResult> {
     const metadataToUpload = (
       await this.batchUploadProperties(metadatas, options)
     ).map((m: any) => JSON.stringify(m));

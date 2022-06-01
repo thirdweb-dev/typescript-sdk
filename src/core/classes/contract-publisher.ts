@@ -26,12 +26,10 @@ import {
 } from "../../schema/contracts/custom";
 import { ContractWrapper } from "./contract-wrapper";
 import {
-  ContractDeployer,
   ContractPublisher as OnChainContractPublisher,
   IContractPublisher,
 } from "contracts";
 import { getContractPublisherAddress } from "../../constants";
-import ContractDeployerAbi from "../../../abis/ContractDeployer.json";
 import ContractPublisherAbi from "../../../abis/ContractPublisher.json";
 import { ContractPublishedEvent } from "contracts/ContractPublisher";
 
@@ -42,10 +40,8 @@ import { ContractPublishedEvent } from "contracts/ContractPublisher";
 export class ContractPublisher extends RPCConnectionHandler {
   private storage: IStorage;
   private publisher: ContractWrapper<OnChainContractPublisher>;
-  private factory: ContractWrapper<ContractDeployer>;
 
   constructor(
-    contractDeployerAddress: string,
     network: NetworkOrSignerOrProvider,
     options: SDKOptions,
     storage: IStorage,
@@ -58,12 +54,6 @@ export class ContractPublisher extends RPCConnectionHandler {
       ContractPublisherAbi,
       options,
     );
-    this.factory = new ContractWrapper<ContractDeployer>(
-      network,
-      contractDeployerAddress,
-      ContractDeployerAbi,
-      options,
-    );
   }
 
   public override updateSignerOrProvider(
@@ -71,7 +61,6 @@ export class ContractPublisher extends RPCConnectionHandler {
   ): void {
     super.updateSignerOrProvider(network);
     this.publisher.updateSignerOrProvider(network);
-    this.factory.updateSignerOrProvider(network);
   }
 
   /**
