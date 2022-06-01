@@ -2,6 +2,7 @@ import { UploadProgressEvent } from "../../types/events";
 import { IStorage } from "../interfaces/IStorage";
 import { UploadResult } from "../interfaces/IStorageUpload";
 import { FileOrBuffer, JsonObject } from "../types";
+import { File } from "@web-std/file";
 
 /**
  * Fetch and upload files to IPFS or any other storage.

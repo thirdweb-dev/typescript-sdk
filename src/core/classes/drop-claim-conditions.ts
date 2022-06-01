@@ -11,7 +11,6 @@ import { BigNumber, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import { Amount, ClaimCondition, ClaimConditionInput } from "../../types";
-import deepEqual from "deep-equal";
 import { ClaimEligibility } from "../../enums";
 import { TransactionResult } from "../types";
 import {
@@ -20,12 +19,12 @@ import {
   transformResultToClaimCondition,
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
-
 import { detectContractFeature } from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { isNode } from "../../common/utils";
+import deepEqual from "fast-deep-equal";
 
 /**
  * Manages claim conditions for NFT Drop contracts

@@ -1,5 +1,3 @@
-import "cross-fetch/polyfill";
-
 export type { ContractType, NetworkOrSignerOrProvider } from "./core/types";
 export type {
   NFTMetadataInput,
