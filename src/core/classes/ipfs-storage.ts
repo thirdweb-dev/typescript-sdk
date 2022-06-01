@@ -12,6 +12,8 @@ import {
 } from "../helpers/storage";
 import { IpfsUploader } from "../uploaders/ipfs-uploader";
 import { UploadProgressEvent } from "../../types/events";
+import { File } from "@web-std/file";
+import FormData from "form-data";
 
 /**
  * IPFS Storage implementation, accepts custom IPFS gateways
