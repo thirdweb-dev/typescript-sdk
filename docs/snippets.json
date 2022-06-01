@@ -368,6 +368,15 @@
         "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace.getAllListings"
       },
       {
+        "name": "getListing",
+        "summary": "Convenience function to get either a direct or auction listing\n\n",
+        "remarks": "\n\nCreate and manage auctions in your marketplace.\n\n",
+        "examples": {
+          "javascript": "const listingId = \"1\";\nconst listing = await contract.getListing(listingId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace.getListing"
+      },
+      {
         "name": "setBidBufferBps",
         "summary": "Set the Auction bid buffer\n\n",
         "remarks": "\n\nA percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items.\n\n",

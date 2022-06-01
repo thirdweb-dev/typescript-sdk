@@ -196,6 +196,13 @@ export class Marketplace implements UpdateableNetwork {
    *
    * @param listingId - the listing id
    * @returns either a direct or auction listing
+   *
+   * @remarks Create and manage auctions in your marketplace.
+   * @example
+   * ```javascript
+   * const listingId = "1";
+   * const listing = await contract.getListing(listingId);
+   * ```
    */
   public async getListing(
     listingId: BigNumberish,
