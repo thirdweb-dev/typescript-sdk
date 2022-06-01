@@ -76,18 +76,18 @@ export class Pack implements UpdateableNetwork {
    * @example
    * ```javascript
    * // royalties on the whole contract
-   * contract.royalty.setDefaultRoyaltyInfo({
+   * contract.royalties.setDefaultRoyaltyInfo({
    *   seller_fee_basis_points: 100, // 1%
    *   fee_recipient: "0x..."
    * });
    * // override royalty for a particular pack
-   * contract.royalty.setTokenRoyaltyInfo(packId, {
+   * contract.royalties.setTokenRoyaltyInfo(packId, {
    *   seller_fee_basis_points: 500, // 5%
    *   fee_recipient: "0x..."
    * });
    * ```
    */
-  public royalty: ContractRoyalty<PackContract, typeof Pack.schema>;
+  public royalties: ContractRoyalty<PackContract, typeof Pack.schema>;
   /**
    * @internal
    */
@@ -114,7 +114,7 @@ export class Pack implements UpdateableNetwork {
     );
     this.analytics = new ContractAnalytics(this.contractWrapper);
     this.roles = new ContractRoles(this.contractWrapper, Pack.contractRoles);
-    this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
+    this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);

@@ -58,7 +58,7 @@ export class Marketplace implements UpdateableNetwork {
   public encoder: ContractEncoder<MarketplaceContract>;
   public events: ContractEvents<MarketplaceContract>;
   public estimator: GasCostEstimator<MarketplaceContract>;
-  public platformFee: ContractPlatformFee<MarketplaceContract>;
+  public platformFees: ContractPlatformFee<MarketplaceContract>;
   /**
    * @internal
    */
@@ -175,7 +175,7 @@ export class Marketplace implements UpdateableNetwork {
     this.direct = new MarketplaceDirect(this.contractWrapper, this.storage);
     this.auction = new MarketplaceAuction(this.contractWrapper, this.storage);
     this.events = new ContractEvents(this.contractWrapper);
-    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 

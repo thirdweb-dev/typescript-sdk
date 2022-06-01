@@ -979,12 +979,12 @@ export class Edition extends Erc1155<TokenERC1155> {
     mintTo(to: string, metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
     mintToSelf(metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
     // (undocumented)
-    platformFee: ContractPlatformFee<TokenERC1155>;
-    // (undocumented)
-    primarySale: ContractPrimarySale<TokenERC1155>;
+    platformFees: ContractPlatformFee<TokenERC1155>;
     // (undocumented)
     roles: ContractRoles<TokenERC1155, typeof Edition.contractRoles[number]>;
-    royalty: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
+    royalties: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
+    // (undocumented)
+    sales: ContractPrimarySale<TokenERC1155>;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<    {
@@ -1124,12 +1124,12 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     // (undocumented)
     metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
     // (undocumented)
-    platformFee: ContractPlatformFee<DropERC1155>;
-    // (undocumented)
-    primarySale: ContractPrimarySale<DropERC1155>;
+    platformFees: ContractPlatformFee<DropERC1155>;
     // (undocumented)
     roles: ContractRoles<DropERC1155, typeof EditionDrop.contractRoles[number]>;
-    royalty: ContractRoyalty<DropERC1155, typeof EditionDrop.schema>;
+    royalties: ContractRoyalty<DropERC1155, typeof EditionDrop.schema>;
+    // (undocumented)
+    sales: ContractPrimarySale<DropERC1155>;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<extendShape<    {
@@ -2166,7 +2166,7 @@ export class Marketplace implements UpdateableNetwork {
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
-    platformFee: ContractPlatformFee<Marketplace_2>;
+    platformFees: ContractPlatformFee<Marketplace_2>;
     // (undocumented)
     roles: ContractRoles<Marketplace_2, typeof Marketplace.contractRoles[number]>;
     // @internal (undocumented)
@@ -2370,7 +2370,7 @@ export class Multiwrap extends Erc721<Multiwrap_2> {
     metadata: ContractMetadata<Multiwrap_2, typeof Multiwrap.schema>;
     // (undocumented)
     roles: ContractRoles<Multiwrap_2, typeof Multiwrap.contractRoles[number]>;
-    royalty: ContractRoyalty<Multiwrap_2, typeof Multiwrap.schema>;
+    royalties: ContractRoyalty<Multiwrap_2, typeof Multiwrap.schema>;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<    {
@@ -2556,12 +2556,12 @@ export class NFTCollection extends Erc721<TokenERC721> {
     mintTo(walletAddress: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     mintToSelf(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
-    platformFee: ContractPlatformFee<TokenERC721>;
-    // (undocumented)
-    primarySale: ContractPrimarySale<TokenERC721>;
+    platformFees: ContractPlatformFee<TokenERC721>;
     // (undocumented)
     roles: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>;
-    royalty: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;
+    royalties: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;
+    // (undocumented)
+    sales: ContractPrimarySale<TokenERC721>;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<    {
@@ -2719,13 +2719,13 @@ export class NFTDrop extends Erc721<DropERC721> {
     // (undocumented)
     metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
     // (undocumented)
-    platformFee: ContractPlatformFee<DropERC721>;
-    // (undocumented)
-    primarySale: ContractPrimarySale<DropERC721>;
+    platformFees: ContractPlatformFee<DropERC721>;
     revealer: DelayedReveal<DropERC721>;
     // (undocumented)
     roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
-    royalty: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
+    royalties: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
+    // (undocumented)
+    sales: ContractPrimarySale<DropERC721>;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<extendShape<    {
@@ -2940,7 +2940,7 @@ export class Pack implements UpdateableNetwork {
     open(packId: string): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     roles: ContractRoles<Pack_2, typeof Pack.contractRoles[number]>;
-    royalty: ContractRoyalty<Pack_2, typeof Pack.schema>;
+    royalties: ContractRoyalty<Pack_2, typeof Pack.schema>;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<    {
@@ -4208,13 +4208,13 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     // (undocumented)
     metadata: ContractMetadata<SignatureDrop_2, typeof SignatureDrop.schema>;
     // (undocumented)
-    platformFee: ContractPlatformFee<SignatureDrop_2>;
-    // (undocumented)
-    primarySale: ContractPrimarySale<SignatureDrop_2>;
+    platformFees: ContractPlatformFee<SignatureDrop_2>;
     revealer: DelayedReveal<SignatureDrop_2>;
     // (undocumented)
     roles: ContractRoles<SignatureDrop_2, typeof SignatureDrop.contractRoles[number]>;
-    royalty: ContractRoyalty<SignatureDrop_2, typeof SignatureDrop.schema>;
+    royalties: ContractRoyalty<SignatureDrop_2, typeof SignatureDrop.schema>;
+    // (undocumented)
+    sales: ContractPrimarySale<SignatureDrop_2>;
     // (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<extendShape<    {
@@ -4972,7 +4972,7 @@ export class Token extends Erc20<TokenERC20> {
     mintTo(to: string, amount: Amount): Promise<TransactionResult>;
     mintToSelf(amount: Amount): Promise<TransactionResult>;
     // (undocumented)
-    platformFee: ContractPlatformFee<TokenERC20>;
+    platformFees: ContractPlatformFee<TokenERC20>;
     // (undocumented)
     roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
     // @internal (undocumented)
@@ -5106,7 +5106,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     // (undocumented)
     metadata: ContractMetadata<DropERC20, typeof TokenDrop.schema>;
     // (undocumented)
-    platformFee: ContractPlatformFee<DropERC20>;
+    platformFees: ContractPlatformFee<DropERC20>;
     // (undocumented)
     roles: ContractRoles<DropERC20, typeof TokenDrop.contractRoles[number]>;
     // (undocumented)

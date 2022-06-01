@@ -80,8 +80,8 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     SignatureDropContract,
     typeof SignatureDrop.schema
   >;
-  public primarySale: ContractPrimarySale<SignatureDropContract>;
-  public platformFee: ContractPlatformFee<SignatureDropContract>;
+  public sales: ContractPrimarySale<SignatureDropContract>;
+  public platformFees: ContractPlatformFee<SignatureDropContract>;
   public events: ContractEvents<SignatureDropContract>;
   public roles: ContractRoles<
     SignatureDropContract,
@@ -98,18 +98,18 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * @example
    * ```javascript
    * // royalties on the whole contract
-   * contract.royalty.setDefaultRoyaltyInfo({
+   * contract.royalties.setDefaultRoyaltyInfo({
    *   seller_fee_basis_points: 100, // 1%
    *   fee_recipient: "0x..."
    * });
    * // override royalty for a particular token
-   * contract.royalty.setTokenRoyaltyInfo(tokenId, {
+   * contract.royalties.setTokenRoyaltyInfo(tokenId, {
    *   seller_fee_basis_points: 500, // 5%
    *   fee_recipient: "0x..."
    * });
    * ```
    */
-  public royalty: ContractRoyalty<
+  public royalties: ContractRoyalty<
     SignatureDropContract,
     typeof SignatureDrop.schema
   >;
@@ -196,13 +196,13 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
       this.contractWrapper,
       SignatureDrop.contractRoles,
     );
-    this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    this.primarySale = new ContractPrimarySale(this.contractWrapper);
+    this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
+    this.sales = new ContractPrimarySale(this.contractWrapper);
     this.analytics = new ContractAnalytics(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
-    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.revealer = new DelayedReveal<SignatureDropContract>(
       this.contractWrapper,
       this.storage,
