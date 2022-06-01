@@ -288,9 +288,7 @@ export class ContractPublisher extends RPCConnectionHandler {
           ethers.utils.isHexString(constructorParamValues[index]),
           `Could not parse bytes32 value. Expected valid hex string but got "${constructorParamValues[index]}".`,
         );
-        if (ethers.utils.isHexString(constructorParamValues[index])) {
-          return ethers.utils.hexZeroPad(constructorParamValues[index], 32);
-        }
+        return ethers.utils.hexZeroPad(constructorParamValues[index], 32);
       }
       if (p.startsWith("bytes")) {
         invariant(
