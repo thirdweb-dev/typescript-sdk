@@ -294,6 +294,21 @@ export class MarketplaceDirect {
     };
   }
 
+  /**
+   * Accept an offer on a direct listing
+   *
+   * @remarks Accept an offer on a direct listing
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the asset you want to bid on
+   * const listingId = 0;
+   * // The price you are willing to bid for a single token of the listing
+   * const offeror = "0x...";
+   *
+   * await contract.direct.acceptOffer(listingId, offeror);
+   * ```
+   */
   public async acceptOffer(
     listingId: BigNumberish,
     addressOfOfferor: string,

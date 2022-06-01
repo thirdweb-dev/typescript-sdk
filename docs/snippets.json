@@ -488,6 +488,15 @@
     "examples": {},
     "methods": [
       {
+        "name": "acceptOffer",
+        "summary": "Accept an offer on a direct listing\n\n",
+        "remarks": "\n\nAccept an offer on a direct listing\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the asset you want to bid on\nconst listingId = 0;\n// The price you are willing to bid for a single token of the listing\nconst offeror = \"0x...\";\n\nawait contract.direct.acceptOffer(listingId, offeror);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceDirect.acceptOffer"
+      },
+      {
         "name": "buyoutListing",
         "summary": "Buy a Listing\n\n",
         "remarks": "\n\nBuy a specific direct listing from the marketplace.\n\n",

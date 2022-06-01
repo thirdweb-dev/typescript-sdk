@@ -4,6 +4,8 @@
 
 ## MarketplaceDirect.acceptOffer() method
 
+Accept an offer on a direct listing
+
 <b>Signature:</b>
 
 ```typescript
@@ -20,4 +22,20 @@ acceptOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<Transact
 <b>Returns:</b>
 
 Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
+
+## Remarks
+
+Accept an offer on a direct listing
+
+## Example
+
+
+```javascript
+// The listing ID of the asset you want to bid on
+const listingId = 0;
+// The price you are willing to bid for a single token of the listing
+const offeror = "0x...";
+
+await contract.direct.acceptOffer(listingId, offeror);
+```
 
