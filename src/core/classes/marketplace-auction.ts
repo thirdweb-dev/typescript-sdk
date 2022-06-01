@@ -289,7 +289,7 @@ export class MarketplaceAuction {
   /**
    * Bid On Auction
    *
-   * @remarks Make a bid on an auction listings
+   * @remarks Make a bid on an auction listing
    *
    * @example
    * ```javascript
