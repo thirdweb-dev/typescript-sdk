@@ -286,15 +286,15 @@ describe("Edition Drop Contract", async () => {
   });
 
   it("Platform fees", async () => {
-    const fees = await bdContract.platformFee.get();
+    const fees = await bdContract.platformFees.get();
     expect(fees.platform_fee_recipient).to.eq(adminWallet.address);
     expect(fees.platform_fee_basis_points).to.eq(10);
 
-    await bdContract.platformFee.set({
+    await bdContract.platformFees.set({
       platform_fee_recipient: samWallet.address,
       platform_fee_basis_points: 500,
     });
-    const fees2 = await bdContract.platformFee.get();
+    const fees2 = await bdContract.platformFees.get();
     expect(fees2.platform_fee_recipient).to.eq(samWallet.address);
     expect(fees2.platform_fee_basis_points).to.eq(500);
   });
