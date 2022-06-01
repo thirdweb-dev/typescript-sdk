@@ -408,6 +408,116 @@
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace"
   },
+  "MarketplaceAuction": {
+    "name": "MarketplaceAuction",
+    "summary": "Handles auction listings\n\n\n",
+    "remarks": null,
+    "examples": {},
+    "methods": [
+      {
+        "name": "buyoutListing",
+        "summary": "Buyout Auction\n\n",
+        "remarks": "\n\nBuy a specific direct listing from the marketplace.\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the asset you want to buy\nconst listingId = 0;\n\nawait contract.auction.buyoutListing(listingId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceAuction.buyoutListing"
+      },
+      {
+        "name": "cancelListing",
+        "summary": "Cancel Auction Listing\n\n",
+        "remarks": "\n\nCancel an auction listing on the marketplace\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the auction listing you want to cancel\nconst listingId = \"0\";\n\nawait contract.auction.cancelListing(listingId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceAuction.cancelListing"
+      },
+      {
+        "name": "closeListing",
+        "summary": "Close the Auction\n\n",
+        "remarks": "\n\nCloses the Auction and executes the sale.\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the auction listing you want to close\nconst listingId = \"0\";\nawait contract.auction.closeListing(listingId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceAuction.closeListing"
+      },
+      {
+        "name": "createListing",
+        "summary": "Create Auction\n\n",
+        "remarks": "\n\nCreate a new auction where people can bid on an asset.\n\n",
+        "examples": {
+          "javascript": "// Data of the auction you want to create\nconst auction = {\n  // address of the contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n // when should the listing open up for offers\n  startTimestamp: new Date(),\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: NATIVE_TOKEN_ADDRESS,\n  // how much people would have to bid to instantly buy the asset\n  buyoutPricePerToken: \"10\",\n  // the minimum bid that will be accepted for the token\n  reservePricePerToken: \"1.5\",\n}\n\nconst tx = await contract.auction.createListing(auction);\nconst receipt = tx.receipt; // the transaction receipt\nconst id = tx.id; // the id of the newly created listing"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceAuction.createListing"
+      },
+      {
+        "name": "getWinner",
+        "summary": "Get Auction Winner\n\n",
+        "remarks": "\n\nGet the winner of the auction after an auction ends.\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the auction that closed\nconst listingId = 0;\n\ncontract.auction.\n  .getWinner(listingId)\n  .then((auctionWinner) => console.log(auctionWinner))\n  .catch((err) => console.error(err));"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceAuction.getWinner"
+      },
+      {
+        "name": "getWinningBid",
+        "summary": "Get Highest Bid\n\n",
+        "remarks": "\n\nGet the current highest bid of an active auction.\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the auction that closed\nconst listingId = 0;\n\ncontract.auction.\n  .getWinningBid(listingId)\n  .then((offer) => console.log(offer))\n  .catch((err) => console.error(err));"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceAuction.getWinningBid"
+      },
+      {
+        "name": "makeBid",
+        "summary": "Bid On Auction\n\n",
+        "remarks": "\n\nMake a bid on an auction listings\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the asset you want to bid on\nconst listingId = 0;\n// The price you are willing to bid for a single token of the listing\nconst pricePerToken = 1;\n\nawait contract.auction.makeBid(listingId, pricePerToken);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceAuction.makeBid"
+      }
+    ],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceAuction"
+  },
+  "MarketplaceDirect": {
+    "name": "MarketplaceDirect",
+    "summary": "Handles direct listings\n\n\n",
+    "remarks": null,
+    "examples": {},
+    "methods": [
+      {
+        "name": "buyoutListing",
+        "summary": "Buy a Listing\n\n",
+        "remarks": "\n\nBuy a specific direct listing from the marketplace.\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the asset you want to buy\nconst listingId = 0;\n// Quantity of the asset you want to buy\nconst quantityDesired = 1;\n\nawait contract.direct.buyoutListing(listingId, quantityDesired);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceDirect.buyoutListing"
+      },
+      {
+        "name": "cancelListing",
+        "summary": "Cancel Direct Listing\n\n",
+        "remarks": "\n\nCancel a direct listing on the marketplace\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the direct listing you want to cancel\nconst listingId = \"0\";\n\nawait contract.direct.cancelListing(listingId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceDirect.cancelListing"
+      },
+      {
+        "name": "createListing",
+        "summary": "Create Direct Listing\n\n",
+        "remarks": "\n\nCreate a new listing on the marketplace where people can buy an asset directly.\n\n",
+        "examples": {
+          "javascript": "// Data of the listing you want to create\nconst listing = {\n  // address of the contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n  // when should the listing open up for offers\n  startTimestamp: new Date(),\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: NATIVE_TOKEN_ADDRESS,\n  // how much the asset will be sold for\n  buyoutPricePerToken: \"1.5\",\n}\n\nconst tx = await contract.direct.createListing(listing);\nconst receipt = tx.receipt; // the transaction receipt\nconst id = tx.id; // the id of the newly created listing"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceDirect.createListing"
+      }
+    ],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceDirect"
+  },
   "Multiwrap": {
     "name": "Multiwrap",
     "summary": "Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.\n\n",

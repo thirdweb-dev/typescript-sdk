@@ -46,7 +46,11 @@ function languageNameToKey(languageName) {
   }
 }
 
-const additionalClassesToParse = ["ContractDeployer"];
+const additionalClassesToParse = [
+  "ContractDeployer",
+  "MarketplaceDirect",
+  "MarketplaceAuction",
+];
 
 const modules = json.members[0].members.filter(
   (m) =>
