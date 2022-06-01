@@ -6,7 +6,7 @@ import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import { ClaimCondition, ClaimConditionInput } from "../../types";
-import deepEqual from "fast-deep-equal";
+import deepEqual from "deep-equal";
 import { ClaimEligibility } from "../../enums";
 import { TransactionResult } from "../index";
 import {

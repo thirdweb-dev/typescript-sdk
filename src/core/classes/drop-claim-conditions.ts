@@ -24,7 +24,7 @@ import { PriceSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { isNode } from "../../common/utils";
-import deepEqual from "fast-deep-equal";
+import deepEqual from "deep-equal";
 
 /**
  * Manages claim conditions for NFT Drop contracts
