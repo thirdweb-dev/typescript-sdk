@@ -368,11 +368,20 @@
         "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace.getAllListings"
       },
       {
+        "name": "getListing",
+        "summary": "Convenience function to get either a direct or auction listing\n\n",
+        "remarks": "\n\nCreate and manage auctions in your marketplace.\n\n",
+        "examples": {
+          "javascript": "const listingId = \"1\";\nconst listing = await contract.getListing(listingId);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace.getListing"
+      },
+      {
         "name": "setBidBufferBps",
         "summary": "Set the Auction bid buffer\n\n",
         "remarks": "\n\nA percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items.\n\n",
         "examples": {
-          "javascript": "// the bid buffer in basis points\nconst bufferBps = 500;\nawait contract.setBidBufferBps(bufferBps);"
+          "javascript": "// the bid buffer in basis points\nconst bufferBps = 500; // 5%\nawait contract.setBidBufferBps(bufferBps);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace.setBidBufferBps"
       },
@@ -471,7 +480,7 @@
       {
         "name": "makeBid",
         "summary": "Bid On Auction\n\n",
-        "remarks": "\n\nMake a bid on an auction listings\n\n",
+        "remarks": "\n\nMake a bid on an auction listing\n\n",
         "examples": {
           "javascript": "// The listing ID of the asset you want to bid on\nconst listingId = 0;\n// The price you are willing to bid for a single token of the listing\nconst pricePerToken = 1;\n\nawait contract.auction.makeBid(listingId, pricePerToken);"
         },
@@ -487,6 +496,15 @@
     "remarks": null,
     "examples": {},
     "methods": [
+      {
+        "name": "acceptOffer",
+        "summary": "Accept an offer on a direct listing\n\n",
+        "remarks": "\n\nAccept an offer on a direct listing\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the asset you want to bid on\nconst listingId = 0;\n// The price you are willing to bid for a single token of the listing\nconst offeror = \"0x...\";\n\nawait contract.direct.acceptOffer(listingId, offeror);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceDirect.acceptOffer"
+      },
       {
         "name": "buyoutListing",
         "summary": "Buy a Listing\n\n",
@@ -513,6 +531,15 @@
           "javascript": "// Data of the listing you want to create\nconst listing = {\n  // address of the contract the asset you want to list is on\n  assetContractAddress: \"0x...\",\n  // token ID of the asset you want to list\n  tokenId: \"0\",\n  // when should the listing open up for offers\n  startTimestamp: new Date(),\n  // how long the listing will be open for\n  listingDurationInSeconds: 86400,\n  // how many of the asset you want to list\n  quantity: 1,\n  // address of the currency contract that will be used to pay for the listing\n  currencyContractAddress: NATIVE_TOKEN_ADDRESS,\n  // how much the asset will be sold for\n  buyoutPricePerToken: \"1.5\",\n}\n\nconst tx = await contract.direct.createListing(listing);\nconst receipt = tx.receipt; // the transaction receipt\nconst id = tx.id; // the id of the newly created listing"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceDirect.createListing"
+      },
+      {
+        "name": "makeOffer",
+        "summary": "Make an offer for a Direct Listing\n\n",
+        "remarks": "\n\nMake an offer on a direct listing\n\n",
+        "examples": {
+          "javascript": "// The listing ID of the asset you want to offer on\nconst listingId = 0;\n// The price you are willing to offer per token\nconst pricePerToken = 1;\n// The quantity of tokens you want to receive for this offer\nconst quantity = 1;\n// The address of the currency you are making the offer in (must be ERC-20)\nconst currencyContractAddress = NATIVE_TOKENS[ChainId.Rinkeby].wrapped.address\n\nawait contract.direct.makeOffer(\n  listingId,\n  quantity,\n  currencyContractAddress,\n  bidAmount\n);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.MarketplaceDirect.makeOffer"
       }
     ],
     "properties": [],

@@ -2266,7 +2266,6 @@ export interface MarketplaceContractDeployMetadata {
 // @public
 export class MarketplaceDirect {
     constructor(contractWrapper: ContractWrapper<Marketplace_2>, storage: IStorage);
-    // (undocumented)
     acceptOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<TransactionResult>;
     buyoutListing(listingId: BigNumberish, quantityDesired: BigNumberish, receiver?: string): Promise<TransactionResult>;
     cancelListing(listingId: BigNumberish): Promise<TransactionResult>;
