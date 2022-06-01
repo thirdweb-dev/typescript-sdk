@@ -14,15 +14,10 @@
   "unpkg": "dist/browser/index.global.js",
   "exports": {
     "node": {
-      "import": "./dist/node/index.mjs",
-      "require": "./dist/node/index.js",
-      "default": "./dist/node/index.js"
+      "module": "./dist/node/index.mjs",
+      "require": "./dist/node/index.js"
     },
-    "browser": {
-      "import": "./dist/browser/index.mjs",
-      "require": "./dist/browser/index.js",
-      "default": "./dist/browser/index.js"
-    }
+    "default": "./dist/browser/index.mjs"
   },
   "files": [
     "dist/**/*"
