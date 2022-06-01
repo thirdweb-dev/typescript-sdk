@@ -364,7 +364,7 @@ export class Marketplace implements UpdateableNetwork {
    * @example
    * ```javascript
    * // the bid buffer in basis points
-   * const bufferBps = 500;
+   * const bufferBps = 500; // 5%
    * await contract.setBidBufferBps(bufferBps);
    * ```
    * @param bufferBps - the bps value

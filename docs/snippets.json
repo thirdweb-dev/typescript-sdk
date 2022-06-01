@@ -381,7 +381,7 @@
         "summary": "Set the Auction bid buffer\n\n",
         "remarks": "\n\nA percentage (e.g. 5%) in basis points (5% = 500, 100% = 10000). A new bid is considered to be a winning bid only if its bid amount is at least the bid buffer (e.g. 5%) greater than the previous winning bid. This prevents buyers from making very slightly higher bids to win the auctioned items.\n\n",
         "examples": {
-          "javascript": "// the bid buffer in basis points\nconst bufferBps = 500;\nawait contract.setBidBufferBps(bufferBps);"
+          "javascript": "// the bid buffer in basis points\nconst bufferBps = 500; // 5%\nawait contract.setBidBufferBps(bufferBps);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Marketplace.setBidBufferBps"
       },
