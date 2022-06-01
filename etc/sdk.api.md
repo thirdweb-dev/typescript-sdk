@@ -2040,10 +2040,7 @@ export class IpfsStorage implements IStorage {
     }): Promise<string>;
     uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<{
-        baseUri: string;
-        uris: string[];
-    }>;
+    }): Promise<UploadResult>;
     // @internal
     uploadSingle(data: string | Record<string, any>, contractAddress?: string, signerAddress?: string): Promise<string>;
 }

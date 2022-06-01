@@ -18,11 +18,11 @@ uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractA
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadatas | [JsonObject](./sdk.jsonobject.md)<!-- -->\[\] |  |
+|  metadatas | [JsonObject](./sdk.jsonobject.md)<!-- -->\[\] | The metadata to be uploaded. |
 |  fileStartNumber | number | <i>(Optional)</i> Optional. The first file file name begins with. |
 |  contractAddress | string | <i>(Optional)</i> Optional. The contract address the data belongs to. |
 |  signerAddress | string | <i>(Optional)</i> Optional. The address of the signer. |
-|  options | { onProgress: (event: [UploadProgressEvent](./sdk.uploadprogressevent.md)<!-- -->) =&gt; void; } | <i>(Optional)</i> |
+|  options | { onProgress: (event: [UploadProgressEvent](./sdk.uploadprogressevent.md)<!-- -->) =&gt; void; } | <i>(Optional)</i> Optional. Upload progress callback. |
 
 <b>Returns:</b>
 

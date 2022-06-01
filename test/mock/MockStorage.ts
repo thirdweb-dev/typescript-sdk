@@ -125,7 +125,7 @@ export class MockStorage implements IStorage {
       JSON.stringify(m),
     );
 
-    const cid = await this.uploadBatch(
+    const { baseUri: cid } = await this.uploadBatch(
       metadataToUpload,
       fileStartNumber,
       contractAddress,

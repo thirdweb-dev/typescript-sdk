@@ -83,6 +83,7 @@ export class ContractMetadata<
       }
     } catch (e) {
       // ignore
+      console.log(e);
     }
 
     if (!data) {

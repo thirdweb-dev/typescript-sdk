@@ -84,10 +84,11 @@ export interface IStorage {
    *
    * Uploads JSON metadata to IPFS
    *
-   * @param metadata - The metadata to be uploaded.
+   * @param metadatas - The metadata to be uploaded.
    * @param fileStartNumber - Optional. The first file file name begins with.
    * @param contractAddress - Optional. The contract address the data belongs to.
    * @param signerAddress - Optional. The address of the signer.
+   * @param options - Optional. Upload progress callback.
    */
   uploadMetadataBatch(
     metadatas: JsonObject[],
