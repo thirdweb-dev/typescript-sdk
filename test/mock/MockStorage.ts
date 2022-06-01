@@ -34,8 +34,9 @@ export class MockStorage implements IStorage {
     fileStartNumber?: number,
     _contractAddress?: string,
     _signerAddress?: string,
-  ): Promise<string> {
+  ): Promise<UploadResult> {
     const cid = uuidv4();
+    const uris: string[] = [];
     this.folders[cid] = {};
 
     let index = fileStartNumber ? fileStartNumber : 0;
@@ -55,11 +56,14 @@ export class MockStorage implements IStorage {
         continue;
       }
       this.folders[cid][index.toString()] = contents;
-
+      uris.push(`${cid}/${index}`);
       index += 1;
     }
 
-    return Promise.resolve(`mock://${cid}`);
+    return Promise.resolve({
+      baseUri: `mock://${cid}`,
+      uris,
+    });
   }
 
   public async getUploadToken(_contractAddress: string): Promise<string> {

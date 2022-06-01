@@ -4921,7 +4921,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-forgotten-export) The symbol "ContractPublisher" needs to be exported by the entry point index.d.ts
     //
     // @internal (undocumented)
-    getPublisher(): Promise<ContractPublisher>;
+    getPublisher(): ContractPublisher;
     // @internal
     getSignatureDrop(contractAddress: string): SignatureDrop;
     getSplit(address: string): Split;

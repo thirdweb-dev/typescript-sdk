@@ -122,10 +122,6 @@ export function getContractAddressByChainId(
       return process.env.factoryAddress as string;
     } else if (contractName === "twRegistry") {
       return process.env.registryAddress as string;
-    } else if (contractName === "twBYOCRegistry") {
-      return process.env.byocRegistryAddress as string;
-    } else if (contractName === "contractDeployer") {
-      return process.env.contractDeployerAddress as string;
     } else if (contractName === "contractMetadataRegistry") {
       return process.env.contractMetadataRegistryAddress as string;
     } else if (contractName === "sigMint") {
