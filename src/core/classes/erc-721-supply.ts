@@ -65,11 +65,18 @@ export class Erc721Supply implements DetectableFeature {
       throw new Error("Contract does not support querying all NFTs");
     }
     const maxId = Math.min(maxSupply.toNumber(), start + count);
-    return await Promise.all(
-      [...Array(maxId - start).keys()].map((i) =>
-        this.erc721.get((start + i).toString()),
-      ),
-    );
+
+    const nfts = [];
+    for (let i = start; i < maxId; i++) {
+      try {
+        const nft = await this.erc721.get(i);
+        nfts.push(nft);
+      } catch {
+        continue;
+      }
+    }
+
+    return await Promise.all(nfts);
   }
 
   /**

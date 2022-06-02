@@ -47,18 +47,9 @@ export class Erc721Enumerable implements DetectableFeature {
    */
   public async all(walletAddress?: string): Promise<NFTMetadataOwner[]> {
     const tokenIds = await this.tokenIds(walletAddress);
-
-    const nfts = [];
-    for (const tokenId of tokenIds) {
-      try {
-        const nft = await this.erc721.get(tokenId);
-        nfts.push(nft);
-      } catch {
-        continue;
-      }
-    }
-
-    return await Promise.all(nfts);
+    return await Promise.all(
+      tokenIds.map((tokenId) => this.erc721.get(tokenId.toString())),
+    );
   }
 
   /**
