@@ -723,6 +723,8 @@ export class ContractRoles<TContract extends IPermissionsEnumerable, TRole exten
     getAll(): Promise<Record<TRole, string[]>>;
     grant(role: TRole, address: string): Promise<TransactionResult>;
     revoke(role: TRole, address: string): Promise<TransactionResult>;
+    // @internal (undocumented)
+    readonly roles: readonly TRole[];
     setAll(rolesWithAddresses: {
         [key in TRole]?: string[];
     }): Promise<TransactionResult>;
