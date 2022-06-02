@@ -27,9 +27,13 @@ export const PINATA_IPFS_URL = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 export type ChainOrRpc =
   | "mumbai"
   | "polygon"
+  // common alias for `polygon`
+  | "matic"
   | "rinkeby"
   | "goerli"
   | "mainnet"
+  // common alias for `mainnet`
+  | "ethereum"
   | "fantom"
   | "avalanche"
   // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
@@ -58,15 +62,17 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
     case "goerli":
       return `https://eth-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "polygon":
+    case "matic":
       return `https://polygon-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "mainnet" || "ethereum":
+    case "mainnet":
+    case "ethereum":
       return `https://eth-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "fantom":
       return "https://rpc.ftm.tools";
     case "avalanche":
       return "https://rpc.ankr.com/avalanche";
     default:
-      if (network.startsWith("http")) {
+      if (network.startsWith("http") || network.startsWith("ws")) {
         return network;
       } else {
         throw new Error(`Unrecognized chain name or RPC url: ${network}`);
