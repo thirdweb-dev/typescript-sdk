@@ -1578,8 +1578,9 @@ export class Erc1155Enumerable implements DetectableFeature {
     all(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
     // (undocumented)
     featureName: "ERC1155Enumerable";
-    getTotalCount(): Promise<BigNumber>;
     owned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
+    totalCirculatingSupply(tokenId: BigNumberish): Promise<BigNumber>;
+    totalCount(): Promise<BigNumber>;
 }
 
 // @public

@@ -213,7 +213,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return this._query.getTotalCount();
+    return this._query.totalCount();
   }
 
   /**
