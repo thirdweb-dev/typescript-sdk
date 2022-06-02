@@ -167,7 +167,7 @@ describe("Publishing", async () => {
   it("AzukiWithMinting mintable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmTKKUUEU6GnG7VEEAAXpveeirREC1JNYntVJGhHKhqcYZ/1";
+    const ipfsUri = "ipfs://QmPPPoKk2mwoxBVTW5qMMNwaV4Ja5qDoq7fFZNFFvr3YsW/1";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
     const deployedAddr = await pub.deployPublishedContract(
@@ -187,6 +187,12 @@ describe("Publishing", async () => {
     invariant(c.nft.query, "no nft query detected");
     const all = await c.nft.query.all();
     expect(all.length).to.eq(1);
+    invariant(c.royalties, "no royalties detected");
+    await c.metadata.set({
+      name: "Hello",
+    });
+    const meta = await c.metadata.get();
+    expect(meta.name).to.eq("Hello");
   });
 
   it("Constructor params with tuples", async () => {
