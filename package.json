@@ -15,6 +15,7 @@
   "exports": {
     "node": {
       "import": "./dist/node/index.mjs",
+      "module": "./dist/node/index.mjs",
       "require": "./dist/node/index.js"
     },
     "default": "./dist/browser/index.mjs"
