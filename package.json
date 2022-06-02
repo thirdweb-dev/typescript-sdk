@@ -72,6 +72,7 @@
     "hardhat": "2.9.3",
     "merkletreejs": "^0.2.24",
     "mocha": "^10.0.0",
+    "node-stdlib-browser": "^1.2.0",
     "prettier": "^2.4.1",
     "ts-mocha": "^10.0.0",
     "ts-node": "^10.7.0",
