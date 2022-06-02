@@ -1,6 +1,8 @@
 import { defineConfig } from "tsup";
 
 import { NodeModulesPolyfillPlugin } from "@esbuild-plugins/node-modules-polyfill";
+import plugin from "node-stdlib-browser/helpers/esbuild/plugin";
+import stdLibBrowser from "node-stdlib-browser";
 
 export default defineConfig([
   // build for node
@@ -42,7 +44,11 @@ export default defineConfig([
     format: ["cjs", "esm"],
     // contains node-only functions, aka has to be bundled in for browser
     noExternal: ["cbor"],
-    esbuildPlugins: [NodeModulesPolyfillPlugin()],
+    inject: [`node_modules/node-stdlib-browser/helpers/esbuild/shim.js`],
+    define: {
+      Buffer: "Buffer",
+    },
+    esbuildPlugins: [NodeModulesPolyfillPlugin(), plugin(stdLibBrowser)],
     outDir: "dist/browser",
   },
   // build for script-tag usage <script src="..."></script>
@@ -64,7 +70,11 @@ export default defineConfig([
     },
     // inject ThirdwebSDK into window
     footer: { js: "window.ThirdwebSDK = window._thirdweb.ThirdwebSDK;" },
-    esbuildPlugins: [NodeModulesPolyfillPlugin()],
+    inject: [`node_modules/node-stdlib-browser/helpers/esbuild/shim.js`],
+    define: {
+      Buffer: "Buffer",
+    },
+    esbuildPlugins: [NodeModulesPolyfillPlugin(), plugin(stdLibBrowser)],
     outDir: "dist/browser",
   },
 ]);
