@@ -68,7 +68,6 @@ export class IpfsUploader implements IStorageUpload {
       });
       const body = await res.json();
       if (!res.ok) {
-        console.log(body);
         throw new UploadError("Failed to upload files to IPFS");
       }
       return {

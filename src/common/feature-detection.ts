@@ -172,22 +172,21 @@ export async function resolveContractUriFromAddress(
  */
 function extractIPFSHashFromBytecode(bytecode: string): string | undefined {
   try {
-    console.log("DEBUG - og bytecode", bytecode.length);
     const numericBytecode = hexToBytes(bytecode);
-    console.log("DEBUG - numericBytecode", numericBytecode);
+
     const cborLength: number =
       numericBytecode[numericBytecode.length - 2] * 0x100 +
       numericBytecode[numericBytecode.length - 1];
     const bytecodeBuffer = Buffer.from(
       numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
     );
-    console.log("DEBUG - cborLength", cborLength, bytecodeBuffer);
+
     const cborData = decodeFirstSync(bytecodeBuffer);
     if (cborData["ipfs"]) {
       return `ipfs://${toB58String(cborData["ipfs"])}`;
     }
   } catch (e) {
-    console.log(e);
+    console.error("failed to extract ipfs hash from bytecode", e);
   }
   return undefined;
 }
