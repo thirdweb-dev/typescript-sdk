@@ -9,7 +9,6 @@ const roleMap = {
   transfer: "TRANSFER_ROLE",
   minter: "MINTER_ROLE",
   pauser: "PAUSER_ROLE",
-  editor: "EDITOR_ROLE",
   lister: "LISTER_ROLE",
   asset: "ASSET_ROLE",
   unwrap: "UNWRAP_ROLE",
