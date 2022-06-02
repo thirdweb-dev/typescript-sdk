@@ -14,6 +14,7 @@
   "unpkg": "dist/browser/index.global.js",
   "exports": {
     "node": {
+      "import": "./dist/node/index.mjs",
       "module": "./dist/node/index.mjs",
       "require": "./dist/node/index.js"
     },
