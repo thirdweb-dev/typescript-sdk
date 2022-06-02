@@ -157,6 +157,12 @@ export async function resolveContractUriFromAddress(
   provider: ethers.providers.Provider,
 ): Promise<string | undefined> {
   const bytecode = await provider.getCode(address);
+  if (bytecode === "0x") {
+    const chain = await provider.getNetwork();
+    throw new Error(
+      `Contract at ${address} does not exist on chain '${chain.name}' (chainId: ${chain.chainId})`,
+    );
+  }
   return extractIPFSHashFromBytecode(bytecode);
 }
 
@@ -166,13 +172,16 @@ export async function resolveContractUriFromAddress(
  */
 function extractIPFSHashFromBytecode(bytecode: string): string | undefined {
   try {
+    console.log("DEBUG - og bytecode", bytecode.length);
     const numericBytecode = hexToBytes(bytecode);
+    console.log("DEBUG - numericBytecode", numericBytecode);
     const cborLength: number =
       numericBytecode[numericBytecode.length - 2] * 0x100 +
       numericBytecode[numericBytecode.length - 1];
     const bytecodeBuffer = Buffer.from(
       numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
     );
+    console.log("DEBUG - cborLength", cborLength, bytecodeBuffer);
     const cborData = decodeFirstSync(bytecodeBuffer);
     if (cborData["ipfs"]) {
       return `ipfs://${toB58String(cborData["ipfs"])}`;
