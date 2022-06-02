@@ -60,7 +60,7 @@ export class AdminRoleMissingError extends Error {
 export type AirdropInput = z.input<typeof AirdropInputSchema>;
 
 // @public (undocumented)
-export const ALL_ROLES: ("transfer" | "unwrap" | "lister" | "admin" | "minter" | "pauser" | "editor" | "asset")[];
+export const ALL_ROLES: ("transfer" | "unwrap" | "lister" | "admin" | "minter" | "pauser" | "asset")[];
 
 // Warning: (ae-forgotten-export) The symbol "PriceSchema" needs to be exported by the entry point index.d.ts
 //
