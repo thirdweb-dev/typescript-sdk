@@ -25,7 +25,11 @@ export class ContractRoles<
 {
   featureName = FEATURE_PERMISSIONS.name;
   private contractWrapper;
-  private readonly roles;
+  /**
+   * @internal
+   * @remarks This is used for typing inside react hooks which is why it has to be public.
+   */
+  public readonly roles;
 
   constructor(
     contractWrapper: ContractWrapper<TContract>,

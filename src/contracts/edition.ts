@@ -197,7 +197,7 @@ export class Edition extends Erc1155<TokenERC1155> {
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return this._query.getTotalCount();
+    return this._query.totalCount();
   }
 
   /**
