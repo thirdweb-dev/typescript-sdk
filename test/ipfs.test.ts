@@ -9,11 +9,11 @@ import {
   IpfsStorage,
   NFTMetadataInput,
 } from "../src";
-import { extractConstructorParams } from "../src/common/feature-detection";
 
 global.fetch = require("cross-fetch");
 
-describe("IPFS Uploads", async () => {
+// TODO re-enable when we have a more reliable IPFS upload system
+describe.skip("IPFS Uploads", async () => {
   const storage: IpfsStorage = new IpfsStorage(ipfsGatewayUrl);
 
   async function getFile(upload: string): Promise<Response> {

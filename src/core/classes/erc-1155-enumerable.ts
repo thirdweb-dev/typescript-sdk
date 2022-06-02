@@ -1,6 +1,6 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { IERC1155Enumerable } from "contracts";
-import { BigNumber } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { EditionMetadata, EditionMetadataOwner } from "../../schema";
 import { Erc1155 } from "./erc-1155";
@@ -50,10 +50,7 @@ export class Erc1155Enumerable implements DetectableFeature {
     const count = BigNumber.from(
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
-    const maxId = Math.min(
-      (await this.getTotalCount()).toNumber(),
-      start + count,
-    );
+    const maxId = Math.min((await this.totalCount()).toNumber(), start + count);
     return await Promise.all(
       [...Array(maxId - start).keys()].map((i) =>
         this.erc1155.get((start + i).toString()),
@@ -63,11 +60,26 @@ export class Erc1155Enumerable implements DetectableFeature {
 
   /**
    * Get the number of NFTs minted
+   * @remarks This returns the total number of NFTs minted in this contract, **not** the total supply of a given token.
+   *
    * @returns the total number of NFTs minted in this contract
    * @public
    */
-  public async getTotalCount(): Promise<BigNumber> {
+  public async totalCount(): Promise<BigNumber> {
     return await this.contractWrapper.readContract.nextTokenIdToMint();
+  }
+
+  /**
+   * Get the supply of token for a given tokenId.
+   * @remarks This is **not** the sum of supply of all NFTs in the contract.
+   *
+   * @returns the total number of NFTs minted in this contract
+   * @public
+   */
+  public async totalCirculatingSupply(
+    tokenId: BigNumberish,
+  ): Promise<BigNumber> {
+    return await this.contractWrapper.readContract.totalSupply(tokenId);
   }
 
   /**

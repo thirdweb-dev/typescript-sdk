@@ -208,7 +208,7 @@ export const ChainlinkVrf: Record<number, ChainlinkInfo>;
 // Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type ChainOrRpc = "mumbai" | "polygon" | "rinkeby" | "goerli" | "mainnet" | "fantom" | "avalanche" | (string & {});
+export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "avalanche" | (string & {});
 
 // Warning: (ae-internal-missing-underscore) The name "CidWithFileName" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -723,6 +723,8 @@ export class ContractRoles<TContract extends IPermissionsEnumerable, TRole exten
     getAll(): Promise<Record<TRole, string[]>>;
     grant(role: TRole, address: string): Promise<TransactionResult>;
     revoke(role: TRole, address: string): Promise<TransactionResult>;
+    // @internal (undocumented)
+    readonly roles: readonly TRole[];
     setAll(rolesWithAddresses: {
         [key in TRole]?: string[];
     }): Promise<TransactionResult>;
@@ -1578,8 +1580,9 @@ export class Erc1155Enumerable implements DetectableFeature {
     all(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
     // (undocumented)
     featureName: "ERC1155Enumerable";
-    getTotalCount(): Promise<BigNumber>;
     owned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
+    totalCirculatingSupply(tokenId: BigNumberish): Promise<BigNumber>;
+    totalCount(): Promise<BigNumber>;
 }
 
 // @public
