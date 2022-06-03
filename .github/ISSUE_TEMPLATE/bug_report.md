@@ -38,7 +38,7 @@ If applicable, add screenshots to help explain your problem.
  - Frontend of your choice if applicable (`react`, `next`, `angular`, `vue`, etc.): [e.g. v12.16.3]
 
 **Link to the project**
-If the project is open-source you have a reproducible project on [CodeSandbox](https://codesandbox.io/), [Replit](https://replit.com/), or [GitHub](https://github.com/), link it here.
+If you have a reproducible project on [CodeSandbox](https://codesandbox.io/), [Replit](https://replit.com/), or [GitHub](https://github.com/), link it here. (This will make it much easier for us to reproduce your issue.)
 
 **Additional context**
 Add any other context about the problem here.
