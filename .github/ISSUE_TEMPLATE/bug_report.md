@@ -9,7 +9,7 @@ assignees: ''
 
 **Prerequisites**
 
-* [ ] I've updated the `@thirdweb-dev/sdk` package to the latest version.
+* [ ] I have checked that `@thirdweb-dev/sdk` is on the latest _stable_ version and the bug still exists.
 * [ ] I've checked other issues and it's not duplicated, check the [issues list](https://github.com/thirdweb-dev/typescript-sdk/issues?q=is%3Aissue+is%3Aclosed).
 
 **Optional**
