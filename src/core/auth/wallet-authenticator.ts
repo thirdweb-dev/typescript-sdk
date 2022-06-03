@@ -19,14 +19,20 @@ import { NetworkOrSignerOrProvider } from "../types";
  * @remarks Enables sign-in with ethereum based authentication.
  * @example
  * ```javascript
+ * // We choose an application name on the server side
+ * const application = "my-app-name"
+ *
  * // On the server side, we can generate a payload for a wallet requesting to authenticate
- * const payloadWithSignature = await sdk.auth.generate({ subject: "0x..." })
+ * const payloadWithSignature = await sdk.auth.generate({
+ *   application,
+ *   subject: "0x...",
+ * })
  *
  * // Then on the client side, we can sign this payload with the wallet requesting to authenticate
  * const authenticatedPayload = await sdk.auth.sign(payloadWithSignature)
  *
  * // Finally, on the server side, we can verify if this payload is valid
- * const isValid = await sdk.auth.verify(authenticatedPayload)
+ * const isValid = await sdk.auth.verify(application, authenticatedPayload)
  * ```
  * @public
  */
@@ -104,8 +110,14 @@ export class WalletAuthenticator extends RPCConnectionHandler {
   }
 
   public async verify(
+    application: string,
     authenticatedPayload: AuthenticatedPayload,
   ): Promise<boolean> {
+    // Ensure that application of the payload is the same as the issuer
+    if (authenticatedPayload.payload.iss.split(":")[0] !== application) {
+      return false;
+    }
+
     // Recover both of the signing addresses for the payload
     const adminAddress = this.recoverAddress(
       JSON.stringify(authenticatedPayload.payload),

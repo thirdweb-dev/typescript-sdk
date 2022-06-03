@@ -56,6 +56,7 @@
 |  [TransactionError](./sdk.transactionerror.md) |  |
 |  [UserWallet](./sdk.userwallet.md) | Connect and Interact with a user wallet |
 |  [Vote](./sdk.vote.md) | Create a decentralized organization for token holders to vote on proposals. |
+|  [WalletAuthenticator](./sdk.walletauthenticator.md) | Wallet Authenticator |
 
 ## Enumerations
 
