@@ -10,7 +10,7 @@ assignees: ''
 **Prerequisites**
 
 * [ ] I have checked that `@thirdweb-dev/sdk` is on the latest _stable_ version and the bug still exists.
-* [ ] I've checked other issues and it's not duplicated, check the [issues list](https://github.com/thirdweb-dev/typescript-sdk/issues?q=is%3Aissue+is%3Aclosed).
+* [ ] I have checked [existing issues](https://github.com/thirdweb-dev/typescript-sdk/issues?q=is%3Aissue) and I was unable to find a duplicate of this.
 
 **Optional**
 
