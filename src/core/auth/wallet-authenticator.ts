@@ -1,5 +1,5 @@
-import { NetworkOrSignerOrProvider, SDKOptions } from "@thirdweb-dev/sdk";
 import { ethers } from "ethers";
+import { SDKOptions } from "../../schema";
 import {
   AuthenticatedPayload,
   AuthenticatedPayloadSchema,
@@ -12,6 +12,7 @@ import {
   FilledAuthenticationPayloadInput,
 } from "../../schema/auth";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
+import { NetworkOrSignerOrProvider } from "../types";
 
 /**
  * Wallet Authenticator
