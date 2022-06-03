@@ -199,7 +199,17 @@ export class ContractPublisher extends RPCConnectionHandler {
     });
   }
 
-  // TODO unpublish contract
+  public async unpublish(
+    publisher: string,
+    contractId: string,
+  ): Promise<TransactionResult> {
+    return {
+      receipt: await this.publisher.sendTransaction("unpublishContract", [
+        publisher,
+        contractId,
+      ]),
+    };
+  }
 
   /**
    * @internal
