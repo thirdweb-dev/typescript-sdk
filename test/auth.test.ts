@@ -74,13 +74,15 @@ describe("Wallet Authentication", async () => {
 
     sdk.updateSignerOrProvider(signerWallet);
     const signedPayload = await sdk.auth.sign(payloadWithSignature);
-    const isValid = await sdk.auth.verify(signedPayload);
+
+    sdk.updateSignerOrProvider(adminWallet);
+    const isValid = await sdk.auth.verify("thirdweb", signedPayload);
 
     // eslint-disable-next-line no-unused-expressions
     expect(isValid).to.be.true;
   });
 
-  it("Should reject payload with incorrect issuer", async () => {
+  it("Should not sign payload with incorrect issuer", async () => {
     const payloadWithSignature = await sdk.auth.generate({
       application: "thirdweb",
       subject: signerWallet.address,
@@ -88,14 +90,16 @@ describe("Wallet Authentication", async () => {
     payloadWithSignature.payload.iss = `thirdweb${attackerWallet.address}`;
 
     sdk.updateSignerOrProvider(signerWallet);
-    const signedPayload = await sdk.auth.sign(payloadWithSignature);
-    const isValid = await sdk.auth.verify(signedPayload);
 
-    // eslint-disable-next-line no-unused-expressions
-    expect(isValid).to.be.false;
+    try {
+      await sdk.auth.sign(payloadWithSignature);
+      expect(false).to.equal(true);
+    } catch {
+      expect(true).to.equal(true);
+    }
   });
 
-  it("Should reject payload with incorrect subject", async () => {
+  it("Should not sign payload with incorrect subject", async () => {
     const payloadWithSignature = await sdk.auth.generate({
       application: "thirdweb",
       subject: signerWallet.address,
@@ -103,25 +107,27 @@ describe("Wallet Authentication", async () => {
     payloadWithSignature.payload.sub = attackerWallet.address;
 
     sdk.updateSignerOrProvider(signerWallet);
-    const signedPayload = await sdk.auth.sign(payloadWithSignature);
-    const isValid = await sdk.auth.verify(signedPayload);
-
-    // eslint-disable-next-line no-unused-expressions
-    expect(isValid).to.be.false;
+    try {
+      await sdk.auth.sign(payloadWithSignature);
+      expect(false).to.equal(true);
+    } catch {
+      expect(true).to.equal(true);
+    }
   });
 
-  it("Should reject payload with incorrect signer", async () => {
+  it("Should not sign payload with incorrect signer", async () => {
     const payloadWithSignature = await sdk.auth.generate({
       application: "thirdweb",
       subject: signerWallet.address,
     });
 
     sdk.updateSignerOrProvider(attackerWallet);
-    const signedPayload = await sdk.auth.sign(payloadWithSignature);
-    const isValid = await sdk.auth.verify(signedPayload);
-
-    // eslint-disable-next-line no-unused-expressions
-    expect(isValid).to.be.false;
+    try {
+      await sdk.auth.sign(payloadWithSignature);
+      expect(false).to.equal(true);
+    } catch {
+      expect(true).to.equal(true);
+    }
   });
 
   it("Should reject payload before invalid before time", async () => {
@@ -133,7 +139,9 @@ describe("Wallet Authentication", async () => {
 
     sdk.updateSignerOrProvider(signerWallet);
     const signedPayload = await sdk.auth.sign(payloadWithSignature);
-    const isValid = await sdk.auth.verify(signedPayload);
+
+    sdk.updateSignerOrProvider(adminWallet);
+    const isValid = await sdk.auth.verify("thirdweb", signedPayload);
 
     // eslint-disable-next-line no-unused-expressions
     expect(isValid).to.be.false;
@@ -148,7 +156,9 @@ describe("Wallet Authentication", async () => {
 
     sdk.updateSignerOrProvider(signerWallet);
     const signedPayload = await sdk.auth.sign(payloadWithSignature);
-    const isValid = await sdk.auth.verify(signedPayload);
+
+    sdk.updateSignerOrProvider(adminWallet);
+    const isValid = await sdk.auth.verify("thirdweb", signedPayload);
 
     // eslint-disable-next-line no-unused-expressions
     expect(isValid).to.be.false;

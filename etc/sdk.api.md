@@ -5537,7 +5537,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     // (undocumented)
     sign(authorizedPayload: AuthorizedPayload): Promise<AuthenticatedPayload>;
     // (undocumented)
-    verify(authenticatedPayload: AuthenticatedPayload): Promise<boolean>;
+    verify(application: string, authenticatedPayload: AuthenticatedPayload): Promise<boolean>;
 }
 
 // @public

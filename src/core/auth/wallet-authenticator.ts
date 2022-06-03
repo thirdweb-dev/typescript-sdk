@@ -129,11 +129,16 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     );
 
     const payload = authenticatedPayload.payload;
+    const issuerAddress = payload.iss.split(":")[1];
+    const connectedAddress = await this.requireSigner().getAddress();
+
+    // Reject if the issuer is not the connected wallet doing verification
+    if (issuerAddress.toLowerCase() !== connectedAddress.toLowerCase()) {
+      return false;
+    }
 
     // Reject if the issuer is not the same as the authorizer of the message
-    if (
-      payload.iss.split(":")[1]?.toLowerCase() !== adminAddress.toLowerCase()
-    ) {
+    if (issuerAddress?.toLowerCase() !== adminAddress.toLowerCase()) {
       return false;
     }
 

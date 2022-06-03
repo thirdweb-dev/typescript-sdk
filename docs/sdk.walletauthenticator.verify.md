@@ -7,13 +7,14 @@
 <b>Signature:</b>
 
 ```typescript
-verify(authenticatedPayload: AuthenticatedPayload): Promise<boolean>;
+verify(application: string, authenticatedPayload: AuthenticatedPayload): Promise<boolean>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
+|  application | string |  |
 |  authenticatedPayload | AuthenticatedPayload |  |
 
 <b>Returns:</b>
