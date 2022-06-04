@@ -15,7 +15,8 @@ export const PUBLIC_GATEWAYS = [
 /**
  * @internal
  */
-export const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co";
+export const TW_IPFS_SERVER_URL =
+  "https://nftlabs-ipfs-server-am-rotate.zeet-nftlabs.zeet.app/";
 /**
  * @internal
  */
