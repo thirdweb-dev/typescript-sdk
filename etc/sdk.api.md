@@ -5282,7 +5282,7 @@ export type TransactionResultWithId<T = never> = TransactionResult<T> & {
 // Warning: (ae-internal-missing-underscore) The name "TW_IPFS_SERVER_URL" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const TW_IPFS_SERVER_URL = "https://nftlabs-ipfs-server-am-rotate.zeet-nftlabs.zeet.app/";
+export const TW_IPFS_SERVER_URL = "https://nftlabs-ipfs-server-am-rotate.zeet-nftlabs.zeet.app";
 
 // @public (undocumented)
 export enum UnderlyingType {
