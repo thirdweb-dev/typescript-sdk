@@ -61,7 +61,7 @@ export class UserWallet {
     amount: Amount,
     currencyAddress = NATIVE_TOKEN_ADDRESS,
   ): Promise<TransactionResult> {
-    const signer = await this.connectedWallet();
+    const signer = this.requireWallet();
     const amountInWei = await normalizePriceValue(
       this.connection.getProvider(),
       amount,
@@ -103,8 +103,7 @@ export class UserWallet {
   async balance(
     currencyAddress = NATIVE_TOKEN_ADDRESS,
   ): Promise<CurrencyValue> {
-    const signer = this.connection.getSigner();
-    invariant(signer, "Wallet not connected");
+    this.requireWallet();
     const provider = this.connection.getProvider();
     let balance: BigNumber;
     if (isNativeToken(currencyAddress)) {
@@ -125,7 +124,7 @@ export class UserWallet {
    * ```
    */
   async getAddress(): Promise<string> {
-    return await this.connectedWallet().getAddress();
+    return await this.requireWallet().getAddress();
   }
 
   /**
@@ -133,18 +132,18 @@ export class UserWallet {
    * @param message - the message to sign
    */
   async sign(message: string): Promise<string> {
-    const signer = this.connectedWallet();
+    const signer = this.requireWallet();
     return await signer.signMessage(message);
   }
 
   /**
    * Send a raw transaction to the blockchain from the connected wallet
-   * @param transactionRequest
+   * @param transactionRequest - raw transaction data to send to the blockchain
    */
   async sendRawTransaction(
     transactionRequest: providers.TransactionRequest,
   ): Promise<TransactionResult> {
-    const signer = this.connectedWallet();
+    const signer = this.requireWallet();
     const tx = await signer.sendTransaction(transactionRequest);
     return {
       receipt: await tx.wait(),
@@ -155,9 +154,12 @@ export class UserWallet {
    * PRIVATE FUNCTIONS
    * ***********************/
 
-  private connectedWallet() {
+  private requireWallet() {
     const signer = this.connection.getSigner();
-    invariant(signer, "Wallet not connected");
+    invariant(
+      signer,
+      "This action requires a connected wallet. Please pass a valid signer to the SDK.",
+    );
     return signer;
   }
 

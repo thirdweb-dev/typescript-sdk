@@ -13,6 +13,7 @@ import {
 } from "../../schema/auth";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
 import { NetworkOrSignerOrProvider } from "../types";
+import { UserWallet } from "../wallet";
 
 /**
  * Wallet Authenticator
@@ -41,8 +42,15 @@ import { NetworkOrSignerOrProvider } from "../types";
  * @beta
  */
 export class WalletAuthenticator extends RPCConnectionHandler {
-  constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
+  private wallet: UserWallet;
+
+  constructor(
+    network: NetworkOrSignerOrProvider,
+    wallet: UserWallet,
+    options: SDKOptions,
+  ) {
     super(network, options);
+    this.wallet = wallet;
   }
 
   /**
@@ -78,8 +86,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     const parsedPayload: FilledAuthenticationPayloadInput =
       AuthenticationPayloadInputSchema.parse(payload);
 
-    const signer = this.requireSigner();
-    const signerAddress = await signer.getAddress();
+    const signerAddress = await this.wallet.getAddress();
 
     const payloadOutput: AuthenticationPayloadOutput =
       AuthenticationPayloadOutputSchema.parse({
@@ -92,7 +99,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
       });
 
     const payloadMessage = JSON.stringify(payloadOutput);
-    const signature = await signer.signMessage(payloadMessage);
+    const signature = await this.wallet.sign(payloadMessage);
 
     const authorizedPayload = AuthorizedPayloadSchema.parse({
       payload: payloadOutput,
@@ -133,7 +140,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
       );
     }
 
-    const signerAddress = await this.requireSigner().getAddress();
+    const signerAddress = await this.wallet.getAddress();
     if (
       authorizedPayload.payload.sub.toLowerCase() !==
       signerAddress.toLowerCase()
@@ -144,8 +151,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     }
 
     const message = this.generateMessage(authorizedPayload);
-    const signer = this.requireSigner();
-    const authenticatedPayload = await signer.signMessage(message);
+    const authenticatedPayload = await this.wallet.sign(message);
     const payload = AuthenticatedPayloadSchema.parse({
       ...authorizedPayload,
       authenticatedPayload,
@@ -184,7 +190,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
 
     const payload = authenticatedPayload.payload;
     const issuerAddress = payload.iss.split(":")[1];
-    const connectedAddress = await this.requireSigner().getAddress();
+    const connectedAddress = await this.wallet.getAddress();
 
     // Reject if the issuer is not the connected wallet doing verification
     if (issuerAddress.toLowerCase() !== connectedAddress.toLowerCase()) {
@@ -214,16 +220,6 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     }
 
     return true;
-  }
-
-  private requireSigner(): ethers.Signer {
-    const signer = this.getSigner();
-    if (!signer) {
-      throw new Error(
-        "This action requires a connected wallet to sign the transaction. Please pass a valid signer to the SDK.",
-      );
-    }
-    return signer;
   }
 
   private generateMessage(payload: AuthorizedPayload): string {
