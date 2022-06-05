@@ -15,9 +15,9 @@ export const AuthenticationPayloadInputSchema = z.object({
    */
   subject: AddressSchema,
   /**
-   * The audience of endpoints intended to receive the authentication payload
+   * The endpoints intended to receive the authentication payload
    */
-  audience: z.array(z.string()).optional(),
+  endpoints: z.array(z.string()).optional(),
   /**
    * The date before which the authentication payload is invalid
    */
@@ -43,7 +43,7 @@ export const AuthenticationPayloadOutputSchema = z.object({
   /**
    * The audience of endpoints intended to receive the authentication payload
    */
-  aud: z.array(z.string()).default(["all"]),
+  aud: z.array(z.string()).default(["*"]),
   /**
    * The date before which the authentication payload is invalid
    */

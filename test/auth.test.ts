@@ -29,7 +29,7 @@ describe("Wallet Authentication", async () => {
       `thirdweb:${adminWallet.address}`,
     );
     expect(payloadWithSignature.payload.sub).to.equal(signerWallet.address);
-    expect(payloadWithSignature.payload.aud).to.deep.equal(["all"]);
+    expect(payloadWithSignature.payload.aud).to.deep.equal(["*"]);
     expect(payloadWithSignature.payload.nbf).to.equal(
       payloadWithSignature.payload.iat,
     );
@@ -44,7 +44,7 @@ describe("Wallet Authentication", async () => {
     const payload: AuthenticationPayloadInput = {
       application: "thirdweb",
       subject: signerWallet.address,
-      audience: ["endpoint1", "endpoint2"],
+      endpoints: ["endpoint1", "endpoint2"],
       invalidBefore,
       expiresAt,
     };
@@ -64,22 +64,6 @@ describe("Wallet Authentication", async () => {
     expect(payloadWithSignature.payload.exp).to.equal(
       Math.floor(expiresAt.getTime() / 1000),
     );
-  });
-
-  it("Should verify payload with valid settings", async () => {
-    const payloadWithSignature = await sdk.auth.generate({
-      application: "thirdweb",
-      subject: signerWallet.address,
-    });
-
-    sdk.updateSignerOrProvider(signerWallet);
-    const signedPayload = await sdk.auth.sign(payloadWithSignature);
-
-    sdk.updateSignerOrProvider(adminWallet);
-    const isValid = await sdk.auth.verify("thirdweb", signedPayload);
-
-    // eslint-disable-next-line no-unused-expressions
-    expect(isValid).to.be.true;
   });
 
   it("Should not sign payload with incorrect issuer", async () => {
@@ -141,7 +125,7 @@ describe("Wallet Authentication", async () => {
     const signedPayload = await sdk.auth.sign(payloadWithSignature);
 
     sdk.updateSignerOrProvider(adminWallet);
-    const isValid = await sdk.auth.verify("thirdweb", signedPayload);
+    const isValid = await sdk.auth.verify(signedPayload, "thirdweb");
 
     // eslint-disable-next-line no-unused-expressions
     expect(isValid).to.be.false;
@@ -158,9 +142,68 @@ describe("Wallet Authentication", async () => {
     const signedPayload = await sdk.auth.sign(payloadWithSignature);
 
     sdk.updateSignerOrProvider(adminWallet);
-    const isValid = await sdk.auth.verify("thirdweb", signedPayload);
+    const isValid = await sdk.auth.verify(signedPayload, "thirdweb");
 
     // eslint-disable-next-line no-unused-expressions
     expect(isValid).to.be.false;
+  });
+
+  it("Should reject payload on unauthorized endpoints", async () => {
+    const payloadWithSignature = await sdk.auth.generate({
+      application: "thirdweb",
+      subject: signerWallet.address,
+      endpoints: ["endpoint1", "endpoint2"],
+    });
+
+    sdk.updateSignerOrProvider(signerWallet);
+    const signedPayload = await sdk.auth.sign(payloadWithSignature);
+
+    sdk.updateSignerOrProvider(adminWallet);
+    const isValid = await sdk.auth.verify(
+      signedPayload,
+      "thirdweb",
+      "endpoint3",
+    );
+
+    // eslint-disable-next-line no-unused-expressions
+    expect(isValid).to.be.false;
+  });
+
+  it("Should reject if no endpoint specified and not all allowed", async () => {
+    const payloadWithSignature = await sdk.auth.generate({
+      application: "thirdweb",
+      subject: signerWallet.address,
+      endpoints: ["endpoint1", "endpoint2"],
+    });
+
+    sdk.updateSignerOrProvider(signerWallet);
+    const signedPayload = await sdk.auth.sign(payloadWithSignature);
+
+    sdk.updateSignerOrProvider(adminWallet);
+    const isValid = await sdk.auth.verify(signedPayload, "thirdweb");
+
+    // eslint-disable-next-line no-unused-expressions
+    expect(isValid).to.be.false;
+  });
+
+  it("Should verify payload with valid settings", async () => {
+    const payloadWithSignature = await sdk.auth.generate({
+      application: "thirdweb",
+      subject: signerWallet.address,
+      endpoints: ["endpoint1"],
+    });
+
+    sdk.updateSignerOrProvider(signerWallet);
+    const signedPayload = await sdk.auth.sign(payloadWithSignature);
+
+    sdk.updateSignerOrProvider(adminWallet);
+    const isValid = await sdk.auth.verify(
+      signedPayload,
+      "thirdweb",
+      "endpoint1",
+    );
+
+    // eslint-disable-next-line no-unused-expressions
+    expect(isValid).to.be.true;
   });
 });
