@@ -13,6 +13,7 @@ import {
 } from "../../common";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_METADATA } from "../../constants/thirdweb-features";
+import { BaseContract } from "ethers";
 
 /**
  * @internal
@@ -38,7 +39,7 @@ export interface IGenericSchemaType {
  * @public
  */
 export class ContractMetadata<
-  TContract extends IThirdwebContract | ThirdwebContract,
+  TContract extends BaseContract,
   TSchema extends IGenericSchemaType,
 > implements DetectableFeature
 {

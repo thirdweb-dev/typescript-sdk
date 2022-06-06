@@ -15,6 +15,7 @@ import {
   DropERC721,
   IERC721Supply,
   IMintableERC721,
+  Drop,
   Multiwrap,
   SignatureDrop,
   TokenERC721,
@@ -24,6 +25,7 @@ import { Erc721Mintable } from "./erc-721-mintable";
 import { BaseERC721 } from "../../types/eips";
 import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { Erc721Claimable } from "./erc-721-claimable";
 
 /**
  * Standard ERC721 NFT functions
@@ -51,6 +53,7 @@ export class Erc721<
 
   public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
+  public drop: Erc721Claimable | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -70,6 +73,7 @@ export class Erc721<
     }
     this.query = this.detectErc721Enumerable();
     this.mint = this.detectErc721Mintable();
+    this.drop = this.detectErc721Claimable();
   }
 
   /**
@@ -256,6 +260,13 @@ export class Erc721<
       )
     ) {
       return new Erc721Mintable(this, this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectErc721Claimable(): Erc721Claimable | undefined {
+    if (detectContractFeature<Drop>(this.contractWrapper, "ERC721Claimable")) {
+      return new Erc721Claimable(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }

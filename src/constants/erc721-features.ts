@@ -3,16 +3,16 @@ import Erc721EnumerableAbi from "../../abis/IERC721Enumerable.json";
 import Erc721SupplyAbi from "../../abis/IERC721Supply.json";
 import IMintableERC721Abi from "../../abis/IMintableERC721.json";
 import MulticallAbi from "../../abis/IMulticall.json";
-import IDropAbi from "../../abis/IDrop.json";
+import DropAbi from "../../abis/Drop.json";
 
 export const FEATURE_NFT_CLAIMABLE = {
   name: "ERC721Claimable",
   namespace: "nft.drop",
   docLinks: {
     sdk: "sdk.erc721claimable",
-    contracts: "IDrop",
+    contracts: "Drop",
   },
-  abis: [Erc721Abi, IDropAbi],
+  abis: [Erc721Abi, DropAbi],
   features: {},
 };
 
