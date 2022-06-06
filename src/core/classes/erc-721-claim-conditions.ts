@@ -1,7 +1,11 @@
-import { IDrop } from "contracts/IDrop";
 import { IStorage } from "../interfaces/IStorage";
 import { ContractMetadata } from "./contract-metadata";
-import { Drop, IERC20, IERC20Metadata } from "contracts";
+import {
+  Drop,
+  IERC20,
+  IERC20Metadata,
+  ContractMetadata as ContractMetadataContract,
+} from "contracts";
 import { BigNumber, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
@@ -14,7 +18,10 @@ import {
   transformResultToClaimCondition,
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
-import { detectContractFeature } from "../../common/feature-detection";
+import {
+  detectContractFeature,
+  hasFunction,
+} from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
 import ERC20Abi from "../../../abis/IERC20.json";
@@ -22,7 +29,7 @@ import { isNode } from "../../common/utils";
 import deepEqual from "fast-deep-equal";
 import { BaseERC721 } from "../../types/eips";
 
-export class GenericClaimConditions {
+export class Erc721ClaimConditions {
   private contractWrapper: ContractWrapper<BaseERC721 & Drop>;
   private metadata: ContractMetadata<Drop, any>;
   private storage: IStorage;
@@ -323,12 +330,23 @@ export class GenericClaimConditions {
         mergedMetadata,
       );
       // TODO: Still possible to do setContractURI?
-      encoded.push(
-        this.contractWrapper.readContract.interface.encodeFunctionData(
+      if (
+        hasFunction<ContractMetadataContract>(
           "setContractURI",
-          [contractURI],
-        ),
-      );
+          this.contractWrapper,
+        )
+      ) {
+        encoded.push(
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "setContractURI",
+            [contractURI],
+          ),
+        );
+      } else {
+        throw new Error(
+          "Setting a merkle root requires implementing ContractMetadata in your contract to support storing a merkle root.",
+        );
+      }
     }
     encoded.push(
       this.contractWrapper.readContract.interface.encodeFunctionData(

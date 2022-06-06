@@ -14,7 +14,7 @@ export const FEATURE_NFT_CLAIMABLE = {
   },
   abis: [Erc721Abi, DropAbi],
   features: {},
-};
+} as const;
 
 export const FEATURE_NFT_BATCH_MINTABLE = {
   name: "ERC721BatchMintable",

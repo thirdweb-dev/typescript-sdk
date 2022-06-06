@@ -12,7 +12,7 @@ import { TransactionResultWithId } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc721 } from "./erc-721";
-import { GenericClaimConditions } from "./generic-claim-conditions";
+import { Erc721ClaimConditions } from "./erc-721-claim-conditions";
 
 /**
  * Claim lazily minted ERC721 NFTs
@@ -48,7 +48,7 @@ export class Erc721Claimable implements DetectableFeature {
    * await contract.claimConditions.set(claimConditions);
    * ```
    */
-  public claimConditions: GenericClaimConditions;
+  public claimConditions: Erc721ClaimConditions;
 
   private metadata: ContractMetadata<Drop, any>;
   private contractWrapper: ContractWrapper<BaseERC721 & Drop>;
@@ -69,7 +69,7 @@ export class Erc721Claimable implements DetectableFeature {
       SmartContract.schema,
       storage,
     );
-    this.claimConditions = new GenericClaimConditions(
+    this.claimConditions = new Erc721ClaimConditions(
       contractWrapper,
       this.metadata,
       storage,

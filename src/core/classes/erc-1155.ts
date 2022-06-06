@@ -1,5 +1,6 @@
 import { ContractWrapper } from "./contract-wrapper";
 import {
+  Drop,
   DropERC1155,
   IERC1155Enumerable,
   IMintableERC1155,
