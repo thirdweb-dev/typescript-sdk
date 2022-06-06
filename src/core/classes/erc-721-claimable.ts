@@ -5,7 +5,7 @@ import { FEATURE_NFT_CLAIMABLE } from "../../constants/erc721-features";
 import { SmartContract } from "../../contracts";
 import { NFTMetadataOwner } from "../../schema";
 import { ClaimVerification } from "../../types";
-import { BaseERC721 } from "../../types/eips";
+import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResultWithId } from "../types";
@@ -47,16 +47,16 @@ export class Erc721Claimable implements DetectableFeature {
    * await contract.claimConditions.set(claimConditions);
    * ```
    */
-  public claimConditions: DropClaimConditions<BaseERC721 & Drop>;
+  public claimConditions: DropClaimConditions<BaseDropERC721>;
 
-  private metadata: ContractMetadata<BaseERC721 & Drop, any>;
-  private contractWrapper: ContractWrapper<BaseERC721 & Drop>;
+  private metadata: ContractMetadata<BaseDropERC721, any>;
+  private contractWrapper: ContractWrapper<BaseDropERC721>;
   private erc721: Erc721;
   private storage: IStorage;
 
   constructor(
     erc721: Erc721,
-    contractWrapper: ContractWrapper<BaseERC721 & Drop>,
+    contractWrapper: ContractWrapper<BaseDropERC721>,
     storage: IStorage,
   ) {
     this.erc721 = erc721;

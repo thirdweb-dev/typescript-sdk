@@ -30,18 +30,14 @@ import { includesErrorMessage } from "../../common";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { isNode } from "../../common/utils";
 import deepEqual from "fast-deep-equal";
-import { BaseERC721 } from "../../types/eips";
+import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 
 /**
  * Manages claim conditions for NFT Drop contracts
  * @public
  */
 export class DropClaimConditions<
-  TContract extends
-    | SignatureDrop
-    | DropERC721
-    | DropERC20
-    | (BaseERC721 & Drop),
+  TContract extends SignatureDrop | DropERC721 | DropERC20 | BaseDropERC721,
 > {
   private contractWrapper;
   private metadata;
