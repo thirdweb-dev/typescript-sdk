@@ -11,9 +11,8 @@ import { IStorage } from "../interfaces/IStorage";
 import { TransactionResultWithId } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
+import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
-import { Erc721ClaimConditions } from "./erc-721-claim-conditions";
-
 /**
  * Claim lazily minted ERC721 NFTs
  * @remarks Manage claim phases and claim ERC721 NFTs that have been lazily minted.
@@ -48,9 +47,9 @@ export class Erc721Claimable implements DetectableFeature {
    * await contract.claimConditions.set(claimConditions);
    * ```
    */
-  public claimConditions: Erc721ClaimConditions;
+  public claimConditions: DropClaimConditions<BaseERC721 & Drop>;
 
-  private metadata: ContractMetadata<Drop, any>;
+  private metadata: ContractMetadata<BaseERC721 & Drop, any>;
   private contractWrapper: ContractWrapper<BaseERC721 & Drop>;
   private erc721: Erc721;
   private storage: IStorage;
@@ -69,7 +68,7 @@ export class Erc721Claimable implements DetectableFeature {
       SmartContract.schema,
       storage,
     );
-    this.claimConditions = new Erc721ClaimConditions(
+    this.claimConditions = new DropClaimConditions(
       contractWrapper,
       this.metadata,
       storage,

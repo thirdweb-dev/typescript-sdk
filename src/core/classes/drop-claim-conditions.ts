@@ -1,11 +1,13 @@
 import { IStorage } from "../interfaces/IStorage";
 import { ContractMetadata } from "./contract-metadata";
 import {
+  Drop,
   DropERC20,
   DropERC721,
   IERC20,
   IERC20Metadata,
   SignatureDrop,
+  ContractMetadata as ContractMetadataContract,
 } from "contracts";
 import { BigNumber, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
@@ -19,19 +21,27 @@ import {
   transformResultToClaimCondition,
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
-import { detectContractFeature } from "../../common/feature-detection";
+import {
+  detectContractFeature,
+  hasFunction,
+} from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { isNode } from "../../common/utils";
 import deepEqual from "fast-deep-equal";
+import { BaseERC721 } from "../../types/eips";
 
 /**
  * Manages claim conditions for NFT Drop contracts
  * @public
  */
 export class DropClaimConditions<
-  TContract extends SignatureDrop | DropERC721 | DropERC20,
+  TContract extends
+    | SignatureDrop
+    | DropERC721
+    | DropERC20
+    | (BaseERC721 & Drop),
 > {
   private contractWrapper;
   private metadata;
@@ -205,31 +215,15 @@ export class DropClaimConditions<
         this.storage,
       );
 
-      const contractType = ethers.utils.toUtf8String(
-        await this.contractWrapper.readContract.contractType(),
-      );
-
       try {
-        const [validMerkleProof] = this.isSignatureDrop(
-          this.contractWrapper.readContract,
-          contractType,
-        )
-          ? await this.contractWrapper.readContract.verifyClaimMerkleProof(
-              activeConditionIndex,
-              addressToCheck,
-              quantity,
-              {
-                proof: proofs.proof,
-                maxQuantityInAllowlist: proofs.maxClaimable,
-              },
-            )
-          : await this.contractWrapper.readContract.verifyClaimMerkleProof(
-              activeConditionIndex,
-              addressToCheck,
-              quantity,
-              proofs.proof,
-              proofs.maxClaimable,
-            );
+        const [validMerkleProof] =
+          await this.contractWrapper.readContract.verifyClaimMerkleProof(
+            activeConditionIndex,
+            addressToCheck,
+            quantity,
+            proofs.proof,
+            proofs.maxClaimable,
+          );
         if (!validMerkleProof) {
           reasons.push(ClaimEligibility.AddressNotAllowed);
           return reasons;
@@ -347,31 +341,32 @@ export class DropClaimConditions<
       const contractURI = await this.metadata._parseAndUploadMetadata(
         mergedMetadata,
       );
-      encoded.push(
-        this.contractWrapper.readContract.interface.encodeFunctionData(
+
+      if (
+        hasFunction<ContractMetadataContract>(
           "setContractURI",
-          [contractURI],
-        ),
-      );
+          this.contractWrapper,
+        )
+      ) {
+        encoded.push(
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "setContractURI",
+            [contractURI],
+          ),
+        );
+      } else {
+        throw new Error(
+          "Setting a merkle root requires implementing ContractMetadata in your contract to support storing a merkle root.",
+        );
+      }
     }
-    const contractType = ethers.utils.toUtf8String(
-      await this.contractWrapper.readContract.contractType(),
-    );
 
     encoded.push(
-      this.isSignatureDrop(this.contractWrapper.readContract, contractType)
-        ? this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setClaimConditions",
-            [
-              sortedConditions,
-              resetClaimEligibilityForAll,
-              ethers.utils.toUtf8Bytes(""),
-            ],
-          )
-        : this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setClaimConditions",
-            [sortedConditions, resetClaimEligibilityForAll],
-          ),
+      // TODO: Remove data param on Drop.sol
+      this.contractWrapper.readContract.interface.encodeFunctionData(
+        "setClaimConditions",
+        [sortedConditions, resetClaimEligibilityForAll],
+      ),
     );
 
     return {
@@ -408,12 +403,5 @@ export class DropClaimConditions<
     } else {
       return Promise.resolve(0);
     }
-  }
-
-  private isSignatureDrop(
-    _contract: SignatureDrop | any,
-    contractType: string,
-  ): _contract is SignatureDrop {
-    return contractType.includes("SignatureDrop");
   }
 }
