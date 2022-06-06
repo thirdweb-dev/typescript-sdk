@@ -3,6 +3,18 @@ import Erc721EnumerableAbi from "../../abis/IERC721Enumerable.json";
 import Erc721SupplyAbi from "../../abis/IERC721Supply.json";
 import IMintableERC721Abi from "../../abis/IMintableERC721.json";
 import MulticallAbi from "../../abis/IMulticall.json";
+import IDropAbi from "../../abis/IDrop.json";
+
+export const FEATURE_NFT_CLAIMABLE = {
+  name: "ERC721Claimable",
+  namespace: "nft.drop",
+  docLinks: {
+    sdk: "sdk.erc721claimable",
+    contracts: "IDrop",
+  },
+  abis: [Erc721Abi, IDropAbi],
+  features: {},
+};
 
 export const FEATURE_NFT_BATCH_MINTABLE = {
   name: "ERC721BatchMintable",
@@ -63,5 +75,6 @@ export const FEATURE_NFT = {
   features: {
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
+    [FEATURE_NFT_CLAIMABLE.name]: FEATURE_NFT_CLAIMABLE,
   },
 } as const;
