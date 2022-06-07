@@ -119,23 +119,16 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * @example
    * ```javascript
    * const presaleStartTime = new Date();
-   * const publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
-   * const claimConditions = [
-   *   {
+   * const claimCondition = {
    *     startTime: presaleStartTime, // start the presale now
    *     maxQuantity: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
-   *   },
-   *   {
-   *     startTime: publicSaleStartTime, // 24h after presale, start public sale
-   *     price: 0.08, // public sale price
-   *   }
-   * ]);
-   * await contract.claimConditions.set(claimConditions);
+   * };
+   * await contract.claimCondition.set(claimCondition);
    * ```
    */
-  public claimConditions: DropSingleClaimConditions<SignatureDropContract>;
+  public claimCondition: DropSingleClaimConditions<SignatureDropContract>;
   /**
    * Delayed reveal
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
@@ -213,7 +206,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
       this.roles,
       this.storage,
     );
-    this.claimConditions = new DropSingleClaimConditions(
+    this.claimCondition = new DropSingleClaimConditions(
       this.contractWrapper,
       this.metadata,
       this.storage,
@@ -570,7 +563,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
-      await this.claimConditions.getActive(),
+      await this.claimCondition.get(),
       (await this.metadata.get()).merkle,
       0,
       this.contractWrapper,

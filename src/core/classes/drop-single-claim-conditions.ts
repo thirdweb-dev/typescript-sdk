@@ -47,7 +47,7 @@ export class DropSingleClaimConditions<TContract extends SignatureDrop> {
    *
    * @returns the claim condition metadata
    */
-  public async getActive(): Promise<ClaimCondition> {
+  public async get(): Promise<ClaimCondition> {
     const claimCondition =
       await this.contractWrapper.readContract.claimCondition();
     const metadata = await this.metadata.get();
@@ -247,17 +247,17 @@ export class DropSingleClaimConditions<TContract extends SignatureDrop> {
    * await dropContract.claimConditions.set(claimConditions);
    * ```
    *
-   * @param claimConditionInputs - The claim conditions
+   * @param claimConditionInput - The claim condition
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
   public async set(
-    claimConditionInputs: ClaimConditionInput[],
+    claimConditionInput: ClaimConditionInput,
     resetClaimEligibilityForAll = false,
   ): Promise<TransactionResult> {
     // process inputs
     const { snapshotInfos, sortedConditions } =
       await processClaimConditionInputs(
-        claimConditionInputs,
+        [claimConditionInput],
         await this.getTokenDecimals(),
         this.contractWrapper.getProvider(),
         this.storage,
@@ -303,26 +303,6 @@ export class DropSingleClaimConditions<TContract extends SignatureDrop> {
       receipt: await this.contractWrapper.multiCall(encoded),
     };
   }
-
-  // /**
-  //  * Update a single claim condition with new data.
-  //  *
-  //  * @param index - the index of the claim condition to update, as given by the index from the result of `getAll()`
-  //  * @param claimConditionInput - the new data to update, previous data will be retained
-  //  */
-  // public async update(
-  //   index: number,
-  //   claimConditionInput: ClaimConditionInput,
-  // ): Promise<TransactionResult> {
-  //   const currentCondition =
-  //     await this.contractWrapper.readContract.claimCondition();
-  //   const newConditionInputs = await updateExistingClaimConditions(
-  //     index,
-  //     claimConditionInput,
-  //     existingConditions,
-  //   );
-  //   return await this.set(newConditionInputs);
-  // }
 
   /** ***************************************
    * PRIVATE FUNCTIONS

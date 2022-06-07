@@ -4186,7 +4186,7 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
     claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // Warning: (ae-forgotten-export) The symbol "DropSingleClaimConditions" needs to be exported by the entry point index.d.ts
-    claimConditions: DropSingleClaimConditions<SignatureDrop_2>;
+    claimCondition: DropSingleClaimConditions<SignatureDrop_2>;
     claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     static contractAbi: any;
