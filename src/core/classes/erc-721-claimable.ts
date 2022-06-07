@@ -1,11 +1,11 @@
-import { Drop, TokensClaimedEvent } from "contracts/Drop";
+import { TokensClaimedEvent } from "contracts/Drop";
 import { BigNumber, BigNumberish, BytesLike, utils } from "ethers";
 import { prepareClaim } from "../../common/claim-conditions";
 import { FEATURE_NFT_CLAIMABLE } from "../../constants/erc721-features";
-import { SmartContract } from "../../contracts";
+import { SmartContract } from "../../contracts/smart-contract";
 import { NFTMetadataOwner } from "../../schema";
 import { ClaimVerification } from "../../types";
-import { BaseDropERC721, BaseERC721 } from "../../types/eips";
+import { BaseDropERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResultWithId } from "../types";
@@ -13,6 +13,7 @@ import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
+
 /**
  * Claim lazily minted ERC721 NFTs
  * @remarks Manage claim phases and claim ERC721 NFTs that have been lazily minted.

@@ -195,6 +195,32 @@ describe("Publishing", async () => {
     expect(meta.name).to.eq("Hello");
   });
 
+  it("ERC721Claimable feature detection", async () => {
+    const realSDK = new ThirdwebSDK(adminWallet);
+    const pub = realSDK.getPublisher();
+    const ipfsUri = "ipfs://QmZKBpdo8cgyvJbuLDtea73CTHmmKui8eHsxp8cW8U7BL2/3";
+    const addr = await pub.deployContract(ipfsUri, []);
+    const c = await realSDK.getContract(addr);
+
+    let claimConditions = await c.nft.drop.claimConditions.getAll();
+    expect(claimConditions.length).to.equal(0);
+
+    console.log("Got here...");
+    await c.nft.drop.claimConditions.set([
+      {
+        price: "0",
+        startTime: new Date(0),
+      },
+      {
+        price: "0",
+        startTime: new Date(),
+      },
+    ]);
+
+    claimConditions = await c.nft.drop.claimConditions.getAll();
+    expect(claimConditions.length).to.equal(2);
+  });
+
   it("Constructor params with tuples", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();

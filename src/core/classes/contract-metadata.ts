@@ -1,8 +1,4 @@
-import {
-  IContractMetadata,
-  IThirdwebContract,
-  ThirdwebContract,
-} from "contracts";
+import { IContractMetadata } from "contracts";
 import { z } from "zod";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResult } from "../types";
