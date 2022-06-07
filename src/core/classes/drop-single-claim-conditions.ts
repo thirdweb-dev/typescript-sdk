@@ -1,12 +1,6 @@
 import { IStorage } from "../interfaces/IStorage";
 import { ContractMetadata } from "./contract-metadata";
-import {
-  DropERC20,
-  DropERC721,
-  IERC20,
-  IERC20Metadata,
-  SignatureDrop,
-} from "contracts";
+import { IERC20, IERC20Metadata, SignatureDrop } from "contracts";
 import { BigNumber, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
@@ -17,7 +11,6 @@ import {
   getClaimerProofs,
   processClaimConditionInputs,
   transformResultToClaimCondition,
-  updateExistingClaimConditions,
 } from "../../common/claim-conditions";
 import { detectContractFeature } from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
@@ -25,12 +18,12 @@ import { includesErrorMessage } from "../../common";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { isNode } from "../../common/utils";
 import deepEqual from "fast-deep-equal";
-
+import { IClaimCondition } from "contracts/SignatureDrop";
 /**
  * Manages claim conditions for NFT Drop contracts
  * @public
  */
-export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
+export class DropSingleClaimConditions<TContract extends SignatureDrop> {
   private contractWrapper;
   private metadata;
   private storage: IStorage;
@@ -55,49 +48,15 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
    * @returns the claim condition metadata
    */
   public async getActive(): Promise<ClaimCondition> {
-    const id =
-      await this.contractWrapper.readContract.getActiveClaimConditionId();
-    const mc = await this.contractWrapper.readContract.getClaimConditionById(
-      id,
-    );
+    const claimCondition =
+      await this.contractWrapper.readContract.claimCondition();
     const metadata = await this.metadata.get();
     return await transformResultToClaimCondition(
-      mc,
+      claimCondition as IClaimCondition.ClaimConditionStructOutput,
       await this.getTokenDecimals(),
       this.contractWrapper.getProvider(),
       metadata.merkle,
       this.storage,
-    );
-  }
-
-  /**
-   * Get all the claim conditions
-   *
-   * @returns the claim conditions metadata
-   */
-  public async getAll(): Promise<ClaimCondition[]> {
-    const claimCondition =
-      await this.contractWrapper.readContract.claimCondition();
-    const startId = claimCondition.currentStartId.toNumber();
-    const count = claimCondition.count.toNumber();
-    const conditions = [];
-    for (let i = startId; i < startId + count; i++) {
-      conditions.push(
-        await this.contractWrapper.readContract.getClaimConditionById(i),
-      );
-    }
-    const metadata = await this.metadata.get();
-    const decimals = await this.getTokenDecimals();
-    return Promise.all(
-      conditions.map((c) =>
-        transformResultToClaimCondition(
-          c,
-          decimals,
-          this.contractWrapper.getProvider(),
-          metadata.merkle,
-          this.storage,
-        ),
-      ),
     );
   }
 
@@ -138,8 +97,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     addressToCheck?: string,
   ): Promise<ClaimEligibility[]> {
     const reasons: ClaimEligibility[] = [];
-    let activeConditionIndex: BigNumber;
-    let claimCondition: ClaimCondition;
+    let claimCondition: IClaimCondition.ClaimConditionStructOutput;
 
     const decimals = await this.getTokenDecimals();
     const quantityWithDecimals = ethers.utils.parseUnits(
@@ -161,10 +119,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     }
 
     try {
-      [activeConditionIndex, claimCondition] = await Promise.all([
-        this.contractWrapper.readContract.getActiveClaimConditionId(),
-        this.getActive(),
-      ]);
+      claimCondition = await this.contractWrapper.readContract.claimCondition();
     } catch (err: any) {
       if (
         includesErrorMessage(err, "!CONDITION") ||
@@ -177,11 +132,8 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
       return reasons;
     }
 
-    if (claimCondition.availableSupply !== "unlimited") {
-      const supplyWithDecimals = ethers.utils.parseUnits(
-        claimCondition.availableSupply,
-        decimals,
-      );
+    if (claimCondition.maxClaimableSupply) {
+      const supplyWithDecimals = claimCondition.maxClaimableSupply;
 
       if (supplyWithDecimals.lt(quantityWithDecimals)) {
         reasons.push(ClaimEligibility.NotEnoughSupply);
@@ -189,11 +141,9 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     }
 
     // check for merkle root inclusion
-    const merkleRootArray = ethers.utils.stripZeros(
-      claimCondition.merkleRootHash,
-    );
+    const merkleRootArray = ethers.utils.stripZeros(claimCondition.merkleRoot);
     if (merkleRootArray.length > 0) {
-      const merkleLower = claimCondition.merkleRootHash.toString();
+      const merkleLower = claimCondition.merkleRoot.toString();
       const metadata = await this.metadata.get();
       const proofs = await getClaimerProofs(
         addressToCheck,
@@ -203,30 +153,17 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
         this.storage,
       );
 
-      const contractType = ethers.utils.toUtf8String(
-        await this.contractWrapper.readContract.contractType(),
-      );
-
       try {
-        const [validMerkleProof] = this.isSignatureDrop(
-          this.contractWrapper.readContract,
-          contractType,
-        )
-          ? await this.contractWrapper.readContract.verifyClaimMerkleProof(
-              addressToCheck,
-              quantity,
-              {
-                proof: proofs.proof,
-                maxQuantityInAllowlist: proofs.maxClaimable,
-              },
-            )
-          : await this.contractWrapper.readContract.verifyClaimMerkleProof(
-              activeConditionIndex,
-              addressToCheck,
-              quantity,
-              proofs.proof,
-              proofs.maxClaimable,
-            );
+        const [validMerkleProof] =
+          await this.contractWrapper.readContract.verifyClaimMerkleProof(
+            addressToCheck,
+            quantity,
+            {
+              proof: proofs.proof,
+              maxQuantityInAllowlist: proofs.maxClaimable,
+            },
+          );
+
         if (!validMerkleProof) {
           reasons.push(ClaimEligibility.AddressNotAllowed);
           return reasons;
@@ -239,10 +176,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
 
     // check for claim timestamp between claims
     const [lastClaimedTimestamp, timestampForNextClaim] =
-      await this.contractWrapper.readContract.getClaimTimestamp(
-        activeConditionIndex,
-        addressToCheck,
-      );
+      await this.contractWrapper.readContract.getClaimTimestamp(addressToCheck);
 
     const now = BigNumber.from(Date.now()).div(1000);
 
@@ -257,10 +191,12 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
 
     // if not within a browser conetext, check for wallet balance.
     // In browser context, let the wallet do that job
-    if (claimCondition.price.gt(0) && isNode()) {
-      const totalPrice = claimCondition.price.mul(BigNumber.from(quantity));
+    if (claimCondition.pricePerToken.gt(0) && isNode()) {
+      const totalPrice = claimCondition.pricePerToken.mul(
+        BigNumber.from(quantity),
+      );
       const provider = this.contractWrapper.getProvider();
-      if (isNativeToken(claimCondition.currencyAddress)) {
+      if (isNativeToken(claimCondition.currency)) {
         const balance = await provider.getBalance(addressToCheck);
         if (balance.lt(totalPrice)) {
           reasons.push(ClaimEligibility.NotEnoughTokens);
@@ -268,7 +204,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
       } else {
         const erc20 = new ContractWrapper<IERC20>(
           provider,
-          claimCondition.currencyAddress,
+          claimCondition.currency,
           ERC20Abi,
           {},
         );
@@ -351,20 +287,16 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
         ),
       );
     }
-    const contractType = ethers.utils.toUtf8String(
-      await this.contractWrapper.readContract.contractType(),
-    );
 
     encoded.push(
-      this.isSignatureDrop(this.contractWrapper.readContract, contractType)
-        ? this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setClaimConditions",
-            [sortedConditions, resetClaimEligibilityForAll],
-          )
-        : this.contractWrapper.readContract.interface.encodeFunctionData(
-            "setClaimConditions",
-            [sortedConditions, resetClaimEligibilityForAll],
-          ),
+      this.contractWrapper.readContract.interface.encodeFunctionData(
+        "setClaimConditions",
+        [
+          sortedConditions[0],
+          resetClaimEligibilityForAll,
+          ethers.utils.toUtf8Bytes(""),
+        ],
+      ),
     );
 
     return {
@@ -372,24 +304,25 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     };
   }
 
-  /**
-   * Update a single claim condition with new data.
-   *
-   * @param index - the index of the claim condition to update, as given by the index from the result of `getAll()`
-   * @param claimConditionInput - the new data to update, previous data will be retained
-   */
-  public async update(
-    index: number,
-    claimConditionInput: ClaimConditionInput,
-  ): Promise<TransactionResult> {
-    const existingConditions = await this.getAll();
-    const newConditionInputs = await updateExistingClaimConditions(
-      index,
-      claimConditionInput,
-      existingConditions,
-    );
-    return await this.set(newConditionInputs);
-  }
+  // /**
+  //  * Update a single claim condition with new data.
+  //  *
+  //  * @param index - the index of the claim condition to update, as given by the index from the result of `getAll()`
+  //  * @param claimConditionInput - the new data to update, previous data will be retained
+  //  */
+  // public async update(
+  //   index: number,
+  //   claimConditionInput: ClaimConditionInput,
+  // ): Promise<TransactionResult> {
+  //   const currentCondition =
+  //     await this.contractWrapper.readContract.claimCondition();
+  //   const newConditionInputs = await updateExistingClaimConditions(
+  //     index,
+  //     claimConditionInput,
+  //     existingConditions,
+  //   );
+  //   return await this.set(newConditionInputs);
+  // }
 
   /** ***************************************
    * PRIVATE FUNCTIONS
@@ -401,12 +334,5 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     } else {
       return Promise.resolve(0);
     }
-  }
-
-  private isSignatureDrop(
-    _contract: SignatureDrop | any,
-    contractType: string,
-  ): _contract is SignatureDrop {
-    return contractType.includes("SignatureDrop");
   }
 }

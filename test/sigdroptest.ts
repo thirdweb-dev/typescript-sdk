@@ -12,7 +12,7 @@ import { SignedPayload721WithQuantitySignature } from "../src/schema/contracts/c
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import invariant from "tiny-invariant";
 import { MerkleTree } from "merkletreejs";
-import keccak256 from "keccak256";
+import { keccak256 } from "ethers/lib/utils";
 
 global.fetch = require("cross-fetch");
 
@@ -475,10 +475,10 @@ describe("Signature drop tests", async () => {
           snapshot: [samWallet.address],
         },
       ]);
-      const conditions = await signatureDropContract.claimConditions.getAll();
-      assert.lengthOf(conditions, 1);
-      invariant(conditions[0].snapshot);
-      expect(conditions[0].snapshot[0].address).to.eq(samWallet.address);
+      const conditions =
+        await signatureDropContract.claimConditions.getActive();
+      invariant(conditions.snapshot);
+      expect(conditions.snapshot[0].address).to.eq(samWallet.address);
     });
 
     it("should remove merkles from the metadata when claim conditions are removed", async () => {
@@ -505,10 +505,8 @@ describe("Signature drop tests", async () => {
         "0xb1a60ad68b77609a455696695fbdd02b850d03ec285e7fe1f4c4093797457b24",
       );
 
-      const roots = (await signatureDropContract.claimConditions.getAll()).map(
-        (c) => c.merkleRootHash,
-      );
-      expect(roots).length(2);
+      const roots = await signatureDropContract.claimConditions.getActive();
+      expect(roots.merkleRootHash.length > 0);
 
       await signatureDropContract.claimConditions.set([{}]);
       const newMetadata = await signatureDropContract.metadata.get();

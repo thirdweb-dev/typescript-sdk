@@ -26,7 +26,7 @@ import {
   NFTMetadataOwner,
 } from "../schema/tokens/common";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
-import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
+import { DropSingleClaimConditions } from "../core/classes/drop-single-claim-conditions";
 import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
@@ -135,7 +135,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * await contract.claimConditions.set(claimConditions);
    * ```
    */
-  public claimConditions: DropClaimConditions<SignatureDropContract>;
+  public claimConditions: DropSingleClaimConditions<SignatureDropContract>;
   /**
    * Delayed reveal
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
@@ -213,7 +213,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
       this.roles,
       this.storage,
     );
-    this.claimConditions = new DropClaimConditions(
+    this.claimConditions = new DropSingleClaimConditions(
       this.contractWrapper,
       this.metadata,
       this.storage,
@@ -370,20 +370,8 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   public async totalClaimedSupply(): Promise<BigNumber> {
     const claimCondition =
       await this.contractWrapper.readContract.claimCondition();
-    const startId = claimCondition.currentStartId.toNumber();
-    const count = claimCondition.count.toNumber();
-    const conditions = [];
-    for (let i = startId; i < startId + count; i++) {
-      conditions.push(
-        await this.contractWrapper.readContract.getClaimConditionById(i),
-      );
-    }
 
-    const totalClaimed = conditions.reduce(function (total, condition) {
-      return total + condition.supplyClaimed.toNumber();
-    }, 0);
-
-    return ethers.BigNumber.from(totalClaimed);
+    return claimCondition.supplyClaimed;
   }
 
   /**
@@ -399,25 +387,10 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * @returns the unclaimed supply
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
-    const claimCondition =
-      await this.contractWrapper.readContract.claimCondition();
-    const startId = claimCondition.currentStartId.toNumber();
-    const count = claimCondition.count.toNumber();
-    const conditions = [];
-    for (let i = startId; i < startId + count; i++) {
-      conditions.push(
-        await this.contractWrapper.readContract.getClaimConditionById(i),
-      );
-    }
-
     const maxSupply =
       await this.contractWrapper.readContract.nextTokenIdToMint();
 
-    const totalClaimed = conditions.reduce(function (total, condition) {
-      return total + condition.supplyClaimed.toNumber();
-    }, 0);
-
-    return BigNumber.from(maxSupply).sub(totalClaimed);
+    return maxSupply.sub(await this.totalClaimedSupply());
   }
 
   /**
