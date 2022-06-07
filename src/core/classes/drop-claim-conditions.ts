@@ -5,7 +5,6 @@ import {
   DropERC721,
   IERC20,
   IERC20Metadata,
-  SignatureDrop,
   ContractMetadata as ContractMetadataContract,
 } from "contracts";
 import { BigNumber, constants, ethers } from "ethers";
