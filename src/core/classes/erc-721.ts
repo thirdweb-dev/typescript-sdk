@@ -15,6 +15,7 @@ import {
   DropERC721,
   IERC721Supply,
   IMintableERC721,
+  LazyMintERC721,
   Multiwrap,
   SignatureDrop,
   TokenERC721,
@@ -24,6 +25,7 @@ import { Erc721Mintable } from "./erc-721-mintable";
 import { BaseERC721 } from "../../types/eips";
 import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { Erc721LazyMintable } from "./erc-721-lazy-mintable";
 
 /**
  * Standard ERC721 NFT functions
@@ -51,6 +53,7 @@ export class Erc721<
 
   public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
+  public lazy: Erc721LazyMintable | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -70,6 +73,7 @@ export class Erc721<
     }
     this.query = this.detectErc721Enumerable();
     this.mint = this.detectErc721Mintable();
+    this.lazy = this.detectErc721LazyMintable();
   }
 
   /**
@@ -225,9 +229,7 @@ export class Erc721<
   /**
    * @internal
    */
-  protected async getTokenMetadata(
-    tokenId: BigNumberish,
-  ): Promise<NFTMetadata> {
+  async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
     if (!tokenUri) {
       throw new NotFoundError();
@@ -256,6 +258,18 @@ export class Erc721<
       )
     ) {
       return new Erc721Mintable(this, this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectErc721LazyMintable(): Erc721LazyMintable | undefined {
+    if (
+      detectContractFeature<LazyMintERC721>(
+        this.contractWrapper,
+        "ERC721LazyMintable",
+      )
+    ) {
+      return new Erc721LazyMintable(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }
