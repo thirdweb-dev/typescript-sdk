@@ -22,10 +22,11 @@ import {
 } from "contracts";
 import { Erc721Supply } from "./erc-721-supply";
 import { Erc721Mintable } from "./erc-721-mintable";
-import { BaseERC721 } from "../../types/eips";
+import { BaseDelayedRevealERC721, BaseERC721 } from "../../types/eips";
 import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { Erc721LazyMintable } from "./erc-721-lazy-mintable";
+import { DelayedReveal } from "./delayed-reveal";
 
 /**
  * Standard ERC721 NFT functions
@@ -74,6 +75,7 @@ export class Erc721<
     this.query = this.detectErc721Enumerable();
     this.mint = this.detectErc721Mintable();
     this.lazy = this.detectErc721LazyMintable();
+    this.reveal = this.detectErc721Revealable();
   }
 
   /**
@@ -270,6 +272,20 @@ export class Erc721<
       )
     ) {
       return new Erc721LazyMintable(this, this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectErc721Revealable():
+    | DelayedReveal<BaseDelayedRevealERC721>
+    | undefined {
+    if (
+      detectContractFeature<BaseDelayedRevealERC721>(
+        this.contractWrapper,
+        "ERC721Revealable",
+      )
+    ) {
+      return new DelayedReveal(this.contractWrapper, this.storage);
     }
     return undefined;
   }
