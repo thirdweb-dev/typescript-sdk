@@ -1793,6 +1793,7 @@ export function extractConstructorParams(predeployMetadataUri: string, storage: 
     [x: string]: any;
     stateMutability?: string | undefined;
     components?: {
+        [x: string]: any;
         name: string;
         type: string;
     }[] | undefined;
@@ -1807,6 +1808,7 @@ export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>):
     [x: string]: any;
     stateMutability?: string | undefined;
     components?: {
+        [x: string]: any;
         name: string;
         type: string;
     }[] | undefined;
