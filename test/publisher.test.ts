@@ -230,7 +230,7 @@ describe("Publishing", async () => {
     invariant(c.nft, "no nft detected");
     invariant(c.nft.query, "no query detected");
     invariant(c.nft.lazy, "no lazy detected");
-    await c.nft.lazy.mint([
+    const tx = await c.nft.lazy.mint([
       {
         name: "cool nft",
       },
@@ -238,6 +238,6 @@ describe("Publishing", async () => {
         name: "cool nft2",
       },
     ]);
-    console.log(await c.nft.query.all());
+    expect(tx).to.not.eq(undefined);
   });
 });

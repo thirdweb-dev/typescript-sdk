@@ -815,8 +815,10 @@
     "@swc/core-win32-ia32-msvc" "1.2.197"
     "@swc/core-win32-x64-msvc" "1.2.197"
 
-"@thirdweb-dev/contracts@file:.yalc/@thirdweb-dev/contracts":
-  version "2.3.11"
+"@thirdweb-dev/contracts@2.3.12-0":
+  version "2.3.12-0"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.12-0.tgz#da54146b2a2e625bafa04a7333d0f38e22d975cb"
+  integrity sha512-Rfkz9FF4AR9349P6vwffMlRFBEiKNat7HbeJLndb1XBE2WqLU8XmgdPBw/hCz2sxGiGbrfToB7Ex6i3lG69okQ==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.8"
