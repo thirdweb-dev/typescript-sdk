@@ -855,15 +855,17 @@ export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
 // @internal (undocumented)
 export const DEFAULT_QUERY_ALL_COUNT = 100;
 
-// Warning: (ae-forgotten-export) The symbol "SignatureDrop" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "DropERC721" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BaseDelayedRevealERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DelayedReveal<T extends SignatureDrop_2 | DropERC721> {
+export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721> {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage);
     createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<TransactionResultWithId[]>;
+    // (undocumented)
+    featureName: "ERC721Revealable";
     getBatchesToReveal(): Promise<BatchToReveal[]>;
     reveal(batchId: BigNumberish, password: string): Promise<TransactionResult>;
 }
@@ -1682,6 +1684,7 @@ export type ERC20Wrappable = {
 };
 
 // Warning: (ae-forgotten-export) The symbol "Multiwrap" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "SignatureDrop" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "TokenERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseERC721" needs to be exported by the entry point index.d.ts
 //
@@ -1713,6 +1716,8 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     ownerOf(tokenId: BigNumberish): Promise<string>;
     // (undocumented)
     query: Erc721Supply | undefined;
+    // (undocumented)
+    revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
     // @internal
@@ -2726,7 +2731,6 @@ export class NFTDrop extends Erc721<DropERC721> {
     metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
     // (undocumented)
     platformFees: ContractPlatformFee<DropERC721>;
-    revealer: DelayedReveal<DropERC721>;
     // (undocumented)
     roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
     royalties: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
@@ -4216,7 +4220,6 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     metadata: ContractMetadata<SignatureDrop_2, typeof SignatureDrop.schema>;
     // (undocumented)
     platformFees: ContractPlatformFee<SignatureDrop_2>;
-    revealer: DelayedReveal<SignatureDrop_2>;
     // (undocumented)
     roles: ContractRoles<SignatureDrop_2, typeof SignatureDrop.contractRoles[number]>;
     royalties: ContractRoyalty<SignatureDrop_2, typeof SignatureDrop.schema>;
@@ -4338,8 +4341,6 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
         }>;
     };
     // Warning: (ae-forgotten-export) The symbol "Erc721WithQuantitySignatureMinting" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     signature: Erc721WithQuantitySignatureMinting;
     totalClaimedSupply(): Promise<BigNumber>;
     totalSupply(): Promise<BigNumber>;

@@ -249,7 +249,7 @@ describe("Publishing", async () => {
     const ipfsUri = "ipfs://QmakWTptQcE4SMWVjbwADazitmhPwuW2DtoreoRAXaGTxw/0";
     const addr = await pub.deployContract(ipfsUri, []);
     const c = await sdk.getContract(addr);
-    invariant(c.nft.reveal, "no nft detected");
+    invariant(c.nft.revealer, "no nft detected");
     // invariant(c.nft.query, "no query detected");
     // invariant(c.nft.lazy, "no lazy detected");
     // const tx = await c.nft.lazy.mint([

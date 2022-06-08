@@ -48,13 +48,13 @@ export class Erc721<
 > implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_NFT.name;
-  protected contractWrapper: ContractWrapper<T>;
-  protected storage: IStorage;
-  protected options: SDKOptions;
-
   public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
   public lazy: Erc721LazyMintable | undefined;
+  public revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
+  protected contractWrapper: ContractWrapper<T>;
+  protected storage: IStorage;
+  protected options: SDKOptions;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -75,7 +75,7 @@ export class Erc721<
     this.query = this.detectErc721Enumerable();
     this.mint = this.detectErc721Mintable();
     this.lazy = this.detectErc721LazyMintable();
-    this.reveal = this.detectErc721Revealable();
+    this.revealer = this.detectErc721Revealable();
   }
 
   /**
