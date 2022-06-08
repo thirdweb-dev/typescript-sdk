@@ -14,6 +14,7 @@ import { BigNumber, BigNumberish, utils } from "ethers";
 /**
  * Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS
  * @param snapshotInput - the list of addresses to hash
+ * @param tokenDecimals - the token decimals
  * @param storage - the storage to upload to
  * @returns the generated snapshot and URI
  * @internal

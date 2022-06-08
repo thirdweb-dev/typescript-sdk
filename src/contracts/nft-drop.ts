@@ -411,6 +411,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    * ```
    *
    * @param metadatas - The metadata to include in the batch.
+   * @param options - optional upload progress callback
    */
   public async createBatch(
     metadatas: NFTMetadataInput[],
