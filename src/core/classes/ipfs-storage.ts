@@ -7,6 +7,7 @@ import { IStorage } from "../interfaces/IStorage";
 import { FileOrBuffer, JsonObject } from "../types";
 import {
   replaceFilePropertiesWithHashes,
+  replaceGatewayUrlWithHash,
   replaceHashWithGatewayUrl,
   resolveGatewayUrl,
 } from "../helpers/storage";
@@ -202,8 +203,9 @@ export class IpfsStorage implements IStorage {
    *
    * @internal
    *
-   * @param metadata - The metadata to recursively process
    * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
+   * @param metadatas
+   * @param options
    */
   private async batchUploadProperties(
     metadatas: JsonObject[],
@@ -211,12 +213,21 @@ export class IpfsStorage implements IStorage {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ) {
-    const filesToUpload = metadatas.flatMap((m) =>
+    // replace all active gateway url links with their raw ipfs hash
+    const sanitizedMetadatas = await replaceGatewayUrlWithHash(
+      metadatas,
+      "ipfs://",
+      this.gatewayUrl,
+    );
+    // extract any binary file to upload
+    const filesToUpload = sanitizedMetadatas.flatMap((m: JsonObject) =>
       this.buildFilePropertiesMap(m, []),
     );
+    // if no binary files to upload, return the metadata
     if (filesToUpload.length === 0) {
-      return metadatas;
+      return sanitizedMetadatas;
     }
+    // otherwise upload those files
     const { cid, fileNames } = await this.uploader.uploadBatchWithCid(
       filesToUpload,
       undefined,
@@ -231,11 +242,8 @@ export class IpfsStorage implements IStorage {
       cids.push(`${cid}/${filename}`);
     }
 
-    const finalMetadata = await replaceFilePropertiesWithHashes(
-      metadatas,
-      cids,
-    );
-    return finalMetadata;
+    // replace all files with their ipfs hash
+    return replaceFilePropertiesWithHashes(sanitizedMetadatas, cids);
   }
 
   /**

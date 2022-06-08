@@ -246,4 +246,26 @@ describe("Publishing", async () => {
     });
     expect(tx).to.not.eq(undefined);
   });
+
+  it("Custom drop contract lazy mint", async () => {
+    const realSDK = new ThirdwebSDK(adminWallet);
+    const pub = await realSDK.getPublisher();
+    const ipfsUri = "ipfs://QmfKR3MMsE8AtXnoDZPHj7Z9SdNkyDTVhHEd1D9cDHDn1o/0";
+    const addr = await pub.deployContract(ipfsUri, []);
+    const c = await sdk.getContract(addr);
+    invariant(c.nft, "no nft detected");
+    invariant(c.nft.query, "no query detected");
+    invariant(c.nft.lazy, "no lazy detected");
+    const tx = await c.nft.lazy.mint([
+      {
+        name: "cool nft",
+      },
+      {
+        name: "cool nft2",
+      },
+    ]);
+    expect(tx).to.not.eq(undefined);
+    const all = await c.nft.query.all();
+    expect(all).length(2);
+  });
 });
