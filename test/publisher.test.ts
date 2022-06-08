@@ -246,20 +246,24 @@ describe("Publishing", async () => {
   it("Custom drop contract delay reveal", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmakWTptQcE4SMWVjbwADazitmhPwuW2DtoreoRAXaGTxw/0";
+    const ipfsUri = "ipfs://QmWp3SpFFEhMkvedC63gLQfccXkpWQxZaSH5MFdeEw64gH/0";
     const addr = await pub.deployContract(ipfsUri, []);
     const c = await sdk.getContract(addr);
+    invariant(c.nft, "no nft detected");
     invariant(c.nft.revealer, "no nft detected");
-    // invariant(c.nft.query, "no query detected");
-    // invariant(c.nft.lazy, "no lazy detected");
-    // const tx = await c.nft.lazy.mint([
-    //   {
-    //     name: "cool nft",
-    //   },
-    //   {
-    //     name: "cool nft2",
-    //   },
-    // ]);
-    // expect(tx).to.not.eq(undefined);
+
+    await c.nft.revealer.createDelayedRevealBatch(
+      {
+        name: "Placeholder #1",
+      },
+      [{ name: "NFT #1" }, { name: "NFT #2" }],
+      "password",
+    );
+
+    const batch = await c.nft.revealer.getBatchesToReveal();
+
+    const tx = await c.nft.revealer.reveal(0, "password");
+    console.log(tx);
+    console.log(batch);
   });
 });

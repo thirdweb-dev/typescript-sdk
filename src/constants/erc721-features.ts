@@ -4,8 +4,7 @@ import Erc721SupplyAbi from "../../abis/IERC721Supply.json";
 import IMintableERC721Abi from "../../abis/IMintableERC721.json";
 import MulticallAbi from "../../abis/IMulticall.json";
 import LazyMintERC721Abi from "../../abis/LazyMintERC721.json";
-import IDelayedRevealAbi from "../../abis/IDelayedReveal.json";
-import ILazyMintAbi from "../../abis/ILazyMint.json";
+import DelayedRevealAbi from "../../abis/DelayedReveal.json";
 
 export const FEATURE_NFT_LAZY_MINTABLE = {
   name: "ERC721LazyMintable",
@@ -73,7 +72,7 @@ export const FEATURE_NFT_REVEALABLE = {
     sdk: "sdk.delayedreveal",
     contracts: "IDelayedReveal",
   },
-  abis: [Erc721Abi, IDelayedRevealAbi, ILazyMintAbi],
+  abis: [Erc721Abi, DelayedRevealAbi, LazyMintERC721Abi],
   features: {},
 } as const;
 
