@@ -6,6 +6,7 @@ import {
   IERC20,
   IERC20Metadata,
   ContractMetadata as ContractMetadataContract,
+  IThirdwebContract,
 } from "contracts";
 import { BigNumber, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
@@ -212,21 +213,19 @@ export class DropClaimConditions<
       try {
         let validMerkleProof;
         if (
-          hasFunction<ContractMetadataContract>(
+          hasFunction<DropERC721 | DropERC20>(
             "contractType",
             this.contractWrapper,
           )
         ) {
-          const wrapper = this.contractWrapper.readContract as
-            | DropERC721
-            | DropERC20;
-          [validMerkleProof] = await wrapper.verifyClaimMerkleProof(
-            activeConditionIndex,
-            addressToCheck,
-            quantity,
-            proofs.proof,
-            proofs.maxClaimable,
-          );
+          [validMerkleProof] =
+            await this.contractWrapper.readContract.verifyClaimMerkleProof(
+              activeConditionIndex,
+              addressToCheck,
+              quantity,
+              proofs.proof,
+              proofs.maxClaimable,
+            );
         } else {
           const wrapper = this.contractWrapper.readContract as BaseDropERC721;
           [validMerkleProof] = await wrapper.verifyClaimMerkleProof(

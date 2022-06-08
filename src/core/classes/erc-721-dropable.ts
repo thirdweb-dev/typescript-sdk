@@ -55,6 +55,7 @@ export class Erc721Dropable implements DetectableFeature {
    * ```
    */
   public claimConditions: DropClaimConditions<BaseDropERC721>;
+  // TODO: Make claim conditions optional optional after contract interface changes
 
   private metadata: ContractMetadata<BaseDropERC721, any>;
   private contractWrapper: ContractWrapper<BaseDropERC721>;

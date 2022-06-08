@@ -6,6 +6,7 @@ import MulticallAbi from "../../abis/IMulticall.json";
 import DropAbi from "../../abis/Drop.json";
 import LazyMintERC721Abi from "../../abis/LazyMintERC721.json";
 
+// TODO: Update after new contract changes
 export const FEATURE_NFT_DROPABLE = {
   name: "ERC721Dropable",
   namespace: "nft.drop",
