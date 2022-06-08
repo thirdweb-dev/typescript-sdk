@@ -227,6 +227,9 @@ export async function getClaimerProofs(
 /**
  * Create and uploads snapshots + converts claim conditions to contract format
  * @param claimConditionInputs
+ * @param tokenDecimals
+ * @param provider
+ * @param storage
  * @internal
  */
 export async function processClaimConditionInputs(
