@@ -377,7 +377,6 @@ export class DropClaimConditions<
       }
     }
 
-    // TODO: Remove data param on Drop.sol
     encoded.push(
       this.contractWrapper.readContract.interface.encodeFunctionData(
         "setClaimConditions",

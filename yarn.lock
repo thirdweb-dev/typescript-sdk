@@ -815,7 +815,7 @@
     "@swc/core-win32-ia32-msvc" "1.2.197"
     "@swc/core-win32-x64-msvc" "1.2.197"
 
-"@thirdweb-dev/contracts@2.3.12":
+"@thirdweb-dev/contracts@^2.3.12":
   version "2.3.12"
   resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-2.3.12.tgz#8f02f9cbb3e4909bb09963a5059946fc9ea92f18"
   integrity sha512-FfAcCKz7cXwukhzbwl909rC2ASNYJpgLC7Ke1kn4b/YF9LJ3hWVRjO2X3Q5OkgyoDCFwU+tTp9sn+cmFEN88dA==

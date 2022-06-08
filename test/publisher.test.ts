@@ -195,7 +195,7 @@ describe("Publishing", async () => {
     expect(meta.name).to.eq("Hello");
   });
 
-  it("ERC721Claimable feature detection", async () => {
+  it("ERC721Dropable feature detection", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = realSDK.getPublisher();
     const ipfsUri = "ipfs://QmZKBpdo8cgyvJbuLDtea73CTHmmKui8eHsxp8cW8U7BL2/3";
@@ -205,7 +205,6 @@ describe("Publishing", async () => {
     let claimConditions = await c.nft.drop.claimConditions.getAll();
     expect(claimConditions.length).to.equal(0);
 
-    console.log("Got here...");
     await c.nft.drop.claimConditions.set([
       {
         price: "0",
@@ -255,8 +254,8 @@ describe("Publishing", async () => {
     const c = await sdk.getContract(addr);
     invariant(c.nft, "no nft detected");
     invariant(c.nft.query, "no query detected");
-    invariant(c.nft.lazy, "no lazy detected");
-    const tx = await c.nft.lazy.mint([
+    invariant(c.nft.drop, "no drop detected");
+    const tx = await c.nft.drop.lazyMint([
       {
         name: "cool nft",
       },

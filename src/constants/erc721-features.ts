@@ -6,27 +6,16 @@ import MulticallAbi from "../../abis/IMulticall.json";
 import DropAbi from "../../abis/Drop.json";
 import LazyMintERC721Abi from "../../abis/LazyMintERC721.json";
 
-export const FEATURE_NFT_CLAIMABLE = {
-  name: "ERC721Claimable",
+export const FEATURE_NFT_DROPABLE = {
+  name: "ERC721Dropable",
   namespace: "nft.drop",
   docLinks: {
-    sdk: "sdk.erc721claimable",
+    sdk: "sdk.erc721dropable",
     contracts: "Drop",
   },
-  abis: [Erc721Abi, DropAbi],
+  abis: [Erc721Abi, DropAbi, LazyMintERC721Abi],
   features: {},
 };
-
-export const FEATURE_NFT_LAZY_MINTABLE = {
-  name: "ERC721LazyMintable",
-  namespace: "nft.lazyMint",
-  docLinks: {
-    sdk: "sdk.erc721lazymintable",
-    contracts: "LazyMintERC721",
-  },
-  abis: [Erc721Abi, LazyMintERC721Abi],
-  features: {},
-} as const;
 
 export const FEATURE_NFT_BATCH_MINTABLE = {
   name: "ERC721BatchMintable",
@@ -87,7 +76,6 @@ export const FEATURE_NFT = {
   features: {
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
-    [FEATURE_NFT_CLAIMABLE.name]: FEATURE_NFT_CLAIMABLE,
-    [FEATURE_NFT_LAZY_MINTABLE.name]: FEATURE_NFT_LAZY_MINTABLE,
+    [FEATURE_NFT_DROPABLE.name]: FEATURE_NFT_DROPABLE,
   },
 } as const;
