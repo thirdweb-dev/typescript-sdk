@@ -1698,8 +1698,12 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     // (undocumented)
     getAddress(): string;
     // @internal (undocumented)
-    protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
+    getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
+    // Warning: (ae-forgotten-export) The symbol "Erc721LazyMintable" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    lazy: Erc721LazyMintable | undefined;
     // (undocumented)
     mint: Erc721Mintable | undefined;
     // @internal (undocumented)

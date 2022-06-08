@@ -362,11 +362,7 @@ export class DropClaimConditions<
       this.isSignatureDrop(this.contractWrapper.readContract, contractType)
         ? this.contractWrapper.readContract.interface.encodeFunctionData(
             "setClaimConditions",
-            [
-              sortedConditions,
-              resetClaimEligibilityForAll,
-              ethers.utils.toUtf8Bytes(""),
-            ],
+            [sortedConditions, resetClaimEligibilityForAll],
           )
         : this.contractWrapper.readContract.interface.encodeFunctionData(
             "setClaimConditions",

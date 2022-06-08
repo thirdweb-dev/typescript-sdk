@@ -2,6 +2,8 @@ import { signers } from "./before-setup";
 import { expect } from "chai";
 import invariant from "tiny-invariant";
 import {
+  DropERC721__factory,
+  SignatureDrop__factory,
   TokenERC1155__factory,
   TokenERC20__factory,
   TokenERC721__factory,
@@ -18,6 +20,7 @@ global.fetch = require("cross-fetch");
 describe("Custom Contracts", async () => {
   let customContractAddress: string;
   let nftContractAddress: string;
+  let sigDropContractAddress: string;
   let tokenContractAddress: string;
   let editionContractAddress: string;
   let adminWallet: SignerWithAddress,
@@ -70,6 +73,10 @@ describe("Custom Contracts", async () => {
       primary_sale_recipient: samWallet.address,
       platform_fee_basis_points: 10,
       platform_fee_recipient: adminWallet.address,
+    });
+    sigDropContractAddress = await sdk.deployer.deploySignatureDrop({
+      name: "sigdrop",
+      primary_sale_recipient: adminWallet.address,
     });
   });
 
@@ -221,6 +228,28 @@ describe("Custom Contracts", async () => {
     });
     const nfts = await c.nft.query.all();
     expect(nfts.length).to.eq(1);
+    expect(nfts[0].metadata.name).to.eq("Custom NFT");
+  });
+
+  it("should detect feature: erc721 lazy mint", async () => {
+    const c = await sdk.getContractFromAbi(
+      sigDropContractAddress,
+      SignatureDrop__factory.abi,
+    );
+    invariant(c, "Contract undefined");
+    invariant(c.nft, "ERC721 undefined");
+    invariant(c.nft.query, "ERC721 query undefined");
+    invariant(c.nft.lazy, "ERC721 lazy undefined");
+    await c.nft.lazy.mint([
+      {
+        name: "Custom NFT",
+      },
+      {
+        name: "Another one",
+      },
+    ]);
+    const nfts = await c.nft.query.all();
+    expect(nfts.length).to.eq(2);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 

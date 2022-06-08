@@ -202,8 +202,9 @@ export class IpfsStorage implements IStorage {
    *
    * @internal
    *
-   * @param metadata - The metadata to recursively process
    * @returns - The processed metadata with properties pointing at ipfs in place of `File | Buffer`
+   * @param metadatas
+   * @param options
    */
   private async batchUploadProperties(
     metadatas: JsonObject[],
