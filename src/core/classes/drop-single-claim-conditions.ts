@@ -19,6 +19,7 @@ import ERC20Abi from "../../../abis/IERC20.json";
 import { isNode } from "../../common/utils";
 import deepEqual from "fast-deep-equal";
 import { IClaimCondition } from "contracts/SignatureDrop";
+
 /**
  * Manages claim conditions for NFT Drop contracts
  * @public
@@ -52,7 +53,7 @@ export class DropSingleClaimConditions<TContract extends SignatureDrop> {
       await this.contractWrapper.readContract.claimCondition();
     const metadata = await this.metadata.get();
     return await transformResultToClaimCondition(
-      claimCondition as IClaimCondition.ClaimConditionStructOutput,
+      claimCondition,
       await this.getTokenDecimals(),
       this.contractWrapper.getProvider(),
       metadata.merkle,
@@ -291,11 +292,7 @@ export class DropSingleClaimConditions<TContract extends SignatureDrop> {
     encoded.push(
       this.contractWrapper.readContract.interface.encodeFunctionData(
         "setClaimConditions",
-        [
-          sortedConditions[0],
-          resetClaimEligibilityForAll,
-          ethers.utils.toUtf8Bytes(""),
-        ],
+        [sortedConditions[0], resetClaimEligibilityForAll],
       ),
     );
 
