@@ -37,6 +37,7 @@ export function replaceFilePropertiesWithHashes(
 
 /**
  * Replaces all ipfs:// hashes (or any other scheme) with gateway url
+ * @internal
  * @param object
  * @param scheme
  * @param gatewayUrl
@@ -70,26 +71,81 @@ export function replaceHashWithGatewayUrl(
 }
 
 /**
+ * Replaces all gateway urls back to ipfs:// hashes
+ * @internal
+ * @param object
+ * @param scheme
+ * @param gatewayUrl
+ */
+export function replaceGatewayUrlWithHash(
+  object: Record<string, any>,
+  scheme: string,
+  gatewayUrl: string,
+): Record<string, any> {
+  if (object === null || !object) {
+    return {};
+  }
+  const keys = Object.keys(object);
+  for (const key in keys) {
+    const val = object[keys[key]];
+    object[keys[key]] = toIPFSHash(val, scheme, gatewayUrl);
+    if (Array.isArray(val)) {
+      object[keys[key]] = val.map((el) => {
+        if (typeof el === "object") {
+          return replaceGatewayUrlWithHash(el, scheme, gatewayUrl);
+        } else {
+          return toIPFSHash(el, scheme, gatewayUrl);
+        }
+      });
+    }
+    if (typeof val === "object") {
+      replaceGatewayUrlWithHash(val, scheme, gatewayUrl);
+    }
+  }
+  return object;
+}
+
+/**
  * Resolves the full URL of a file for a given gateway.
  *
  * For example, if the hash of a file is `ipfs://bafkreib3u2u6ir2fsl5nkuwixfsb3l4xehri3psjv5yga4inuzsjunk2sy`, then the URL will be:
  * "https://cloudflare-ipfs.com/ipfs/bafkreibnwjhx5s3r2rggdoy3hw7lr7wmgy4bas35oky3ed6eijklk2oyvq"
  * if the gateway is `cloudflare-ipfs.com`.
- *
- * @param ipfsHash
+ * @internal
+ * @param object
  * @param scheme
  * @param gatewayUrl
  */
 export function resolveGatewayUrl<T extends Json>(
-  ipfsHash: T,
+  object: T,
   scheme: string,
   gatewayUrl: string,
 ): T {
-  if (typeof ipfsHash === "string") {
-    return ipfsHash && ipfsHash.toLowerCase().includes(scheme)
-      ? (ipfsHash.replace(scheme, gatewayUrl) as T)
-      : ipfsHash;
+  if (typeof object === "string") {
+    return object && object.toLowerCase().includes(scheme)
+      ? (object.replace(scheme, gatewayUrl) as T)
+      : object;
   } else {
-    return ipfsHash;
+    return object;
+  }
+}
+
+/**
+ * @internal
+ * @param object
+ * @param scheme
+ * @param gatewayUrl
+ */
+export function toIPFSHash<T extends Json>(
+  object: T,
+  scheme: string,
+  gatewayUrl: string,
+): T {
+  if (typeof object === "string") {
+    return object && object.toLowerCase().includes(gatewayUrl)
+      ? (object.replace(gatewayUrl, scheme) as T)
+      : object;
+  } else {
+    return object;
   }
 }
