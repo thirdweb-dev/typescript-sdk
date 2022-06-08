@@ -8,12 +8,12 @@ import {
   FileOrBuffer,
   IpfsStorage,
   NFTMetadataInput,
+  PUBLIC_GATEWAYS,
 } from "../src";
 
 global.fetch = require("cross-fetch");
 
-// TODO re-enable when we have a more reliable IPFS upload system
-describe.skip("IPFS Uploads", async () => {
+describe("IPFS Uploads", async () => {
   const storage: IpfsStorage = new IpfsStorage(ipfsGatewayUrl);
 
   async function getFile(upload: string): Promise<Response> {
@@ -76,6 +76,17 @@ describe.skip("IPFS Uploads", async () => {
       } catch (err) {
         assert.fail(err as string);
       }
+    });
+
+    it("should upload metadata and replace gateway urls on upload/download", async () => {
+      const upload = await storage.uploadMetadata({
+        svg: `${ipfsGatewayUrl}QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/backgrounds/SVG/Asset%20501.svg`,
+      });
+      const otherStorage = new IpfsStorage(PUBLIC_GATEWAYS[1]);
+      const downloaded = await otherStorage.get(upload);
+      expect(downloaded.svg).to.eq(
+        `${PUBLIC_GATEWAYS[1]}QmZsU8nTTexTxPzCKZKqo3Ntf5cUiWMRahoLmtpimeaCiT/backgrounds/SVG/Asset%20501.svg`,
+      );
     });
 
     it.skip("should expose upload progress", async () => {
@@ -180,14 +191,6 @@ describe.skip("IPFS Uploads", async () => {
         assert.equal(parsed.description, object.description);
         assert.equal(parsed.id, object.id);
       }
-    });
-
-    it("should upload many Buffers correctly", async () => {
-      const sampleObjects: Buffer[] = [
-        readFileSync("test/test.mp4"),
-        readFileSync("test/test.mp4"),
-      ];
-      const cid = await storage.uploadBatch(sampleObjects);
     });
 
     it("should upload files with filenames correctly", async () => {
