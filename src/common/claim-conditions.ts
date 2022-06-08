@@ -34,7 +34,6 @@ import {
 import { createSnapshot } from "./snapshots";
 import { NATIVE_TOKEN_ADDRESS } from "../constants";
 import { IDropClaimCondition } from "contracts/DropERC20";
-
 /**
  * Returns proofs and the overrides required for the transaction.
  * @internal

@@ -143,7 +143,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           signatureDropmetadata.seller_fee_basis_points,
           signatureDropmetadata.platform_fee_basis_points,
           signatureDropmetadata.platform_fee_recipient,
-          signMintAddress,
         ];
       case Multiwrap.contractType:
         const multiwrapMetadata = Multiwrap.schema.deploy.parse(metadata);

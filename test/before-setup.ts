@@ -11,7 +11,6 @@ import {
   Marketplace__factory,
   Multiwrap__factory,
   Pack__factory,
-  SigMint__factory,
   SignatureDrop__factory,
   Split__factory,
   TokenERC1155__factory,
@@ -147,14 +146,6 @@ before(async () => {
     .deploy(trustedForwarderAddress)) as ContractPublisher;
   await contractPublisher.deployed();
 
-  const sigMintDeployer = await new ethers.ContractFactory(
-    SigMint__factory.abi,
-    SigMint__factory.bytecode,
-  )
-    .connect(signer)
-    .deploy();
-  await sigMintDeployer.deployed();
-
   await registryContract.grantRole(
     await registryContract.OPERATOR_ROLE(),
     contactDeployer.address,
@@ -260,7 +251,6 @@ before(async () => {
   process.env.factoryAddress = thirdwebFactoryDeployer.address;
   process.env.contractPublisherAddress = contractPublisher.address;
   process.env.contractMetadataRegistryAddress = metadataRegistry.address;
-  process.env.sigMintDeployerAddress = sigMintDeployer.address;
 
   storage = new MockStorage();
   sdk = new ThirdwebSDK(
