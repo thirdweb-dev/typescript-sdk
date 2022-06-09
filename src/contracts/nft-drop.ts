@@ -31,6 +31,7 @@ import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
 import { ContractEncoder } from "../core/classes/contract-encoder";
+import { DelayedReveal } from "../core/classes/delayed-reveal";
 import {
   Erc721Enumerable,
   Erc721Supply,
@@ -158,6 +159,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    * await contract.revealer.reveal(batchId, "my secret password");
    * ```
    */
+  public revealer: DelayedReveal<DropERC721>;
 
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
@@ -193,6 +195,10 @@ export class NFTDrop extends Erc721<DropERC721> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
+    this.revealer = new DelayedReveal<DropERC721>(
+      this.contractWrapper,
+      this.storage,
+    );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
