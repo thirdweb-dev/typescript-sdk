@@ -903,11 +903,7 @@ export interface DirectListing {
 // Warning: (ae-forgotten-export) The symbol "BaseDropERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-<<<<<<< HEAD
 export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | BaseDropERC721> {
-=======
-export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
->>>>>>> main
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
     canClaim(quantity: Amount, addressToCheck?: string): Promise<boolean>;
     getActive(): Promise<ClaimCondition>;
