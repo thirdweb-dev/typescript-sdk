@@ -6,7 +6,6 @@ import {
   IERC20,
   IERC20Metadata,
   ContractMetadata as ContractMetadataContract,
-  IThirdwebContract,
 } from "contracts";
 import { BigNumber, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
