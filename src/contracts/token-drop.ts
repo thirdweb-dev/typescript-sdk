@@ -1,9 +1,6 @@
 import { DropERC20 } from "contracts";
-import {
-  IStorage,
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-} from "../core";
+import { IStorage } from "../core/interfaces/IStorage";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { BigNumberish, BytesLike, constants, utils } from "ethers";

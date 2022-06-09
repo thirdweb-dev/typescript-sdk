@@ -1,12 +1,9 @@
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { IERC20, Split as SplitContract } from "contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import {
-  ContractInterceptor,
-  IStorage,
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-} from "../core";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { IStorage } from "../core/interfaces/IStorage";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";

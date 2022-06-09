@@ -1,12 +1,12 @@
 import { IERC20, VoteERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { IStorage } from "../core/interfaces/IStorage";
 import {
-  ContractInterceptor,
-  IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core";
+} from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { VoteContractSchema } from "../schema/contracts/vote";
@@ -22,7 +22,7 @@ import { VoteType } from "../enums";
 import { CurrencyValue } from "../types/currency";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import { GasCostEstimator } from "../core/classes";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ProposalCreatedEvent } from "contracts/VoteERC20";
 import ERC20Abi from "../../abis/IERC20.json";

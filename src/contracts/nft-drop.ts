@@ -1,5 +1,4 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import { DropERC721 } from "contracts";
 import {
   BigNumber,
   BigNumberish,
@@ -32,17 +31,16 @@ import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { DelayedReveal } from "../core/classes/delayed-reveal";
-import {
-  Erc721Enumerable,
-  Erc721Supply,
-  GasCostEstimator,
-} from "../core/classes";
+import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
+import { Erc721Supply } from "../core/classes/erc-721-supply";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ClaimVerification } from "../types";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { getRoleHash } from "../common";
 import {
+  DropERC721,
   TokensClaimedEvent,
   TokensLazyMintedEvent,
 } from "contracts/DropERC721";

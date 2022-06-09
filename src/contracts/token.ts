@@ -10,14 +10,12 @@ import {
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenMintInput } from "../schema/tokens/token";
-import {
-  GasCostEstimator,
-  ContractInterceptor,
-  ContractEncoder,
-  ContractEvents,
-  ContractPlatformFee,
-  Erc20,
-} from "../core/classes";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { Erc20 } from "../core/classes/erc-20";
 import { Amount, CurrencyValue } from "../types";
 import { TokenERC20History } from "../core/classes/erc-20-history";
 import { Erc20SignatureMinting } from "../core/classes/erc-20-signature-minting";

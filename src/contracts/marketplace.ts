@@ -2,11 +2,8 @@ import { Marketplace as MarketplaceContract } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import {
-  IStorage,
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-} from "../core";
+import { IStorage } from "../core/interfaces/IStorage";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { UpdateableNetwork } from "../core/interfaces/contract";
@@ -21,12 +18,10 @@ import { getRoleHash } from "../common/role";
 import { MarketplaceDirect } from "../core/classes/marketplace-direct";
 import { MarketplaceAuction } from "../core/classes/marketplace-auction";
 import { DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
-import {
-  GasCostEstimator,
-  ContractInterceptor,
-  ContractEvents,
-  ContractPlatformFee,
-} from "../core/classes";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
