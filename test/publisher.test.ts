@@ -53,13 +53,13 @@ describe("Publishing", async () => {
     sdk.updateSignerOrProvider(adminWallet);
   });
 
-  it("should extract functions", async () => {
+  it.skip("should extract functions", async () => {
     const publisher = sdk.getPublisher();
     const functions = await publisher.extractFunctions(simpleContractUri);
     expect(functions.length).gt(0);
   });
 
-  it("should extract features", async () => {
+  it.skip("should extract features", async () => {
     expect(
       isFeatureEnabled(TokenERC721__factory.abi, "ERC721Enumerable"),
     ).to.eq(true);
@@ -82,7 +82,7 @@ describe("Publishing", async () => {
     );
   });
 
-  it("should publish simple greeter contract", async () => {
+  it.skip("should publish simple greeter contract", async () => {
     const publisher = sdk.getPublisher();
     const tx = await publisher.publish(simpleContractUri);
     const contract = await tx.data();
@@ -100,7 +100,7 @@ describe("Publishing", async () => {
     expect(meta.name).to.eq("Greeter");
   });
 
-  it("should publish multiple versions", async () => {
+  it.skip("should publish multiple versions", async () => {
     sdk.updateSignerOrProvider(samWallet);
     const publisher = sdk.getPublisher();
     let id = "";
@@ -115,7 +115,7 @@ describe("Publishing", async () => {
     expect(all[all.length - 1] === versions[versions.length - 1]);
   });
 
-  it("should publish constructor params contract", async () => {
+  it.skip("should publish constructor params contract", async () => {
     sdk.updateSignerOrProvider(bobWallet);
     const publisher = sdk.getPublisher();
     const tx = await publisher.publish(contructorParamsContractUri);
@@ -135,7 +135,7 @@ describe("Publishing", async () => {
     const all = await publisher.getAll(bobWallet.address);
     expect(all.length).to.be.eq(1);
   });
-  it("should publish batch contracts", async () => {
+  it.skip("should publish batch contracts", async () => {
     const publisher = sdk.getPublisher();
     const tx = await publisher.publishBatch([
       simpleContractUri,
@@ -146,7 +146,7 @@ describe("Publishing", async () => {
     expect((await tx[1].data()).id).to.eq("ConstructorParams");
   });
 
-  it("SimpleAzuki enumerable", async () => {
+  it.skip("SimpleAzuki enumerable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmTKKUUEU6GnG7VEEAAXpveeirREC1JNYntVJGhHKhqcYZ/0";
@@ -164,7 +164,7 @@ describe("Publishing", async () => {
     expect(all.length).to.eq(0);
   });
 
-  it("AzukiWithMinting mintable", async () => {
+  it.skip("AzukiWithMinting mintable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmPPPoKk2mwoxBVTW5qMMNwaV4Ja5qDoq7fFZNFFvr3YsW/1";
@@ -198,9 +198,12 @@ describe("Publishing", async () => {
   it("ERC721Dropable feature detection", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmZrUX4tf6Cexhj5AHDcYPviLSVRk286bRww8sCqnkHPFw/3";
+    const ipfsUri = "ipfs://QmWaidQMSYHPzYYZCxMc2nSk2vrD28mS43Xc9k7QFyAGja/0";
     const addr = await pub.deployContract(ipfsUri, []);
     const c = await realSDK.getContract(addr);
+
+    invariant(c.nft, "nft must be defined");
+    invariant(c.nft.drop, "drop must be defined");
 
     let claimConditions = await c.nft.drop.claimConditions.getAll();
     expect(claimConditions.length).to.equal(0);
@@ -220,7 +223,7 @@ describe("Publishing", async () => {
     expect(claimConditions.length).to.equal(2);
   });
 
-  it("Constructor params with tuples", async () => {
+  it.skip("Constructor params with tuples", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmZQa56Cj1gFnZgKSkvGE5uzhaQrQV3nU6upDWDusCaCwY/0";

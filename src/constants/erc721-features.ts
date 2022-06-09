@@ -4,17 +4,30 @@ import Erc721SupplyAbi from "../../abis/IERC721Supply.json";
 import IMintableERC721Abi from "../../abis/IMintableERC721.json";
 import MulticallAbi from "../../abis/IMulticall.json";
 import DropAbi from "../../abis/Drop.json";
-import LazyMintERC721Abi from "../../abis/LazyMintERC721.json";
 import DelayedRevealAbi from "../../abis/DelayedReveal.json";
+import LazyMintERC721Abi from "../../abis/LazyMintERC721.json";
+import IClaimConditionsMultiPhaseAbi from "../../abis/IClaimConditionsMultiPhase.json";
 
 export const FEATURE_NFT_REVEALABLE = {
   name: "ERC721Revealable",
-  namespace: "nft.revealer",
+  namespace: "nft.drop.revealer",
   docLinks: {
-    sdk: "sdk.delayedreveal",
+    sdk: "sdk.drop.delayedreveal",
     contracts: "IDelayedReveal",
   },
-  abis: [Erc721Abi, DropAbi, DelayedRevealAbi, LazyMintERC721Abi],
+  abis: [Erc721Abi, DropAbi, LazyMintERC721Abi, DelayedRevealAbi],
+  features: {},
+} as const;
+
+// Update ABI dependencies
+export const FEATURE_NFT_CLAIM_CONDITIONS = {
+  name: "ERC721ClaimConditions",
+  namespace: "nft.drop.claimConditions",
+  docLinks: {
+    sdk: "sdk.dropClaimConditions",
+    contracts: "IClaimConditions",
+  },
+  abis: [Erc721Abi, DropAbi, LazyMintERC721Abi, IClaimConditionsMultiPhaseAbi],
   features: {},
 } as const;
 
@@ -29,6 +42,7 @@ export const FEATURE_NFT_DROPABLE = {
   abis: [Erc721Abi, DropAbi, LazyMintERC721Abi],
   features: {
     [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
+    [FEATURE_NFT_CLAIM_CONDITIONS.name]: FEATURE_NFT_CLAIM_CONDITIONS,
   },
 } as const;
 

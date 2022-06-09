@@ -33,6 +33,10 @@ function matchesAbiInterface(
   const interfaceFn = interfaceAbis
     .flatMap((i) => extractFunctionsFromAbi(i))
     .map((f) => f.name);
+
+  console.log(">>>>");
+  console.log(contractFn.filter((k) => interfaceFn.includes(k)));
+
   return (
     contractFn.filter((k) => interfaceFn.includes(k)).length ===
     interfaceFn.length
