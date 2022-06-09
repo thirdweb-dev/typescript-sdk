@@ -5,6 +5,7 @@ export * from "./contract-metadata";
 export * from "./contract-roles";
 export * from "./contract-royalty";
 export * from "./contract-sales";
+export * from "./delayed-reveal";
 export * from "./drop-claim-conditions";
 export * from "./drop-erc1155-claim-conditions";
 export * from "./drop-erc1155-history";
