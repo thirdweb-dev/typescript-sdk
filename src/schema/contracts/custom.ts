@@ -119,7 +119,12 @@ export type AbiFunction = {
   signature: string;
   stateMutability: string;
 };
+export type ContractSource = {
+  filename: string;
+  source: string;
+};
 export type PublishedMetadata = {
   name: string;
   abi: z.infer<typeof AbiSchema>;
+  sources: ContractSource[];
 };

@@ -255,11 +255,30 @@ async function fetchContractMetadata(
   const metadata = await storage.get(compilerMetadataUri);
   const abi = AbiSchema.parse(metadata.output.abi);
   const compilationTarget = metadata.settings.compilationTarget;
-  const keys = Object.keys(compilationTarget);
-  const name = compilationTarget[keys[0]];
+  const targets = Object.keys(compilationTarget);
+  const name = compilationTarget[targets[0]];
+  const sources = await Promise.all(
+    Object.entries(metadata.sources).map(async ([path, info]) => {
+      const urls = (info as any).urls as string[];
+      const ipfsLink = urls.find((url) => url.includes("ipfs"));
+      if (ipfsLink) {
+        const ipfsHash = ipfsLink.split("ipfs/")[1];
+        return {
+          filename: path,
+          source: await storage.getRaw(`ipfs://${ipfsHash}`),
+        };
+      } else {
+        return {
+          filename: path,
+          source: "Could not find source for this contract",
+        };
+      }
+    }),
+  );
   return {
     name,
     abi,
+    sources,
   };
 }
 
