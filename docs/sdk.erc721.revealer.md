@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
+revealer: DelayedReveal<BaseDelayedRevealERC721 | DropERC721> | undefined;
 ```

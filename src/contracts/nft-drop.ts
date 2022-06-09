@@ -159,7 +159,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    * await contract.revealer.reveal(batchId, "my secret password");
    * ```
    */
-  public revealer: DelayedReveal<DropERC721>;
+  public override revealer: DelayedReveal<DropERC721>;
 
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;

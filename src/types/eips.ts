@@ -1,5 +1,6 @@
 import {
   DelayedReveal,
+  DropERC721,
   IERC1155,
   IERC1155Metadata,
   IERC1155Supply,
@@ -15,4 +16,5 @@ export type BaseERC721 = IERC721 & IERC721Metadata;
 export type BaseERC1155 = IERC1155 & IERC1155Metadata & IERC1155Supply;
 export type BaseDelayedRevealERC721 = BaseERC721 &
   DelayedReveal &
-  LazyMintERC721;
+  LazyMintERC721 &
+  DropERC721;

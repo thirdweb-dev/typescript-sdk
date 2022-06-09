@@ -1717,7 +1717,7 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     // (undocumented)
     query: Erc721Supply | undefined;
     // (undocumented)
-    revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
+    revealer: DelayedReveal<BaseDelayedRevealERC721 | DropERC721> | undefined;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
     // @internal
@@ -2731,6 +2731,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
     // (undocumented)
     platformFees: ContractPlatformFee<DropERC721>;
+    revealer: DelayedReveal<DropERC721>;
     // (undocumented)
     roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
     royalties: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;

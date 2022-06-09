@@ -51,7 +51,9 @@ export class Erc721<
   public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
   public lazy: Erc721LazyMintable | undefined;
-  public revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
+  public revealer:
+    | DelayedReveal<BaseDelayedRevealERC721 | DropERC721>
+    | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;

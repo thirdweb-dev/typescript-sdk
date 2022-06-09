@@ -861,6 +861,15 @@
         "reference": "https://docs.thirdweb.com/typescript/sdk.dropclaimconditions"
       },
       {
+        "name": "revealer",
+        "summary": "Delayed reveal\n\n",
+        "remarks": "\n\nCreate a batch of encrypted NFTs that can be revealed at a later time.\n\n",
+        "examples": {
+          "javascript": "// the real NFTs, these will be encrypted until you reveal them\nconst realNFTs = [{\n  name: \"Common NFT #1\",\n  description: \"Common NFT, one of many.\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}, {\n  name: \"Super Rare NFT #2\",\n  description: \"You got a Super Rare NFT!\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}];\n// A placeholder NFT that people will get immediately in their wallet, and will be converted to the real NFT at reveal time\nconst placeholderNFT = {\n  name: \"Hidden NFT\",\n  description: \"Will be revealed next week!\"\n};\n// Create and encrypt the NFTs\nawait contract.revealer.createDelayedRevealBatch(\n  placeholderNFT,\n  realNFTs,\n  \"my secret password\",\n);\n// Whenever you're ready, reveal your NFTs at any time\nconst batchId = 0; // the batch to reveal\nawait contract.revealer.reveal(batchId, \"my secret password\");"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.delayedreveal"
+      },
+      {
         "name": "royalties",
         "summary": "Configure royalties\n\n",
         "remarks": "\n\nSet your own royalties for the entire contract or per token\n\n",
