@@ -1,20 +1,17 @@
 import { TWFactory, TWFactory__factory } from "contracts";
 import { BigNumber, Contract, ethers, constants } from "ethers";
 import { z } from "zod";
-import {
-  CONTRACTS_MAP,
-  Edition,
-  EditionDrop,
-  Marketplace,
-  NFTCollection,
-  NFTDrop,
-  SignatureDrop,
-  Pack,
-  REMOTE_CONTRACT_NAME,
-  Split,
-  Token,
-  Vote,
-} from "../../contracts";
+import { CONTRACTS_MAP, REMOTE_CONTRACT_NAME } from "../../contracts/maps";
+import { Edition } from "../../contracts/edition";
+import { EditionDrop } from "../../contracts/edition-drop";
+import { NFTCollection } from "../../contracts/nft-collection";
+import { NFTDrop } from "../../contracts/nft-drop";
+import { Marketplace } from "../../contracts/marketplace";
+import { SignatureDrop } from "../../contracts/signature-drop";
+import { Pack } from "../../contracts/pack";
+import { Split } from "../../contracts/split";
+import { Vote } from "../../contracts/vote";
+import { Token } from "../../contracts/token";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
 import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
