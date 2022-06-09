@@ -91,14 +91,16 @@ export function replaceGatewayUrlWithHash(
     object[keys[key]] = toIPFSHash(val, scheme, gatewayUrl);
     if (Array.isArray(val)) {
       object[keys[key]] = val.map((el) => {
-        if (typeof el === "object") {
+        const isFile = el instanceof File || el instanceof Buffer;
+        if (typeof el === "object" && !isFile) {
           return replaceGatewayUrlWithHash(el, scheme, gatewayUrl);
         } else {
           return toIPFSHash(el, scheme, gatewayUrl);
         }
       });
     }
-    if (typeof val === "object") {
+    const isFile = val instanceof File || val instanceof Buffer;
+    if (typeof val === "object" && !isFile) {
       replaceGatewayUrlWithHash(val, scheme, gatewayUrl);
     }
   }
