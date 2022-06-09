@@ -20,7 +20,7 @@ import { ContractRoles } from "./contract-roles";
 import { SignatureDrop } from "../../contracts";
 import { BigNumber } from "ethers";
 import { uploadOrExtractURIs } from "../../common/nft";
-import { TokensMintedWithSignatureEvent } from "contracts/SigMint";
+import { TokensMintedWithSignatureEvent } from "contracts/SignatureDrop";
 
 /**
  * Enables generating dynamic ERC721 NFTs. You can authorize then some external party to mint tokens on your contract
@@ -235,8 +235,7 @@ export class Erc721WithQuantitySignatureMinting {
             name: "SignatureMintERC721",
             version: "1",
             chainId,
-            verifyingContract:
-              await this.contractWrapper.readContract.sigMint(),
+            verifyingContract: await this.contractWrapper.readContract.address,
           },
           { MintRequest: MintRequest721withQuantity }, // TYPEHASH
           await this.mapPayloadToContractStruct(finalPayload),
