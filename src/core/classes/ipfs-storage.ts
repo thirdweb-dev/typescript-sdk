@@ -214,7 +214,7 @@ export class IpfsStorage implements IStorage {
     },
   ) {
     // replace all active gateway url links with their raw ipfs hash
-    const sanitizedMetadatas = await replaceGatewayUrlWithHash(
+    const sanitizedMetadatas = replaceGatewayUrlWithHash(
       metadatas,
       "ipfs://",
       this.gatewayUrl,
@@ -278,9 +278,9 @@ export class IpfsStorage implements IStorage {
   /**
    * FOR TESTING ONLY
    * @internal
-   * @param data
-   * @param contractAddress
-   * @param signerAddress
+   * @param data -
+   * @param contractAddress -
+   * @param signerAddress -
    */
   public async uploadSingle(
     data: string | Record<string, any>,
