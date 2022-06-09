@@ -230,26 +230,27 @@ describe("Custom Contracts", async () => {
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 
-  // it("should detect feature: erc721 lazy mint", async () => {
-  //   const c = await sdk.getContractFromAbi(
-  //     dropContractAddress,
-  //     DropERC721__factory.abi,
-  //   );
-  //   invariant(c, "Contract undefined");
-  //   invariant(c.nft, "ERC721 undefined");
-  //   invariant(c.nft.drop, "ERC721 drop undefined");
-  //   await c.nft.drop.lazyMint([
-  //     {
-  //       name: "Custom NFT",
-  //     },
-  //     {
-  //       name: "Another one",
-  //     },
-  //   ]);
-  //   const nfts = await c.nft.query.all();
-  //   expect(nfts.length).to.eq(2);
-  //   expect(nfts[0].metadata.name).to.eq("Custom NFT");
-  // });
+  it("should detect feature: erc721 lazy mint", async () => {
+    const c = await sdk.getContractFromAbi(
+      sigDropContractAddress,
+      SignatureDrop__factory.abi,
+    );
+    invariant(c, "Contract undefined");
+    invariant(c.nft, "ERC721 undefined");
+    invariant(c.nft.query, "ERC721 query undefined");
+    invariant(c.nft.drop, "ERC721 drop undefined");
+    await c.nft.drop.lazyMint([
+      {
+        name: "Custom NFT",
+      },
+      {
+        name: "Another one",
+      },
+    ]);
+    const nfts = await c.nft.query.all();
+    expect(nfts.length).to.eq(2);
+    expect(nfts[0].metadata.name).to.eq("Custom NFT");
+  });
 
   it("should detect feature: erc721 delay reveal", async () => {
     const c = await sdk.getContractFromAbi(
@@ -258,9 +259,10 @@ describe("Custom Contracts", async () => {
     );
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
-    invariant(c.nft.revealer, "ERC721 query undefined");
+    invariant(c.nft.drop, "ERC721 drop");
+    invariant(c.nft.drop.revealer, "ERC721 query undefined");
 
-    await c.nft.revealer.createDelayedRevealBatch(
+    await c.nft.drop.revealer.createDelayedRevealBatch(
       {
         name: "Placeholder #1",
       },
@@ -268,7 +270,10 @@ describe("Custom Contracts", async () => {
       "password",
     );
 
-    await c.nft.revealer.reveal(0, "password");
+    const batches = await c.nft.drop.revealer.getBatchesToReveal();
+    expect(batches.length).to.eq(1);
+
+    await c.nft.drop.revealer.reveal(0, "password");
     expect((await c.nft.get(0)).metadata.name).to.be.equal("NFT #1");
   });
 

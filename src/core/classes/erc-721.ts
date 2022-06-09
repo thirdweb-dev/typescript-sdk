@@ -21,14 +21,9 @@ import {
 } from "contracts";
 import { Erc721Supply } from "./erc-721-supply";
 import { Erc721Mintable } from "./erc-721-mintable";
-import {
-  BaseDelayedRevealERC721,
-  BaseDropERC721,
-  BaseERC721,
-} from "../../types/eips";
+import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { DelayedReveal } from "./delayed-reveal";
 import { Erc721Dropable } from "./erc-721-dropable";
 
 /**
@@ -54,9 +49,6 @@ export class Erc721<
   public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
   public drop: Erc721Dropable | undefined;
-  public revealer:
-    | DelayedReveal<BaseDelayedRevealERC721 | DropERC721>
-    | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
@@ -80,7 +72,6 @@ export class Erc721<
     this.query = this.detectErc721Enumerable();
     this.mint = this.detectErc721Mintable();
     this.drop = this.detectErc721Dropable();
-    this.revealer = this.detectErc721Revealable();
   }
 
   /**
@@ -277,20 +268,6 @@ export class Erc721<
       )
     ) {
       return new Erc721Dropable(this, this.contractWrapper, this.storage);
-    }
-    return undefined;
-  }
-
-  private detectErc721Revealable():
-    | DelayedReveal<BaseDelayedRevealERC721>
-    | undefined {
-    if (
-      detectContractFeature<BaseDelayedRevealERC721>(
-        this.contractWrapper,
-        "ERC721Revealable",
-      )
-    ) {
-      return new DelayedReveal(this.contractWrapper, this.storage);
     }
     return undefined;
   }

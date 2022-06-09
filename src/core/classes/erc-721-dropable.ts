@@ -11,7 +11,7 @@ import {
 } from "../../schema";
 import { TokensLazyMintedEvent } from "contracts/LazyMintERC721";
 import { ClaimVerification, UploadProgressEvent } from "../../types";
-import { BaseDropERC721 } from "../../types/eips";
+import { BaseDelayedRevealERC721, BaseDropERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResultWithId } from "../types";
@@ -19,6 +19,8 @@ import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
+import { DelayedReveal } from "./delayed-reveal";
+import { detectContractFeature } from "../../common/feature-detection";
 
 /**
  * Lazily mint and claim ERC721 NFTs
@@ -31,6 +33,8 @@ import { Erc721 } from "./erc-721";
  */
 export class Erc721Dropable implements DetectableFeature {
   featureName = FEATURE_NFT_DROPABLE.name;
+
+  public revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
 
   /**
    * Configure claim conditions
@@ -81,6 +85,7 @@ export class Erc721Dropable implements DetectableFeature {
       this.metadata,
       storage,
     );
+    this.revealer = this.detectErc721Revealable();
   }
 
   /**
@@ -244,5 +249,19 @@ export class Erc721Dropable implements DetectableFeature {
       this.storage,
       proofs,
     );
+  }
+
+  private detectErc721Revealable():
+    | DelayedReveal<BaseDelayedRevealERC721>
+    | undefined {
+    if (
+      detectContractFeature<BaseDelayedRevealERC721>(
+        this.contractWrapper,
+        "ERC721Revealable",
+      )
+    ) {
+      return new DelayedReveal(this.contractWrapper, this.storage);
+    }
+    return undefined;
   }
 }

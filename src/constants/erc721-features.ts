@@ -7,6 +7,17 @@ import DropAbi from "../../abis/Drop.json";
 import LazyMintERC721Abi from "../../abis/LazyMintERC721.json";
 import DelayedRevealAbi from "../../abis/DelayedReveal.json";
 
+export const FEATURE_NFT_REVEALABLE = {
+  name: "ERC721Revealable",
+  namespace: "nft.revealer",
+  docLinks: {
+    sdk: "sdk.delayedreveal",
+    contracts: "IDelayedReveal",
+  },
+  abis: [Erc721Abi, DropAbi, DelayedRevealAbi, LazyMintERC721Abi],
+  features: {},
+} as const;
+
 // TODO: Update after new contract changes
 export const FEATURE_NFT_DROPABLE = {
   name: "ERC721Dropable",
@@ -16,8 +27,10 @@ export const FEATURE_NFT_DROPABLE = {
     contracts: "Drop",
   },
   abis: [Erc721Abi, DropAbi, LazyMintERC721Abi],
-  features: {},
-};
+  features: {
+    [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
+  },
+} as const;
 
 export const FEATURE_NFT_BATCH_MINTABLE = {
   name: "ERC721BatchMintable",
@@ -67,17 +80,6 @@ export const FEATURE_NFT_SUPPLY = {
   },
 } as const;
 
-export const FEATURE_NFT_REVEALABLE = {
-  name: "ERC721Revealable",
-  namespace: "nft.revealer",
-  docLinks: {
-    sdk: "sdk.delayedreveal",
-    contracts: "IDelayedReveal",
-  },
-  abis: [Erc721Abi, DelayedRevealAbi, LazyMintERC721Abi],
-  features: {},
-} as const;
-
 export const FEATURE_NFT = {
   name: "ERC721",
   namespace: "nft",
@@ -90,6 +92,5 @@ export const FEATURE_NFT = {
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
     [FEATURE_NFT_DROPABLE.name]: FEATURE_NFT_DROPABLE,
-    [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
   },
 } as const;

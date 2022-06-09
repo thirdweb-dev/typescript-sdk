@@ -1715,8 +1715,6 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     ownerOf(tokenId: BigNumberish): Promise<string>;
     // (undocumented)
     query: Erc721Supply | undefined;
-    // (undocumented)
-    revealer: DelayedReveal<BaseDelayedRevealERC721 | DropERC721> | undefined;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
     // @internal
@@ -1743,10 +1741,12 @@ export class Erc721Dropable implements DetectableFeature {
     claimConditions: DropClaimConditions<BaseDropERC721>;
     claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
-    featureName: string;
+    featureName: "ERC721Dropable";
     lazyMint(metadatas: NFTMetadataInput[], options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    // (undocumented)
+    revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
 }
 
 // @public

@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-featureName: string;
+featureName: "ERC721Dropable";
 ```
