@@ -198,7 +198,7 @@ describe("Publishing", async () => {
   it("ERC721Dropable feature detection", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmZKBpdo8cgyvJbuLDtea73CTHmmKui8eHsxp8cW8U7BL2/3";
+    const ipfsUri = "ipfs://QmZrUX4tf6Cexhj5AHDcYPviLSVRk286bRww8sCqnkHPFw/3";
     const addr = await pub.deployContract(ipfsUri, []);
     const c = await realSDK.getContract(addr);
 
@@ -244,27 +244,5 @@ describe("Publishing", async () => {
       anArray: [adminWallet.address, samWallet.address],
     });
     expect(tx).to.not.eq(undefined);
-  });
-
-  it("Custom drop contract lazy mint", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
-    const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmfKR3MMsE8AtXnoDZPHj7Z9SdNkyDTVhHEd1D9cDHDn1o/0";
-    const addr = await pub.deployContract(ipfsUri, []);
-    const c = await sdk.getContract(addr);
-    invariant(c.nft, "no nft detected");
-    invariant(c.nft.query, "no query detected");
-    invariant(c.nft.drop, "no drop detected");
-    const tx = await c.nft.drop.lazyMint([
-      {
-        name: "cool nft",
-      },
-      {
-        name: "cool nft2",
-      },
-    ]);
-    expect(tx).to.not.eq(undefined);
-    const all = await c.nft.query.all();
-    expect(all).length(2);
   });
 });

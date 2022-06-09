@@ -635,13 +635,11 @@ export class ContractInterceptor<TContract extends BaseContract> {
     overrideNextTransaction(hook: () => CallOverrides): void;
 }
 
-// Warning: (ae-forgotten-export) The symbol "IThirdwebContract" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "ThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "DetectableFeature" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractMetadata" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
-export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebContract, TSchema extends IGenericSchemaType> implements DetectableFeature {
+export class ContractMetadata<TContract extends BaseContract, TSchema extends IGenericSchemaType> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>, schema: TSchema, storage: IStorage);
     // (undocumented)
     featureName: "ContractMetadata";
@@ -697,6 +695,7 @@ export class ContractPrimarySale<TContract extends IPrimarySale> implements Dete
     setRecipient(recipient: string): Promise<TransactionResult>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "ThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "ContractPublishedMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -733,6 +732,7 @@ export class ContractRoles<TContract extends IPermissionsEnumerable, TRole exten
 }
 
 // Warning: (ae-forgotten-export) The symbol "IRoyalty" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "IThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractRoyalty" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
@@ -900,9 +900,10 @@ export interface DirectListing {
 }
 
 // Warning: (ae-forgotten-export) The symbol "DropERC20" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BaseDropERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DropClaimConditions<TContract extends SignatureDrop_2 | DropERC721 | DropERC20> {
+export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | BaseDropERC721> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
     canClaim(quantity: Amount, addressToCheck?: string): Promise<boolean>;
     getActive(): Promise<ClaimCondition>;
@@ -1693,6 +1694,8 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
     // (undocumented)
+    drop: Erc721Dropable | undefined;
+    // (undocumented)
     featureName: "ERC721";
     get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
     // (undocumented)
@@ -1700,10 +1703,6 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     // @internal (undocumented)
     getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
-    // Warning: (ae-forgotten-export) The symbol "Erc721LazyMintable" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    lazy: Erc721LazyMintable | undefined;
     // (undocumented)
     mint: Erc721Mintable | undefined;
     // @internal (undocumented)
@@ -1730,6 +1729,19 @@ export class Erc721BatchMintable implements DetectableFeature {
     featureName: "ERC721BatchMintable";
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     to(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+}
+
+// @public
+export class Erc721Dropable implements DetectableFeature {
+    constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseDropERC721>, storage: IStorage);
+    claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claimConditions: DropClaimConditions<BaseDropERC721>;
+    claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // (undocumented)
+    featureName: string;
+    lazyMint(metadatas: NFTMetadataInput[], options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId<NFTMetadata>[]>;
 }
 
 // @public

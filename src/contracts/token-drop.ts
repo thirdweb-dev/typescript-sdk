@@ -7,17 +7,15 @@ import {
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { BigNumberish, BytesLike, constants, utils } from "ethers";
-import {
-  GasCostEstimator,
-  ContractEncoder,
-  ContractInterceptor,
-  ContractPlatformFee,
-  ContractPrimarySale,
-  ContractMetadata,
-  ContractRoles,
-  DropClaimConditions,
-  Erc20,
-} from "../core/classes";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractRoles } from "../core/classes/contract-roles";
+import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
+import { Erc20 } from "../core/classes/erc-20";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { Amount, ClaimVerification, CurrencyValue } from "../types";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 
