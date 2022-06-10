@@ -27,7 +27,7 @@ export const FEATURE_NFT_CLAIM_CONDITIONS = {
     sdk: "sdk.dropClaimConditions",
     contracts: "IClaimConditions",
   },
-  abis: [Erc721Abi, DropAbi, LazyMintERC721Abi, IClaimConditionsMultiPhaseAbi],
+  abis: [Erc721Abi, DropAbi, IClaimConditionsMultiPhaseAbi],
   features: {},
 } as const;
 
@@ -38,7 +38,7 @@ export const FEATURE_NFT_DROPABLE = {
     sdk: "sdk.erc721dropable",
     contracts: "Drop",
   },
-  abis: [Erc721Abi, DropAbi, LazyMintERC721Abi],
+  abis: [Erc721Abi, DropAbi],
   features: {
     [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
     [FEATURE_NFT_CLAIM_CONDITIONS.name]: FEATURE_NFT_CLAIM_CONDITIONS,

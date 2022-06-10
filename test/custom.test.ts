@@ -3,6 +3,7 @@ import { expect } from "chai";
 import invariant from "tiny-invariant";
 import {
   DropERC721__factory,
+  SignatureDrop__factory,
   TokenERC1155__factory,
   TokenERC20__factory,
   TokenERC721__factory,
@@ -21,7 +22,7 @@ describe("Custom Contracts", async () => {
   let nftContractAddress: string;
   let tokenContractAddress: string;
   let editionContractAddress: string;
-  let nftDropContractAddress: string;
+  let sigDropContractAddress: string;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -73,7 +74,7 @@ describe("Custom Contracts", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: adminWallet.address,
     });
-    nftDropContractAddress = await sdk.deployer.deployNFTDrop({
+    sigDropContractAddress = await sdk.deployer.deploySignatureDrop({
       name: "sigdrop",
       primary_sale_recipient: adminWallet.address,
     });
@@ -230,52 +231,52 @@ describe("Custom Contracts", async () => {
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 
-  // it("should detect feature: erc721 lazy mint", async () => {
-  //   const c = await sdk.getContractFromAbi(
-  //     nftDropContractAddress,
-  //     DropERC721__factory.abi,
-  //   );
-  //   invariant(c, "Contract undefined");
-  //   invariant(c.nft, "ERC721 undefined");
-  //   invariant(c.nft.query, "ERC721 query undefined");
-  //   invariant(c.nft.drop, "ERC721 drop undefined");
-  //   await c.nft.drop.lazyMint([
-  //     {
-  //       name: "Custom NFT",
-  //     },
-  //     {
-  //       name: "Another one",
-  //     },
-  //   ]);
-  //   const nfts = await c.nft.query.all();
-  //   expect(nfts.length).to.eq(2);
-  //   expect(nfts[0].metadata.name).to.eq("Custom NFT");
-  // });
+  it("should detect feature: erc721 lazy mint", async () => {
+    const c = await sdk.getContractFromAbi(
+      sigDropContractAddress,
+      SignatureDrop__factory.abi,
+    );
+    invariant(c, "Contract undefined");
+    invariant(c.nft, "ERC721 undefined");
+    invariant(c.nft.query, "ERC721 query undefined");
+    invariant(c.nft.drop, "ERC721 drop undefined");
+    await c.nft.drop.lazyMint([
+      {
+        name: "Custom NFT",
+      },
+      {
+        name: "Another one",
+      },
+    ]);
+    const nfts = await c.nft.query.all();
+    expect(nfts.length).to.eq(2);
+    expect(nfts[0].metadata.name).to.eq("Custom NFT");
+  });
 
-  // it("should detect feature: erc721 delay reveal", async () => {
-  //   const c = await sdk.getContractFromAbi(
-  //     nftDropContractAddress,
-  //     DropERC721__factory.abi,
-  //   );
-  //   invariant(c, "Contract undefined");
-  //   invariant(c.nft, "ERC721 undefined");
-  //   invariant(c.nft.drop, "ERC721 drop");
-  //   invariant(c.nft.drop.revealer, "ERC721 query undefined");
+  it("should detect feature: erc721 delay reveal", async () => {
+    const c = await sdk.getContractFromAbi(
+      sigDropContractAddress,
+      SignatureDrop__factory.abi,
+    );
+    invariant(c, "Contract undefined");
+    invariant(c.nft, "ERC721 undefined");
+    invariant(c.nft.drop, "ERC721 drop");
+    invariant(c.nft.drop.revealer, "ERC721 query undefined");
 
-  //   await c.nft.drop.revealer.createDelayedRevealBatch(
-  //     {
-  //       name: "Placeholder #1",
-  //     },
-  //     [{ name: "NFT #1" }, { name: "NFT #2" }, { name: "NFT #3" }],
-  //     "password",
-  //   );
+    await c.nft.drop.revealer.createDelayedRevealBatch(
+      {
+        name: "Placeholder #1",
+      },
+      [{ name: "NFT #1" }, { name: "NFT #2" }, { name: "NFT #3" }],
+      "password",
+    );
 
-  //   const batches = await c.nft.drop.revealer.getBatchesToReveal();
-  //   expect(batches.length).to.eq(1);
+    const batches = await c.nft.drop.revealer.getBatchesToReveal();
+    expect(batches.length).to.eq(1);
 
-  //   await c.nft.drop.revealer.reveal(0, "password");
-  //   expect((await c.nft.get(0)).metadata.name).to.be.equal("NFT #1");
-  // });
+    await c.nft.drop.revealer.reveal(0, "password");
+    expect((await c.nft.get(0)).metadata.name).to.be.equal("NFT #1");
+  });
 
   it("should detect feature: erc1155", async () => {
     const c = await sdk.getContractFromAbi(

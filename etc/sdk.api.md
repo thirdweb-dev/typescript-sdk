@@ -1710,6 +1710,8 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
     mint: Erc721Mintable | undefined;
+    // @internal
+    nextTokenIdToMint(): Promise<BigNumber>;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)

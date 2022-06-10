@@ -109,8 +109,7 @@ export class Erc721Dropable implements DetectableFeature {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    const startFileNumber =
-      await this.contractWrapper.readContract.nextTokenIdToMint();
+    const startFileNumber = await this.erc721.nextTokenIdToMint();
     const batch = await this.storage.uploadMetadataBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),
       startFileNumber.toNumber(),
