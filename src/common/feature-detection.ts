@@ -5,6 +5,7 @@ import {
   AbiFunction,
   AbiSchema,
   AbiTypeSchema,
+  ContractSource,
   PreDeployMetadata,
   PreDeployMetadataFetched,
   PublishedMetadata,
@@ -257,29 +258,42 @@ async function fetchContractMetadata(
   const compilationTarget = metadata.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
   const name = compilationTarget[targets[0]];
-  const sources = await Promise.all(
-    Object.entries(metadata.sources).map(async ([path, info]) => {
-      const urls = (info as any).urls as string[];
-      const ipfsLink = urls.find((url) => url.includes("ipfs"));
-      if (ipfsLink) {
-        const ipfsHash = ipfsLink.split("ipfs/")[1];
-        return {
-          filename: path,
-          source: await storage.getRaw(`ipfs://${ipfsHash}`),
-        };
-      } else {
-        return {
-          filename: path,
-          source: "Could not find source for this contract",
-        };
-      }
-    }),
-  );
   return {
     name,
     abi,
-    sources,
+    metadata,
   };
+}
+
+/**
+ * @internal
+ * @param publishedMetadata
+ * @param storage
+ */
+export async function fetchSourceFilesFromMetadata(
+  publishedMetadata: PublishedMetadata,
+  storage: IStorage,
+): Promise<ContractSource[]> {
+  return await Promise.all(
+    Object.entries(publishedMetadata.metadata.sources).map(
+      async ([path, info]) => {
+        const urls = (info as any).urls as string[];
+        const ipfsLink = urls.find((url) => url.includes("ipfs"));
+        if (ipfsLink) {
+          const ipfsHash = ipfsLink.split("ipfs/")[1];
+          return {
+            filename: path,
+            source: await storage.getRaw(`ipfs://${ipfsHash}`),
+          };
+        } else {
+          return {
+            filename: path,
+            source: "Could not find source for this contract",
+          };
+        }
+      },
+    ),
+  );
 }
 
 /**

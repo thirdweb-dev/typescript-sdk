@@ -17,10 +17,12 @@ import {
   extractFunctions,
   fetchContractMetadataFromAddress,
   fetchPreDeployMetadata,
+  fetchSourceFilesFromMetadata,
 } from "../../common/feature-detection";
 import {
   AbiFunction,
   ContractParam,
+  ContractSource,
   PublishedContract,
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
@@ -97,6 +99,17 @@ export class ContractPublisher extends RPCConnectionHandler {
       this.getProvider(),
       this.storage,
     );
+  }
+
+  /**
+   * @internal
+   * @param address
+   */
+  public async fetchContractSourcesFromAddress(
+    address: string,
+  ): Promise<ContractSource[]> {
+    const metadata = await this.fetchContractMetadataFromAddress(address);
+    return await fetchSourceFilesFromMetadata(metadata, this.storage);
   }
 
   /**

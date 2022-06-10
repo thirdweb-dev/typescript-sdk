@@ -126,5 +126,5 @@ export type ContractSource = {
 export type PublishedMetadata = {
   name: string;
   abi: z.infer<typeof AbiSchema>;
-  sources: ContractSource[];
+  metadata: Record<string, any>;
 };
