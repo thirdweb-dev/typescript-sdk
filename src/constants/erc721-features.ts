@@ -3,7 +3,7 @@ import Erc721EnumerableAbi from "../../abis/IERC721Enumerable.json";
 import Erc721SupplyAbi from "../../abis/IERC721Supply.json";
 import IMintableERC721Abi from "../../abis/IMintableERC721.json";
 import MulticallAbi from "../../abis/IMulticall.json";
-import DropAbi from "../../abis/Drop.json";
+import DropAbi from "../../abis/IDrop.json";
 import DelayedRevealAbi from "../../abis/DelayedReveal.json";
 import LazyMintERC721Abi from "../../abis/LazyMintERC721.json";
 import IClaimConditionsMultiPhaseAbi from "../../abis/IClaimConditionsMultiPhase.json";
@@ -31,7 +31,6 @@ export const FEATURE_NFT_CLAIM_CONDITIONS = {
   features: {},
 } as const;
 
-// TODO: Update after new contract changes
 export const FEATURE_NFT_DROPABLE = {
   name: "ERC721Dropable",
   namespace: "nft.drop",

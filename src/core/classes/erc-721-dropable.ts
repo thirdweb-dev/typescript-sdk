@@ -1,6 +1,5 @@
 import { TokensClaimedEvent } from "contracts/Drop";
 import { BigNumber, BigNumberish, BytesLike, ethers, utils } from "ethers";
-import { prepareClaim } from "../../common/claim-conditions";
 import { FEATURE_NFT_DROPABLE } from "../../constants/erc721-features";
 import {
   CommonNFTInput,
@@ -58,10 +57,9 @@ export class Erc721Dropable implements DetectableFeature {
    * await contract.claimConditions.set(claimConditions);
    * ```
    */
-  public claimConditions: DropClaimConditions<BaseDropERC721>;
+  public claimConditions: DropClaimConditions<BaseDropERC721> | undefined;
   // TODO: Make claim conditions optional optional after contract interface changes
 
-  private metadata: ContractMetadata<BaseDropERC721, any>;
   private contractWrapper: ContractWrapper<BaseDropERC721>;
   private erc721: Erc721;
   private storage: IStorage;
@@ -75,17 +73,8 @@ export class Erc721Dropable implements DetectableFeature {
     this.contractWrapper = contractWrapper;
 
     this.storage = storage;
-    this.metadata = new ContractMetadata(
-      contractWrapper,
-      CustomContractSchema,
-      storage,
-    );
-    this.claimConditions = new DropClaimConditions(
-      contractWrapper,
-      this.metadata,
-      storage,
-    );
     this.revealer = this.detectErc721Revealable();
+    this.claimConditions = this.detectClaimConditions();
   }
 
   /**
@@ -170,16 +159,30 @@ export class Erc721Dropable implements DetectableFeature {
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
-   * @param proofs - Array of proofs
-   *
+   * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
+   * @param proofs - Optional Array of proofs
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   public async claimTo(
     destinationAddress: string,
     quantity: BigNumberish,
+    claimData?: ClaimVerification,
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const claimVerification = await this.prepareClaim(quantity, proofs);
+    let claimVerification = claimData;
+    if (this.claimConditions && !claimData) {
+      claimVerification = await this.claimConditions.prepareClaim(
+        quantity,
+        proofs,
+      );
+    }
+
+    if (!claimVerification) {
+      throw new Error(
+        "Claim verification Data is required - either pass it in as 'claimData' or set claim conditions via 'setClaimConditions'",
+      );
+    }
+
     const receipt = await this.contractWrapper.sendTransaction(
       "claim",
       [
@@ -218,11 +221,13 @@ export class Erc721Dropable implements DetectableFeature {
    */
   public async claim(
     quantity: BigNumberish,
+    claimData?: ClaimVerification,
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       quantity,
+      claimData,
       proofs,
     );
   }
@@ -230,26 +235,6 @@ export class Erc721Dropable implements DetectableFeature {
   /** ******************************
    * PRIVATE FUNCTIONS
    *******************************/
-
-  /**
-   * Returns proofs and the overrides required for the transaction.
-   *
-   * @returns - `overrides` and `proofs` as an object.
-   */
-  private async prepareClaim(
-    quantity: BigNumberish,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
-  ): Promise<ClaimVerification> {
-    return prepareClaim(
-      quantity,
-      await this.claimConditions.getActive(),
-      (await this.metadata.get()).merkle,
-      0,
-      this.contractWrapper,
-      this.storage,
-      proofs,
-    );
-  }
 
   private detectErc721Revealable():
     | DelayedReveal<BaseDelayedRevealERC721>
@@ -261,6 +246,29 @@ export class Erc721Dropable implements DetectableFeature {
       )
     ) {
       return new DelayedReveal(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectClaimConditions():
+    | DropClaimConditions<BaseDropERC721>
+    | undefined {
+    if (
+      detectContractFeature<BaseDropERC721>(
+        this.contractWrapper,
+        "ERC721ClaimConditions",
+      )
+    ) {
+      const metadata = new ContractMetadata(
+        this.contractWrapper,
+        CustomContractSchema,
+        this.storage,
+      );
+      return new DropClaimConditions(
+        this.contractWrapper,
+        metadata,
+        this.storage,
+      );
     }
     return undefined;
   }

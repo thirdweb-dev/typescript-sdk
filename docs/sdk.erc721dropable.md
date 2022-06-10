@@ -35,7 +35,7 @@ await contract.drop.claim(quantity);
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [claimConditions](./sdk.erc721dropable.claimconditions.md) |  | [DropClaimConditions](./sdk.dropclaimconditions.md)<!-- -->&lt;BaseDropERC721&gt; | Configure claim conditions |
+|  [claimConditions](./sdk.erc721dropable.claimconditions.md) |  | [DropClaimConditions](./sdk.dropclaimconditions.md)<!-- -->&lt;BaseDropERC721&gt; \| undefined | Configure claim conditions |
 |  [featureName](./sdk.erc721dropable.featurename.md) |  | "ERC721Dropable" |  |
 |  [revealer](./sdk.erc721dropable.revealer.md) |  | [DelayedReveal](./sdk.delayedreveal.md)<!-- -->&lt;BaseDelayedRevealERC721&gt; \| undefined |  |
 
@@ -43,7 +43,7 @@ await contract.drop.claim(quantity);
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [claim(quantity, proofs)](./sdk.erc721dropable.claim.md) |  | Claim NFTs to the connected wallet. |
-|  [claimTo(destinationAddress, quantity, proofs)](./sdk.erc721dropable.claimto.md) |  | Claim unique NFTs to a specific Wallet |
+|  [claim(quantity, claimData, proofs)](./sdk.erc721dropable.claim.md) |  | Claim NFTs to the connected wallet. |
+|  [claimTo(destinationAddress, quantity, claimData, proofs)](./sdk.erc721dropable.claimto.md) |  | Claim unique NFTs to a specific Wallet |
 |  [lazyMint(metadatas, options)](./sdk.erc721dropable.lazymint.md) |  | Create a batch of unique NFTs to be claimed in the future |
 

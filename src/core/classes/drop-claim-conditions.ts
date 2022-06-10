@@ -7,14 +7,27 @@ import {
   IERC20Metadata,
   ContractMetadata as ContractMetadataContract,
 } from "contracts";
-import { BigNumber, constants, ethers } from "ethers";
+import {
+  BigNumber,
+  BigNumberish,
+  BytesLike,
+  constants,
+  ethers,
+  utils,
+} from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
-import { Amount, ClaimCondition, ClaimConditionInput } from "../../types";
+import {
+  Amount,
+  ClaimCondition,
+  ClaimConditionInput,
+  ClaimVerification,
+} from "../../types";
 import { ClaimEligibility } from "../../enums";
 import { TransactionResult } from "../types";
 import {
   getClaimerProofs,
+  prepareClaim,
   processClaimConditionInputs,
   transformResultToClaimCondition,
   updateExistingClaimConditions,
@@ -416,5 +429,26 @@ export class DropClaimConditions<
     } else {
       return Promise.resolve(0);
     }
+  }
+
+  /**
+   * Returns proofs and the overrides required for the transaction.
+   *
+   * @returns - `overrides` and `proofs` as an object.
+   * @internal
+   */
+  public async prepareClaim(
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+  ): Promise<ClaimVerification> {
+    return prepareClaim(
+      quantity,
+      await this.getActive(),
+      (await this.metadata.get()).merkle,
+      0,
+      this.contractWrapper,
+      this.storage,
+      proofs,
+    );
   }
 }

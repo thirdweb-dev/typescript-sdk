@@ -9,7 +9,7 @@ Configure claim conditions
 <b>Signature:</b>
 
 ```typescript
-claimConditions: DropClaimConditions<BaseDropERC721>;
+claimConditions: DropClaimConditions<BaseDropERC721> | undefined;
 ```
 
 ## Remarks

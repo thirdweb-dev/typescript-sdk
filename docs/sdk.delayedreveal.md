@@ -9,7 +9,7 @@ Handles delayed reveal logic
 <b>Signature:</b>
 
 ```typescript
-export declare class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721> 
+export declare class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop> 
 ```
 
 ## Constructors

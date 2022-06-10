@@ -9,7 +9,7 @@ Claim unique NFTs to a specific Wallet
 <b>Signature:</b>
 
 ```typescript
-claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+claimTo(destinationAddress: string, quantity: BigNumberish, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 ```
 
 ## Parameters
@@ -18,7 +18,8 @@ claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]
 |  --- | --- | --- |
 |  destinationAddress | string | Address you want to send the token to |
 |  quantity | BigNumberish | Quantity of the tokens you want to claim |
-|  proofs | BytesLike\[\] | <i>(Optional)</i> Array of proofs |
+|  claimData | [ClaimVerification](./sdk.claimverification.md) | <i>(Optional)</i> Optional claim verification data (e.g. price, allowlist proof, etc...) |
+|  proofs | BytesLike\[\] | <i>(Optional)</i> Optional Array of proofs |
 
 <b>Returns:</b>
 

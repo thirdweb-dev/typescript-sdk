@@ -204,6 +204,7 @@ describe("Publishing", async () => {
 
     invariant(c.nft, "nft must be defined");
     invariant(c.nft.drop, "drop must be defined");
+    invariant(c.nft.drop.claimConditions, "claim conditions must be defined");
 
     let claimConditions = await c.nft.drop.claimConditions.getAll();
     expect(claimConditions.length).to.equal(0);

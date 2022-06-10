@@ -857,9 +857,10 @@ export const DEFAULT_QUERY_ALL_COUNT = 100;
 
 // Warning: (ae-forgotten-export) The symbol "DropERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseDelayedRevealERC721" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "SignatureDrop" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721> {
+export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop_2> {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage);
     createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
@@ -911,6 +912,8 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | Base
     getActive(): Promise<ClaimCondition>;
     getAll(): Promise<ClaimCondition[]>;
     getClaimIneligibilityReasons(quantity: Amount, addressToCheck?: string): Promise<ClaimEligibility[]>;
+    // @internal
+    prepareClaim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<ClaimVerification>;
     set(claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
     update(index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
 }
@@ -1685,7 +1688,6 @@ export type ERC20Wrappable = {
 };
 
 // Warning: (ae-forgotten-export) The symbol "Multiwrap" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "SignatureDrop" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "TokenERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseERC721" needs to be exported by the entry point index.d.ts
 //
@@ -1737,9 +1739,9 @@ export class Erc721BatchMintable implements DetectableFeature {
 // @public
 export class Erc721Dropable implements DetectableFeature {
     constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseDropERC721>, storage: IStorage);
-    claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    claimConditions: DropClaimConditions<BaseDropERC721>;
-    claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claim(quantity: BigNumberish, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claimConditions: DropClaimConditions<BaseDropERC721> | undefined;
+    claimTo(destinationAddress: string, quantity: BigNumberish, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     featureName: "ERC721Dropable";
     lazyMint(metadatas: NFTMetadataInput[], options?: {
@@ -4233,6 +4235,7 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     metadata: ContractMetadata<SignatureDrop_2, typeof SignatureDrop.schema>;
     // (undocumented)
     platformFees: ContractPlatformFee<SignatureDrop_2>;
+    revealer: DelayedReveal<SignatureDrop_2>;
     // (undocumented)
     roles: ContractRoles<SignatureDrop_2, typeof SignatureDrop.contractRoles[number]>;
     royalties: ContractRoyalty<SignatureDrop_2, typeof SignatureDrop.schema>;
@@ -4832,9 +4835,7 @@ export class Split implements UpdateableNetwork {
         address: string;
         sharesBps: number;
         }[];
-        }>; /**
-        * @internal
-        */
+        }>;
         input: ZodObject<extendShape<    {
         name: ZodString;
         description: ZodOptional<ZodString>;
