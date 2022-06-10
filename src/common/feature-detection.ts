@@ -288,9 +288,17 @@ export async function fetchSourceFilesFromMetadata(
         const ipfsLink = urls.find((url) => url.includes("ipfs"));
         if (ipfsLink) {
           const ipfsHash = ipfsLink.split("ipfs/")[1];
+          // 5 sec timeout for sources that haven't been uploaded to ipfs
+          const timeout = new Promise<string>((_r, rej) =>
+            setTimeout(() => rej("timeout"), 5000),
+          );
+          const source = await Promise.race([
+            storage.getRaw(`ipfs://${ipfsHash}`),
+            timeout,
+          ]);
           return {
             filename: path,
-            source: await storage.getRaw(`ipfs://${ipfsHash}`),
+            source,
           };
         } else {
           return {
