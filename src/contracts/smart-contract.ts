@@ -181,7 +181,7 @@ export class SmartContract<
       );
     }
     // TODO validate each argument
-    if (fn.stateMutability === "view") {
+    if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
       // read function
       return (this.contractWrapper.readContract as any)[functionName](...args);
     } else {
