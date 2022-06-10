@@ -19,6 +19,10 @@ export enum ChainId {
   FantomTestnet = 4002,
   Avalanche = 43114,
   AvalancheFujiTestnet = 43113,
+  Optimism = 10,
+  OptimismTestnet = 69,
+  Arbitrum = 42161,
+  ArbitrumTestnet = 421611,
 }
 
 /**
@@ -33,7 +37,11 @@ export type SUPPORTED_CHAIN_ID =
   | ChainId.Fantom
   | ChainId.FantomTestnet
   | ChainId.Avalanche
-  | ChainId.AvalancheFujiTestnet;
+  | ChainId.AvalancheFujiTestnet
+  | ChainId.Optimism
+  | ChainId.OptimismTestnet
+  | ChainId.Arbitrum
+  | ChainId.ArbitrumTestnet;
 
 /**
  * @public
@@ -48,4 +56,8 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[] = [
   ChainId.FantomTestnet,
   ChainId.Avalanche,
   ChainId.AvalancheFujiTestnet,
+  ChainId.Optimism,
+  ChainId.OptimismTestnet,
+  ChainId.Arbitrum,
+  ChainId.ArbitrumTestnet,
 ];

@@ -36,6 +36,10 @@ export type ChainOrRpc =
   | "ethereum"
   | "fantom"
   | "avalanche"
+  | "optimism"
+  | "optimism-kovan"
+  | "arbitrum"
+  | "arbitrum-rinkeby"
   // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
   | (string & {});
 
@@ -67,6 +71,14 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
     case "mainnet":
     case "ethereum":
       return `https://eth-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+    case "optimism":
+      return `https://opt-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+    case "optimism-kovan":
+      return `https://opt-kovan.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+    case "arbitrum":
+      return `https://arb-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+    case "arbirum-rinkeby":
+      return `https://arb-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "fantom":
       return "https://rpc.ftm.tools";
     case "avalanche":
