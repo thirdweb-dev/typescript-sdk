@@ -244,7 +244,7 @@ export class Erc721Dropable implements DetectableFeature {
         "ERC721Revealable",
       )
     ) {
-      return new DelayedReveal(this.contractWrapper, this.storage);
+      return new DelayedReveal(this.erc721, this.contractWrapper, this.storage);
     }
     return undefined;
   }

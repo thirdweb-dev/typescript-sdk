@@ -194,6 +194,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.revealer = new DelayedReveal<DropERC721>(
+      this,
       this.contractWrapper,
       this.storage,
     );

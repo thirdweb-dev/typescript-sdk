@@ -6,7 +6,12 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../../schema/tokens/common";
-import { IStorage, TransactionResult, TransactionResultWithId } from "../index";
+import {
+  Erc721,
+  IStorage,
+  TransactionResult,
+  TransactionResultWithId,
+} from "../index";
 import { fetchTokenMetadata } from "../../common/nft";
 import { BatchToReveal } from "../../types/delayed-reveal";
 import { TokensLazyMintedEvent } from "contracts/DropERC721";
@@ -26,8 +31,14 @@ export class DelayedReveal<
 
   private contractWrapper: ContractWrapper<T>;
   private storage: IStorage;
+  private erc721: Erc721;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
+  constructor(
+    erc721: Erc721,
+    contractWrapper: ContractWrapper<T>,
+    storage: IStorage,
+  ) {
+    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
   }
@@ -84,8 +95,7 @@ export class DelayedReveal<
       await this.contractWrapper.getSigner()?.getAddress(),
     );
 
-    const startFileNumber =
-      await this.contractWrapper.readContract.nextTokenIdToMint();
+    const startFileNumber = await this.erc721.nextTokenIdToMint();
 
     const batch = await this.storage.uploadMetadataBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),

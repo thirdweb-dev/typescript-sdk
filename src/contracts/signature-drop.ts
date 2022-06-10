@@ -208,7 +208,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.revealer = new DelayedReveal(this.contractWrapper, this.storage);
+    this.revealer = new DelayedReveal(this, this.contractWrapper, this.storage);
     this.signature = new Erc721WithQuantitySignatureMinting(
       this.contractWrapper,
       this.roles,

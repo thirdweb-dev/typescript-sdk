@@ -41,14 +41,14 @@ import { includesErrorMessage } from "../../common";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { isNode } from "../../common/utils";
 import deepEqual from "fast-deep-equal";
-import { BaseDropERC721 } from "../../types/eips";
+import { BaseClaimConditionERC721 } from "../../types/eips";
 
 /**
  * Manages claim conditions for NFT Drop contracts
  * @public
  */
 export class DropClaimConditions<
-  TContract extends DropERC721 | DropERC20 | BaseDropERC721,
+  TContract extends DropERC721 | DropERC20 | BaseClaimConditionERC721,
 > {
   private contractWrapper;
   private metadata;
@@ -239,7 +239,8 @@ export class DropClaimConditions<
               proofs.maxClaimable,
             );
         } else {
-          const wrapper = this.contractWrapper.readContract as BaseDropERC721;
+          const wrapper = this.contractWrapper
+            .readContract as BaseClaimConditionERC721;
           [validMerkleProof] = await wrapper.verifyClaimMerkleProof(
             activeConditionIndex,
             addressToCheck,

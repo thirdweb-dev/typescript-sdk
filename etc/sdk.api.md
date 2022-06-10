@@ -861,7 +861,7 @@ export const DEFAULT_QUERY_ALL_COUNT = 100;
 //
 // @public
 export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop_2> {
-    constructor(contractWrapper: ContractWrapper<T>, storage: IStorage);
+    constructor(erc721: Erc721, contractWrapper: ContractWrapper<T>, storage: IStorage);
     createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<TransactionResultWithId[]>;
@@ -903,10 +903,10 @@ export interface DirectListing {
 }
 
 // Warning: (ae-forgotten-export) The symbol "DropERC20" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "BaseDropERC721" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BaseClaimConditionERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | BaseDropERC721> {
+export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | BaseClaimConditionERC721> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
     canClaim(quantity: Amount, addressToCheck?: string): Promise<boolean>;
     getActive(): Promise<ClaimCondition>;
@@ -1742,6 +1742,7 @@ export class Erc721BatchMintable implements DetectableFeature {
 export class Erc721Dropable implements DetectableFeature {
     constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseDropERC721>, storage: IStorage);
     claim(quantity: BigNumberish, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // Warning: (ae-forgotten-export) The symbol "BaseDropERC721" needs to be exported by the entry point index.d.ts
     claimConditions: DropClaimConditions<BaseDropERC721> | undefined;
     claimTo(destinationAddress: string, quantity: BigNumberish, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)

@@ -16,7 +16,7 @@ export declare class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC72
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(contractWrapper, storage)](./sdk.delayedreveal._constructor_.md) |  | Constructs a new instance of the <code>DelayedReveal</code> class |
+|  [(constructor)(erc721, contractWrapper, storage)](./sdk.delayedreveal._constructor_.md) |  | Constructs a new instance of the <code>DelayedReveal</code> class |
 
 ## Properties
 
