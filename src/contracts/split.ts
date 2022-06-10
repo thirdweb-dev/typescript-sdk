@@ -1,12 +1,9 @@
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { IERC20, Split as SplitContract } from "contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import {
-  ContractInterceptor,
-  IStorage,
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-} from "../core";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { IStorage } from "../core/interfaces/IStorage";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";
@@ -15,7 +12,7 @@ import { fetchCurrencyValue } from "../common/currency";
 import { BigNumber, Contract } from "ethers";
 import { SplitRecipient } from "../types/SplitRecipient";
 import { SplitsContractSchema } from "../schema/contracts/splits";
-import { GasCostEstimator } from "../core/classes";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractEvents } from "../core/classes/contract-events";
 import ERC20Abi from "../../abis/IERC20.json";
 import { ContractAnalytics } from "../core/classes/contract-analytics";

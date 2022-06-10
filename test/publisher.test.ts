@@ -195,6 +195,35 @@ describe("Publishing", async () => {
     expect(meta.name).to.eq("Hello");
   });
 
+  it("ERC721Dropable feature detection", async () => {
+    const realSDK = new ThirdwebSDK(adminWallet);
+    const pub = realSDK.getPublisher();
+    const ipfsUri = "ipfs://QmWaidQMSYHPzYYZCxMc2nSk2vrD28mS43Xc9k7QFyAGja/0";
+    const addr = await pub.deployContract(ipfsUri, []);
+    const c = await realSDK.getContract(addr);
+
+    invariant(c.nft, "nft must be defined");
+    invariant(c.nft.drop, "drop must be defined");
+    invariant(c.nft.drop.claimConditions, "claim conditions must be defined");
+
+    let claimConditions = await c.nft.drop.claimConditions.getAll();
+    expect(claimConditions.length).to.equal(0);
+
+    await c.nft.drop.claimConditions.set([
+      {
+        price: "0",
+        startTime: new Date(0),
+      },
+      {
+        price: "0",
+        startTime: new Date(),
+      },
+    ]);
+
+    claimConditions = await c.nft.drop.claimConditions.getAll();
+    expect(claimConditions.length).to.equal(2);
+  });
+
   it("Constructor params with tuples", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
@@ -219,27 +248,5 @@ describe("Publishing", async () => {
       anArray: [adminWallet.address, samWallet.address],
     });
     expect(tx).to.not.eq(undefined);
-  });
-
-  it("Custom drop contract lazy mint", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
-    const pub = await realSDK.getPublisher();
-    const ipfsUri = "ipfs://QmfKR3MMsE8AtXnoDZPHj7Z9SdNkyDTVhHEd1D9cDHDn1o/0";
-    const addr = await pub.deployContract(ipfsUri, []);
-    const c = await sdk.getContract(addr);
-    invariant(c.nft, "no nft detected");
-    invariant(c.nft.query, "no query detected");
-    invariant(c.nft.lazy, "no lazy detected");
-    const tx = await c.nft.lazy.mint([
-      {
-        name: "cool nft",
-      },
-      {
-        name: "cool nft2",
-      },
-    ]);
-    expect(tx).to.not.eq(undefined);
-    const all = await c.nft.query.all();
-    expect(all).length(2);
   });
 });

@@ -366,14 +366,14 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         displayValue: z.ZodString;
     }>, "strip", z.ZodTypeAny, {
         symbol: string;
-        name: string;
         value: BigNumber;
+        name: string;
         decimals: number;
         displayValue: string;
     }, {
         symbol: string;
-        name: string;
         value: string | number | bigint | BigNumber;
+        name: string;
         decimals: number;
         displayValue: string;
     }>>;
@@ -396,8 +396,8 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     currentMintSupply: string;
     currencyMetadata: {
         symbol: string;
-        name: string;
         value: BigNumber;
+        name: string;
         decimals: number;
         displayValue: string;
     };
@@ -414,8 +414,8 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     currentMintSupply?: string | number | undefined;
     currencyMetadata?: {
         symbol: string;
-        name: string;
         value: string | number | bigint | BigNumber;
+        name: string;
         decimals: number;
         displayValue: string;
     } | undefined;
@@ -635,13 +635,11 @@ export class ContractInterceptor<TContract extends BaseContract> {
     overrideNextTransaction(hook: () => CallOverrides): void;
 }
 
-// Warning: (ae-forgotten-export) The symbol "IThirdwebContract" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "ThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "DetectableFeature" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractMetadata" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
-export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebContract, TSchema extends IGenericSchemaType> implements DetectableFeature {
+export class ContractMetadata<TContract extends BaseContract, TSchema extends IGenericSchemaType> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>, schema: TSchema, storage: IStorage);
     // (undocumented)
     featureName: "ContractMetadata";
@@ -697,6 +695,7 @@ export class ContractPrimarySale<TContract extends IPrimarySale> implements Dete
     setRecipient(recipient: string): Promise<TransactionResult>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "ThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "ContractPublishedMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -733,6 +732,7 @@ export class ContractRoles<TContract extends IPermissionsEnumerable, TRole exten
 }
 
 // Warning: (ae-forgotten-export) The symbol "IRoyalty" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "IThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractRoyalty" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
@@ -833,14 +833,14 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
     displayValue: z.ZodString;
 }>, "strip", z.ZodTypeAny, {
     symbol: string;
-    name: string;
     value: BigNumber;
+    name: string;
     decimals: number;
     displayValue: string;
 }, {
     symbol: string;
-    name: string;
     value: string | number | bigint | BigNumber;
+    name: string;
     decimals: number;
     displayValue: string;
 }>;
@@ -857,10 +857,11 @@ export const DEFAULT_QUERY_ALL_COUNT = 100;
 
 // Warning: (ae-forgotten-export) The symbol "DropERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseDelayedRevealERC721" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "SignatureDrop" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721> {
-    constructor(contractWrapper: ContractWrapper<T>, storage: IStorage);
+export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop_2> {
+    constructor(erc721: Erc721, contractWrapper: ContractWrapper<T>, storage: IStorage);
     createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<TransactionResultWithId[]>;
@@ -902,14 +903,17 @@ export interface DirectListing {
 }
 
 // Warning: (ae-forgotten-export) The symbol "DropERC20" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BaseClaimConditionERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
+export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | BaseClaimConditionERC721> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
     canClaim(quantity: Amount, addressToCheck?: string): Promise<boolean>;
     getActive(): Promise<ClaimCondition>;
     getAll(): Promise<ClaimCondition[]>;
     getClaimIneligibilityReasons(quantity: Amount, addressToCheck?: string): Promise<ClaimEligibility[]>;
+    // @internal
+    prepareClaim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<ClaimVerification>;
     set(claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
     update(index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
 }
@@ -1684,7 +1688,6 @@ export type ERC20Wrappable = {
 };
 
 // Warning: (ae-forgotten-export) The symbol "Multiwrap" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "SignatureDrop" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "TokenERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseERC721" needs to be exported by the entry point index.d.ts
 //
@@ -1696,6 +1699,8 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
     // (undocumented)
+    drop: Erc721Dropable | undefined;
+    // (undocumented)
     featureName: "ERC721";
     get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
     // (undocumented)
@@ -1703,12 +1708,10 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     // @internal (undocumented)
     getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
-    // Warning: (ae-forgotten-export) The symbol "Erc721LazyMintable" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    lazy: Erc721LazyMintable | undefined;
     // (undocumented)
     mint: Erc721Mintable | undefined;
+    // @internal
+    nextTokenIdToMint(): Promise<BigNumber>;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -1716,8 +1719,6 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     ownerOf(tokenId: BigNumberish): Promise<string>;
     // (undocumented)
     query: Erc721Supply | undefined;
-    // (undocumented)
-    revealer: DelayedReveal<BaseDelayedRevealERC721 | DropERC721> | undefined;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
     // @internal
@@ -1735,6 +1736,22 @@ export class Erc721BatchMintable implements DetectableFeature {
     featureName: "ERC721BatchMintable";
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     to(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+}
+
+// @public
+export class Erc721Dropable implements DetectableFeature {
+    constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseDropERC721>, storage: IStorage);
+    claim(quantity: BigNumberish, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // Warning: (ae-forgotten-export) The symbol "BaseDropERC721" needs to be exported by the entry point index.d.ts
+    claimConditions: DropClaimConditions<BaseDropERC721> | undefined;
+    claimTo(destinationAddress: string, quantity: BigNumberish, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // (undocumented)
+    featureName: "ERC721Dropable";
+    lazyMint(metadatas: NFTMetadataInput[], options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    // (undocumented)
+    revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
 }
 
 // @public
@@ -1799,11 +1816,11 @@ export function extractConstructorParams(predeployMetadataUri: string, storage: 
     stateMutability?: string | undefined;
     components?: {
         [x: string]: any;
-        name: string;
         type: string;
+        name: string;
     }[] | undefined;
-    name: string;
     type: string;
+    name: string;
 }[]>;
 
 // Warning: (ae-internal-missing-underscore) The name "extractConstructorParamsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1814,11 +1831,11 @@ export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>):
     stateMutability?: string | undefined;
     components?: {
         [x: string]: any;
-        name: string;
         type: string;
+        name: string;
     }[] | undefined;
-    name: string;
     type: string;
+    name: string;
 }[];
 
 // Warning: (ae-internal-missing-underscore) The name "extractFunctions" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3550,8 +3567,6 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3563,6 +3578,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: ethers.BigNumber;
+    mintEndTime: ethers.BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -3572,8 +3589,6 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
-    mintStartTime?: Date | undefined;
-    mintEndTime?: Date | undefined;
     metadata?: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3585,6 +3600,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     } | undefined;
+    mintStartTime?: Date | undefined;
+    mintEndTime?: Date | undefined;
     quantity: string | number | bigint | ethers.BigNumber;
 }>;
 
@@ -3654,8 +3671,6 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3667,6 +3682,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: ethers.BigNumber;
+    mintEndTime: ethers.BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -3678,8 +3695,6 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     tokenId: string | number | bigint | ethers.BigNumber;
     royaltyBps: string | number | bigint | ethers.BigNumber;
     quantity: string | number | bigint | ethers.BigNumber;
-    mintStartTime: string | number | bigint | ethers.BigNumber;
-    mintEndTime: string | number | bigint | ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3691,6 +3706,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: string | number | bigint | ethers.BigNumber;
+    mintEndTime: string | number | bigint | ethers.BigNumber;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature20PayloadInput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3817,8 +3834,6 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3830,6 +3845,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: ethers.BigNumber;
+    mintEndTime: ethers.BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -3914,8 +3931,6 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3927,6 +3942,8 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: ethers.BigNumber;
+    mintEndTime: ethers.BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -3936,8 +3953,6 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     currencyAddress?: string | undefined;
     uri: string;
     royaltyBps: string | number | bigint | ethers.BigNumber;
-    mintStartTime: string | number | bigint | ethers.BigNumber;
-    mintEndTime: string | number | bigint | ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3949,6 +3964,8 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: string | number | bigint | ethers.BigNumber;
+    mintEndTime: string | number | bigint | ethers.BigNumber;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature721WithQuantityInput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -4042,8 +4059,6 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -4055,6 +4070,8 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: ethers.BigNumber;
+    mintEndTime: ethers.BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -4063,8 +4080,6 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
-    mintStartTime?: Date | undefined;
-    mintEndTime?: Date | undefined;
     metadata?: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -4076,6 +4091,8 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     } | undefined;
+    mintStartTime?: Date | undefined;
+    mintEndTime?: Date | undefined;
     quantity: string | number | bigint | ethers.BigNumber;
 }>;
 
@@ -4143,8 +4160,6 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -4156,6 +4171,8 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: ethers.BigNumber;
+    mintEndTime: ethers.BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -4166,8 +4183,6 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
     uri: string;
     royaltyBps: string | number | bigint | ethers.BigNumber;
     quantity: string | number | bigint | ethers.BigNumber;
-    mintStartTime: string | number | bigint | ethers.BigNumber;
-    mintEndTime: string | number | bigint | ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -4179,6 +4194,8 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: string | number | bigint | ethers.BigNumber;
+    mintEndTime: string | number | bigint | ethers.BigNumber;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "SignatureDrop" should be prefixed with an underscore because the declaration is marked as @internal
@@ -4221,6 +4238,7 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     metadata: ContractMetadata<SignatureDrop_2, typeof SignatureDrop.schema>;
     // (undocumented)
     platformFees: ContractPlatformFee<SignatureDrop_2>;
+    revealer: DelayedReveal<SignatureDrop_2>;
     // (undocumented)
     roles: ContractRoles<SignatureDrop_2, typeof SignatureDrop.contractRoles[number]>;
     royalties: ContractRoyalty<SignatureDrop_2, typeof SignatureDrop.schema>;
@@ -4680,8 +4698,8 @@ export class Split implements UpdateableNetwork {
     balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
         [key: string]: {
             symbol: string;
-            name: string;
             value: BigNumber;
+            name: string;
             decimals: number;
             displayValue: string;
         };
@@ -4916,7 +4934,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ThirdwebContract>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "split" | "custom" | "token" | "pack" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
+        contractType: "custom" | "token" | "pack" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
     getEdition(address: string): Edition;

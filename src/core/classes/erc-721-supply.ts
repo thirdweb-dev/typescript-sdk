@@ -1,11 +1,11 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { IERC721Enumerable, IERC721Supply, TokenERC721 } from "contracts";
+import { IERC721Enumerable, IERC721Supply } from "contracts";
 import { BigNumber } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { NFTMetadataOwner } from "../../schema";
 import { Erc721 } from "./erc-721";
 import { BaseERC721 } from "../../types/eips";
-import { detectContractFeature, hasFunction } from "../../common";
+import { detectContractFeature } from "../../common";
 import { Erc721Enumerable } from "./erc-721-enumerable";
 import { FEATURE_NFT_SUPPLY } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
@@ -56,14 +56,7 @@ export class Erc721Supply implements DetectableFeature {
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
 
-    let maxSupply;
-    if (hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)) {
-      maxSupply = await this.contractWrapper.readContract.nextTokenIdToMint();
-    } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
-      maxSupply = await this.contractWrapper.readContract.totalSupply();
-    } else {
-      throw new Error("Contract does not support querying all NFTs");
-    }
+    const maxSupply = await this.erc721.nextTokenIdToMint();
     const maxId = Math.min(maxSupply.toNumber(), start + count);
     return await Promise.all(
       [...Array(maxId - start).keys()].map((i) =>

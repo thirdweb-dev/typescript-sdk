@@ -1,12 +1,17 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721 } from "contracts";
+import { DropERC721, SignatureDrop } from "contracts";
 import {
   CommonNFTInput,
   NFTMetadata,
   NFTMetadataInput,
 } from "../../schema/tokens/common";
-import { IStorage, TransactionResult, TransactionResultWithId } from "../index";
+import {
+  Erc721,
+  IStorage,
+  TransactionResult,
+  TransactionResultWithId,
+} from "../index";
 import { fetchTokenMetadata } from "../../common/nft";
 import { BatchToReveal } from "../../types/delayed-reveal";
 import { TokensLazyMintedEvent } from "contracts/DropERC721";
@@ -19,13 +24,21 @@ import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
  * Handles delayed reveal logic
  * @public
  */
-export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721> {
+export class DelayedReveal<
+  T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop,
+> {
   featureName = FEATURE_NFT_REVEALABLE.name;
 
   private contractWrapper: ContractWrapper<T>;
   private storage: IStorage;
+  private erc721: Erc721;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
+  constructor(
+    erc721: Erc721,
+    contractWrapper: ContractWrapper<T>,
+    storage: IStorage,
+  ) {
+    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
   }
@@ -82,8 +95,7 @@ export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721> {
       await this.contractWrapper.getSigner()?.getAddress(),
     );
 
-    const startFileNumber =
-      await this.contractWrapper.readContract.nextTokenIdToMint();
+    const startFileNumber = await this.erc721.nextTokenIdToMint();
 
     const batch = await this.storage.uploadMetadataBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),

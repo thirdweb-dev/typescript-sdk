@@ -4,13 +4,13 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
+import { IStorage } from "../core/interfaces/IStorage";
 import {
-  Erc1155Enumerable,
-  IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core";
+} from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
@@ -19,12 +19,10 @@ import {
   EditionMetadataOrUri,
   EditionMetadataOwner,
 } from "../schema/tokens/edition";
-import {
-  ContractEncoder,
-  ContractEvents,
-  ContractInterceptor,
-  ContractPlatformFee,
-} from "../core/classes";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { BigNumber, BigNumberish, constants } from "ethers";
 import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-minting";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";

@@ -1,7 +1,7 @@
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert, expect } from "chai";
-import { NFTCollection } from "../src/contracts";
+import { expect } from "chai";
+import { NFTCollection } from "../src/contracts/nft-collection";
 import { sdk, signers } from "./before-setup";
 
 describe("ContractAnalytics", () => {

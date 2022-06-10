@@ -9,14 +9,14 @@ Handles delayed reveal logic
 <b>Signature:</b>
 
 ```typescript
-export declare class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721> 
+export declare class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop> 
 ```
 
 ## Constructors
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(contractWrapper, storage)](./sdk.delayedreveal._constructor_.md) |  | Constructs a new instance of the <code>DelayedReveal</code> class |
+|  [(constructor)(erc721, contractWrapper, storage)](./sdk.delayedreveal._constructor_.md) |  | Constructs a new instance of the <code>DelayedReveal</code> class |
 
 ## Properties
 
