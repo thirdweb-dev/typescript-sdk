@@ -1,12 +1,12 @@
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { IStorage } from "../core/interfaces/IStorage";
 import {
-  ContractInterceptor,
-  IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core";
+} from "../core/types";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";

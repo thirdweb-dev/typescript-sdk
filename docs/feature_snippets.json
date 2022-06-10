@@ -477,6 +477,54 @@
       "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721BatchMintable"
     }
   },
+  "ERC721Dropable": {
+    "name": "Erc721Dropable",
+    "summary": "Lazily mint and claim ERC721 NFTs\n\n",
+    "remarks": "\n\nManage claim phases and claim ERC721 NFTs that have been lazily minted.\n\n",
+    "examples": {
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nawait contract.drop.claim(quantity);"
+    },
+    "methods": [
+      {
+        "name": "claimTo",
+        "summary": "Claim unique NFTs to a specific Wallet\n\n",
+        "remarks": "\n\nLet the specified wallet claim NFTs.\n\n",
+        "examples": {
+          "javascript": "const address = \"{{wallet_address}}\"; // address of the wallet you want to claim the NFTs\nconst quantity = 1; // how many unique NFTs you want to claim\n\nconst tx = await contract.claimTo(address, quantity);\nconst receipt = tx.receipt; // the transaction receipt\nconst claimedTokenId = tx.id; // the id of the NFT claimed\nconst claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Dropable.claimTo"
+        }
+      },
+      {
+        "name": "lazyMint",
+        "summary": "Create a batch of unique NFTs to be claimed in the future\n\n",
+        "remarks": "\n\nCreate batch allows you to create a batch of many unique NFTs in one transaction.\n\n",
+        "examples": {
+          "javascript": "// Custom metadata of the NFTs to create\nconst metadatas = [{\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}];\n\nconst results = await contract.nft.lazy.mint(metadatas); // uploads and creates the NFTs on chain\nconst firstTokenId = results[0].id; // token id of the first created NFT\nconst firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Dropable.lazyMint"
+        }
+      }
+    ],
+    "properties": [
+      {
+        "name": "claimConditions",
+        "summary": "Configure claim conditions\n\n",
+        "remarks": "\n\nDefine who can claim NFTs in the collection, when and how many.\n\n",
+        "examples": {
+          "javascript": "const presaleStartTime = new Date();\nconst publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst claimConditions = [\n  {\n    startTime: presaleStartTime, // start the presale now\n    maxQuantity: 2, // limit how many mints for this presale\n    price: 0.01, // presale price\n    snapshot: ['0x...', '0x...'], // limit minting to only certain addresses\n  },\n  {\n    startTime: publicSaleStartTime, // 24h after presale, start public sale\n    price: 0.08, // public sale price\n  }\n]);\nawait contract.claimConditions.set(claimConditions);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.dropclaimconditions"
+        }
+      }
+    ],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Dropable"
+    }
+  },
   "ERC721Enumerable": {
     "name": "Erc721Enumerable",
     "summary": "List owned ERC721 NFTs\n\n",

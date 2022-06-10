@@ -15,6 +15,7 @@ export * from "./erc-20-batch-mintable";
 export * from "./erc-20-history";
 export * from "./erc-20-signature-minting";
 export * from "./erc-721";
+export * from "./erc-721-dropable";
 export * from "./erc-721-signature-minting";
 export * from "./erc-721-supply";
 export * from "./erc-721-enumerable";

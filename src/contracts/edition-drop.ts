@@ -4,13 +4,13 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
+import { IStorage } from "../core/interfaces/IStorage";
 import {
-  Erc1155Enumerable,
-  IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core";
+} from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {

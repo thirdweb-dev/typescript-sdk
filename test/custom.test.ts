@@ -2,6 +2,7 @@ import { signers } from "./before-setup";
 import { expect } from "chai";
 import invariant from "tiny-invariant";
 import {
+  DropERC721__factory,
   SignatureDrop__factory,
   TokenERC1155__factory,
   TokenERC20__factory,
@@ -19,9 +20,9 @@ global.fetch = require("cross-fetch");
 describe("Custom Contracts", async () => {
   let customContractAddress: string;
   let nftContractAddress: string;
-  let sigDropContractAddress: string;
   let tokenContractAddress: string;
   let editionContractAddress: string;
+  let sigDropContractAddress: string;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -238,8 +239,8 @@ describe("Custom Contracts", async () => {
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
     invariant(c.nft.query, "ERC721 query undefined");
-    invariant(c.nft.lazy, "ERC721 lazy undefined");
-    await c.nft.lazy.mint([
+    invariant(c.nft.drop, "ERC721 drop undefined");
+    await c.nft.drop.lazyMint([
       {
         name: "Custom NFT",
       },
@@ -259,9 +260,10 @@ describe("Custom Contracts", async () => {
     );
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
-    invariant(c.nft.revealer, "ERC721 query undefined");
+    invariant(c.nft.drop, "ERC721 drop");
+    invariant(c.nft.drop.revealer, "ERC721 query undefined");
 
-    await c.nft.revealer.createDelayedRevealBatch(
+    await c.nft.drop.revealer.createDelayedRevealBatch(
       {
         name: "Placeholder #1",
       },
@@ -269,7 +271,10 @@ describe("Custom Contracts", async () => {
       "password",
     );
 
-    await c.nft.revealer.reveal(0, "password");
+    const batches = await c.nft.drop.revealer.getBatchesToReveal();
+    expect(batches.length).to.eq(1);
+
+    await c.nft.drop.revealer.reveal(0, "password");
     expect((await c.nft.get(0)).metadata.name).to.be.equal("NFT #1");
   });
 
