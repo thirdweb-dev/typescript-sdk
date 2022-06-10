@@ -5,6 +5,7 @@ import {
   FEATURE_NFT_LAZY_MINTABLE,
   FEATURE_NFT_MINTABLE,
   FEATURE_NFT_SUPPLY,
+  FEATURE_NFT_REVEALABLE,
 } from "./erc721-features";
 import {
   FEATURE_TOKEN,
@@ -46,7 +47,8 @@ export type Feature =
   | typeof FEATURE_PLATFORM_FEE
   | typeof FEATURE_PRIMARY_SALE
   | typeof FEATURE_PERMISSIONS
-  | typeof FEATURE_METADATA;
+  | typeof FEATURE_METADATA
+  | typeof FEATURE_NFT_REVEALABLE;
 
 /**
  * @internal

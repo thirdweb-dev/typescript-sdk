@@ -31,7 +31,6 @@ import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import { DelayedReveal } from "../core/classes/delayed-reveal";
 import {
   Erc721Enumerable,
   Erc721Supply,
@@ -160,8 +159,6 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * await contract.revealer.reveal(batchId, "my secret password");
    * ```
    */
-  public revealer: DelayedReveal<SignatureDropContract>;
-
   public signature: Erc721WithQuantitySignatureMinting;
 
   private _query = this.query as Erc721Supply;
@@ -196,10 +193,6 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
-    this.revealer = new DelayedReveal<SignatureDropContract>(
-      this.contractWrapper,
-      this.storage,
-    );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.signature = new Erc721WithQuantitySignatureMinting(
       this.contractWrapper,
