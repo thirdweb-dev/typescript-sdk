@@ -53,13 +53,13 @@ describe("Publishing", async () => {
     sdk.updateSignerOrProvider(adminWallet);
   });
 
-  it.skip("should extract functions", async () => {
+  it("should extract functions", async () => {
     const publisher = sdk.getPublisher();
     const functions = await publisher.extractFunctions(simpleContractUri);
     expect(functions.length).gt(0);
   });
 
-  it.skip("should extract features", async () => {
+  it("should extract features", async () => {
     expect(
       isFeatureEnabled(TokenERC721__factory.abi, "ERC721Enumerable"),
     ).to.eq(true);
@@ -82,7 +82,7 @@ describe("Publishing", async () => {
     );
   });
 
-  it.skip("should publish simple greeter contract", async () => {
+  it("should publish simple greeter contract", async () => {
     const publisher = sdk.getPublisher();
     const tx = await publisher.publish(simpleContractUri);
     const contract = await tx.data();
@@ -100,7 +100,7 @@ describe("Publishing", async () => {
     expect(meta.name).to.eq("Greeter");
   });
 
-  it.skip("should publish multiple versions", async () => {
+  it("should publish multiple versions", async () => {
     sdk.updateSignerOrProvider(samWallet);
     const publisher = sdk.getPublisher();
     let id = "";
@@ -115,7 +115,7 @@ describe("Publishing", async () => {
     expect(all[all.length - 1] === versions[versions.length - 1]);
   });
 
-  it.skip("should publish constructor params contract", async () => {
+  it("should publish constructor params contract", async () => {
     sdk.updateSignerOrProvider(bobWallet);
     const publisher = sdk.getPublisher();
     const tx = await publisher.publish(contructorParamsContractUri);
@@ -135,7 +135,7 @@ describe("Publishing", async () => {
     const all = await publisher.getAll(bobWallet.address);
     expect(all.length).to.be.eq(1);
   });
-  it.skip("should publish batch contracts", async () => {
+  it("should publish batch contracts", async () => {
     const publisher = sdk.getPublisher();
     const tx = await publisher.publishBatch([
       simpleContractUri,
@@ -146,7 +146,7 @@ describe("Publishing", async () => {
     expect((await tx[1].data()).id).to.eq("ConstructorParams");
   });
 
-  it.skip("SimpleAzuki enumerable", async () => {
+  it("SimpleAzuki enumerable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmTKKUUEU6GnG7VEEAAXpveeirREC1JNYntVJGhHKhqcYZ/0";
@@ -164,7 +164,7 @@ describe("Publishing", async () => {
     expect(all.length).to.eq(0);
   });
 
-  it.skip("AzukiWithMinting mintable", async () => {
+  it("AzukiWithMinting mintable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmPPPoKk2mwoxBVTW5qMMNwaV4Ja5qDoq7fFZNFFvr3YsW/1";
@@ -224,7 +224,7 @@ describe("Publishing", async () => {
     expect(claimConditions.length).to.equal(2);
   });
 
-  it.skip("Constructor params with tuples", async () => {
+  it("Constructor params with tuples", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmZQa56Cj1gFnZgKSkvGE5uzhaQrQV3nU6upDWDusCaCwY/0";
