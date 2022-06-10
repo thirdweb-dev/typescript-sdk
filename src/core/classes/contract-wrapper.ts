@@ -320,7 +320,7 @@ export class ContractWrapper<
       fn
     ];
     if (!func) {
-      throw new Error("invalid function");
+      throw new Error(`invalid function: "${fn.toString()}"`);
     }
     try {
       return await func(...args, callOverrides);
