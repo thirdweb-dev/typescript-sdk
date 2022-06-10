@@ -2,7 +2,6 @@ import { TokensClaimedEvent } from "contracts/Drop";
 import { BigNumber, BigNumberish, BytesLike, ethers, utils } from "ethers";
 import { prepareClaim } from "../../common/claim-conditions";
 import { FEATURE_NFT_DROPABLE } from "../../constants/erc721-features";
-import { SmartContract } from "../../contracts/smart-contract";
 import {
   CommonNFTInput,
   NFTMetadata,
@@ -21,6 +20,7 @@ import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
 import { DelayedReveal } from "./delayed-reveal";
 import { detectContractFeature } from "../../common/feature-detection";
+import { CustomContractSchema } from "../../schema/contracts/custom";
 
 /**
  * Lazily mint and claim ERC721 NFTs
@@ -77,7 +77,7 @@ export class Erc721Dropable implements DetectableFeature {
     this.storage = storage;
     this.metadata = new ContractMetadata(
       contractWrapper,
-      SmartContract.schema,
+      CustomContractSchema,
       storage,
     );
     this.claimConditions = new DropClaimConditions(

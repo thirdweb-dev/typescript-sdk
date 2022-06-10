@@ -1,6 +1,6 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721 } from "contracts";
+import { DropERC721, SignatureDrop } from "contracts";
 import {
   CommonNFTInput,
   NFTMetadata,
@@ -19,7 +19,9 @@ import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
  * Handles delayed reveal logic
  * @public
  */
-export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721> {
+export class DelayedReveal<
+  T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop,
+> {
   featureName = FEATURE_NFT_REVEALABLE.name;
 
   private contractWrapper: ContractWrapper<T>;

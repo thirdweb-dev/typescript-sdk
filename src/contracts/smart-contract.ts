@@ -1,17 +1,15 @@
 import { ContractMetadata } from "../core/classes/contract-metadata";
-import {
-  ContractEvents,
-  ContractInterceptor,
-  ContractPrimarySale,
-  ContractRoles,
-  ContractRoyalty,
-  Erc1155,
-  Erc20,
-  Erc721,
-  GasCostEstimator,
-  IStorage,
-  NetworkOrSignerOrProvider,
-} from "../core";
+import { IStorage, NetworkOrSignerOrProvider } from "../core";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { Erc1155 } from "../core/classes/erc-1155";
+import { Erc20 } from "../core/classes/erc-20";
+import { Erc721 } from "../core/classes/erc-721";
+
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {

@@ -12,7 +12,7 @@ import { fetchCurrencyValue } from "../common/currency";
 import { BigNumber, Contract } from "ethers";
 import { SplitRecipient } from "../types/SplitRecipient";
 import { SplitsContractSchema } from "../schema/contracts/splits";
-import { GasCostEstimator } from "../core/classes";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractEvents } from "../core/classes/contract-events";
 import ERC20Abi from "../../abis/IERC20.json";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
