@@ -22,3 +22,13 @@ listenToAllEvents(listener: (event: ContractEvent) => void): void;
 
 void
 
+## Example
+
+
+```javascript
+contract.events.listenToAllEvents((event) => {
+  console.log(event.eventName) // the name of the emitted event
+  console.log(event.data) // event payload
+}
+```
+

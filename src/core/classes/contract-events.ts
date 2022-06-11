@@ -74,6 +74,13 @@ export class ContractEvents<TContract extends BaseContract> {
   /**
    * Listen to all events emitted from this contract
    * @param listener - the receiver that will be called on every new event
+   * @example
+   * ```javascript
+   * contract.events.listenToAllEvents((event) => {
+   *   console.log(event.eventName) // the name of the emitted event
+   *   console.log(event.data) // event payload
+   * }
+   * ```
    */
   public listenToAllEvents(listener: (event: ContractEvent) => void) {
     const address = this.contractWrapper.readContract.address;
