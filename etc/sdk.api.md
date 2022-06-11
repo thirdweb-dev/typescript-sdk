@@ -610,11 +610,18 @@ export class ContractEncoder<TContract extends BaseContract> {
     encode(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): string;
 }
 
+// @public (undocumented)
+export type ContractEvent = {
+    eventName: string;
+    data: Record<string, any>;
+};
+
 // @public
 export class ContractEvents<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     addEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: (event: Record<string, any>) => void): void;
     addTransactionListener(listener: ListenerFn): void;
+    listenToAllEvents(listener: (event: ContractEvent) => void): void;
     removeAllListeners(): void;
     // (undocumented)
     removeEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: providers.Listener): void;

@@ -2,6 +2,8 @@ import { ContractWrapper } from "./contract-wrapper";
 import { BaseContract, providers } from "ethers";
 import { EventType } from "../../constants";
 import { ListenerFn } from "eventemitter3";
+import { EventFragment } from "@ethersproject/abi";
+import { ContractEvent } from "../../types/index";
 
 /**
  * Listen to Contract events in real time
@@ -64,24 +66,26 @@ export class ContractEvents<TContract extends BaseContract> {
     );
     this.contractWrapper.readContract.on(event.name, (...args) => {
       // convert event info into nice object with named properties
-      const results: Record<string, any> = {};
-      event.inputs.forEach((param, index) => {
-        if (Array.isArray(args[index])) {
-          const obj: Record<string, any> = {};
-          const components = param.components;
-          if (components) {
-            const arr = args[index];
-            for (let i = 0; i < components.length; i++) {
-              const name = components[i].name;
-              obj[name] = arr[i];
-            }
-            results[param.name] = obj;
-          }
-        } else {
-          results[param.name] = args[index];
-        }
-      });
+      const results = this.toContractEvent(event, args);
       listener(results);
+    });
+  }
+
+  /**
+   * Listen to all events emitted from this contract
+   * @param listener - the receiver that will be called on every new event
+   */
+  public listenToAllEvents(listener: (event: ContractEvent) => void) {
+    const address = this.contractWrapper.readContract.address;
+    const filter = { address };
+    this.contractWrapper.getProvider().on(filter, (log) => {
+      try {
+        const parsedLog =
+          this.contractWrapper.readContract.interface.parseLog(log);
+        listener(this.toContractEvent(parsedLog.eventFragment, parsedLog.args));
+      } catch (e) {
+        console.error("Could not parse event:", log, e);
+      }
     });
   }
 
@@ -106,5 +110,35 @@ export class ContractEvents<TContract extends BaseContract> {
    */
   public removeAllListeners() {
     this.contractWrapper.readContract.removeAllListeners();
+    const address = this.contractWrapper.readContract.address;
+    const filter = { address };
+    this.contractWrapper.getProvider().removeAllListeners(filter);
+  }
+
+  private toContractEvent(
+    event: EventFragment,
+    args: ReadonlyArray<any>,
+  ): ContractEvent {
+    const results: Record<string, any> = {};
+    event.inputs.forEach((param, index) => {
+      if (Array.isArray(args[index])) {
+        const obj: Record<string, any> = {};
+        const components = param.components;
+        if (components) {
+          const arr = args[index];
+          for (let i = 0; i < components.length; i++) {
+            const name = components[i].name;
+            obj[name] = arr[i];
+          }
+          results[param.name] = obj;
+        }
+      } else {
+        results[param.name] = args[index];
+      }
+    });
+    return {
+      eventName: event.name,
+      data: results,
+    };
   }
 }

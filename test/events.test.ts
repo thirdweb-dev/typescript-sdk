@@ -2,7 +2,7 @@ import { ethers, Wallet } from "ethers";
 import { sdk } from "./before-setup";
 import { EventType } from "../src/constants/events";
 import { expect } from "chai";
-import { NFTDrop, ThirdwebSDK } from "../src";
+import { ContractEvent, NFTDrop, ThirdwebSDK } from "../src";
 import { AddressZero } from "@ethersproject/constants";
 
 global.fetch = require("cross-fetch");
@@ -37,6 +37,26 @@ describe("Events", async () => {
       txStatus = event.status;
     });
     await dropContract.setApprovalForAll(ethers.constants.AddressZero, true);
+    dropContract.events.removeAllListeners();
+  });
+
+  it("should emit Contract events", async () => {
+    const events: ContractEvent[] = [];
+    dropContract.events.listenToAllEvents((event) => {
+      events.push(event);
+    });
+    await dropContract.createBatch([
+      {
+        name: "1",
+      },
+      {
+        name: "2",
+      },
+    ]);
+    await new Promise((resolve) => setTimeout(resolve, 5000));
+    dropContract.events.removeAllListeners();
+    expect(events.length).to.be.gt(0);
+    expect(events.map((e) => e.eventName)).to.include("TokensLazyMinted");
   });
 
   // TODO
