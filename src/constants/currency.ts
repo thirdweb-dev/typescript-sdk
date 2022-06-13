@@ -105,8 +105,8 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.Arbitrum]: {
-    name: "ArbitrumEther",
-    symbol: "ARETH",
+    name: "Ether",
+    symbol: "AETH",
     decimals: 18,
     wrapped: {
       address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
@@ -115,8 +115,8 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.ArbitrumTestnet]: {
-    name: "Ether",
-    symbol: "ETH",
+    name: "Arbitrum Rinkeby Ether",
+    symbol: "ARETH",
     decimals: 18,
     wrapped: {
       address: "0xEBbc3452Cc911591e4F18f3b36727Df45d6bd1f9",
@@ -136,7 +136,7 @@ export const NATIVE_TOKENS: Record<
   },
   [ChainId.OptimismTestnet]: {
     name: "Kovan Ether",
-    symbol: "KETH",
+    symbol: "KOR",
     decimals: 18,
     wrapped: {
       address: "0xbC6F6b680bc61e30dB47721c6D1c5cde19C1300d",
