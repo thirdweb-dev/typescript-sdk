@@ -144,7 +144,7 @@ describe("Edition sig minting", async () => {
     });
 
     it("should allow batch minting", async () => {
-      const payloads = [];
+      const payloads: PayloadToSign1155[] = [];
       const freeMint = {
         currencyAddress: NATIVE_TOKEN_ADDRESS,
         metadata: {
@@ -157,9 +157,8 @@ describe("Edition sig minting", async () => {
       for (let i = 0; i < 10; i++) {
         payloads.push(freeMint);
       }
-      const batch = await Promise.all(
-        payloads.map(async (p) => await editionContract.signature.generate(p)),
-      );
+      const batch = await editionContract.signature.generateBatch(payloads);
+
       await sdk.updateSignerOrProvider(samWallet);
       const tx = await editionContract.signature.mintBatch(batch);
       expect(tx.length).to.eq(10);
@@ -222,12 +221,12 @@ describe("Edition sig minting", async () => {
     it("should mint the right metadata", async () => {
       const tx = await editionContract.signature.mint(v1);
       const nft = await editionContract.get(tx.id);
-      assert.equal(nft.metadata.name, meta.metadata.name);
+      assert.equal(nft.metadata.name, (meta.metadata as any)?.name);
     });
 
     it("should mint additional supply", async () => {
       const tx = await editionContract.signature.mint(v1);
-      const additional = await editionContract.signature.generate({
+      const additional = await editionContract.signature.generateFromTokenId({
         tokenId: tx.id,
         quantity: 100,
       });
@@ -245,7 +244,7 @@ describe("Edition sig minting", async () => {
         metadata: { name: "test" },
         supply: 0,
       });
-      const payload = await editionContract.signature.generate({
+      const payload = await editionContract.signature.generateFromTokenId({
         tokenId: "0",
         quantity: "1",
         metadata: "",

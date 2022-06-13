@@ -67,9 +67,16 @@ export const Signature721PayloadOutput = Signature721PayloadInput.extend({
  */
 export const Signature1155PayloadInput = Signature721PayloadInput.extend({
   metadata: NFTInputOrUriSchema.default(""),
-  tokenId: BigNumberishSchema.default(ethers.constants.MaxUint256),
   quantity: BigNumberishSchema,
 });
+
+/**
+ * @internal
+ */
+export const Signature1155PayloadInputWithTokenId =
+  Signature1155PayloadInput.extend({
+    tokenId: BigNumberishSchema,
+  });
 
 /**
  * @internal
@@ -145,6 +152,12 @@ export type FilledSignaturePayload1155 = z.output<
 /**
  * @public
  */
+export type FilledSignaturePayload1155WithTokenId = z.output<
+  typeof Signature1155PayloadInputWithTokenId
+>;
+/**
+ * @public
+ */
 export type FilledSignature721WithQuantity = z.output<
   typeof Signature721WithQuantityInput
 >;
@@ -162,6 +175,12 @@ export type PayloadWithUri721withQuantity = z.output<
  * @public
  */
 export type PayloadToSign1155 = z.input<typeof Signature1155PayloadInput>;
+/**
+ * @public
+ */
+export type PayloadToSign1155WithTokenId = z.input<
+  typeof Signature1155PayloadInputWithTokenId
+>;
 /**
  * @public
  */
