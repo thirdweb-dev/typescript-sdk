@@ -115,7 +115,7 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.ArbitrumTestnet]: {
-    name: "Arbitrum Rinkeby Ether",
+    name: "Ether",
     symbol: "ETH",
     decimals: 18,
     wrapped: {
