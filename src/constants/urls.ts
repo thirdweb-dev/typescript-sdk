@@ -72,12 +72,16 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
     case "ethereum":
       return `https://eth-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "optimism":
+      // TODO test this RPC
       return `https://opt-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "optimism-kovan":
-      return `https://opt-kovan.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
+      // alchemy optimism kovan rpc doesn't link to the testnet sequencer...
+      return "https://kovan.optimism.io";
     case "arbitrum":
+      // TODO test this RPC
       return `https://arb-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "arbirum-rinkeby":
+      // TODO test this RPC
       return `https://arb-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "fantom":
       return "https://rpc.ftm.tools";

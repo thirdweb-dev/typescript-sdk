@@ -15,6 +15,8 @@ export declare enum ChainId
 
 |  Member | Value | Description |
 |  --- | --- | --- |
+|  Arbitrum | <code>42161</code> |  |
+|  ArbitrumTestnet | <code>421611</code> |  |
 |  Avalanche | <code>43114</code> |  |
 |  AvalancheFujiTestnet | <code>43113</code> |  |
 |  BSC | <code>56</code> |  |
@@ -28,6 +30,8 @@ export declare enum ChainId
 |  Mainnet | <code>1</code> |  |
 |  Moonriver | <code>1285</code> |  |
 |  Mumbai | <code>80001</code> |  |
+|  Optimism | <code>10</code> |  |
+|  OptimismTestnet | <code>69</code> |  |
 |  Polygon | <code>137</code> |  |
 |  Rinkeby | <code>4</code> |  |
 |  Ropsten | <code>3</code> |  |

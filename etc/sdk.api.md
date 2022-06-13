@@ -155,6 +155,10 @@ export type BufferOrStringWithName = {
 // @public (undocumented)
 export enum ChainId {
     // (undocumented)
+    Arbitrum = 42161,
+    // (undocumented)
+    ArbitrumTestnet = 421611,
+    // (undocumented)
     Avalanche = 43114,
     // (undocumented)
     AvalancheFujiTestnet = 43113,
@@ -180,6 +184,10 @@ export enum ChainId {
     Moonriver = 1285,
     // (undocumented)
     Mumbai = 80001,
+    // (undocumented)
+    Optimism = 10,
+    // (undocumented)
+    OptimismTestnet = 69,
     // (undocumented)
     Polygon = 137,
     // (undocumented)
@@ -208,7 +216,7 @@ export const ChainlinkVrf: Record<number, ChainlinkInfo>;
 // Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "avalanche" | (string & {});
+export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "avalanche" | "optimism" | "optimism-kovan" | "arbitrum" | "arbitrum-rinkeby" | (string & {});
 
 // Warning: (ae-internal-missing-underscore) The name "CidWithFileName" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -4914,7 +4922,7 @@ export interface SplitRecipientInput {
 }
 
 // @public (undocumented)
-export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet;
+export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet | ChainId.Optimism | ChainId.OptimismTestnet | ChainId.Arbitrum | ChainId.ArbitrumTestnet;
 
 // @public (undocumented)
 export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];

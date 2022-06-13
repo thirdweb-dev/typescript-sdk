@@ -107,6 +107,42 @@ export const CONTRACT_ADDRESSES: Record<
     contractMetadataRegistry: "0x1e474395f58418e9c594a79abb0152D04C229E8e",
     sigMint: constants.AddressZero,
   },
+  [ChainId.Arbitrum]: {
+    biconomyForwarder: constants.AddressZero,
+    twFactory: "", // TODO
+    twRegistry: "", // TODO
+    twBYOCRegistry: constants.AddressZero,
+    contractDeployer: constants.AddressZero,
+    contractMetadataRegistry: constants.AddressZero,
+    sigMint: constants.AddressZero,
+  },
+  [ChainId.ArbitrumTestnet]: {
+    biconomyForwarder: constants.AddressZero,
+    twFactory: "", // TODO
+    twRegistry: "", // TODO
+    twBYOCRegistry: constants.AddressZero,
+    contractDeployer: constants.AddressZero,
+    contractMetadataRegistry: constants.AddressZero,
+    sigMint: constants.AddressZero,
+  },
+  [ChainId.Optimism]: {
+    biconomyForwarder: constants.AddressZero,
+    twFactory: "", // TODO
+    twRegistry: "", // TODO
+    twBYOCRegistry: constants.AddressZero,
+    contractDeployer: constants.AddressZero,
+    contractMetadataRegistry: constants.AddressZero,
+    sigMint: constants.AddressZero,
+  },
+  [ChainId.OptimismTestnet]: {
+    biconomyForwarder: constants.AddressZero,
+    twFactory: "0x3805FF4740F47c5F3206223af6e7D5d99e58a2E7", // TODO from shared deployer wallet
+    twRegistry: "0xc7B5A95ee69c3384F97edcDEb31F29ed0078bF52", // TODO from shared deployer wallet
+    twBYOCRegistry: constants.AddressZero,
+    contractDeployer: constants.AddressZero,
+    contractMetadataRegistry: constants.AddressZero,
+    sigMint: constants.AddressZero,
+  },
 };
 
 /**

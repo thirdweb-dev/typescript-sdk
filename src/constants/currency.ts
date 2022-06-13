@@ -104,6 +104,46 @@ export const NATIVE_TOKENS: Record<
       symbol: "WFTM",
     },
   },
+  [ChainId.Arbitrum]: {
+    name: "Arbitrum",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  [ChainId.ArbitrumTestnet]: {
+    name: "Arbitrum Testnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0xEBbc3452Cc911591e4F18f3b36727Df45d6bd1f9",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  [ChainId.Optimism]: {
+    name: "Optimism",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0x4200000000000000000000000000000000000006",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
+  [ChainId.OptimismTestnet]: {
+    name: "Optimism Testnet",
+    symbol: "ETH",
+    decimals: 18,
+    wrapped: {
+      address: "0xbC6F6b680bc61e30dB47721c6D1c5cde19C1300d",
+      name: "Wrapped Ether",
+      symbol: "WETH",
+    },
+  },
   [ChainId.Hardhat]: {
     name: "Ether",
     symbol: "ETH",
