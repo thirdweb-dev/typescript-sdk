@@ -25,8 +25,8 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.Rinkeby]: {
-    name: "Rinkeby Ether",
-    symbol: "rETH",
+    name: "Ether",
+    symbol: "ETH",
     decimals: 18,
     wrapped: {
       address: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
@@ -35,8 +35,8 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.Goerli]: {
-    name: "Goerli Ether",
-    symbol: "gETH",
+    name: "Ether",
+    symbol: "ETH",
     decimals: 18,
     wrapped: {
       address: "0x0bb7509324ce409f7bbc4b701f932eaca9736ab7",
@@ -105,8 +105,8 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.Arbitrum]: {
-    name: "ArbitrumEther",
-    symbol: "ARETH",
+    name: "Ether",
+    symbol: "ETH",
     decimals: 18,
     wrapped: {
       address: "0x82af49447d8a07e3bd95bd0d56f35241523fbab1",
@@ -135,8 +135,8 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.OptimismTestnet]: {
-    name: "Kovan Ether",
-    symbol: "KETH",
+    name: "Ether",
+    symbol: "ETH",
     decimals: 18,
     wrapped: {
       address: "0xbC6F6b680bc61e30dB47721c6D1c5cde19C1300d",
