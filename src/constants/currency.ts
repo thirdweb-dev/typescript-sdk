@@ -105,7 +105,7 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.Arbitrum]: {
-    name: "Arbitrum",
+    name: "Ether",
     symbol: "ETH",
     decimals: 18,
     wrapped: {
@@ -115,7 +115,7 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.ArbitrumTestnet]: {
-    name: "Arbitrum Testnet",
+    name: "Ether",
     symbol: "ETH",
     decimals: 18,
     wrapped: {
@@ -125,7 +125,7 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.Optimism]: {
-    name: "Optimism",
+    name: "Ether",
     symbol: "ETH",
     decimals: 18,
     wrapped: {
@@ -135,7 +135,7 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.OptimismTestnet]: {
-    name: "Optimism Testnet",
+    name: "Ether",
     symbol: "ETH",
     decimals: 18,
     wrapped: {
