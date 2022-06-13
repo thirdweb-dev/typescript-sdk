@@ -37,9 +37,9 @@ export type ChainOrRpc =
   | "fantom"
   | "avalanche"
   | "optimism"
-  | "optimism-kovan"
+  | "optimism-testnet"
   | "arbitrum"
-  | "arbitrum-rinkeby"
+  | "arbitrum-testnet"
   // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
   | (string & {});
 
@@ -74,13 +74,13 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
     case "optimism":
       // TODO test this RPC
       return `https://opt-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "optimism-kovan":
+    case "optimism-testnet":
       // alchemy optimism kovan rpc doesn't link to the testnet sequencer...
       return "https://kovan.optimism.io";
     case "arbitrum":
       // TODO test this RPC
       return `https://arb-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "arbirum-rinkeby":
+    case "arbitrum-testnet":
       // TODO test this RPC
       return `https://arb-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "fantom":
