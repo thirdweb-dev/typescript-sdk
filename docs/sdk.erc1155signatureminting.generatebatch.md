@@ -4,7 +4,7 @@
 
 ## Erc1155SignatureMinting.generateBatch() method
 
-Genrate a batch of signatures that can be used to mint many dynamic NFTs.
+Generate a batch of signatures that can be used to mint many new NFTs dynamically.
 
 <b>Signature:</b>
 
@@ -26,5 +26,5 @@ an array of payloads and signatures
 
 ## Remarks
 
-See [Erc721SignatureMinting.generate()](./sdk.erc721signatureminting.generate.md)
+See [Erc1155SignatureMinting.generate()](./sdk.erc1155signatureminting.generate.md)
 
