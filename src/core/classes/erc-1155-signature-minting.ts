@@ -1,9 +1,10 @@
 import {
-  FilledSignaturePayload1155,
+  FilledSignaturePayload1155WithTokenId,
   MintRequest1155,
   PayloadToSign1155,
+  PayloadToSign1155WithTokenId,
   PayloadWithUri1155,
-  Signature1155PayloadInput,
+  Signature1155PayloadInputWithTokenId,
   Signature1155PayloadOutput,
   SignedPayload1155,
 } from "../../schema/contracts/common/signature";
@@ -15,7 +16,7 @@ import { ITokenERC1155, TokenERC1155 } from "contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
-import { BigNumber } from "ethers";
+import { BigNumber, ethers } from "ethers";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { TokensMintedWithSignatureEvent } from "contracts/ITokenERC1155";
 
@@ -152,7 +153,7 @@ export class Erc1155SignatureMinting {
   }
 
   /**
-   * Generate a signature that can be used to mint a dynamic NFT
+   * Generate a signature that can be used to mint an NFT dynamically.
    *
    * @remarks Takes in an NFT and some information about how it can be minted, uploads the metadata and signs it with your private key. The generated signature can then be used to mint an NFT using the exact payload and signature generated.
    *
@@ -182,19 +183,64 @@ export class Erc1155SignatureMinting {
    * const signedPayload = contract.signature.generate(payload);
    * // now anyone can use these to mint the NFT using `contract.signature.mint(signedPayload)`
    * ```
-   * @param mintRequest - the payload to sign
+   * @param payloadToSign - the payload to sign
    * @returns the signed payload and the corresponding signature
    */
   public async generate(
-    mintRequest: PayloadToSign1155,
+    payloadToSign: PayloadToSign1155,
   ): Promise<SignedPayload1155> {
-    return (await this.generateBatch([mintRequest]))[0];
+    const payload = {
+      ...payloadToSign,
+      tokenId: ethers.constants.MaxUint256,
+    };
+    return this.generateFromTokenId(payload);
   }
 
   /**
-   * Genrate a batch of signatures that can be used to mint many dynamic NFTs.
+   * Generate a signature that can be used to mint additionaly supply to an existing NFT.
    *
-   * @remarks See {@link Erc721SignatureMinting.generate}
+   * @remarks Takes in a payload with the token ID of an existing NFT, and signs it with your private key. The generated signature can then be used to mint additional supply to the NFT using the exact payload and signature generated.
+   *
+   * @example
+   * ```javascript
+   * const nftMetadata = {
+   *   name: "Cool NFT #1",
+   *   description: "This is a cool NFT",
+   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+   * };
+   *
+   * const startTime = new Date();
+   * const endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
+   * const payload = {
+   *   tokenId: 0, // Instead of metadata, we specificy the token ID of the NFT to mint supply to
+   *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
+   *   quantity: 2, // the quantity of NFTs to mint
+   *   price: 0.5, // the price per NFT
+   *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
+   *   mintStartTime: startTime, // can mint anytime from now
+   *   mintEndTime: endTime, // to 24h from now
+   *   royaltyRecipient: "0x...", // custom royalty recipient for this NFT
+   *   royaltyBps: 100, // custom royalty fees for this NFT (in bps)
+   *   primarySaleRecipient: "0x...", // custom sale recipient for this NFT
+   * };
+   *
+   * const signedPayload = contract.signature.generate(payload);
+   * // now anyone can use these to mint the NFT using `contract.signature.mint(signedPayload)`
+   * ```
+   * @param payloadToSign - the payload to sign
+   * @returns the signed payload and the corresponding signature
+   */
+  public async generateFromTokenId(
+    payloadToSign: PayloadToSign1155WithTokenId,
+  ): Promise<SignedPayload1155> {
+    const payloads = await this.generateBatchFromTokenIds([payloadToSign]);
+    return payloads[0];
+  }
+
+  /**
+   * Generate a batch of signatures that can be used to mint many new NFTs dynamically.
+   *
+   * @remarks See {@link Erc1155SignatureMinting.generate}
    *
    * @param payloadsToSign - the payloads to sign
    * @returns an array of payloads and signatures
@@ -202,14 +248,31 @@ export class Erc1155SignatureMinting {
   public async generateBatch(
     payloadsToSign: PayloadToSign1155[],
   ): Promise<SignedPayload1155[]> {
+    const payloads = payloadsToSign.map((payload) => ({
+      ...payload,
+      tokenId: ethers.constants.MaxUint256,
+    }));
+    return this.generateBatchFromTokenIds(payloads);
+  }
+
+  /**
+   * Genrate a batch of signatures that can be used to mint new NFTs or additionaly supply to existing NFTs dynamically.
+   *
+   * @remarks See {@link Erc1155SignatureMinting.generateFromTokenId}
+   *
+   * @param payloadsToSign - the payloads to sign with tokenIds specified
+   * @returns an array of payloads and signatures
+   */
+  public async generateBatchFromTokenIds(
+    payloadsToSign: PayloadToSign1155WithTokenId[],
+  ): Promise<SignedPayload1155[]> {
     await this.roles.verify(
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );
 
-    const parsedRequests: FilledSignaturePayload1155[] = payloadsToSign.map(
-      (m) => Signature1155PayloadInput.parse(m),
-    );
+    const parsedRequests: FilledSignaturePayload1155WithTokenId[] =
+      payloadsToSign.map((m) => Signature1155PayloadInputWithTokenId.parse(m));
 
     const metadatas = parsedRequests.map((r) => r.metadata);
     const uris = await uploadOrExtractURIs(metadatas, this.storage);

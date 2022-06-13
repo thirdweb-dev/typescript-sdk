@@ -9,3 +9,8 @@ export interface UploadProgressEvent {
    */
   total: number;
 }
+
+export type ContractEvent = {
+  eventName: string;
+  data: Record<string, any>;
+};
