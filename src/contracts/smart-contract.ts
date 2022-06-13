@@ -21,12 +21,13 @@ import {
 } from "contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { ContractInterface } from "ethers";
+import { CallOverrides, ContractInterface } from "ethers";
 import { ALL_ROLES, detectContractFeature } from "../common";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { z } from "zod";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -166,7 +167,19 @@ export class SmartContract<
    * @param functionName - the name of the function to call
    * @param args - the arguments of the function
    */
-  public async call(functionName: string, ...args: any[]): Promise<any> {
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    // parse into options if present
+    try {
+      const last = args[args.length - 1];
+      // TODO validate last is a CallOverrides object
+      // if so, remove from args array
+    } catch (e) {
+      // no-op
+    }
+
     const functions = this.publishedMetadata.extractFunctions();
     const fn = functions.find((f) => f.name === functionName);
     if (!fn) {
