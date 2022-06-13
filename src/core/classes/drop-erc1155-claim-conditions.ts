@@ -267,9 +267,9 @@ export class DropErc1155ClaimConditions {
    *****************************************/
 
   /**
-   * Set public mint conditions on a NFT
+   * Set claim conditions on a single NFT
    *
-   * @remarks Sets the public mint conditions that need to be fulfilled by users to claim a particular NFT in this bundle.
+   * @remarks Sets the public mint conditions that need to be fulfilled by users to claim a particular NFT in this contract.
    *
    * @example
    * ```javascript
@@ -301,6 +301,48 @@ export class DropErc1155ClaimConditions {
     claimConditionInputs: ClaimConditionInput[],
     resetClaimEligibilityForAll = false,
   ): Promise<TransactionResult> {
+    return this.setBatch(
+      [tokenId],
+      claimConditionInputs,
+      resetClaimEligibilityForAll,
+    );
+  }
+
+  /**
+   * Set claim conditions on multiple NFTs at once
+   *
+   * @remarks Sets the claim conditions that need to be fulfilled by users to claim the given NFTs in this contract.
+   *
+   * @example
+   * ```javascript
+   * const presaleStartTime = new Date();
+   * const publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
+   * const claimConditions = [
+   *   {
+   *     startTime: presaleStartTime, // start the presale now
+   *     maxQuantity: 2, // limit how many mints for this presale
+   *     price: 0.01, // presale price
+   *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+   *   },
+   *   {
+   *     startTime: publicSaleStartTime, // 24h after presale, start public sale
+   *     price: 0.08, // public sale price
+   *   }
+   * ]);
+   *
+   * const tokenIds = [0,1,2]; // the ids of the NFTs to set claim conditions on
+   * await dropContract.claimConditions.setBatch(tokenIds, claimConditions);
+   * ```
+   *
+   * @param tokenIds - the token ids to set the claim conditions on
+   * @param claimConditionInputs - The claim conditions
+   * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
+   */
+  public async setBatch(
+    tokenIds: BigNumberish[],
+    claimConditionInputs: ClaimConditionInput[],
+    resetClaimEligibilityForAll = false,
+  ) {
     // process inputs
     const { snapshotInfos, sortedConditions } =
       await processClaimConditionInputs(
@@ -340,13 +382,14 @@ export class DropErc1155ClaimConditions {
       );
     }
 
-    encoded.push(
-      this.contractWrapper.readContract.interface.encodeFunctionData(
-        "setClaimConditions",
-        [tokenId, sortedConditions, resetClaimEligibilityForAll],
-      ),
-    );
-
+    tokenIds.forEach((tokenId) => {
+      encoded.push(
+        this.contractWrapper.readContract.interface.encodeFunctionData(
+          "setClaimConditions",
+          [tokenId, sortedConditions, resetClaimEligibilityForAll],
+        ),
+      );
+    });
     return {
       receipt: await this.contractWrapper.multiCall(encoded),
     };
