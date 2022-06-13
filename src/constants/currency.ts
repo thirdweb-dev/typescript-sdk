@@ -25,8 +25,8 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.Rinkeby]: {
-    name: "Ether",
-    symbol: "ETH",
+    name: "Rinkeby Ether",
+    symbol: "RIN",
     decimals: 18,
     wrapped: {
       address: "0xc778417E063141139Fce010982780140Aa0cD5Ab",
@@ -35,8 +35,8 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.Goerli]: {
-    name: "Ether",
-    symbol: "ETH",
+    name: "Görli Ether",
+    symbol: "GOR",
     decimals: 18,
     wrapped: {
       address: "0x0bb7509324ce409f7bbc4b701f932eaca9736ab7",
