@@ -25,7 +25,7 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.Rinkeby]: {
-    name: "Rinkeby Ether",
+    name: "Ether",
     symbol: "ETH",
     decimals: 18,
     wrapped: {
@@ -35,7 +35,7 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.Goerli]: {
-    name: "Goerli Ether",
+    name: "Ether",
     symbol: "ETH",
     decimals: 18,
     wrapped: {
@@ -135,7 +135,7 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.OptimismTestnet]: {
-    name: "Kovan Ether",
+    name: "Ether",
     symbol: "ETH",
     decimals: 18,
     wrapped: {

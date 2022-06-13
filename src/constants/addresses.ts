@@ -118,8 +118,8 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.ArbitrumTestnet]: {
     biconomyForwarder: constants.AddressZero,
-    twFactory: "", // TODO
-    twRegistry: "", // TODO
+    twFactory: "0xeb8de81F1eFA6523f72ad0cd0a1e6E5C0908b3Ce", // TODO from shared deployer wallet
+    twRegistry: "0x6D340cc8bF255d05aCad6c3d820D8B0d8905542c", // TODO from shared deployer wallet
     twBYOCRegistry: constants.AddressZero,
     contractDeployer: constants.AddressZero,
     contractMetadataRegistry: constants.AddressZero,
