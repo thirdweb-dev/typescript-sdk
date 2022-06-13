@@ -1,11 +1,9 @@
 import {
-  FilledSignaturePayload1155,
   FilledSignaturePayload1155WithTokenId,
   MintRequest1155,
   PayloadToSign1155,
   PayloadToSign1155WithTokenId,
   PayloadWithUri1155,
-  Signature1155PayloadInput,
   Signature1155PayloadInputWithTokenId,
   Signature1155PayloadOutput,
   SignedPayload1155,
@@ -242,7 +240,7 @@ export class Erc1155SignatureMinting {
   /**
    * Generate a batch of signatures that can be used to mint many new NFTs dynamically.
    *
-   * @remarks See {@link Erc721SignatureMinting.generate}
+   * @remarks See {@link Erc1155SignatureMinting.generate}
    *
    * @param payloadsToSign - the payloads to sign
    * @returns an array of payloads and signatures
@@ -260,7 +258,7 @@ export class Erc1155SignatureMinting {
   /**
    * Genrate a batch of signatures that can be used to mint new NFTs or additionaly supply to existing NFTs dynamically.
    *
-   * @remarks See {@link Erc721SignatureMinting.generateFromTokenId}
+   * @remarks See {@link Erc1155SignatureMinting.generateFromTokenId}
    *
    * @param payloadsToSign - the payloads to sign with tokenIds specified
    * @returns an array of payloads and signatures

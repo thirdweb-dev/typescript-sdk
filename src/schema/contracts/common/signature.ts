@@ -9,7 +9,7 @@ import {
 import { z } from "zod";
 import { NFTInputOrUriSchema } from "../../tokens/common";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
-import { ethers, constants } from "ethers";
+import { constants } from "ethers";
 import { resolveOrGenerateId } from "../../../common/signature-minting";
 
 /**
