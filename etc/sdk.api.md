@@ -163,8 +163,6 @@ export enum ChainId {
     // (undocumented)
     AvalancheFujiTestnet = 43113,
     // (undocumented)
-    BSC = 56,
-    // (undocumented)
     Fantom = 250,
     // (undocumented)
     FantomTestnet = 4002,
@@ -175,13 +173,9 @@ export enum ChainId {
     // (undocumented)
     Harmony = 1666600000,
     // (undocumented)
-    Kovan = 42,
-    // (undocumented)
     Localhost = 1337,
     // (undocumented)
     Mainnet = 1,
-    // (undocumented)
-    Moonriver = 1285,
     // (undocumented)
     Mumbai = 80001,
     // (undocumented)
@@ -191,11 +185,7 @@ export enum ChainId {
     // (undocumented)
     Polygon = 137,
     // (undocumented)
-    Rinkeby = 4,
-    // (undocumented)
-    Ropsten = 3,
-    // (undocumented)
-    xDai = 100
+    Rinkeby = 4
 }
 
 // Warning: (ae-internal-missing-underscore) The name "ChainlinkInfo" should be prefixed with an underscore because the declaration is marked as @internal
@@ -2546,6 +2536,8 @@ export const NATIVE_TOKENS: Record<SUPPORTED_CHAIN_ID | ChainId.Hardhat, NativeT
 
 // @public (undocumented)
 export interface NativeToken extends Currency {
+    // (undocumented)
+    decimals: 18;
     // (undocumented)
     wrapped: {
         address: string;
