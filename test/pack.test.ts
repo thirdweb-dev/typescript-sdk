@@ -55,19 +55,21 @@ describe("Pack Contract", async () => {
 
   const createPacks = async (): Promise<PackMetadata[]> => {
     const packOne = await packContract.create({
-      assetContract: bundleContract.getAddress(),
-      assets: [
+      erc1155Rewards: [
         {
+          contractAddress: bundleContract.getAddress(),
           tokenId: "0",
-          amount: BigNumber.from(50),
+          quantity: BigNumber.from(50),
         },
         {
+          contractAddress: bundleContract.getAddress(),
           tokenId: "1",
-          amount: BigNumber.from(50),
+          quantity: BigNumber.from(50),
         },
         {
+          contractAddress: bundleContract.getAddress(),
           tokenId: "2",
-          amount: BigNumber.from(50),
+          quantity: BigNumber.from(50),
         },
       ],
       metadata: {
@@ -76,25 +78,27 @@ describe("Pack Contract", async () => {
     });
 
     const packTwo = await packContract.create({
-      assetContract: bundleContract.getAddress(),
-      assets: [
+      erc1155Rewards: [
         {
+          contractAddress: bundleContract.getAddress(),
           tokenId: "0",
-          amount: BigNumber.from(50),
+          quantity: BigNumber.from(50),
         },
         {
+          contractAddress: bundleContract.getAddress(),
           tokenId: "1",
-          amount: BigNumber.from(50),
+          quantity: BigNumber.from(50),
         },
         {
+          contractAddress: bundleContract.getAddress(),
           tokenId: "2",
-          amount: BigNumber.from(50),
+          quantity: BigNumber.from(50),
         },
       ],
       metadata: {
         name: "Pack",
       },
-      rewardsPerOpen: BigNumber.from(2),
+      rewardsPerPack: 2,
     });
 
     return [await packOne.data(), await packTwo.data()];
@@ -164,7 +168,7 @@ describe("Pack Contract", async () => {
       const pack = await createPacks();
       // TODO how can we test this with VRF in the way?
       const result = await packContract.open(pack[0].id);
-      assert.equal(result.length, 1);
+      assert.equal(result.erc1155Rewards?.length, 1);
     });
   });
 

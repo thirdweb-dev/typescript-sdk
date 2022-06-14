@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AddressSchema, PriceSchema } from "../../shared";
+import { AddressSchema, BigNumberishSchema, PriceSchema } from "../../shared";
 
 /**
  * @internal
@@ -19,13 +19,13 @@ export const ERC20WrappableSchema = CommonWrappableSchema.extend({
  * @internal
  */
 export const ERC721WrappableSchema = CommonWrappableSchema.extend({
-  tokenId: z.number(),
+  tokenId: BigNumberishSchema,
 });
 
 /**
  * @internal
  */
 export const ERC1155WrappableSchema = CommonWrappableSchema.extend({
-  tokenId: z.number(),
-  quantity: z.number(),
+  tokenId: BigNumberishSchema,
+  quantity: BigNumberishSchema,
 });

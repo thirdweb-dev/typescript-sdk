@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { RawDateSchema } from "../shared";
+import { BigNumberishSchema, RawDateSchema } from "../shared";
 import { NFTInputOrUriSchema } from "./common";
 import {
   ERC1155WrappableSchema,
@@ -11,7 +11,7 @@ import {
  * @internal
  */
 const ERC20RewardContentsSchema = ERC20WrappableSchema.extend({
-  totalRewards: z.number().default(1),
+  totalRewards: BigNumberishSchema.default("1"),
 });
 
 /**
@@ -23,7 +23,7 @@ const ERC721RewardContentsSchema = ERC721WrappableSchema;
  * @internal
  */
 const ERC1155RewardContentsSchema = ERC1155WrappableSchema.extend({
-  totalRewards: z.number().default(1),
+  totalRewards: BigNumberishSchema.default("1"),
 });
 
 /**
@@ -43,7 +43,7 @@ export const PackMetadataInputSchema = z.object({
   erc20Rewards: z.array(ERC20RewardContentsSchema).default([]),
   erc721Rewards: z.array(ERC721RewardContentsSchema).default([]),
   erc1155Rewards: z.array(ERC1155RewardContentsSchema).default([]),
-  rewardsPerPack: z.number().default(1),
+  rewardsPerPack: BigNumberishSchema.default("1"),
   openStartTime: RawDateSchema.default(new Date()),
 });
 
