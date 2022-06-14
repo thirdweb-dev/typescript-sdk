@@ -29,21 +29,22 @@ describe("Custom Contracts", async () => {
     bobWallet: SignerWithAddress;
   let sdk: ThirdwebSDK;
   let storage: IpfsStorage;
+  let simpleContractUri: string;
 
   before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
     sdk = new ThirdwebSDK(adminWallet);
     storage = new IpfsStorage();
-    const simpleContractUri = await uploadContractMetadata("Greeter", storage);
+    simpleContractUri = await uploadContractMetadata("Greeter", storage);
+  });
+
+  beforeEach(async () => {
+    sdk.updateSignerOrProvider(adminWallet);
     const publisher = sdk.getPublisher();
     customContractAddress = await publisher.deployContract(
       simpleContractUri,
       [],
     );
-  });
-
-  beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
     nftContractAddress = await sdk.deployer.deployNFTCollection({
       name: `Drop`,
       description: "Test contract from tests",
