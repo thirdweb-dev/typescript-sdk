@@ -38,11 +38,17 @@ export const PackRewardsSchema = z.object({
 /**
  * @internal
  */
-export const PackMetadataInputSchema = z.object({
-  metadata: NFTInputOrUriSchema,
+export const PackRewardsOutputSchema = z.object({
   erc20Rewards: z.array(ERC20RewardContentsSchema).default([]),
   erc721Rewards: z.array(ERC721RewardContentsSchema).default([]),
   erc1155Rewards: z.array(ERC1155RewardContentsSchema).default([]),
+});
+
+/**
+ * @internal
+ */
+export const PackMetadataInputSchema = PackRewardsOutputSchema.extend({
+  metadata: NFTInputOrUriSchema,
   rewardsPerPack: BigNumberishSchema.default("1"),
   openStartTime: RawDateSchema.default(new Date()),
 });
@@ -61,3 +67,8 @@ export type PackMetadataOutput = z.output<typeof PackMetadataInputSchema>;
  * @public
  */
 export type PackRewards = z.input<typeof PackRewardsSchema>;
+
+/**
+ * @public
+ */
+export type PackRewardsOutput = z.output<typeof PackRewardsOutputSchema>;

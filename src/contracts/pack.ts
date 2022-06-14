@@ -21,13 +21,14 @@ import {
   PackMetadataInputSchema,
   PackMetadataOutput,
   PackRewards,
+  PackRewardsOutput,
 } from "../schema/tokens/pack";
 import {
   ITokenBundle,
   PackCreatedEvent,
   PackOpenedEvent,
 } from "contracts/Pack";
-import { ethers } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import {
   fetchCurrencyMetadata,
   hasERC20Allowance,
@@ -36,6 +37,8 @@ import {
 import { isTokenApprovedForTransfer } from "../common/marketplace";
 import { uploadOrExtractURI } from "../common/nft";
 import { EditionMetadata } from "../schema";
+import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
+import { QueryAllParams } from "../types";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -93,6 +96,8 @@ export class Pack extends Erc1155<PackContract> {
    */
   public interceptor: ContractInterceptor<PackContract>;
 
+  private _query = this.query as Erc1155Enumerable;
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
@@ -118,6 +123,87 @@ export class Pack extends Erc1155<PackContract> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+  }
+
+  /** ******************************
+   * READ FUNCTIONS
+   *******************************/
+
+  /**
+   * Get All Packs
+   *
+   * @remarks Get all the data associated with every token bundle in this contract.
+   *
+   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   *
+   * @example
+   * ```javascript
+   * const wrappedBundles = await contract.getAll();
+   * console.log(wrappedBundles);
+   * ```
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns The NFT metadata for all NFTs queried.
+   */
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<EditionMetadata[]> {
+    return this._query.all(queryParams);
+  }
+
+  public async getPackContents(
+    packId: BigNumberish,
+  ): Promise<PackRewardsOutput> {
+    const { contents, perUnitAmounts } =
+      await this.contractWrapper.readContract.getPackContents(packId);
+
+    const erc20Rewards = [];
+    const erc721Rewards = [];
+    const erc1155Rewards = [];
+
+    for (let i = 0; i < contents.length; i++) {
+      const reward = contents[i];
+      const amount = perUnitAmounts[i];
+      switch (reward.tokenType) {
+        case 0: {
+          const tokenMetadata = await fetchCurrencyMetadata(
+            this.contractWrapper.getProvider(),
+            reward.assetContract,
+          );
+          const rewardAmount = ethers.utils.formatUnits(
+            reward.totalAmount,
+            tokenMetadata.decimals,
+          );
+          erc20Rewards.push({
+            contractAddress: reward.assetContract,
+            quantity: BigNumber.from(rewardAmount).div(amount).toString(),
+            totalRewards: amount.toString(),
+          });
+          break;
+        }
+        case 1: {
+          erc721Rewards.push({
+            contractAddress: reward.assetContract,
+            tokenId: reward.tokenId.toString(),
+          });
+          break;
+        }
+        case 2: {
+          erc1155Rewards.push({
+            contractAddress: reward.assetContract,
+            tokenId: reward.tokenId.toString(),
+            quantity: BigNumber.from(reward.totalAmount).div(amount).toString(),
+            totalRewards: amount.toString(),
+          });
+          break;
+        }
+      }
+    }
+
+    return {
+      erc20Rewards,
+      erc721Rewards,
+      erc1155Rewards,
+    };
   }
 
   /** ******************************
@@ -261,25 +347,24 @@ export class Pack extends Erc1155<PackContract> {
           );
           erc20Rewards.push({
             contractAddress: reward.assetContract,
-            quantity: ethers.utils.formatUnits(
-              reward.totalAmount,
-              tokenMetadata.decimals,
-            ),
+            quantity: ethers.utils
+              .formatUnits(reward.totalAmount, tokenMetadata.decimals)
+              .toString(),
           });
           break;
         }
         case 1: {
           erc721Rewards.push({
             contractAddress: reward.assetContract,
-            tokenId: reward.tokenId.toNumber(),
+            tokenId: reward.tokenId.toString(),
           });
           break;
         }
         case 2: {
           erc1155Rewards.push({
             contractAddress: reward.assetContract,
-            tokenId: reward.tokenId.toNumber(),
-            quantity: reward.totalAmount.toNumber(),
+            tokenId: reward.tokenId.toString(),
+            quantity: reward.totalAmount.toString(),
           });
           break;
         }
@@ -296,6 +381,7 @@ export class Pack extends Erc1155<PackContract> {
   /** *****************************
    * PRIVATE FUNCTIONS
    *******************************/
+
   private async toPackContentArgs(metadataWithRewards: PackMetadataOutput) {
     const contents: ITokenBundle.TokenStruct[] = [];
     const numOfRewardUnits = [];
@@ -389,7 +475,9 @@ export class Pack extends Erc1155<PackContract> {
       contents.push({
         assetContract: erc1155.contractAddress,
         tokenType: 2,
-        totalAmount: erc1155.quantity * erc1155.totalRewards,
+        totalAmount: BigNumber.from(erc1155.quantity).mul(
+          BigNumber.from(erc1155.totalRewards),
+        ),
         tokenId: erc1155.tokenId,
       });
     }
