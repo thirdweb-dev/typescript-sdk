@@ -1,4 +1,4 @@
-import { signers } from "./before-setup";
+import { expectError, signers } from "./before-setup";
 import { expect } from "chai";
 import invariant from "tiny-invariant";
 import {
@@ -12,6 +12,7 @@ import {
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { uploadContractMetadata } from "./publisher.test";
 import { IpfsStorage, ThirdwebSDK } from "../src";
+import { ethers } from "ethers";
 
 require("./before-setup");
 
@@ -28,21 +29,22 @@ describe("Custom Contracts", async () => {
     bobWallet: SignerWithAddress;
   let sdk: ThirdwebSDK;
   let storage: IpfsStorage;
+  let simpleContractUri: string;
 
   before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
     sdk = new ThirdwebSDK(adminWallet);
     storage = new IpfsStorage();
-    const simpleContractUri = await uploadContractMetadata("Greeter", storage);
+    simpleContractUri = await uploadContractMetadata("Greeter", storage);
+  });
+
+  beforeEach(async () => {
+    sdk.updateSignerOrProvider(adminWallet);
     const publisher = sdk.getPublisher();
     customContractAddress = await publisher.deployContract(
       simpleContractUri,
       [],
     );
-  });
-
-  beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
     nftContractAddress = await sdk.deployer.deployNFTCollection({
       name: `Drop`,
       description: "Test contract from tests",
@@ -91,6 +93,32 @@ describe("Custom Contracts", async () => {
     expect(tx.receipt).to.not.eq(undefined);
     const owner2 = await c.call("owner");
     expect(owner2).to.eq(samWallet.address);
+  });
+
+  it("should call raw ABI functions with call overrides", async () => {
+    const c = await sdk.getContract(customContractAddress);
+    invariant(c, "Contract undefined");
+
+    try {
+      await c.call("setOwner", samWallet.address, {
+        value: ethers.utils.parseEther("0.1"),
+      });
+    } catch (e) {
+      expectError(e, "non-payable method");
+    }
+
+    try {
+      await c.call("setOwner", samWallet.address, {
+        somObj: "foo",
+      });
+    } catch (e) {
+      expectError(e, "requires 1 arguments, but 2 were provided");
+    }
+
+    const tx = await c.call("setOwner", samWallet.address, {
+      gasLimit: 300_000,
+    });
+    expect(tx.receipt).to.not.eq(undefined);
   });
 
   it("should fetch published metadata", async () => {
