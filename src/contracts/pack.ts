@@ -9,7 +9,7 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";
 import { Pack as PackContract } from "contracts";
-import { PacksContractSchema } from "../schema/contracts/packs";
+import { PackContractSchema } from "../schema/contracts/packs";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { Erc1155 } from "../core/classes/erc-1155";
@@ -36,7 +36,7 @@ import {
 } from "../common/currency";
 import { isTokenApprovedForTransfer } from "../common/marketplace";
 import { uploadOrExtractURI } from "../common/nft";
-import { EditionMetadata } from "../schema";
+import { EditionMetadata, EditionMetadataOwner } from "../schema";
 import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
 import { QueryAllParams } from "../types";
 
@@ -61,7 +61,7 @@ export class Pack extends Erc1155<PackContract> {
   /**
    * @internal
    */
-  static schema = PacksContractSchema;
+  static schema = PackContractSchema;
   // TODO: Change schema and deployment
 
   public metadata: ContractMetadata<PackContract, typeof Pack.schema>;
@@ -132,22 +132,42 @@ export class Pack extends Erc1155<PackContract> {
   /**
    * Get All Packs
    *
-   * @remarks Get all the data associated with every token bundle in this contract.
+   * @remarks Get all the data associated with every pack in this contract.
    *
-   * By default, returns the first 100 NFTs, use queryParams to fetch more.
+   * By default, returns the first 100 packs, use queryParams to fetch more.
    *
    * @example
    * ```javascript
-   * const wrappedBundles = await contract.getAll();
-   * console.log(wrappedBundles);
+   * const packs = await contract.getAll();
+   * console.log(packs;
    * ```
    * @param queryParams - optional filtering to only fetch a subset of results.
-   * @returns The NFT metadata for all NFTs queried.
+   * @returns The pack metadata for all packs queried.
    */
   public async getAll(
     queryParams?: QueryAllParams,
   ): Promise<EditionMetadata[]> {
     return this._query.all(queryParams);
+  }
+
+  /**
+   * Get Owned Packs
+   *
+   * @remarks Get all the data associated with the packs owned by a specific wallet.
+   *
+   * @example
+   * ```javascript
+   * // Address of the wallet to get the packs of
+   * const address = "{{wallet_address}}";
+   * const packss = await contract.getOwned(address);
+   * ```
+   *
+   * @returns The pack metadata for all the owned packs in the contract.
+   */
+  public async getOwned(
+    walletAddress?: string,
+  ): Promise<EditionMetadataOwner[]> {
+    return this._query.owned(walletAddress);
   }
 
   public async getPackContents(
@@ -175,8 +195,8 @@ export class Pack extends Erc1155<PackContract> {
           );
           erc20Rewards.push({
             contractAddress: reward.assetContract,
-            quantity: BigNumber.from(rewardAmount).div(amount).toString(),
-            totalRewards: amount.toString(),
+            quantity: amount.toString(),
+            totalRewards: BigNumber.from(rewardAmount).div(amount).toString(),
           });
           break;
         }
@@ -191,8 +211,10 @@ export class Pack extends Erc1155<PackContract> {
           erc1155Rewards.push({
             contractAddress: reward.assetContract,
             tokenId: reward.tokenId.toString(),
-            quantity: BigNumber.from(reward.totalAmount).div(amount).toString(),
-            totalRewards: amount.toString(),
+            quantity: amount.toString(),
+            totalRewards: BigNumber.from(reward.totalAmount)
+              .div(amount)
+              .toString(),
           });
           break;
         }
@@ -297,6 +319,7 @@ export class Pack extends Erc1155<PackContract> {
       throw new Error("PackCreated event not found");
     }
     const packId = event[0].args.packId;
+
     return {
       id: packId,
       receipt,
@@ -320,7 +343,10 @@ export class Pack extends Erc1155<PackContract> {
    * const tx = await contract.open(tokenId, amount);
    * ```
    */
-  public async open(tokenId: number, amount = 1): Promise<PackRewards> {
+  public async open(
+    tokenId: BigNumberish,
+    amount: BigNumberish = 1,
+  ): Promise<PackRewards> {
     const receipt = await this.contractWrapper.sendTransaction("openPack", [
       tokenId,
       amount,

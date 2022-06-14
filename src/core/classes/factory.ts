@@ -17,7 +17,6 @@ import { IStorage } from "../interfaces/IStorage";
 import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 
-import { ChainlinkVrf } from "../../constants/chainlink";
 import {
   CONTRACT_ADDRESSES,
   getContractAddressByChainId,
