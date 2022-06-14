@@ -27,7 +27,7 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
-import { z } from "zod";
+import { CallOverrideSchema } from "../schema/index";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -161,8 +161,14 @@ export class SmartContract<
    * console.log(myValue);
    *
    * // write functions will return the transaction receipt
-   * const tx = await contract.call("myWriteFunction", [arg1, arg2]);
+   * const tx = await contract.call("myWriteFunction", arg1, arg2);
    * const receipt = tx.receipt;
+   *
+   * // Optionally override transaction options
+   * await contract.call("myWriteFunction", arg1, arg2, {
+   *  gasLimit: 1000000, // override default gas limit
+   *  value: ethers.utils.parseEther("0.1"), // send 0.1 ether with the contract call
+   * };
    * ```
    * @param functionName - the name of the function to call
    * @param args - the arguments of the function
@@ -171,11 +177,15 @@ export class SmartContract<
     functionName: string,
     ...args: unknown[] | [...unknown[], CallOverrides]
   ): Promise<any> {
-    // parse into options if present
+    // parse last arg as tx options if present
+    let txOptions: CallOverrides | undefined;
     try {
-      const last = args[args.length - 1];
-      // TODO validate last is a CallOverrides object
-      // if so, remove from args array
+      if (args.length > 1 && typeof args[args.length - 1] === "object") {
+        const last = args[args.length - 1];
+        txOptions = CallOverrideSchema.parse(last);
+        // if call overrides found, remove it from args array
+        args = args.slice(0, args.length - 1);
+      }
     } catch (e) {
       // no-op
     }
@@ -202,6 +212,7 @@ export class SmartContract<
       const receipt = await this.contractWrapper.sendTransaction(
         functionName,
         args,
+        txOptions,
       );
       return {
         receipt,
