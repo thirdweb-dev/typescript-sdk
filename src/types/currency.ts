@@ -15,6 +15,8 @@ import { PriceSchema } from "../schema/shared";
 export type Currency = z.infer<typeof CurrencySchema>;
 
 export interface NativeToken extends Currency {
+  // native tokens all have 18 decimals
+  decimals: 18;
   wrapped: {
     address: string;
     name: string;
