@@ -232,7 +232,7 @@ export class Pack extends Erc1155<PackContract> {
           );
           erc20Rewards.push({
             contractAddress: reward.assetContract,
-            quantity: amount.toString(),
+            quantityPerReward: amount.toString(),
             totalRewards: BigNumber.from(rewardAmount).div(amount).toString(),
           });
           break;
@@ -248,7 +248,7 @@ export class Pack extends Erc1155<PackContract> {
           erc1155Rewards.push({
             contractAddress: reward.assetContract,
             tokenId: reward.tokenId.toString(),
-            quantity: amount.toString(),
+            quantityPerReward: amount.toString(),
             totalRewards: BigNumber.from(reward.totalAmount)
               .div(amount)
               .toString(),
@@ -410,7 +410,7 @@ export class Pack extends Erc1155<PackContract> {
           );
           erc20Rewards.push({
             contractAddress: reward.assetContract,
-            quantity: ethers.utils
+            quantityPerReward: ethers.utils
               .formatUnits(reward.totalAmount, tokenMetadata.decimals)
               .toString(),
           });
@@ -427,7 +427,7 @@ export class Pack extends Erc1155<PackContract> {
           erc1155Rewards.push({
             contractAddress: reward.assetContract,
             tokenId: reward.tokenId.toString(),
-            quantity: reward.totalAmount.toString(),
+            quantityPerReward: reward.totalAmount.toString(),
           });
           break;
         }
@@ -456,7 +456,7 @@ export class Pack extends Erc1155<PackContract> {
     for (const erc20 of erc20Rewards) {
       const normalizedQuantity = await normalizePriceValue(
         provider,
-        erc20.quantity,
+        erc20.quantityPerReward,
         erc20.contractAddress,
       );
       // Multiply the quantity of one reward by the number of rewards
@@ -538,7 +538,7 @@ export class Pack extends Erc1155<PackContract> {
       contents.push({
         assetContract: erc1155.contractAddress,
         tokenType: 2,
-        totalAmount: BigNumber.from(erc1155.quantity).mul(
+        totalAmount: BigNumber.from(erc1155.quantityPerReward).mul(
           BigNumber.from(erc1155.totalRewards),
         ),
         tokenId: erc1155.tokenId,

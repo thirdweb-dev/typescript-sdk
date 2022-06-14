@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BigNumberishSchema, RawDateSchema } from "../shared";
+import { BigNumberishSchema, PriceSchema, RawDateSchema } from "../shared";
 import { NFTInputOrUriSchema } from "./common";
 import {
   ERC1155WrappableSchema,
@@ -10,19 +10,42 @@ import {
 /**
  * @internal
  */
-const ERC20RewardContentsSchema = ERC20WrappableSchema.extend({
+const ERC20RewardSchema = ERC20WrappableSchema.omit({
+  quantity: true,
+}).extend({
+  quantityPerReward: PriceSchema,
+});
+
+/**
+ * @internal
+ */
+const ERC721RewardSchema = ERC721WrappableSchema;
+
+/**
+ * @internal
+ */
+const ERC1155RewardSchema = ERC1155WrappableSchema.omit({
+  quantity: true,
+}).extend({
+  quantityPerReward: BigNumberishSchema,
+});
+
+/**
+ * @internal
+ */
+const ERC20RewardContentsSchema = ERC20RewardSchema.extend({
   totalRewards: BigNumberishSchema.default("1"),
 });
 
 /**
  * @internal
  */
-const ERC721RewardContentsSchema = ERC721WrappableSchema;
+const ERC721RewardContentsSchema = ERC721RewardSchema;
 
 /**
  * @internal
  */
-const ERC1155RewardContentsSchema = ERC1155WrappableSchema.extend({
+const ERC1155RewardContentsSchema = ERC1155RewardSchema.extend({
   totalRewards: BigNumberishSchema.default("1"),
 });
 
@@ -30,9 +53,9 @@ const ERC1155RewardContentsSchema = ERC1155WrappableSchema.extend({
  * @internal
  */
 export const PackRewardsSchema = z.object({
-  erc20Rewards: z.array(ERC20WrappableSchema).default([]),
-  erc721Rewards: z.array(ERC721WrappableSchema).default([]),
-  erc1155Rewards: z.array(ERC1155WrappableSchema).default([]),
+  erc20Rewards: z.array(ERC20RewardSchema).default([]),
+  erc721Rewards: z.array(ERC721RewardSchema).default([]),
+  erc1155Rewards: z.array(ERC1155RewardSchema).default([]),
 });
 
 /**
