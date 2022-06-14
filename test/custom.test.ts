@@ -92,20 +92,11 @@ describe("Custom Contracts", async () => {
     expect(tx.receipt).to.not.eq(undefined);
     const owner2 = await c.call("owner");
     expect(owner2).to.eq(samWallet.address);
-
-    await c.call("setOwner", owner, {
-      from: adminWallet.address,
-    });
   });
 
   it("should call raw ABI functions with call overrides", async () => {
     const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
-
-    const tx = await c.call("setOwner", samWallet.address, {
-      gasLimit: 300_000,
-    });
-    expect(tx.receipt).to.not.eq(undefined);
 
     try {
       await c.call("setOwner", samWallet.address, {
@@ -122,6 +113,11 @@ describe("Custom Contracts", async () => {
     } catch (e) {
       expectError(e, "requires 1 arguments, but 2 were provided");
     }
+
+    const tx = await c.call("setOwner", samWallet.address, {
+      gasLimit: 300_000,
+    });
+    expect(tx.receipt).to.not.eq(undefined);
   });
 
   it("should fetch published metadata", async () => {
