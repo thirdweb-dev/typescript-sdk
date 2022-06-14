@@ -917,6 +917,15 @@
         "reference": "https://docs.thirdweb.com/typescript/sdk.Pack.getOwned"
       },
       {
+        "name": "getPackContents",
+        "summary": "Get Pack Contents\n\n",
+        "remarks": "\n\nGet the rewards contained inside a pack.\n\n",
+        "examples": {
+          "javascript": "const packId = 0;\nconst contents = await contract.getPackContents(packId);\nconsole.log(contents.erc20Rewards);\nconsole.log(contents.erc721Rewards);\nconsole.log(contents.erc1155Rewards);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Pack.getPackContents"
+      },
+      {
         "name": "open",
         "summary": "Open Pack\n\n",
         "remarks": "\n\n- Open a pack to reveal the contained rewards. This will burn the specified pack and the contained assets will be transferred to the opening users wallet.\n\n",

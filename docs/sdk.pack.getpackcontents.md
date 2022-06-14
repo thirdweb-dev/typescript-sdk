@@ -4,6 +4,8 @@
 
 ## Pack.getPackContents() method
 
+Get Pack Contents
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +16,26 @@ getPackContents(packId: BigNumberish): Promise<PackRewardsOutput>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  packId | BigNumberish |  |
+|  packId | BigNumberish | The id of the pack to get the contents of. |
 
 <b>Returns:</b>
 
 Promise&lt;PackRewardsOutput&gt;
+
+- The contents of the pack.
+
+## Remarks
+
+Get the rewards contained inside a pack.
+
+## Example
+
+
+```javascript
+const packId = 0;
+const contents = await contract.getPackContents(packId);
+console.log(contents.erc20Rewards);
+console.log(contents.erc721Rewards);
+console.log(contents.erc1155Rewards);
+```
 

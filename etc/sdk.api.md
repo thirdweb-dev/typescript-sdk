@@ -2944,15 +2944,15 @@ export class Pack extends Erc1155<Pack_2> {
     getAll(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
     getOwned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
     // Warning: (ae-forgotten-export) The symbol "PackRewardsOutput" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     getPackContents(packId: BigNumberish): Promise<PackRewardsOutput>;
+    getTotalCount(): Promise<BigNumber>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<Pack_2>;
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<Pack_2, typeof Pack.schema>;
     // Warning: (ae-forgotten-export) The symbol "PackRewards" needs to be exported by the entry point index.d.ts
-    open(tokenId: number, amount?: number): Promise<PackRewards>;
+    open(tokenId: BigNumberish, amount?: BigNumberish): Promise<PackRewards>;
     // (undocumented)
     roles: ContractRoles<Pack_2, typeof Pack.contractRoles[number]>;
     royalties: ContractRoyalty<Pack_2, typeof Pack.schema>;

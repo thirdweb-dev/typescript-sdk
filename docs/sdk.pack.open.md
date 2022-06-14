@@ -9,15 +9,15 @@ Open Pack
 <b>Signature:</b>
 
 ```typescript
-open(tokenId: number, amount?: number): Promise<PackRewards>;
+open(tokenId: BigNumberish, amount?: BigNumberish): Promise<PackRewards>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  tokenId | number | the token ID of the pack you want to open |
-|  amount | number | <i>(Optional)</i> the amount of packs you want to open |
+|  tokenId | BigNumberish | the token ID of the pack you want to open |
+|  amount | BigNumberish | <i>(Optional)</i> the amount of packs you want to open |
 
 <b>Returns:</b>
 
