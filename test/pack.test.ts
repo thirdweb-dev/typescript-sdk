@@ -60,19 +60,19 @@ describe("Pack Contract", async () => {
         {
           contractAddress: bundleContract.getAddress(),
           tokenId: "0",
-          quantity: 1,
+          quantityPerReward: 1,
           totalRewards: 50,
         },
         {
           contractAddress: bundleContract.getAddress(),
           tokenId: "1",
-          quantity: 1,
+          quantityPerReward: 1,
           totalRewards: 50,
         },
         {
           contractAddress: bundleContract.getAddress(),
           tokenId: "2",
-          quantity: 1,
+          quantityPerReward: 1,
           totalRewards: 50,
         },
       ],
@@ -86,19 +86,19 @@ describe("Pack Contract", async () => {
         {
           contractAddress: bundleContract.getAddress(),
           tokenId: "0",
-          quantity: 1,
+          quantityPerReward: 1,
           totalRewards: 50,
         },
         {
           contractAddress: bundleContract.getAddress(),
           tokenId: "1",
-          quantity: 1,
+          quantityPerReward: 1,
           totalRewards: 50,
         },
         {
           contractAddress: bundleContract.getAddress(),
           tokenId: "2",
-          quantity: 1,
+          quantityPerReward: 1,
           totalRewards: 50,
         },
       ],
@@ -123,15 +123,24 @@ describe("Pack Contract", async () => {
     const rewards = await packContract.getPackContents(pack.id);
 
     const first = rewards.erc1155Rewards.find(
-      (reward) => reward.tokenId === "0" && reward.totalRewards === "50",
+      (reward) =>
+        reward.tokenId === "0" &&
+        reward.totalRewards === "50" &&
+        reward.quantityPerReward === "1",
     );
 
     const second = rewards.erc1155Rewards.find(
-      (reward) => reward.tokenId === "1" && reward.totalRewards === "50",
+      (reward) =>
+        reward.tokenId === "1" &&
+        reward.totalRewards === "50" &&
+        reward.quantityPerReward === "1",
     );
 
     const third = rewards.erc1155Rewards.find(
-      (reward) => reward.tokenId === "2" && reward.totalRewards === "50",
+      (reward) =>
+        reward.tokenId === "2" &&
+        reward.totalRewards === "50" &&
+        reward.quantityPerReward === "1",
     );
 
     assert.isDefined(first, "First NFT not found");
