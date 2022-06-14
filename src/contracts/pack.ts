@@ -39,6 +39,7 @@ import { uploadOrExtractURI } from "../common/nft";
 import { EditionMetadata, EditionMetadataOwner } from "../schema";
 import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
 import { QueryAllParams } from "../types";
+import { getRoleHash } from "../common/role";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -170,6 +171,42 @@ export class Pack extends Erc1155<PackContract> {
     return this._query.owned(walletAddress);
   }
 
+  /**
+   * Get the number of packs created
+   * @returns the total number of packs minted in this contract
+   * @public
+   */
+  public async getTotalCount(): Promise<BigNumber> {
+    return this._query.totalCount();
+  }
+
+  /**
+   * Get whether users can transfer packs from this contract
+   */
+  public async isTransferRestricted(): Promise<boolean> {
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      ethers.constants.AddressZero,
+    );
+    return !anyoneCanTransfer;
+  }
+
+  /**
+   * Get Pack Contents
+   * @remarks Get the rewards contained inside a pack.
+   *
+   * @param packId - The id of the pack to get the contents of.
+   * @returns - The contents of the pack.
+   *
+   * @example
+   * ```javascript
+   * const packId = 0;
+   * const contents = await contract.getPackContents(packId);
+   * console.log(contents.erc20Rewards);
+   * console.log(contents.erc721Rewards);
+   * console.log(contents.erc1155Rewards);
+   * ```
+   */
   public async getPackContents(
     packId: BigNumberish,
   ): Promise<PackRewardsOutput> {
