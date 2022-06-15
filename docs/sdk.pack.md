@@ -9,9 +9,9 @@ Create lootboxes of NFTs with rarity based open mechanics.
 <b>Signature:</b>
 
 ```typescript
-export declare class Pack implements UpdateableNetwork 
+export declare class Pack extends Erc1155<PackContract> 
 ```
-<b>Implements:</b> UpdateableNetwork
+<b>Extends:</b> [Erc1155](./sdk.erc1155.md)<!-- -->&lt;PackContract
 
 ## Example
 
@@ -47,21 +47,12 @@ const contract = sdk.getPack("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [balance(tokenId)](./sdk.pack.balance.md) |  |  |
-|  [balanceOf(address, tokenId)](./sdk.pack.balanceof.md) |  | Get Pack Balance |
-|  [create(args)](./sdk.pack.create.md) |  | Create Pack |
-|  [depositLink(amount)](./sdk.pack.depositlink.md) |  |  |
-|  [get(packId)](./sdk.pack.get.md) |  | Get a pack by id |
-|  [getAddress()](./sdk.pack.getaddress.md) |  |  |
-|  [getAll()](./sdk.pack.getall.md) |  | Get Pack Data |
-|  [getLinkBalance()](./sdk.pack.getlinkbalance.md) |  |  |
-|  [getNFTs(packId)](./sdk.pack.getnfts.md) |  | Get Pack Reward Data |
-|  [getOwned(\_address)](./sdk.pack.getowned.md) |  | <code>getOwned</code> is a convenience method for getting all owned tokens for a particular wallet. |
-|  [isApproved(address, operator)](./sdk.pack.isapproved.md) |  |  |
-|  [onNetworkUpdated(network)](./sdk.pack.onnetworkupdated.md) |  |  |
-|  [open(packId)](./sdk.pack.open.md) |  | Open Pack |
-|  [setApproval(operator, approved)](./sdk.pack.setapproval.md) |  |  |
-|  [transfer(to, tokenId, amount)](./sdk.pack.transfer.md) |  | Transfer Pack |
-|  [transferBatchFrom(from, to, args, data)](./sdk.pack.transferbatchfrom.md) |  |  |
-|  [transferFrom(from, to, args, data)](./sdk.pack.transferfrom.md) |  |  |
+|  [create(metadataWithRewards)](./sdk.pack.create.md) |  | Create Pack |
+|  [createTo(to, metadataWithRewards)](./sdk.pack.createto.md) |  | Create Pack To Wallet |
+|  [getAll(queryParams)](./sdk.pack.getall.md) |  | Get All Packs |
+|  [getOwned(walletAddress)](./sdk.pack.getowned.md) |  | Get Owned Packs |
+|  [getPackContents(packId)](./sdk.pack.getpackcontents.md) |  | Get Pack Contents |
+|  [getTotalCount()](./sdk.pack.gettotalcount.md) |  | Get the number of packs created |
+|  [isTransferRestricted()](./sdk.pack.istransferrestricted.md) |  | Get whether users can transfer packs from this contract |
+|  [open(tokenId, amount)](./sdk.pack.open.md) |  | Open Pack |
 

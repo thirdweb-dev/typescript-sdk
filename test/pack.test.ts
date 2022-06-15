@@ -4,11 +4,9 @@ import { sdk, signers } from "./before-setup";
 import { assert } from "chai";
 import { BigNumber } from "ethers";
 import { EditionMetadataInput, Pack, Edition } from "../src";
-import { PackMetadata } from "../src/types/packs";
 
 global.fetch = require("cross-fetch");
 
-// TODO: Write some actual pack contract tests
 describe("Pack Contract", async () => {
   let packContract: Pack;
   let bundleContract: Edition;
@@ -20,6 +18,20 @@ describe("Pack Contract", async () => {
   before(() => {
     [adminWallet, samWallet, bobWallet] = signers;
   });
+
+  const createBundles = async () => {
+    const batch: EditionMetadataInput[] = [];
+    for (let i = 0; i < 5; i++) {
+      batch.push({
+        metadata: {
+          name: `NFT ${i}`,
+        },
+        supply: BigNumber.from(1000),
+      });
+    }
+
+    await bundleContract.mintBatch(batch);
+  };
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
@@ -37,157 +49,136 @@ describe("Pack Contract", async () => {
         primary_sale_recipient: adminWallet.address,
       }),
     );
+
+    await bundleContract.setApprovalForAll(packContract.getAddress(), true);
+    await createBundles();
   });
 
-  const createBundles = async () => {
-    const batch: EditionMetadataInput[] = [];
-    for (let i = 0; i < 5; i++) {
-      batch.push({
-        metadata: {
-          name: `NFT ${i}`,
-        },
-        supply: BigNumber.from(1000),
-      });
-    }
-
-    await bundleContract.mintBatch(batch);
-  };
-
-  const createPacks = async (): Promise<PackMetadata[]> => {
+  const createPacks = async () => {
     const packOne = await packContract.create({
-      assetContract: bundleContract.getAddress(),
-      assets: [
+      erc1155Rewards: [
         {
+          contractAddress: bundleContract.getAddress(),
           tokenId: "0",
-          amount: BigNumber.from(50),
+          quantityPerReward: 1,
+          totalRewards: 50,
         },
         {
+          contractAddress: bundleContract.getAddress(),
           tokenId: "1",
-          amount: BigNumber.from(50),
+          quantityPerReward: 1,
+          totalRewards: 50,
         },
         {
+          contractAddress: bundleContract.getAddress(),
           tokenId: "2",
-          amount: BigNumber.from(50),
+          quantityPerReward: 1,
+          totalRewards: 50,
         },
       ],
-      metadata: {
+      packMetadata: {
         name: "Pack",
       },
     });
 
     const packTwo = await packContract.create({
-      assetContract: bundleContract.getAddress(),
-      assets: [
+      erc1155Rewards: [
         {
+          contractAddress: bundleContract.getAddress(),
           tokenId: "0",
-          amount: BigNumber.from(50),
+          quantityPerReward: 1,
+          totalRewards: 50,
         },
         {
+          contractAddress: bundleContract.getAddress(),
           tokenId: "1",
-          amount: BigNumber.from(50),
+          quantityPerReward: 1,
+          totalRewards: 50,
         },
         {
+          contractAddress: bundleContract.getAddress(),
           tokenId: "2",
-          amount: BigNumber.from(50),
+          quantityPerReward: 1,
+          totalRewards: 50,
         },
       ],
-      metadata: {
+      packMetadata: {
         name: "Pack",
       },
-      rewardsPerOpen: BigNumber.from(2),
+      rewardsPerPack: 2,
     });
 
-    return [await packOne.data(), await packTwo.data()];
+    return [packOne, packTwo];
   };
 
-  describe("Pack Creation", () => {
-    beforeEach(async () => {
-      await createBundles();
-    });
+  it("should allow you to create a batch of packs", async () => {
+    const [pack] = await createPacks();
+    const data = await pack.data();
 
-    it("should allow you to create a batch of packs", async () => {
-      const [pack] = await createPacks();
-
-      assert.equal(pack.creator, adminWallet.address);
-      assert.equal(pack.id.toString(), "0");
-      assert.equal(pack.metadata.name, "Pack");
-    });
-
-    it("should return the correct rewards", async () => {
-      const [pack] = await createPacks();
-      const rewards = await packContract.getNFTs(pack.id);
-
-      const first = rewards.find(
-        (reward) =>
-          reward.metadata.id.toString() === "0" &&
-          reward.supply.toNumber() === 50 &&
-          reward.metadata.name === "NFT 0",
-      );
-
-      const second = rewards.find(
-        (reward) =>
-          reward.metadata.id.toString() === "1" &&
-          reward.supply.toNumber() === 50 &&
-          reward.metadata.name === "NFT 1",
-      );
-
-      const third = rewards.find(
-        (reward) =>
-          reward.metadata.id.toString() === "2" &&
-          reward.supply.toNumber() === 50 &&
-          reward.metadata.name === "NFT 2",
-      );
-
-      assert.isDefined(first, "First NFT not found");
-      assert.isDefined(second, "Second NFT not found");
-      assert.isDefined(third, "Third NFT not found");
-    });
-
-    it("should return correct pack supply", async () => {
-      const [packOne, packTwo] = await createPacks();
-      const balanceOne = await packContract.balance(packOne.id);
-      const balanceTwo = await packContract.balance(packTwo.id);
-
-      assert.equal("150", packOne.currentSupply.toString());
-      assert.equal("150", balanceOne.toString());
-      assert.equal("75", packTwo.currentSupply.toString());
-      assert.equal("75", balanceTwo.toString());
-    });
+    assert.equal(data.metadata.name, "Pack");
   });
 
-  describe("Open Pack", async () => {
-    beforeEach(async () => {
-      await createBundles();
-    });
+  it("should return the correct rewards", async () => {
+    const [pack] = await createPacks();
+    const rewards = await packContract.getPackContents(pack.id);
 
-    it.skip("pack open returns valid reward", async () => {
-      const pack = await createPacks();
-      // TODO how can we test this with VRF in the way?
-      const result = await packContract.open(pack[0].id);
-      assert.equal(result.length, 1);
-    });
+    const first = rewards.erc1155Rewards.find(
+      (reward) =>
+        reward.tokenId === "0" &&
+        reward.totalRewards === "50" &&
+        reward.quantityPerReward === "1",
+    );
+
+    const second = rewards.erc1155Rewards.find(
+      (reward) =>
+        reward.tokenId === "1" &&
+        reward.totalRewards === "50" &&
+        reward.quantityPerReward === "1",
+    );
+
+    const third = rewards.erc1155Rewards.find(
+      (reward) =>
+        reward.tokenId === "2" &&
+        reward.totalRewards === "50" &&
+        reward.quantityPerReward === "1",
+    );
+
+    assert.isDefined(first, "First NFT not found");
+    assert.isDefined(second, "Second NFT not found");
+    assert.isDefined(third, "Third NFT not found");
   });
 
-  describe("Get owned packs", async () => {
-    beforeEach(async () => {
-      await createBundles();
-    });
+  it("should return correct pack supply", async () => {
+    const [packOne, packTwo] = await createPacks();
+    const balanceOne = await packContract.balance(packOne.id);
+    const balanceTwo = await packContract.balance(packTwo.id);
 
-    it("get owned returns pack metadata and balances", async () => {
-      const pack = await createPacks();
+    assert.equal("150", balanceOne.toString());
+    assert.equal("75", balanceTwo.toString());
+  });
 
-      let adminOwned = await packContract.getOwned();
-      assert.equal(adminOwned.length, 2);
-      assert.equal(adminOwned[0].ownedByAddress.toString(), "150");
-      assert.equal(adminOwned[1].ownedByAddress.toString(), "75");
+  it("pack open returns valid reward", async () => {
+    const [packOne, packTwo] = await createPacks();
+    let result = await packContract.open(packOne.id);
+    assert.equal(result.erc1155Rewards?.length, 1);
+    result = await packContract.open(packTwo.id);
+    assert.equal(result.erc1155Rewards?.length, 2);
+  });
 
-      await packContract.transfer(samWallet.address, "0", BigNumber.from(50));
-      const samOwned = await packContract.getOwned(samWallet.address);
-      assert.equal(samOwned.length, 1);
-      assert.equal(samOwned[0].ownedByAddress.toString(), "50");
+  it("get owned returns pack metadata and balances", async () => {
+    await createPacks();
 
-      adminOwned = await packContract.getOwned();
-      assert.equal(adminOwned[0].ownedByAddress.toString(), "100");
-    });
+    let adminOwned = await packContract.getOwned();
+    assert.equal(adminOwned.length, 2);
+    assert.equal(adminOwned[0].quantityOwned.toString(), "150");
+    assert.equal(adminOwned[1].quantityOwned.toString(), "75");
+
+    await packContract.transfer(samWallet.address, "0", BigNumber.from(50));
+    const samOwned = await packContract.getOwned(samWallet.address);
+    assert.equal(samOwned.length, 1);
+    assert.equal(samOwned[0].quantityOwned.toString(), "50");
+
+    adminOwned = await packContract.getOwned();
+    assert.equal(adminOwned[0].quantityOwned.toString(), "100");
   });
 });

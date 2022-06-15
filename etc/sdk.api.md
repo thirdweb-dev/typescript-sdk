@@ -188,21 +188,6 @@ export enum ChainId {
     Rinkeby = 4
 }
 
-// Warning: (ae-internal-missing-underscore) The name "ChainlinkInfo" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export type ChainlinkInfo = {
-    vrfCoordinator: string;
-    linkTokenAddress: string;
-    keyHash: string;
-    fees: BigNumber;
-};
-
-// Warning: (ae-internal-missing-underscore) The name "ChainlinkVrf" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export const ChainlinkVrf: Record<number, ChainlinkInfo>;
-
 // Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -2043,31 +2028,6 @@ export class InvalidAddressError extends Error {
     constructor(address?: string);
 }
 
-// @beta (undocumented)
-export interface IPackBatchArgs {
-    // (undocumented)
-    amount: BigNumberish;
-    // (undocumented)
-    tokenId: BigNumberish;
-}
-
-// @public (undocumented)
-export interface IPackCreateArgs {
-    // (undocumented)
-    assetContract: string;
-    // (undocumented)
-    assets: {
-        tokenId: BigNumberish;
-        amount: BigNumberish;
-    }[];
-    // (undocumented)
-    metadata: NFTMetadataInput;
-    // (undocumented)
-    rewardsPerOpen?: BigNumberish;
-    // (undocumented)
-    secondsUntilOpenStart?: BigNumberish;
-}
-
 // @public
 export class IpfsStorage implements IStorage {
     // Warning: (ae-forgotten-export) The symbol "IpfsUploader" needs to be exported by the entry point index.d.ts
@@ -2947,48 +2907,52 @@ export const OptionalPropertiesInput: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.Zod
 // @internal (undocumented)
 export const OZ_DEFENDER_FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
 
+// Warning: (ae-forgotten-export) The symbol "Pack" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class Pack implements UpdateableNetwork {
+export class Pack extends Erc1155<Pack_2> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Pack_2>);
     // @internal (undocumented)
     analytics: ContractAnalytics<Pack_2>;
-    // (undocumented)
-    balance(tokenId: string): Promise<BigNumber>;
-    balanceOf(address: string, tokenId: string): Promise<BigNumber>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
     static contractRoles: readonly ["admin", "minter", "pauser", "transfer"];
     // (undocumented)
     static contractType: "pack";
-    create(args: IPackCreateArgs): Promise<TransactionResultWithId<PackMetadata>>;
-    // (undocumented)
-    depositLink(amount: BigNumberish): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "PackMetadataInput" needs to be exported by the entry point index.d.ts
+    create(metadataWithRewards: PackMetadataInput): Promise<TransactionResultWithId<{
+        metadata: {
+            [x: string]: Json;
+            name?: string | undefined;
+            description?: string | null | undefined;
+            image?: string | null | undefined;
+            external_url?: string | null | undefined;
+            animation_url?: string | null | undefined;
+            uri: string;
+            id: BigNumber;
+        };
+        supply: BigNumber;
+    }>>;
+    createTo(to: string, metadataWithRewards: PackMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;
     // (undocumented)
     encoder: ContractEncoder<Pack_2>;
     // (undocumented)
     estimator: GasCostEstimator<Pack_2>;
     // (undocumented)
     events: ContractEvents<Pack_2>;
-    get(packId: BigNumberish): Promise<PackMetadata>;
-    // (undocumented)
-    getAddress(): string;
-    getAll(): Promise<PackMetadata[]>;
-    // (undocumented)
-    getLinkBalance(): Promise<CurrencyValue>;
-    getNFTs(packId: string): Promise<PackNFTMetadata[]>;
-    getOwned(_address?: string): Promise<PackMetadataWithBalance[]>;
+    getAll(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
+    getOwned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
+    // Warning: (ae-forgotten-export) The symbol "PackRewardsOutput" needs to be exported by the entry point index.d.ts
+    getPackContents(packId: BigNumberish): Promise<PackRewardsOutput>;
+    getTotalCount(): Promise<BigNumber>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<Pack_2>;
-    // (undocumented)
-    isApproved(address: string, operator: string): Promise<boolean>;
-    // Warning: (ae-forgotten-export) The symbol "Pack" needs to be exported by the entry point index.d.ts
-    //
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<Pack_2, typeof Pack.schema>;
-    // (undocumented)
-    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
-    open(packId: string): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    // Warning: (ae-forgotten-export) The symbol "PackRewards" needs to be exported by the entry point index.d.ts
+    open(tokenId: BigNumberish, amount?: BigNumberish): Promise<PackRewards>;
     // (undocumented)
     roles: ContractRoles<Pack_2, typeof Pack.contractRoles[number]>;
     royalties: ContractRoyalty<Pack_2, typeof Pack.schema>;
@@ -3091,45 +3055,6 @@ export class Pack implements UpdateableNetwork {
         name: string;
         }>;
     };
-    // (undocumented)
-    setApproval(operator: string, approved?: boolean): Promise<TransactionResult>;
-    transfer(to: string, tokenId: string, amount: BigNumber): Promise<TransactionResult>;
-    // Warning: (ae-incompatible-release-tags) The symbol "transferBatchFrom" is marked as @public, but its signature references "IPackBatchArgs" which is marked as @beta
-    //
-    // (undocumented)
-    transferBatchFrom(from: string, to: string, args: IPackBatchArgs[], data?: BytesLike): Promise<TransactionResult>;
-    // Warning: (ae-incompatible-release-tags) The symbol "transferFrom" is marked as @public, but its signature references "IPackBatchArgs" which is marked as @beta
-    //
-    // (undocumented)
-    transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): Promise<TransactionResult>;
-}
-
-// @public (undocumented)
-export interface PackMetadata {
-    // (undocumented)
-    creator: string;
-    // (undocumented)
-    currentSupply: BigNumber;
-    // (undocumented)
-    id: string;
-    // (undocumented)
-    metadata: NFTMetadata;
-    // (undocumented)
-    openStart: Date | null;
-}
-
-// @public (undocumented)
-export interface PackMetadataWithBalance extends PackMetadata {
-    // (undocumented)
-    ownedByAddress: BigNumber;
-}
-
-// @public (undocumented)
-export interface PackNFTMetadata {
-    // (undocumented)
-    metadata: NFTMetadata;
-    // (undocumented)
-    supply: BigNumber;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "PartialClaimConditionInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
@@ -5071,7 +4996,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ThirdwebContract>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "custom" | "token" | "pack" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
+        contractType: "custom" | "token" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
     getEdition(address: string): Edition;
@@ -5447,16 +5372,6 @@ export type TransactionResultWithId<T = never> = TransactionResult<T> & {
 //
 // @internal (undocumented)
 export const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co";
-
-// @public (undocumented)
-export enum UnderlyingType {
-    // (undocumented)
-    ERC20 = 1,
-    // (undocumented)
-    ERC721 = 2,
-    // (undocumented)
-    None = 0
-}
 
 // Warning: (ae-internal-missing-underscore) The name "UploadError" should be prefixed with an underscore because the declaration is marked as @internal
 //

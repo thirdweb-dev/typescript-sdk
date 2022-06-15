@@ -4,23 +4,36 @@
 
 ## Pack.getOwned() method
 
-`getOwned` is a convenience method for getting all owned tokens for a particular wallet.
+Get Owned Packs
 
 <b>Signature:</b>
 
 ```typescript
-getOwned(_address?: string): Promise<PackMetadataWithBalance[]>;
+getOwned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  \_address | string | <i>(Optional)</i> The address to check for token ownership |
+|  walletAddress | string | <i>(Optional)</i> |
 
 <b>Returns:</b>
 
-Promise&lt;[PackMetadataWithBalance](./sdk.packmetadatawithbalance.md)<!-- -->\[\]&gt;
+Promise&lt;[EditionMetadataOwner](./sdk.editionmetadataowner.md)<!-- -->\[\]&gt;
 
-An array of PackMetadataWithBalance objects that are owned by the address
+The pack metadata for all the owned packs in the contract.
+
+## Remarks
+
+Get all the data associated with the packs owned by a specific wallet.
+
+## Example
+
+
+```javascript
+// Address of the wallet to get the packs of
+const address = "{{wallet_address}}";
+const packss = await contract.getOwned(address);
+```
 

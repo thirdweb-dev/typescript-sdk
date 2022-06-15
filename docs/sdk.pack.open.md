@@ -9,32 +9,30 @@ Open Pack
 <b>Signature:</b>
 
 ```typescript
-open(packId: string): Promise<TransactionResultWithId<NFTMetadata>[]>;
+open(tokenId: BigNumberish, amount?: BigNumberish): Promise<PackRewards>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  packId | string |  |
+|  tokenId | BigNumberish | the token ID of the pack you want to open |
+|  amount | BigNumberish | <i>(Optional)</i> the amount of packs you want to open |
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[NFTMetadata](./sdk.nftmetadata.md)<!-- -->&gt;\[\]&gt;
+Promise&lt;PackRewards&gt;
 
 ## Remarks
 
-Open a pack to burn it and obtain the reward asset inside.
+- Open a pack to reveal the contained rewards. This will burn the specified pack and the contained assets will be transferred to the opening users wallet.
 
 ## Example
 
 
 ```javascript
-// The pack ID of the asset you want to buy
-const packId = "0";
-const tx = await contract.open(packId);
-const receipt = tx.receipt; // the transaction receipt
-const packId = tx.id; // the id of the pack that was opened
-const rewards = tx.data(); // the contents of the opened pack
+const tokenId = 0
+const amount = 1
+const tx = await contract.open(tokenId, amount);
 ```
 

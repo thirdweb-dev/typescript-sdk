@@ -17,7 +17,6 @@ import { IStorage } from "../interfaces/IStorage";
 import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 
-import { ChainlinkVrf } from "../../constants/chainlink";
 import {
   CONTRACT_ADDRESSES,
   getContractAddressByChainId,
@@ -212,7 +211,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         ];
       case Pack.contractType:
         const packsMetadata = Pack.schema.deploy.parse(metadata);
-        const vrf = ChainlinkVrf[await this.getChainID()];
         return [
           await this.getSignerAddress(),
           packsMetadata.name,
@@ -221,8 +219,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           trustedForwarders,
           packsMetadata.fee_recipient,
           packsMetadata.seller_fee_basis_points,
-          vrf.fees,
-          vrf.keyHash,
         ];
       default:
         return [];

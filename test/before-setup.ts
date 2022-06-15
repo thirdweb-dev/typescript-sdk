@@ -48,7 +48,6 @@ import {
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";
 import { ChainId } from "../src/constants/chains";
-import { ChainlinkVrf } from "../src/constants/chainlink";
 
 const RPC_URL = "http://localhost:8545";
 
@@ -170,13 +169,6 @@ before(async () => {
         ).wrapped.address;
         return await contractFactory.deploy(
           nativeTokenWrapperAddress,
-          thirdwebFeeDeployer.address,
-        );
-      case Pack.contractType:
-        const vrf = ChainlinkVrf[ChainId.Hardhat];
-        return await contractFactory.deploy(
-          vrf.vrfCoordinator,
-          vrf.linkTokenAddress,
           thirdwebFeeDeployer.address,
         );
       default:

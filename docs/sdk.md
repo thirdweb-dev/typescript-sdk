@@ -67,7 +67,6 @@
 |  [EventType](./sdk.eventtype.md) |  |
 |  [ListingType](./sdk.listingtype.md) |  |
 |  [ProposalState](./sdk.proposalstate.md) |  |
-|  [UnderlyingType](./sdk.underlyingtype.md) |  |
 |  [VoteType](./sdk.votetype.md) |  |
 
 ## Functions
@@ -85,8 +84,6 @@
 |  [BatchToReveal](./sdk.batchtoreveal.md) |  |
 |  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
 |  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
-|  [IPackBatchArgs](./sdk.ipackbatchargs.md) | <b><i>(BETA)</i></b> |
-|  [IPackCreateArgs](./sdk.ipackcreateargs.md) |  |
 |  [IStorage](./sdk.istorage.md) | Interface for any storage provider |
 |  [MarketplaceContractDeployMetadata](./sdk.marketplacecontractdeploymetadata.md) | Options for deploying a Marketplace contract |
 |  [MarketplaceFilter](./sdk.marketplacefilter.md) |  |
@@ -96,9 +93,6 @@
 |  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
 |  [NFTContractDeployMetadata](./sdk.nftcontractdeploymetadata.md) | Options for deploying an NFT contract |
 |  [Offer](./sdk.offer.md) |  |
-|  [PackMetadata](./sdk.packmetadata.md) |  |
-|  [PackMetadataWithBalance](./sdk.packmetadatawithbalance.md) |  |
-|  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [Proposal](./sdk.proposal.md) |  |
 |  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
 |  [ProposalVote](./sdk.proposalvote.md) |  |

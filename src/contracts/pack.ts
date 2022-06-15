@@ -1,39 +1,45 @@
-import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { IStorage } from "../core/interfaces/IStorage";
 import {
   NetworkOrSignerOrProvider,
-  TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";
-import { IERC1155, IERC20, Pack as PackContract } from "contracts";
-import { PacksContractSchema } from "../schema/contracts/packs";
+import { Pack as PackContract } from "contracts";
+import { PackContractSchema } from "../schema/contracts/packs";
 import { ContractRoles } from "../core/classes/contract-roles";
-import { NFTMetadata } from "../schema/tokens/common";
-import { BigNumber, BigNumberish, BytesLike, Contract, ethers } from "ethers";
-import { fetchTokenMetadataForContract } from "../common/nft";
-import {
-  IPackBatchArgs,
-  IPackCreateArgs,
-  PackMetadata,
-  PackMetadataWithBalance,
-  PackNFTMetadata,
-} from "../types/packs";
-import { NotFoundError } from "../common";
-import { CurrencyValue } from "../types/currency";
-import { fetchCurrencyValue } from "../common/currency";
-import { ChainlinkVrf } from "../constants/chainlink";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
-import { GasCostEstimator } from "../core/classes";
+import { Erc1155 } from "../core/classes/erc-1155";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractEvents } from "../core/classes/contract-events";
-import { PackAddedEvent, PackOpenRequestedEvent } from "contracts/Pack";
-import ERC1155Abi from "../../abis/IERC1155.json";
-import ERC20Abi from "../../abis/IERC20.json";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import {
+  PackMetadataInput,
+  PackMetadataInputSchema,
+  PackMetadataOutput,
+  PackRewards,
+  PackRewardsOutput,
+} from "../schema/tokens/pack";
+import {
+  ITokenBundle,
+  PackCreatedEvent,
+  PackOpenedEvent,
+} from "contracts/Pack";
+import { BigNumber, BigNumberish, ethers } from "ethers";
+import {
+  fetchCurrencyMetadata,
+  hasERC20Allowance,
+  normalizePriceValue,
+} from "../common/currency";
+import { isTokenApprovedForTransfer } from "../common/marketplace";
+import { uploadOrExtractURI } from "../common/nft";
+import { EditionMetadata, EditionMetadataOwner } from "../schema";
+import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
+import { QueryAllParams } from "../types";
+import { getRoleHash } from "../common/role";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -49,17 +55,14 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  *
  * @public
  */
-export class Pack implements UpdateableNetwork {
+export class Pack extends Erc1155<PackContract> {
   static contractType = "pack" as const;
   static contractRoles = ["admin", "minter", "pauser", "transfer"] as const;
   static contractAbi = require("../../abis/Pack.json");
   /**
    * @internal
    */
-  static schema = PacksContractSchema;
-
-  private contractWrapper: ContractWrapper<PackContract>;
-  private storage: IStorage;
+  static schema = PackContractSchema;
 
   public metadata: ContractMetadata<PackContract, typeof Pack.schema>;
   public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
@@ -93,6 +96,8 @@ export class Pack implements UpdateableNetwork {
    */
   public interceptor: ContractInterceptor<PackContract>;
 
+  private _query = this.query as Erc1155Enumerable;
+
   constructor(
     network: NetworkOrSignerOrProvider,
     address: string,
@@ -105,8 +110,7 @@ export class Pack implements UpdateableNetwork {
       options,
     ),
   ) {
-    this.contractWrapper = contractWrapper;
-    this.storage = storage;
+    super(contractWrapper, storage, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Pack.schema,
@@ -121,187 +125,143 @@ export class Pack implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
-    this.contractWrapper.updateSignerOrProvider(network);
-  }
-
-  getAddress(): string {
-    return this.contractWrapper.readContract.address;
-  }
-
   /** ******************************
    * READ FUNCTIONS
    *******************************/
 
   /**
-   * Get a pack by id
-   * @param packId - the id of the pack to fetch
-   * @returns the pack metadata
-   */
-  public async get(packId: BigNumberish): Promise<PackMetadata> {
-    const [meta, state, supply] = await Promise.all([
-      fetchTokenMetadataForContract(
-        this.getAddress(),
-        this.contractWrapper.getProvider(),
-        packId,
-        this.storage,
-      ),
-      this.contractWrapper.readContract.packs(packId),
-      this.contractWrapper.readContract
-        .totalSupply(packId)
-        .catch(() => BigNumber.from("0")),
-    ]);
-    return {
-      id: BigNumber.from(packId).toString(),
-      metadata: meta,
-      creator: state.creator,
-      currentSupply: supply,
-      openStart: state.openStart.gt(0)
-        ? new Date(state.openStart.toNumber() * 1000)
-        : null,
-    };
-  }
-
-  /**
-   * Get Pack Data
+   * Get All Packs
    *
-   * @remarks Get data associated with every pack in this contract.
+   * @remarks Get all the data associated with every pack in this contract.
+   *
+   * By default, returns the first 100 packs, use queryParams to fetch more.
    *
    * @example
    * ```javascript
    * const packs = await contract.getAll();
-   * console.log(packs);
+   * console.log(packs;
    * ```
-   *
-   * @returns The NFT metadata for all NFTs in the contract.
+   * @param queryParams - optional filtering to only fetch a subset of results.
+   * @returns The pack metadata for all packs queried.
    */
-  public async getAll(): Promise<PackMetadata[]> {
-    const maxId = (
-      await this.contractWrapper.readContract.nextTokenId()
-    ).toNumber();
-    return await Promise.all(
-      Array.from(Array(maxId).keys()).map((i) => this.get(i.toString())),
-    );
+  public async getAll(
+    queryParams?: QueryAllParams,
+  ): Promise<EditionMetadata[]> {
+    return this._query.all(queryParams);
   }
 
   /**
-   * Get Pack Reward Data
+   * Get Owned Packs
    *
-   * @remarks Get data associated with the rewards inside a specified pack
-   *
-   * @example
-   * ```javascript
-   * // The pack ID of the pack whos rewards you want to get
-   * const packId = 0;
-   *
-   * const nfts = await contract.getNFTs(packId);
-   * console.log(nfts);
-   * ```
-   *
-   * @returns The NFT metadata for all NFTs in the contract.
-   */
-  public async getNFTs(packId: string): Promise<PackNFTMetadata[]> {
-    const packReward =
-      await this.contractWrapper.readContract.getPackWithRewards(packId);
-    if (!packReward.source) {
-      throw new NotFoundError();
-    }
-    const rewards = await Promise.all(
-      packReward.tokenIds.map((tokenId) =>
-        fetchTokenMetadataForContract(
-          packReward.source,
-          this.contractWrapper.getProvider(),
-          tokenId.toString(),
-          this.storage,
-        ),
-      ),
-    );
-    return rewards.map((reward, i) => ({
-      supply: packReward.amountsPacked[i],
-      metadata: reward,
-    }));
-  }
-
-  /**
-   * Get Pack Balance
-   *
-   * @remarks Get a wallets pack balance (number of a specific packs in this contract owned by the wallet).
+   * @remarks Get all the data associated with the packs owned by a specific wallet.
    *
    * @example
    * ```javascript
-   * // Address of the wallet to check pack balance
+   * // Address of the wallet to get the packs of
    * const address = "{{wallet_address}}";
-   * // The token ID of the pack you want to check the wallets balance of
-   * const tokenId = "0"
-   *
-   * const balance = await contract.balanceOf(address, tokenId);
-   * console.log(balance);
+   * const packss = await contract.getOwned(address);
    * ```
+   *
+   * @returns The pack metadata for all the owned packs in the contract.
    */
-  public async balanceOf(address: string, tokenId: string): Promise<BigNumber> {
-    return await this.contractWrapper.readContract.balanceOf(address, tokenId);
-  }
-
-  public async balance(tokenId: string): Promise<BigNumber> {
-    return await this.balanceOf(
-      await this.contractWrapper.getSignerAddress(),
-      tokenId,
-    );
-  }
-
-  public async isApproved(address: string, operator: string): Promise<boolean> {
-    return await this.contractWrapper.readContract.isApprovedForAll(
-      address,
-      operator,
-    );
-  }
-
-  public async getLinkBalance(): Promise<CurrencyValue> {
-    const chainId = await this.contractWrapper.getChainID();
-    const chainlink = ChainlinkVrf[chainId];
-    const erc20 = new Contract(
-      chainlink.linkTokenAddress,
-      ERC20Abi,
-      this.contractWrapper.getProvider(),
-    ) as IERC20;
-    return await fetchCurrencyValue(
-      this.contractWrapper.getProvider(),
-      chainlink.linkTokenAddress,
-      await erc20.balanceOf(this.getAddress()),
-    );
+  public async getOwned(
+    walletAddress?: string,
+  ): Promise<EditionMetadataOwner[]> {
+    return this._query.owned(walletAddress);
   }
 
   /**
-   * `getOwned` is a convenience method for getting all owned tokens
-   * for a particular wallet.
-   *
-   * @param _address - The address to check for token ownership
-   * @returns An array of PackMetadataWithBalance objects that are owned by the address
+   * Get the number of packs created
+   * @returns the total number of packs minted in this contract
+   * @public
    */
-  public async getOwned(_address?: string): Promise<PackMetadataWithBalance[]> {
-    const address = _address
-      ? _address
-      : await this.contractWrapper.getSignerAddress();
-    const maxId = await this.contractWrapper.readContract.nextTokenId();
-    const balances = await this.contractWrapper.readContract.balanceOfBatch(
-      Array(maxId.toNumber()).fill(address),
-      Array.from(Array(maxId.toNumber()).keys()),
-    );
+  public async getTotalCount(): Promise<BigNumber> {
+    return this._query.totalCount();
+  }
 
-    const ownedBalances = balances
-      .map((b, i) => {
-        return {
-          tokenId: i,
-          balance: b,
-        };
-      })
-      .filter((b) => b.balance.gt(0));
-    return await Promise.all(
-      ownedBalances.map(async ({ tokenId, balance }) => {
-        const token = await this.get(tokenId.toString());
-        return { ...token, ownedByAddress: balance };
-      }),
+  /**
+   * Get whether users can transfer packs from this contract
+   */
+  public async isTransferRestricted(): Promise<boolean> {
+    const anyoneCanTransfer = await this.contractWrapper.readContract.hasRole(
+      getRoleHash("transfer"),
+      ethers.constants.AddressZero,
     );
+    return !anyoneCanTransfer;
+  }
+
+  /**
+   * Get Pack Contents
+   * @remarks Get the rewards contained inside a pack.
+   *
+   * @param packId - The id of the pack to get the contents of.
+   * @returns - The contents of the pack.
+   *
+   * @example
+   * ```javascript
+   * const packId = 0;
+   * const contents = await contract.getPackContents(packId);
+   * console.log(contents.erc20Rewards);
+   * console.log(contents.erc721Rewards);
+   * console.log(contents.erc1155Rewards);
+   * ```
+   */
+  public async getPackContents(
+    packId: BigNumberish,
+  ): Promise<PackRewardsOutput> {
+    const { contents, perUnitAmounts } =
+      await this.contractWrapper.readContract.getPackContents(packId);
+
+    const erc20Rewards = [];
+    const erc721Rewards = [];
+    const erc1155Rewards = [];
+
+    for (let i = 0; i < contents.length; i++) {
+      const reward = contents[i];
+      const amount = perUnitAmounts[i];
+      switch (reward.tokenType) {
+        case 0: {
+          const tokenMetadata = await fetchCurrencyMetadata(
+            this.contractWrapper.getProvider(),
+            reward.assetContract,
+          );
+          const rewardAmount = ethers.utils.formatUnits(
+            reward.totalAmount,
+            tokenMetadata.decimals,
+          );
+          erc20Rewards.push({
+            contractAddress: reward.assetContract,
+            quantityPerReward: amount.toString(),
+            totalRewards: BigNumber.from(rewardAmount).div(amount).toString(),
+          });
+          break;
+        }
+        case 1: {
+          erc721Rewards.push({
+            contractAddress: reward.assetContract,
+            tokenId: reward.tokenId.toString(),
+          });
+          break;
+        }
+        case 2: {
+          erc1155Rewards.push({
+            contractAddress: reward.assetContract,
+            tokenId: reward.tokenId.toString(),
+            quantityPerReward: amount.toString(),
+            totalRewards: BigNumber.from(reward.totalAmount)
+              .div(amount)
+              .toString(),
+          });
+          break;
+        }
+      }
+    }
+
+    return {
+      erc20Rewards,
+      erc721Rewards,
+      erc1155Rewards,
+    };
   }
 
   /** ******************************
@@ -309,260 +269,285 @@ export class Pack implements UpdateableNetwork {
    *******************************/
 
   /**
-   * Open Pack
+   * Create Pack
+   * @remarks Create a new pack with the given metadata and rewards and mint it to the connected wallet.
+   * @remarks See {@link Pack.createTo}
    *
-   * @remarks Open a pack to burn it and obtain the reward asset inside.
+   * @param metadataWithRewards - the metadata and rewards to include in the pack
+   */
+  public async create(metadataWithRewards: PackMetadataInput) {
+    const signerAddress = await this.contractWrapper.getSignerAddress();
+    return this.createTo(signerAddress, metadataWithRewards);
+  }
+
+  /**
+   * Create Pack To Wallet
+   * @remarks Create a new pack with the given metadata and rewards and mint it to the specified address.
+   *
+   * @param to - the address to mint the pack to
+   * @param metadataWithRewards - the metadata and rewards to include in the pack
    *
    * @example
    * ```javascript
-   * // The pack ID of the asset you want to buy
-   * const packId = "0";
-   * const tx = await contract.open(packId);
-   * const receipt = tx.receipt; // the transaction receipt
-   * const packId = tx.id; // the id of the pack that was opened
-   * const rewards = tx.data(); // the contents of the opened pack
+   * const pack = {
+   *   // The metadata for the pack NFT itself
+   *   packMetadata: {
+   *     name: "My Pack",
+   *     description: "This is a new pack",
+   *     image: "ipfs://...",
+   *   },
+   *   // ERC20 rewards to be included in the pack
+   *   erc20Rewards: [
+   *     {
+   *       assetContract: "0x...",
+   *       quantity: 100,
+   *     }
+   *   ],
+   *   // ERC721 rewards to be included in the pack
+   *   erc721Rewards: [
+   *     {
+   *       assetContract: "0x...",
+   *       tokenId: 0,
+   *     }
+   *   ],
+   *   // ERC1155 rewards to be included in the pack
+   *   erc1155Rewards: [
+   *     {
+   *       assetContract: "0x...",
+   *       tokenId: 0,
+   *       quantity: 100,
+   *     }
+   *   ],
+   *   openStartTime: new Date(), // the date that packs can start to be opened, defaults to now
+   *   rewardsPerPack: 1, // the number of rewards in each pack, defaults to 1
+   * }
+   *
+   * const tx = await contract.createTo("0x...", pack);
+   * ```
+   */
+  public async createTo(
+    to: string,
+    metadataWithRewards: PackMetadataInput,
+  ): Promise<TransactionResultWithId<EditionMetadata>> {
+    const uri = await uploadOrExtractURI(
+      metadataWithRewards.packMetadata,
+      this.storage,
+    );
+
+    const parsedMetadata = PackMetadataInputSchema.parse(metadataWithRewards);
+    const { contents, numOfRewardUnits } = await this.toPackContentArgs(
+      parsedMetadata,
+    );
+
+    const receipt = await this.contractWrapper.sendTransaction("createPack", [
+      contents,
+      numOfRewardUnits,
+      uri,
+      parsedMetadata.openStartTime,
+      parsedMetadata.rewardsPerPack,
+      to,
+    ]);
+
+    const event = this.contractWrapper.parseLogs<PackCreatedEvent>(
+      "PackCreated",
+      receipt?.logs,
+    );
+    if (event.length === 0) {
+      throw new Error("PackCreated event not found");
+    }
+    const packId = event[0].args.packId;
+
+    return {
+      id: packId,
+      receipt,
+      data: () => this.get(packId),
+    };
+  }
+
+  /**
+   * Open Pack
+   *
+   * @remarks - Open a pack to reveal the contained rewards. This will burn the specified pack and
+   * the contained assets will be transferred to the opening users wallet.
+   *
+   * @param tokenId - the token ID of the pack you want to open
+   * @param amount - the amount of packs you want to open
+   *
+   * @example
+   * ```javascript
+   * const tokenId = 0
+   * const amount = 1
+   * const tx = await contract.open(tokenId, amount);
    * ```
    */
   public async open(
-    packId: string,
-  ): Promise<TransactionResultWithId<NFTMetadata>[]> {
+    tokenId: BigNumberish,
+    amount: BigNumberish = 1,
+  ): Promise<PackRewards> {
     const receipt = await this.contractWrapper.sendTransaction("openPack", [
-      packId,
+      tokenId,
+      amount,
     ]);
-    const logs = this.contractWrapper.parseLogs<PackOpenRequestedEvent>(
-      "PackOpenRequested",
+    const event = this.contractWrapper.parseLogs<PackOpenedEvent>(
+      "PackOpened",
       receipt?.logs,
     );
-    if (logs.length === 0) {
-      throw new Error("Failed to open pack");
+    if (event.length === 0) {
+      throw new Error("PackOpened event not found");
     }
-    const event = logs[0];
+    const rewards = event[0].args.rewardUnitsDistributed;
 
-    const requestId = event.args.requestId;
-    const opener = event.args.opener;
+    const erc20Rewards = [];
+    const erc721Rewards = [];
+    const erc1155Rewards = [];
 
-    // TODO type this
-    const fulfillEvent: any = await new Promise((resolve) => {
-      this.contractWrapper.readContract.once(
-        this.contractWrapper.readContract.filters.PackOpenFulfilled(
-          null,
-          opener,
-        ),
-        (_packId, _opener, _requestId, rewardContract, rewardIds) => {
-          if (requestId === _requestId) {
-            resolve({
-              packId: _packId,
-              opener: _opener,
-              requestId,
-              rewardContract,
-              rewardIds,
-            });
-          }
-        },
-      );
-    });
-
-    const { rewardIds, rewardContract } = fulfillEvent;
-
-    return rewardIds.map((rewardId: BigNumber) => ({
-      id: packId,
-      receipt,
-      data: () =>
-        fetchTokenMetadataForContract(
-          rewardContract,
-          this.contractWrapper.getProvider(),
-          rewardId.toString(),
-          this.storage,
-        ),
-    }));
-  }
-
-  /**
-   * Create Pack
-   *
-   * @remarks Create a new pack with its own rewards.
-   *
-   * @example
-   * ```javascript
-   * // Data to create the pack
-   * const pack = {
-   *   // The address of the contract that holds the rewards you want to include
-   *   assetContract: "0x...",
-   *   // The metadata of the pack
-   *   metadata: {
-   *     name: "Cool Pack",
-   *     description: "This is a cool pack",
-   *     // This can be an image url or image file
-   *     image: readFileSync("path/to/image.png"),
-   *   },
-   *   // The NFTs you want to include in the pack
-   *   assets: [
-   *     {
-   *       tokenId: 0, // The token ID of the asset you want to add
-   *       amount: 1, // The amount of the asset you want to add
-   *     }, {
-   *       tokenId: 1,
-   *       amount: 1,
-   *     }
-   *   ],
-   * };
-   *
-   * await contract.create(pack);
-   * ```
-   *
-   * @param args - Args for the pack creation
-   * @returns - The newly created pack metadata
-   */
-  public async create(
-    args: IPackCreateArgs,
-  ): Promise<TransactionResultWithId<PackMetadata>> {
-    const asset = new Contract(
-      args.assetContract,
-      ERC1155Abi,
-      this.contractWrapper.getSigner() || this.contractWrapper.getProvider(),
-    ) as IERC1155;
-
-    const from = await this.contractWrapper.getSignerAddress();
-    const ids = args.assets.map((a) => a.tokenId);
-    const amounts = args.assets.map((a) => a.amount);
-    const uri = await this.storage.uploadMetadata(args.metadata);
-
-    const packParams = ethers.utils.defaultAbiCoder.encode(
-      ["string", "uint256", "uint256"],
-      [uri, args.secondsUntilOpenStart || 0, args.rewardsPerOpen || 1],
-    );
-
-    // TODO: make it gasless
-    const tx = await asset.safeBatchTransferFrom(
-      from,
-      this.getAddress(),
-      ids,
-      amounts,
-      packParams,
-      await this.contractWrapper.getCallOverrides(),
-    );
-
-    const receipt = await tx.wait();
-    const log = this.contractWrapper.parseLogs<PackAddedEvent>(
-      "PackAdded",
-      receipt.logs,
-    );
-    if (log.length === 0) {
-      throw new Error("PackCreated event not found");
+    for (const reward of rewards) {
+      switch (reward.tokenType) {
+        case 0: {
+          const tokenMetadata = await fetchCurrencyMetadata(
+            this.contractWrapper.getProvider(),
+            reward.assetContract,
+          );
+          erc20Rewards.push({
+            contractAddress: reward.assetContract,
+            quantityPerReward: ethers.utils
+              .formatUnits(reward.totalAmount, tokenMetadata.decimals)
+              .toString(),
+          });
+          break;
+        }
+        case 1: {
+          erc721Rewards.push({
+            contractAddress: reward.assetContract,
+            tokenId: reward.tokenId.toString(),
+          });
+          break;
+        }
+        case 2: {
+          erc1155Rewards.push({
+            contractAddress: reward.assetContract,
+            tokenId: reward.tokenId.toString(),
+            quantityPerReward: reward.totalAmount.toString(),
+          });
+          break;
+        }
+      }
     }
-    const packId = log[0].args.packId;
-    return { id: packId, receipt, data: () => this.get(packId.toString()) };
-  }
 
-  /**
-   * Transfer Pack
-   *
-   * @remarks Transfer a pack from the connected wallet to another wallet.
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet you want to send the pack to
-   * const toAddress = "0x...";
-   *
-   * // The token ID of the pack you want to send
-   * const tokenId = "0";
-   *
-   * // The number of packs you want to send
-   * const amount = 1;
-   *
-   * await contract.transfer(toAddress, tokenId, amount);
-   * ```
-   */
-  public async transfer(
-    to: string,
-    tokenId: string,
-    amount: BigNumber,
-  ): Promise<TransactionResult> {
     return {
-      receipt: await this.contractWrapper.sendTransaction("safeTransferFrom", [
-        await this.contractWrapper.getSignerAddress(),
-        to,
-        tokenId,
-        amount,
-        [0],
-      ]),
+      erc20Rewards,
+      erc721Rewards,
+      erc1155Rewards,
     };
   }
 
-  public async transferFrom(
-    from: string,
-    to: string,
-    args: IPackBatchArgs,
-    data: BytesLike = [0],
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("safeTransferFrom", [
-        from,
-        to,
-        args.tokenId,
-        args.amount,
-        data,
-      ]),
-    };
-  }
-
-  public async transferBatchFrom(
-    from: string,
-    to: string,
-    args: IPackBatchArgs[],
-    data: BytesLike = [0],
-  ): Promise<TransactionResult> {
-    const ids = args.map((a) => a.tokenId);
-    const amounts = args.map((a) => a.amount);
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "safeBatchTransferFrom",
-        [from, to, ids, amounts, data],
-      ),
-    };
-  }
-
-  public async setApproval(
-    operator: string,
-    approved = true,
-  ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("setApprovalForAll", [
-        operator,
-        approved,
-      ]),
-    };
-  }
-
-  public async depositLink(amount: BigNumberish): Promise<TransactionResult> {
-    const chainId = await this.contractWrapper.getChainID();
-    const chainlink = ChainlinkVrf[chainId];
-    const erc20 = new Contract(
-      chainlink.linkTokenAddress,
-      ERC20Abi,
-      this.contractWrapper.getProvider(),
-    ) as IERC20;
-    // TODO: make it gasless
-    const tx = await erc20.transfer(
-      this.getAddress(),
-      amount,
-      await this.contractWrapper.getCallOverrides(),
-    );
-    return { receipt: await tx.wait() };
-  }
-
-  // TODO new withdraw LINK function in contract
-  // public async withdrawLink(to: string, amount: BigNumberish) {
-  //   const chainId = await this.contractWrapper.getChainID();
-  //   const chainlink = ChainlinkVrf[chainId];
-  //   await this.contractWrapper.sendTransaction("transferERC20", [
-  //     chainlink.linkTokenAddress,
-  //     to,
-  //     amount,
-  //   ]);
-  // }
-
-  /** ******************************
+  /** *****************************
    * PRIVATE FUNCTIONS
    *******************************/
+
+  private async toPackContentArgs(metadataWithRewards: PackMetadataOutput) {
+    const contents: ITokenBundle.TokenStruct[] = [];
+    const numOfRewardUnits = [];
+    const { erc20Rewards, erc721Rewards, erc1155Rewards } = metadataWithRewards;
+
+    const provider = this.contractWrapper.getProvider();
+    const owner = await this.contractWrapper.getSignerAddress();
+
+    for (const erc20 of erc20Rewards) {
+      const normalizedQuantity = await normalizePriceValue(
+        provider,
+        erc20.quantityPerReward,
+        erc20.contractAddress,
+      );
+      // Multiply the quantity of one reward by the number of rewards
+      const totalQuantity = normalizedQuantity.mul(erc20.totalRewards);
+      const hasAllowance = await hasERC20Allowance(
+        this.contractWrapper,
+        erc20.contractAddress,
+        totalQuantity,
+      );
+      if (!hasAllowance) {
+        throw new Error(
+          `ERC20 token with contract address "${
+            erc20.contractAddress
+          }" does not have enough allowance to transfer.\n\nYou can set allowance to the multiwrap contract to transfer these tokens by running:\n\nawait sdk.getToken("${
+            erc20.contractAddress
+          }").setAllowance("${this.getAddress()}", ${totalQuantity});\n\n`,
+        );
+      }
+
+      numOfRewardUnits.push(erc20.totalRewards);
+      contents.push({
+        assetContract: erc20.contractAddress,
+        tokenType: 0,
+        totalAmount: totalQuantity,
+        tokenId: 0,
+      });
+    }
+
+    for (const erc721 of erc721Rewards) {
+      const isApproved = await isTokenApprovedForTransfer(
+        this.contractWrapper.getProvider(),
+        this.getAddress(),
+        erc721.contractAddress,
+        erc721.tokenId,
+        owner,
+      );
+
+      if (!isApproved) {
+        throw new Error(
+          `ERC721 token "${erc721.tokenId}" with contract address "${
+            erc721.contractAddress
+          }" is not approved for transfer.\n\nYou can give approval the multiwrap contract to transfer this token by running:\n\nawait sdk.getNFTCollection("${
+            erc721.contractAddress
+          }").setApprovalForToken("${this.getAddress()}", ${
+            erc721.tokenId
+          });\n\n`,
+        );
+      }
+
+      numOfRewardUnits.push(1);
+      contents.push({
+        assetContract: erc721.contractAddress,
+        tokenType: 1,
+        totalAmount: 1,
+        tokenId: erc721.tokenId,
+      });
+    }
+
+    for (const erc1155 of erc1155Rewards) {
+      const isApproved = await isTokenApprovedForTransfer(
+        this.contractWrapper.getProvider(),
+        this.getAddress(),
+        erc1155.contractAddress,
+        erc1155.tokenId,
+        owner,
+      );
+
+      if (!isApproved) {
+        throw new Error(
+          `ERC1155 token "${erc1155.tokenId}" with contract address "${
+            erc1155.contractAddress
+          }" is not approved for transfer.\n\nYou can give approval the multiwrap contract to transfer this token by running:\n\nawait sdk.getEdition("${
+            erc1155.contractAddress
+          }").setApprovalForAll("${this.getAddress()}", true);\n\n`,
+        );
+      }
+
+      numOfRewardUnits.push(erc1155.totalRewards);
+      contents.push({
+        assetContract: erc1155.contractAddress,
+        tokenType: 2,
+        totalAmount: BigNumber.from(erc1155.quantityPerReward).mul(
+          BigNumber.from(erc1155.totalRewards),
+        ),
+        tokenId: erc1155.tokenId,
+      });
+    }
+
+    return {
+      contents,
+      numOfRewardUnits,
+    };
+  }
 }
