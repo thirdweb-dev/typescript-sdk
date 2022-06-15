@@ -4,6 +4,11 @@
 
 ## WalletAuthenticator.sign() method
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
+Sign Authorized Payload
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +19,22 @@ sign(authorizedPayload: AuthorizedPayload): Promise<AuthenticatedPayload>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  authorizedPayload | AuthorizedPayload |  |
+|  authorizedPayload | AuthorizedPayload | The payload signed and authorized by the server side wallet |
 
 <b>Returns:</b>
 
 Promise&lt;AuthenticatedPayload&gt;
+
+- The authenticated payload that can be used to send to the server
+
+## Remarks
+
+Sign a payload authorized by the server with the client side wallet to create a token that can used for authentication.
+
+## Example
+
+
+```javascript
+
+```
 

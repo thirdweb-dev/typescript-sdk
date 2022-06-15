@@ -195,6 +195,35 @@ describe("Publishing", async () => {
     expect(meta.name).to.eq("Hello");
   });
 
+  it("ERC721Dropable feature detection", async () => {
+    const realSDK = new ThirdwebSDK(adminWallet);
+    const pub = realSDK.getPublisher();
+    const ipfsUri = "ipfs://QmWaidQMSYHPzYYZCxMc2nSk2vrD28mS43Xc9k7QFyAGja/0";
+    const addr = await pub.deployContract(ipfsUri, []);
+    const c = await realSDK.getContract(addr);
+
+    invariant(c.nft, "nft must be defined");
+    invariant(c.nft.drop, "drop must be defined");
+    invariant(c.nft.drop.claimConditions, "claim conditions must be defined");
+
+    let claimConditions = await c.nft.drop.claimConditions.getAll();
+    expect(claimConditions.length).to.equal(0);
+
+    await c.nft.drop.claimConditions.set([
+      {
+        price: "0",
+        startTime: new Date(0),
+      },
+      {
+        price: "0",
+        startTime: new Date(),
+      },
+    ]);
+
+    claimConditions = await c.nft.drop.claimConditions.getAll();
+    expect(claimConditions.length).to.equal(2);
+  });
+
   it("Constructor params with tuples", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();

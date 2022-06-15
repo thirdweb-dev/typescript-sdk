@@ -4,28 +4,37 @@
 
 ## Pack.getAll() method
 
-Get Pack Data
+Get All Packs
 
 <b>Signature:</b>
 
 ```typescript
-getAll(): Promise<PackMetadata[]>;
+getAll(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
 ```
+
+## Parameters
+
+|  Parameter | Type | Description |
+|  --- | --- | --- |
+|  queryParams | [QueryAllParams](./sdk.queryallparams.md) | <i>(Optional)</i> optional filtering to only fetch a subset of results. |
+
 <b>Returns:</b>
 
-Promise&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->\[\]&gt;
+Promise&lt;[EditionMetadata](./sdk.editionmetadata.md)<!-- -->\[\]&gt;
 
-The NFT metadata for all NFTs in the contract.
+The pack metadata for all packs queried.
 
 ## Remarks
 
-Get data associated with every pack in this contract.
+Get all the data associated with every pack in this contract.
+
+By default, returns the first 100 packs, use queryParams to fetch more.
 
 ## Example
 
 
 ```javascript
 const packs = await contract.getAll();
-console.log(packs);
+console.log(packs;
 ```
 

@@ -376,6 +376,29 @@ describe("Edition Drop Contract", async () => {
     await bdContract.claim("0", 1);
   });
 
+  it("should set multiple claim conditions at once", async () => {
+    await bdContract.createBatch([
+      {
+        name: "test1",
+        description: "test1",
+      },
+      {
+        name: "test2",
+        description: "test2",
+      },
+    ]);
+    await bdContract.claimConditions.setBatch(
+      [0, 1],
+      [
+        {
+          price: 1,
+        },
+      ],
+    );
+    await bdContract.claim("0", 1);
+    await bdContract.claim("1", 1);
+  });
+
   describe("eligibility", () => {
     beforeEach(async () => {
       await bdContract.createBatch([

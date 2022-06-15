@@ -26,17 +26,14 @@ import {
   NFTMetadataOwner,
 } from "../schema/tokens/common";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
-import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
+import { DropSingleClaimConditions } from "../core/classes/drop-single-claim-conditions";
 import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import { DelayedReveal } from "../core/classes/delayed-reveal";
-import {
-  Erc721Enumerable,
-  Erc721Supply,
-  GasCostEstimator,
-} from "../core/classes";
+import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
+import { Erc721Supply } from "../core/classes/erc-721-supply";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ClaimVerification } from "../types";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
@@ -48,6 +45,7 @@ import {
 } from "contracts/DropERC721";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { Erc721WithQuantitySignatureMinting } from "../core/classes/erc-721-with-quantity-signature-minting";
+import { DelayedReveal } from "../core/index";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -119,23 +117,16 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * @example
    * ```javascript
    * const presaleStartTime = new Date();
-   * const publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
-   * const claimConditions = [
-   *   {
+   * const claimCondition = {
    *     startTime: presaleStartTime, // start the presale now
    *     maxQuantity: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
-   *   },
-   *   {
-   *     startTime: publicSaleStartTime, // 24h after presale, start public sale
-   *     price: 0.08, // public sale price
-   *   }
-   * ]);
-   * await contract.claimConditions.set(claimConditions);
+   * };
+   * await contract.claimCondition.set(claimCondition);
    * ```
    */
-  public claimConditions: DropClaimConditions<SignatureDropContract>;
+  public claimCondition: DropSingleClaimConditions<SignatureDropContract>;
   /**
    * Delayed reveal
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
@@ -168,7 +159,20 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * ```
    */
   public revealer: DelayedReveal<SignatureDropContract>;
-
+  /**
+   * Signature Minting
+   * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
+   * @example
+   * ```javascript
+   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
+   * const signedPayload = contract.signature.generate(payload);
+   *
+   * // now anyone can mint the NFT
+   * const tx = contract.signature.mint(signedPayload);
+   * const receipt = tx.receipt; // the mint transaction receipt
+   * const mintedId = tx.id; // the id of the NFT minted
+   * ```
+   */
   public signature: Erc721WithQuantitySignatureMinting;
 
   private _query = this.query as Erc721Supply;
@@ -203,17 +207,14 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
-    this.revealer = new DelayedReveal<SignatureDropContract>(
-      this.contractWrapper,
-      this.storage,
-    );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.revealer = new DelayedReveal(this, this.contractWrapper, this.storage);
     this.signature = new Erc721WithQuantitySignatureMinting(
       this.contractWrapper,
       this.roles,
       this.storage,
     );
-    this.claimConditions = new DropClaimConditions(
+    this.claimCondition = new DropSingleClaimConditions(
       this.contractWrapper,
       this.metadata,
       this.storage,
@@ -370,20 +371,8 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   public async totalClaimedSupply(): Promise<BigNumber> {
     const claimCondition =
       await this.contractWrapper.readContract.claimCondition();
-    const startId = claimCondition.currentStartId.toNumber();
-    const count = claimCondition.count.toNumber();
-    const conditions = [];
-    for (let i = startId; i < startId + count; i++) {
-      conditions.push(
-        await this.contractWrapper.readContract.getClaimConditionById(i),
-      );
-    }
 
-    const totalClaimed = conditions.reduce(function (total, condition) {
-      return total + condition.supplyClaimed.toNumber();
-    }, 0);
-
-    return ethers.BigNumber.from(totalClaimed);
+    return claimCondition.supplyClaimed;
   }
 
   /**
@@ -399,25 +388,10 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * @returns the unclaimed supply
    */
   public async totalUnclaimedSupply(): Promise<BigNumber> {
-    const claimCondition =
-      await this.contractWrapper.readContract.claimCondition();
-    const startId = claimCondition.currentStartId.toNumber();
-    const count = claimCondition.count.toNumber();
-    const conditions = [];
-    for (let i = startId; i < startId + count; i++) {
-      conditions.push(
-        await this.contractWrapper.readContract.getClaimConditionById(i),
-      );
-    }
-
     const maxSupply =
       await this.contractWrapper.readContract.nextTokenIdToMint();
 
-    const totalClaimed = conditions.reduce(function (total, condition) {
-      return total + condition.supplyClaimed.toNumber();
-    }, 0);
-
-    return BigNumber.from(maxSupply).sub(totalClaimed);
+    return maxSupply.sub(await this.totalClaimedSupply());
   }
 
   /**
@@ -597,7 +571,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
-      await this.claimConditions.getActive(),
+      await this.claimCondition.get(),
       (await this.metadata.get()).merkle,
       0,
       this.contractWrapper,

@@ -69,10 +69,12 @@ export type PreDeployMetadataFetched = {
 /**
  * @internal
  */
-const AbiTypeBaseSchema = z.object({
-  type: z.string(),
-  name: z.string(),
-});
+const AbiTypeBaseSchema = z
+  .object({
+    type: z.string(),
+    name: z.string(),
+  })
+  .catchall(z.any());
 
 /**
  * @internal
@@ -117,7 +119,12 @@ export type AbiFunction = {
   signature: string;
   stateMutability: string;
 };
+export type ContractSource = {
+  filename: string;
+  source: string;
+};
 export type PublishedMetadata = {
   name: string;
   abi: z.infer<typeof AbiSchema>;
+  metadata: Record<string, any>;
 };

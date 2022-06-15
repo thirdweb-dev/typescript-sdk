@@ -1,4 +1,4 @@
-import { BigNumber, utils } from "ethers";
+import { BigNumber, CallOverrides, utils } from "ethers";
 import { z } from "zod";
 import { Json } from "../core/types";
 import { isBrowser } from "../common/utils";
@@ -95,3 +95,17 @@ export const StartDateSchema = RawDateSchema.default(new Date(0));
 export const EndDateSchema = RawDateSchema.default(
   new Date(Date.now() + 1000 * 60 * 60 * 24 * 365 * 10),
 );
+
+export const CallOverrideSchema: z.ZodType<CallOverrides> = z
+  .object({
+    gasLimit: BigNumberishSchema.optional(),
+    gasPrice: BigNumberishSchema.optional(),
+    maxFeePerGas: BigNumberishSchema.optional(),
+    maxPriorityFeePerGas: BigNumberishSchema.optional(),
+    nonce: BigNumberishSchema.optional(),
+    value: BigNumberishSchema.optional(),
+    blockTag: z.union([z.string(), z.number()]).optional(),
+    from: AddressSchema.optional(),
+    type: z.number().optional(),
+  })
+  .strict();

@@ -4,6 +4,11 @@
 
 ## WalletAuthenticator.generate() method
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
+Generate an Authorized Payload
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,9 +19,35 @@ generate(payload: AuthenticationPayloadInput): Promise<AuthorizedPayload>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  payload | AuthenticationPayloadInput |  |
+|  payload | AuthenticationPayloadInput | The configuration used to generate an authentication payload |
 
 <b>Returns:</b>
 
 Promise&lt;AuthorizedPayload&gt;
+
+- A payload authorized by the server that the client can sign for authentication
+
+## Remarks
+
+Generate a payload on the server side for a client side wallet to sign and use for authentication. This payload enables the server side wallet to specify exactly when the wallet is authorized to authenticate, and for which services they are able to access.
+
+## Example
+
+
+```javascript
+const payload = {
+  // The name of the server-side application authorizing the payload
+  appication: "my-app-name",
+  // The address of the client side wallet requesting to authenticate
+  subject: "0x...",
+  // The server-side endpoints the wallet is authorized to access (defaults to ["*"] for access to all)
+  endpoints: ["endpoint1", "endpoint2"],
+  // The date object representing the time before which the authentication is invalid (defaults to now)
+  invalidBefore: new Date(),
+  // The date object representing the time at which the authentication expires (5 hours from now)
+  expiresAt: new Date(Date.now() + 5 * 60 * 60 * 1000),
+}
+
+const authorizedPayload = await sdk.auth.generate(payload)
+```
 

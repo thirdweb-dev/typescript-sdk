@@ -12,7 +12,7 @@ import { SignedPayload721WithQuantitySignature } from "../src/schema/contracts/c
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import invariant from "tiny-invariant";
 import { MerkleTree } from "merkletreejs";
-import keccak256 from "keccak256";
+import { keccak256 } from "ethers/lib/utils";
 
 global.fetch = require("cross-fetch");
 
@@ -470,47 +470,32 @@ describe("Signature drop tests", async () => {
         { name: "test", description: "test" },
       ]);
 
-      await signatureDropContract.claimConditions.set([
-        {
-          snapshot: [samWallet.address],
-        },
-      ]);
-      const conditions = await signatureDropContract.claimConditions.getAll();
-      assert.lengthOf(conditions, 1);
-      invariant(conditions[0].snapshot);
-      expect(conditions[0].snapshot[0].address).to.eq(samWallet.address);
+      await signatureDropContract.claimCondition.set({
+        snapshot: [samWallet.address],
+      });
+      const conditions = await signatureDropContract.claimCondition.get();
+      invariant(conditions.snapshot);
+      expect(conditions.snapshot[0].address).to.eq(samWallet.address);
     });
 
     it("should remove merkles from the metadata when claim conditions are removed", async () => {
-      await signatureDropContract.claimConditions.set([
-        {
-          startTime: new Date(),
-          waitInSeconds: 10,
-          snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
-        },
-        {
-          startTime: new Date(Date.now() + 60 * 60 * 1000),
-          snapshot: [bobWallet.address],
-        },
-      ]);
+      await signatureDropContract.claimCondition.set({
+        startTime: new Date(),
+        waitInSeconds: 10,
+        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+      });
 
       const metadata = await signatureDropContract.metadata.get();
       const merkles = metadata.merkle;
 
       expect(merkles).have.property(
-        "0xd89eb21bf7ee4dd07d88e8f90a513812d9d38ac390a58722762c9f3afc4e0feb",
-      );
-
-      expect(merkles).have.property(
         "0xb1a60ad68b77609a455696695fbdd02b850d03ec285e7fe1f4c4093797457b24",
       );
 
-      const roots = (await signatureDropContract.claimConditions.getAll()).map(
-        (c) => c.merkleRootHash,
-      );
-      expect(roots).length(2);
+      const roots = await signatureDropContract.claimCondition.get();
+      expect(roots.merkleRootHash.length > 0);
 
-      await signatureDropContract.claimConditions.set([{}]);
+      await signatureDropContract.claimCondition.set({});
       const newMetadata = await signatureDropContract.metadata.get();
       const newMerkles = newMetadata.merkle;
       expect(JSON.stringify(newMerkles)).to.eq("{}");
@@ -534,11 +519,9 @@ describe("Signature drop tests", async () => {
           : w.address,
       );
 
-      await signatureDropContract.claimConditions.set([
-        {
-          snapshot: members,
-        },
-      ]);
+      await signatureDropContract.claimCondition.set({
+        snapshot: members,
+      });
       const metadata = [];
       for (let i = 0; i < 10; i++) {
         metadata.push({
@@ -561,11 +544,9 @@ describe("Signature drop tests", async () => {
       const testWallets: SignerWithAddress[] = [bobWallet];
       const members = testWallets.map((w) => w.address);
 
-      await signatureDropContract.claimConditions.set([
-        {
-          snapshot: members,
-        },
-      ]);
+      await signatureDropContract.claimCondition.set({
+        snapshot: members,
+      });
 
       const metadata = [];
       for (let i = 0; i < 2; i++) {
@@ -603,7 +584,7 @@ describe("Signature drop tests", async () => {
       await signatureDropContract.createBatch(metadatas);
       const all = await signatureDropContract.getAll();
       expect(all.length).to.eq(100);
-      await signatureDropContract.claimConditions.set([{}]);
+      await signatureDropContract.claimCondition.set({});
       await signatureDropContract.claim(1);
       const claimed = await signatureDropContract.totalClaimedSupply();
       const unclaimed = await signatureDropContract.totalUnclaimedSupply();
@@ -619,7 +600,7 @@ describe("Signature drop tests", async () => {
         });
       }
       await signatureDropContract.createBatch(metadatas);
-      await signatureDropContract.claimConditions.set([{}]);
+      await signatureDropContract.claimCondition.set({});
       await signatureDropContract.claim(10);
       const ts = await signatureDropContract.totalSupply();
       expect(ts.toNumber()).to.eq(20);
@@ -629,18 +610,9 @@ describe("Signature drop tests", async () => {
     });
 
     it("should not allow claiming to someone not in the merkle tree", async () => {
-      await signatureDropContract.claimConditions.set(
-        [
-          {
-            snapshot: [
-              bobWallet.address,
-              samWallet.address,
-              abbyWallet.address,
-            ],
-          },
-        ],
-        false,
-      );
+      await signatureDropContract.claimCondition.set({
+        snapshot: [bobWallet.address, samWallet.address, abbyWallet.address],
+      });
       await signatureDropContract.createBatch([
         { name: "name", description: "description" },
       ]);
@@ -663,7 +635,7 @@ describe("Signature drop tests", async () => {
       await signatureDropContract.createBatch([
         { name: "name", description: "description" },
       ]);
-      await signatureDropContract.claimConditions.set([{}]);
+      await signatureDropContract.claimCondition.set({});
       await signatureDropContract.claim(1);
     });
 
@@ -674,14 +646,12 @@ describe("Signature drop tests", async () => {
         { name: "name3", description: "description" },
         { name: "name4", description: "description" },
       ]);
-      await signatureDropContract.claimConditions.set([
-        {
-          snapshot: [
-            { address: w1.address, maxClaimable: 2 },
-            { address: w2.address, maxClaimable: 1 },
-          ],
-        },
-      ]);
+      await signatureDropContract.claimCondition.set({
+        snapshot: [
+          { address: w1.address, maxClaimable: 2 },
+          { address: w2.address, maxClaimable: 1 },
+        ],
+      });
       await sdk.updateSignerOrProvider(w1);
       const tx = await signatureDropContract.claim(2);
       expect(tx.length).to.eq(2);
@@ -738,7 +708,7 @@ describe("Signature drop tests", async () => {
     });
 
     it("should return the newly claimed token", async () => {
-      await signatureDropContract.claimConditions.set([{}]);
+      await signatureDropContract.claimCondition.set({});
       await signatureDropContract.createBatch([
         {
           name: "test 0",

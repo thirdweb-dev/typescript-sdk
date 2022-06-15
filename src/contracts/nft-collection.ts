@@ -1,15 +1,13 @@
+import { IStorage } from "../core/interfaces/IStorage";
 import type {
-  IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core";
-import {
-  Erc721BatchMintable,
-  Erc721Enumerable,
-  Erc721Mintable,
-  Erc721Supply,
-} from "../core/classes";
+} from "../core/types";
+import { Erc721BatchMintable } from "../core/classes/erc-721-batch-mintable";
+import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
+import { Erc721Mintable } from "../core/classes/erc-721-mintable";
+import { Erc721Supply } from "../core/classes/erc-721-supply";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenERC721 } from "contracts";

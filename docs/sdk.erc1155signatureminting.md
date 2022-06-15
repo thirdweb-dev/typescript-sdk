@@ -22,8 +22,10 @@ export declare class Erc1155SignatureMinting
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [generate(mintRequest)](./sdk.erc1155signatureminting.generate.md) |  | Generate a signature that can be used to mint a dynamic NFT |
-|  [generateBatch(payloadsToSign)](./sdk.erc1155signatureminting.generatebatch.md) |  | Genrate a batch of signatures that can be used to mint many dynamic NFTs. |
+|  [generate(payloadToSign)](./sdk.erc1155signatureminting.generate.md) |  | Generate a signature that can be used to mint an NFT dynamically. |
+|  [generateBatch(payloadsToSign)](./sdk.erc1155signatureminting.generatebatch.md) |  | Generate a batch of signatures that can be used to mint many new NFTs dynamically. |
+|  [generateBatchFromTokenIds(payloadsToSign)](./sdk.erc1155signatureminting.generatebatchfromtokenids.md) |  | Genrate a batch of signatures that can be used to mint new NFTs or additionaly supply to existing NFTs dynamically. |
+|  [generateFromTokenId(payloadToSign)](./sdk.erc1155signatureminting.generatefromtokenid.md) |  | Generate a signature that can be used to mint additionaly supply to an existing NFT. |
 |  [mint(signedPayload)](./sdk.erc1155signatureminting.mint.md) |  | Mint a dynamically generated NFT |
 |  [mintBatch(signedPayloads)](./sdk.erc1155signatureminting.mintbatch.md) |  | Mint any number of dynamically generated NFT at once |
 |  [verify(signedPayload)](./sdk.erc1155signatureminting.verify.md) |  | Verify that a payload is correctly signed |

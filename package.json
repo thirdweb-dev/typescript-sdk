@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "2.3.8-1",
+  "version": "2.3.14",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -13,12 +13,32 @@
   "browser": "dist/browser/index.js",
   "unpkg": "dist/browser/index.global.js",
   "exports": {
-    "node": {
+    ".": {
+      "node": {
+        "types": "./dist/node/index.d.ts",
+        "import": "./dist/node/index.mjs",
+        "module": "./dist/node/index.mjs",
+        "require": "./dist/node/index.js",
+        "default": "./dist/node/index.js"
+      },
+      "types": "./dist/browser/index.d.ts",
+      "default": "./dist/browser/index.mjs"
+    },
+    "./dist/browser": {
+      "types": "./dist/browser/index.d.ts",
+      "import": "./dist/browser/index.mjs",
+      "module": "./dist/browser/index.mjs",
+      "require": "./dist/browser/index.js",
+      "default": "./dist/browser/index.js"
+    },
+    "./dist/node": {
+      "types": "./dist/node/index.d.ts",
       "import": "./dist/node/index.mjs",
       "module": "./dist/node/index.mjs",
-      "require": "./dist/node/index.js"
+      "require": "./dist/node/index.js",
+      "default": "./dist/node/index.js"
     },
-    "default": "./dist/browser/index.mjs"
+    "./package.json": "./package.json"
   },
   "files": [
     "dist/**/*"
@@ -27,7 +47,7 @@
   "scripts": {
     "clean": "rm -rf dist/",
     "dev": "tsdx watch",
-    "build:lib": "rm -rf ./dist && tsup && yarn generate-types",
+    "build:lib": "rm -rf ./dist && tsup && yarn generate-types && node ./scripts/create-proxy-dts.mjs",
     "format": "prettier src/ --write",
     "prepublishOnly": "yarn lint && yarn build",
     "lint": "eslint src/",
@@ -85,7 +105,7 @@
     "ethers": "^5"
   },
   "dependencies": {
-    "@thirdweb-dev/contracts": "2.3.9",
+    "@thirdweb-dev/contracts": "2.3.15-0",
     "@web-std/file": "^3.0.0",
     "cbor": "^8.1.0",
     "cross-fetch": "^3.1.5",

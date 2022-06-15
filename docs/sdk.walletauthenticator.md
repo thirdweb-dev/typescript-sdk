@@ -4,6 +4,9 @@
 
 ## WalletAuthenticator class
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
 Wallet Authenticator
 
 <b>Signature:</b>
@@ -15,7 +18,7 @@ export declare class WalletAuthenticator extends RPCConnectionHandler
 
 ## Remarks
 
-Enables sign-in with ethereum based authentication.
+Enables the connected wallet to securely authenticate to a backend server. The wallet authenticator makes use of a JSON token to authenticate the wallet that contains an embedded JWT token. The authentication token can be reused multiple times after authenticating and doesn't need to be stored on any database - instead it can be stored on the client side for later use.
 
 ## Example
 
@@ -41,13 +44,13 @@ const isValid = await sdk.auth.verify(application, authenticatedPayload)
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, options)](./sdk.walletauthenticator._constructor_.md) |  | Constructs a new instance of the <code>WalletAuthenticator</code> class |
+|  [(constructor)(network, wallet, options)](./sdk.walletauthenticator._constructor_.md) |  | <b><i>(BETA)</i></b> Constructs a new instance of the <code>WalletAuthenticator</code> class |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [generate(payload)](./sdk.walletauthenticator.generate.md) |  |  |
-|  [sign(authorizedPayload)](./sdk.walletauthenticator.sign.md) |  |  |
-|  [verify(application, authenticatedPayload)](./sdk.walletauthenticator.verify.md) |  |  |
+|  [generate(payload)](./sdk.walletauthenticator.generate.md) |  | <b><i>(BETA)</i></b> Generate an Authorized Payload |
+|  [sign(authorizedPayload)](./sdk.walletauthenticator.sign.md) |  | <b><i>(BETA)</i></b> Sign Authorized Payload |
+|  [verify(authenticatedPayload, application, endpoint)](./sdk.walletauthenticator.verify.md) |  | <b><i>(BETA)</i></b> |
 

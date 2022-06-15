@@ -1,26 +1,22 @@
 import { TWFactory, TWFactory__factory } from "contracts";
 import { BigNumber, Contract, ethers, constants } from "ethers";
 import { z } from "zod";
-import {
-  CONTRACTS_MAP,
-  Edition,
-  EditionDrop,
-  Marketplace,
-  NFTCollection,
-  NFTDrop,
-  SignatureDrop,
-  Pack,
-  REMOTE_CONTRACT_NAME,
-  Split,
-  Token,
-  Vote,
-} from "../../contracts";
+import { CONTRACTS_MAP, REMOTE_CONTRACT_NAME } from "../../contracts/maps";
+import { Edition } from "../../contracts/edition";
+import { EditionDrop } from "../../contracts/edition-drop";
+import { NFTCollection } from "../../contracts/nft-collection";
+import { NFTDrop } from "../../contracts/nft-drop";
+import { Marketplace } from "../../contracts/marketplace";
+import { SignatureDrop } from "../../contracts/signature-drop";
+import { Pack } from "../../contracts/pack";
+import { Split } from "../../contracts/split";
+import { Vote } from "../../contracts/vote";
+import { Token } from "../../contracts/token";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
 import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 
-import { ChainlinkVrf } from "../../constants/chainlink";
 import {
   CONTRACT_ADDRESSES,
   getContractAddressByChainId,
@@ -143,7 +139,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           signatureDropmetadata.seller_fee_basis_points,
           signatureDropmetadata.platform_fee_basis_points,
           signatureDropmetadata.platform_fee_recipient,
-          signMintAddress,
         ];
       case Multiwrap.contractType:
         const multiwrapMetadata = Multiwrap.schema.deploy.parse(metadata);
@@ -216,7 +211,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         ];
       case Pack.contractType:
         const packsMetadata = Pack.schema.deploy.parse(metadata);
-        const vrf = ChainlinkVrf[await this.getChainID()];
         return [
           await this.getSignerAddress(),
           packsMetadata.name,
@@ -225,8 +219,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           trustedForwarders,
           packsMetadata.fee_recipient,
           packsMetadata.seller_fee_basis_points,
-          vrf.fees,
-          vrf.keyHash,
         ];
       default:
         return [];

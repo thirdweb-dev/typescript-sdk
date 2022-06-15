@@ -1,10 +1,8 @@
 import {
-  Erc721Supply,
-  IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core";
+} from "../core/types";
 import { Erc721 } from "../core/classes/erc-721";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
@@ -34,6 +32,8 @@ import { BigNumberish, ethers } from "ethers";
 import TokenStruct = ITokenBundle.TokenStruct;
 import { QueryAllParams } from "../types";
 import { isTokenApprovedForTransfer } from "../common/marketplace";
+import { Erc721Supply } from "../core/classes/erc-721-supply";
+import { IStorage } from "../core/interfaces/IStorage";
 
 /**
  * Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.

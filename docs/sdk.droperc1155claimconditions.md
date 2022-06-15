@@ -26,6 +26,7 @@ export declare class DropErc1155ClaimConditions
 |  [getActive(tokenId)](./sdk.droperc1155claimconditions.getactive.md) |  | Get the currently active claim condition |
 |  [getAll(tokenId)](./sdk.droperc1155claimconditions.getall.md) |  | Get all the claim conditions |
 |  [getClaimIneligibilityReasons(tokenId, quantity, addressToCheck)](./sdk.droperc1155claimconditions.getclaimineligibilityreasons.md) |  | For any claim conditions that a particular wallet is violating, this function returns human-readable information about the breaks in the condition that can be used to inform the user. |
-|  [set(tokenId, claimConditionInputs, resetClaimEligibilityForAll)](./sdk.droperc1155claimconditions.set.md) |  | Set public mint conditions on a NFT |
+|  [set(tokenId, claimConditionInputs, resetClaimEligibilityForAll)](./sdk.droperc1155claimconditions.set.md) |  | Set claim conditions on a single NFT |
+|  [setBatch(tokenIds, claimConditionInputs, resetClaimEligibilityForAll)](./sdk.droperc1155claimconditions.setbatch.md) |  | Set claim conditions on multiple NFTs at once |
 |  [update(tokenId, index, claimConditionInput)](./sdk.droperc1155claimconditions.update.md) |  | Update a single claim condition with new data. |
 

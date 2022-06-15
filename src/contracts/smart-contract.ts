@@ -1,17 +1,15 @@
 import { ContractMetadata } from "../core/classes/contract-metadata";
-import {
-  ContractEvents,
-  ContractInterceptor,
-  ContractPrimarySale,
-  ContractRoles,
-  ContractRoyalty,
-  Erc1155,
-  Erc20,
-  Erc721,
-  GasCostEstimator,
-  IStorage,
-  NetworkOrSignerOrProvider,
-} from "../core";
+import { IStorage, NetworkOrSignerOrProvider } from "../core";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { Erc1155 } from "../core/classes/erc-1155";
+import { Erc20 } from "../core/classes/erc-20";
+import { Erc721 } from "../core/classes/erc-721";
+
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
@@ -23,12 +21,13 @@ import {
 } from "contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { ContractInterface } from "ethers";
+import { CallOverrides, ContractInterface } from "ethers";
 import { ALL_ROLES, detectContractFeature } from "../common";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { CallOverrideSchema } from "../schema/index";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -162,13 +161,35 @@ export class SmartContract<
    * console.log(myValue);
    *
    * // write functions will return the transaction receipt
-   * const tx = await contract.call("myWriteFunction", [arg1, arg2]);
+   * const tx = await contract.call("myWriteFunction", arg1, arg2);
    * const receipt = tx.receipt;
+   *
+   * // Optionally override transaction options
+   * await contract.call("myWriteFunction", arg1, arg2, {
+   *  gasLimit: 1000000, // override default gas limit
+   *  value: ethers.utils.parseEther("0.1"), // send 0.1 ether with the contract call
+   * };
    * ```
    * @param functionName - the name of the function to call
    * @param args - the arguments of the function
    */
-  public async call(functionName: string, ...args: any[]): Promise<any> {
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    // parse last arg as tx options if present
+    let txOptions: CallOverrides | undefined;
+    try {
+      if (args.length > 1 && typeof args[args.length - 1] === "object") {
+        const last = args[args.length - 1];
+        txOptions = CallOverrideSchema.parse(last);
+        // if call overrides found, remove it from args array
+        args = args.slice(0, args.length - 1);
+      }
+    } catch (e) {
+      // no-op
+    }
+
     const functions = this.publishedMetadata.extractFunctions();
     const fn = functions.find((f) => f.name === functionName);
     if (!fn) {
@@ -183,7 +204,7 @@ export class SmartContract<
       );
     }
     // TODO validate each argument
-    if (fn.stateMutability === "view") {
+    if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
       // read function
       return (this.contractWrapper.readContract as any)[functionName](...args);
     } else {
@@ -191,6 +212,7 @@ export class SmartContract<
       const receipt = await this.contractWrapper.sendTransaction(
         functionName,
         args,
+        txOptions,
       );
       return {
         receipt,

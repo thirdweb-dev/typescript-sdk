@@ -6,21 +6,39 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../../schema/tokens/common";
-import { IStorage, TransactionResult, TransactionResultWithId } from "../index";
+import {
+  Erc721,
+  IStorage,
+  TransactionResult,
+  TransactionResultWithId,
+} from "../index";
 import { fetchTokenMetadata } from "../../common/nft";
 import { BatchToReveal } from "../../types/delayed-reveal";
 import { TokensLazyMintedEvent } from "contracts/DropERC721";
 import { UploadProgressEvent } from "../../types/events";
+import { BaseDelayedRevealERC721 } from "../../types/eips";
+import { hasFunction } from "../../common";
+import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
 
 /**
  * Handles delayed reveal logic
  * @public
  */
-export class DelayedReveal<T extends SignatureDrop | DropERC721> {
+export class DelayedReveal<
+  T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop,
+> {
+  featureName = FEATURE_NFT_REVEALABLE.name;
+
   private contractWrapper: ContractWrapper<T>;
   private storage: IStorage;
+  private erc721: Erc721;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
+  constructor(
+    erc721: Erc721,
+    contractWrapper: ContractWrapper<T>,
+    storage: IStorage,
+  ) {
+    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
   }
@@ -77,8 +95,7 @@ export class DelayedReveal<T extends SignatureDrop | DropERC721> {
       await this.contractWrapper.getSigner()?.getAddress(),
     );
 
-    const startFileNumber =
-      await this.contractWrapper.readContract.nextTokenIdToMint();
+    const startFileNumber = await this.erc721.nextTokenIdToMint();
 
     const batch = await this.storage.uploadMetadataBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),
@@ -167,17 +184,26 @@ export class DelayedReveal<T extends SignatureDrop | DropERC721> {
 
     const countRangeArray = Array.from(Array(count.toNumber()).keys());
 
-    const contractType = ethers.utils.toUtf8String(
-      await this.contractWrapper.readContract.contractType(),
-    );
-
     // map over to get the base uri indices, which should be the end token id of every batch
     const uriIndices = await Promise.all(
-      countRangeArray.map((i) =>
-        this.isSignatureDrop(this.contractWrapper.readContract, contractType)
-          ? this.contractWrapper.readContract.getBatchIdAtIndex(i)
-          : this.contractWrapper.readContract.baseURIIndices(i),
-      ),
+      countRangeArray.map((i) => {
+        if (
+          hasFunction<BaseDelayedRevealERC721>(
+            "getBatchIdAtIndex",
+            this.contractWrapper,
+          )
+        ) {
+          return this.contractWrapper.readContract.getBatchIdAtIndex(i);
+        }
+
+        if (hasFunction<DropERC721>("baseURIIndices", this.contractWrapper)) {
+          return this.contractWrapper.readContract.baseURIIndices(i);
+        }
+
+        throw new Error(
+          "Contract does not have getBatchIdAtIndex or baseURIIndices.",
+        );
+      }),
     );
 
     // first batch always start from 0. don't need to fetch the last batch so pop it from the range array
@@ -234,12 +260,5 @@ export class DelayedReveal<T extends SignatureDrop | DropERC721> {
   private async getNftMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
     return fetchTokenMetadata(tokenId, tokenUri, this.storage);
-  }
-
-  private isSignatureDrop(
-    _contract: SignatureDrop | DropERC721,
-    contractType: string,
-  ): _contract is SignatureDrop {
-    return contractType.includes("SignatureDrop");
   }
 }

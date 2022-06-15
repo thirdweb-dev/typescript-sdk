@@ -5,6 +5,7 @@ import {
   AbiFunction,
   AbiSchema,
   AbiTypeSchema,
+  ContractSource,
   PreDeployMetadata,
   PreDeployMetadataFetched,
   PublishedMetadata,
@@ -22,17 +23,24 @@ import { toB58String } from "multihashes";
 /**
  * @internal
  * @param abi
- * @param interfaceAbis
+ * @param feature
  */
 function matchesAbiInterface(
   abi: z.input<typeof AbiSchema>,
-  interfaceAbis: readonly z.input<typeof AbiSchema>[],
+  feature: Feature,
 ): boolean {
-  // returns true if all the functions in `interfaceToMatch` are found in `contract`
-  const contractFn = extractFunctionsFromAbi(abi).map((f) => f.name);
-  const interfaceFn = interfaceAbis
-    .flatMap((i) => extractFunctionsFromAbi(i))
-    .map((f) => f.name);
+  // returns true if all the functions in `interfaceToMatch` are found in `contract` (removing any duplicates)
+  const contractFn = [
+    ...new Set(extractFunctionsFromAbi(abi).map((f) => f.name)),
+  ];
+  const interfaceFn = [
+    ...new Set(
+      feature.abis
+        .flatMap((i) => extractFunctionsFromAbi(i))
+        .map((f) => f.name),
+    ),
+  ];
+
   return (
     contractFn.filter((k) => interfaceFn.includes(k)).length ===
     interfaceFn.length
@@ -255,12 +263,52 @@ async function fetchContractMetadata(
   const metadata = await storage.get(compilerMetadataUri);
   const abi = AbiSchema.parse(metadata.output.abi);
   const compilationTarget = metadata.settings.compilationTarget;
-  const keys = Object.keys(compilationTarget);
-  const name = compilationTarget[keys[0]];
+  const targets = Object.keys(compilationTarget);
+  const name = compilationTarget[targets[0]];
   return {
     name,
     abi,
+    metadata,
   };
+}
+
+/**
+ * @internal
+ * @param publishedMetadata
+ * @param storage
+ */
+export async function fetchSourceFilesFromMetadata(
+  publishedMetadata: PublishedMetadata,
+  storage: IStorage,
+): Promise<ContractSource[]> {
+  return await Promise.all(
+    Object.entries(publishedMetadata.metadata.sources).map(
+      async ([path, info]) => {
+        const urls = (info as any).urls as string[];
+        const ipfsLink = urls.find((url) => url.includes("ipfs"));
+        if (ipfsLink) {
+          const ipfsHash = ipfsLink.split("ipfs/")[1];
+          // 5 sec timeout for sources that haven't been uploaded to ipfs
+          const timeout = new Promise<string>((_r, rej) =>
+            setTimeout(() => rej("timeout"), 5000),
+          );
+          const source = await Promise.race([
+            storage.getRaw(`ipfs://${ipfsHash}`),
+            timeout,
+          ]);
+          return {
+            filename: path,
+            source,
+          };
+        } else {
+          return {
+            filename: path,
+            source: "Could not find source for this contract",
+          };
+        }
+      },
+    ),
+  );
 }
 
 /**
@@ -314,7 +362,7 @@ export function detectFeatures(
   const results: Record<string, FeatureWithEnabled> = {};
   for (const featureKey in features) {
     const feature = features[featureKey];
-    const enabled = matchesAbiInterface(abi, feature.abis);
+    const enabled = matchesAbiInterface(abi, feature);
     const childResults = detectFeatures(abi, feature.features);
     results[featureKey] = {
       ...feature,

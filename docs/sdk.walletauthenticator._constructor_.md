@@ -4,12 +4,15 @@
 
 ## WalletAuthenticator.(constructor)
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
 Constructs a new instance of the `WalletAuthenticator` class
 
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, options: SDKOptions);
+constructor(network: NetworkOrSignerOrProvider, wallet: UserWallet, options: SDKOptions);
 ```
 
 ## Parameters
@@ -17,5 +20,6 @@ constructor(network: NetworkOrSignerOrProvider, options: SDKOptions);
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  wallet | [UserWallet](./sdk.userwallet.md) |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) |  |
 

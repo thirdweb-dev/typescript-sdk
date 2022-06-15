@@ -4,19 +4,19 @@
 
 ## Erc1155SignatureMinting.generate() method
 
-Generate a signature that can be used to mint a dynamic NFT
+Generate a signature that can be used to mint an NFT dynamically.
 
 <b>Signature:</b>
 
 ```typescript
-generate(mintRequest: PayloadToSign1155): Promise<SignedPayload1155>;
+generate(payloadToSign: PayloadToSign1155): Promise<SignedPayload1155>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  mintRequest | [PayloadToSign1155](./sdk.payloadtosign1155.md) | the payload to sign |
+|  payloadToSign | [PayloadToSign1155](./sdk.payloadtosign1155.md) | the payload to sign |
 
 <b>Returns:</b>
 

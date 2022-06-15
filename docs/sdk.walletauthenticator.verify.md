@@ -4,18 +4,22 @@
 
 ## WalletAuthenticator.verify() method
 
+> This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
+> 
+
 <b>Signature:</b>
 
 ```typescript
-verify(application: string, authenticatedPayload: AuthenticatedPayload): Promise<boolean>;
+verify(authenticatedPayload: AuthenticatedPayload, application: string, endpoint?: string): Promise<boolean>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  application | string |  |
 |  authenticatedPayload | AuthenticatedPayload |  |
+|  application | string |  |
+|  endpoint | string | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

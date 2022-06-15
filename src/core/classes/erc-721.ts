@@ -1,7 +1,7 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { BigNumber, BigNumberish, constants } from "ethers";
 import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
-import { IStorage } from "../interfaces";
+import { IStorage } from "../interfaces/IStorage";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
@@ -21,9 +21,10 @@ import {
 } from "contracts";
 import { Erc721Supply } from "./erc-721-supply";
 import { Erc721Mintable } from "./erc-721-mintable";
-import { BaseERC721 } from "../../types/eips";
+import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { Erc721Dropable } from "./erc-721-dropable";
 
 /**
  * Standard ERC721 NFT functions
@@ -45,12 +46,12 @@ export class Erc721<
 > implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_NFT.name;
+  public query: Erc721Supply | undefined;
+  public mint: Erc721Mintable | undefined;
+  public drop: Erc721Dropable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
-
-  public query: Erc721Supply | undefined;
-  public mint: Erc721Mintable | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -70,6 +71,7 @@ export class Erc721<
     }
     this.query = this.detectErc721Enumerable();
     this.mint = this.detectErc721Mintable();
+    this.drop = this.detectErc721Dropable();
   }
 
   /**
@@ -225,9 +227,7 @@ export class Erc721<
   /**
    * @internal
    */
-  protected async getTokenMetadata(
-    tokenId: BigNumberish,
-  ): Promise<NFTMetadata> {
+  async getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
     if (!tokenUri) {
       throw new NotFoundError();
@@ -258,5 +258,33 @@ export class Erc721<
       return new Erc721Mintable(this, this.contractWrapper, this.storage);
     }
     return undefined;
+  }
+
+  private detectErc721Dropable(): Erc721Dropable | undefined {
+    if (
+      detectContractFeature<BaseDropERC721>(
+        this.contractWrapper,
+        "ERC721Dropable",
+      )
+    ) {
+      return new Erc721Dropable(this, this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  /**
+   * Return the next available token ID to mint
+   * @internal
+   */
+  public async nextTokenIdToMint(): Promise<BigNumber> {
+    if (hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)) {
+      return await this.contractWrapper.readContract.nextTokenIdToMint();
+    } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
+      return await this.contractWrapper.readContract.totalSupply();
+    } else {
+      throw new Error(
+        "Contract requires either `nextTokenIdToMint` or `totalSupply` function available to determine the next token ID to mint",
+      );
+    }
   }
 }
