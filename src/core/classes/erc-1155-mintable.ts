@@ -90,9 +90,8 @@ export class Erc1155Mintable implements DetectableFeature {
       "TransferSingle",
       receipt?.logs,
     );
-    console.log(event);
     if (event.length === 0) {
-      throw new Error("TokenMinted event not found");
+      throw new Error("TransferSingleEvent event not found");
     }
     const id = event[0].args.id;
     return {

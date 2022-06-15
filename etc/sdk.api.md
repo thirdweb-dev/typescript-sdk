@@ -155,11 +155,13 @@ export type BufferOrStringWithName = {
 // @public (undocumented)
 export enum ChainId {
     // (undocumented)
+    Arbitrum = 42161,
+    // (undocumented)
+    ArbitrumTestnet = 421611,
+    // (undocumented)
     Avalanche = 43114,
     // (undocumented)
     AvalancheFujiTestnet = 43113,
-    // (undocumented)
-    BSC = 56,
     // (undocumented)
     Fantom = 250,
     // (undocumented)
@@ -171,29 +173,25 @@ export enum ChainId {
     // (undocumented)
     Harmony = 1666600000,
     // (undocumented)
-    Kovan = 42,
-    // (undocumented)
     Localhost = 1337,
     // (undocumented)
     Mainnet = 1,
     // (undocumented)
-    Moonriver = 1285,
-    // (undocumented)
     Mumbai = 80001,
+    // (undocumented)
+    Optimism = 10,
+    // (undocumented)
+    OptimismTestnet = 69,
     // (undocumented)
     Polygon = 137,
     // (undocumented)
-    Rinkeby = 4,
-    // (undocumented)
-    Ropsten = 3,
-    // (undocumented)
-    xDai = 100
+    Rinkeby = 4
 }
 
 // Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "avalanche" | (string & {});
+export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "avalanche" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | (string & {});
 
 // Warning: (ae-internal-missing-underscore) The name "CidWithFileName" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -2499,6 +2497,8 @@ export const NATIVE_TOKENS: Record<SUPPORTED_CHAIN_ID | ChainId.Hardhat, NativeT
 // @public (undocumented)
 export interface NativeToken extends Currency {
     // (undocumented)
+    decimals: 18;
+    // (undocumented)
     wrapped: {
         address: string;
         name: string;
@@ -4460,7 +4460,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
     // @internal (undocumented)
     analytics: ContractAnalytics<TContract>;
-    call(functionName: string, ...args: any[]): Promise<any>;
+    call(functionName: string, ...args: unknown[] | [...unknown[], CallOverrides]): Promise<any>;
     // (undocumented)
     static contractType: "custom";
     edition: Erc1155 | undefined;
@@ -4970,7 +4970,7 @@ export interface SplitRecipientInput {
 }
 
 // @public (undocumented)
-export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet;
+export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet | ChainId.Optimism | ChainId.OptimismTestnet | ChainId.Arbitrum | ChainId.ArbitrumTestnet;
 
 // @public (undocumented)
 export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];

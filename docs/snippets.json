@@ -997,7 +997,7 @@
         "summary": "Call any function on this contract\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "// read functions will return the data from the contract\nconst myValue = await contract.call(\"myReadFunction\");\nconsole.log(myValue);\n\n// write functions will return the transaction receipt\nconst tx = await contract.call(\"myWriteFunction\", [arg1, arg2]);\nconst receipt = tx.receipt;"
+          "javascript": "// read functions will return the data from the contract\nconst myValue = await contract.call(\"myReadFunction\");\nconsole.log(myValue);\n\n// write functions will return the transaction receipt\nconst tx = await contract.call(\"myWriteFunction\", arg1, arg2);\nconst receipt = tx.receipt;\n\n// Optionally override transaction options\nawait contract.call(\"myWriteFunction\", arg1, arg2, {\n gasLimit: 1000000, // override default gas limit\n value: ethers.utils.parseEther(\"0.1\"), // send 0.1 ether with the contract call\n};"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.SmartContract.call"
       }
