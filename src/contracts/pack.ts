@@ -63,7 +63,6 @@ export class Pack extends Erc1155<PackContract> {
    * @internal
    */
   static schema = PackContractSchema;
-  // TODO: Change schema and deployment
 
   public metadata: ContractMetadata<PackContract, typeof Pack.schema>;
   public roles: ContractRoles<PackContract, typeof Pack.contractRoles[number]>;
@@ -330,7 +329,7 @@ export class Pack extends Erc1155<PackContract> {
     metadataWithRewards: PackMetadataInput,
   ): Promise<TransactionResultWithId<EditionMetadata>> {
     const uri = await uploadOrExtractURI(
-      metadataWithRewards.metadata,
+      metadataWithRewards.packMetadata,
       this.storage,
     );
 

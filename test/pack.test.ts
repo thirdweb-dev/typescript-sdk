@@ -76,7 +76,7 @@ describe("Pack Contract", async () => {
           totalRewards: 50,
         },
       ],
-      metadata: {
+      packMetadata: {
         name: "Pack",
       },
     });
@@ -102,7 +102,7 @@ describe("Pack Contract", async () => {
           totalRewards: 50,
         },
       ],
-      metadata: {
+      packMetadata: {
         name: "Pack",
       },
       rewardsPerPack: 2,

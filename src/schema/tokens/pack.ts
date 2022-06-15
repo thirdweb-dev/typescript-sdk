@@ -71,7 +71,7 @@ export const PackRewardsOutputSchema = z.object({
  * @internal
  */
 export const PackMetadataInputSchema = PackRewardsOutputSchema.extend({
-  metadata: NFTInputOrUriSchema,
+  packMetadata: NFTInputOrUriSchema,
   rewardsPerPack: BigNumberishSchema.default("1"),
   openStartTime: RawDateSchema.default(new Date()),
 });
