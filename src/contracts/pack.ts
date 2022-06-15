@@ -271,6 +271,7 @@ export class Pack extends Erc1155<PackContract> {
   /**
    * Create Pack
    * @remarks Create a new pack with the given metadata and rewards and mint it to the connected wallet.
+   * @remarks See {@link Pack.createTo}
    *
    * @param metadataWithRewards - the metadata and rewards to include in the pack
    */
@@ -288,9 +289,9 @@ export class Pack extends Erc1155<PackContract> {
    *
    * @example
    * ```javascript
-   * const packMetadata = {
+   * const metadata = {
    *   // The metadata for the pack NFT itself
-   *   metadata: {
+   *   packMetadata: {
    *     name: "My Pack",
    *     description: "This is a new pack",
    *     image: "ipfs://...",
@@ -321,7 +322,7 @@ export class Pack extends Erc1155<PackContract> {
    *   rewardsPerPack: 1, // the number of rewards in each pack, defaults to 1
    * }
    *
-   * const tx = await contract.createTo("0x...", packMetadata);
+   * const tx = await contract.createTo("0x...", metadata);
    * ```
    */
   public async createTo(

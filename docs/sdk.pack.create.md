@@ -36,5 +36,5 @@ Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&l
 
 ## Remarks
 
-Create a new pack with the given metadata and rewards and mint it to the connected wallet.
+See [Pack.createTo()](./sdk.pack.createto.md)
 

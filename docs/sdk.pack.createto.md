@@ -31,9 +31,9 @@ Create a new pack with the given metadata and rewards and mint it to the specifi
 
 
 ```javascript
-const packMetadata = {
+const metadata = {
   // The metadata for the pack NFT itself
-  metadata: {
+  packMetadata: {
     name: "My Pack",
     description: "This is a new pack",
     image: "ipfs://...",
@@ -64,6 +64,6 @@ const packMetadata = {
   rewardsPerPack: 1, // the number of rewards in each pack, defaults to 1
 }
 
-const tx = await contract.createTo("0x...", packMetadata);
+const tx = await contract.createTo("0x...", metadata);
 ```
 
