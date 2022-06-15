@@ -1,15 +1,14 @@
 import { ethers } from "ethers";
+import { isBrowser } from "../../common/utils";
 import { SDKOptions } from "../../schema";
 import {
-  AuthenticatedPayload,
-  AuthenticatedPayloadSchema,
-  AuthenticationPayloadInput,
-  AuthenticationPayloadInputSchema,
-  AuthenticationPayloadOutput,
-  AuthenticationPayloadOutputSchema,
-  AuthorizedPayload,
-  AuthorizedPayloadSchema,
-  FilledAuthenticationPayloadInput,
+  LoginOptions,
+  LoginPayload,
+  AuthenticationOptions,
+  LoginPayloadData,
+  LoginPayloadDataSchema,
+  AuthenticationPayloadDataSchema,
+  AuthenticationPayloadData,
 } from "../../schema/auth";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
 import { NetworkOrSignerOrProvider } from "../types";
@@ -54,183 +53,228 @@ export class WalletAuthenticator extends RPCConnectionHandler {
   }
 
   /**
-   * Generate an Authorized Payload
-   * @remarks Generate a payload on the server side for a client side wallet to sign and use for authentication.
-   * This payload enables the server side wallet to specify exactly when the wallet is authorized to authenticate,
-   * and for which services they are able to access.
-   *
+   * Login With Connected Wallet
+   * @remarks Client-side function that allows the connected wallet to login to a server-side application.
+   * Generates a login payload that can be sent to the server-side for verification or authentication.
+   * 
+   * @param domain - The domain of the server-side application to login to
+   * @param options - Optional configuration options for the login request
+   * @returns Login payload that can be used on the server-side to verify the login request or authenticate
+   * 
    * @example
    * ```javascript
-   * const payload = {
-   *   // The name of the server-side application authorizing the payload
-   *   appication: "my-app-name",
-   *   // The address of the client side wallet requesting to authenticate
-   *   subject: "0x...",
-   *   // The server-side endpoints the wallet is authorized to access (defaults to ["*"] for access to all)
-   *   endpoints: ["endpoint1", "endpoint2"],
-   *   // The date object representing the time before which the authentication is invalid (defaults to now)
-   *   invalidBefore: new Date(),
-   *   // The date object representing the time at which the authentication expires (5 hours from now)
-   *   expiresAt: new Date(Date.now() + 5 * 60 * 60 * 1000),
-   * }
-   *
-   * const authorizedPayload = await sdk.auth.generate(payload)
+   * // Add the domain of the application users will login to, this will be used throughout the login process
+   * const domain = "thirdweb.com";
+   * // Generate a signed login payload for the connected wallet to authenticate with
+   * const loginPayload = await sdk.auth.login(domain);
    * ```
-   *
-   * @param payload - The configuration used to generate an authentication payload
-   * @returns - A payload authorized by the server that the client can sign for authentication
    */
-  public async generate(
-    payload: AuthenticationPayloadInput,
-  ): Promise<AuthorizedPayload> {
-    const parsedPayload: FilledAuthenticationPayloadInput =
-      AuthenticationPayloadInputSchema.parse(payload);
-
+  public async login(
+    domain: string, 
+    options?: LoginOptions
+  ): Promise<LoginPayload> {
     const signerAddress = await this.wallet.getAddress();
-
-    const payloadOutput: AuthenticationPayloadOutput =
-      AuthenticationPayloadOutputSchema.parse({
-        // Add the issuer in application:address format to use on the client side
-        iss: `${parsedPayload.application}:${signerAddress}`,
-        sub: parsedPayload.subject,
-        aud: parsedPayload.endpoints,
-        nbf: parsedPayload.invalidBefore,
-        exp: parsedPayload.expiresAt,
-      });
-
-    const payloadMessage = JSON.stringify(payloadOutput);
-    const signature = await this.wallet.sign(payloadMessage);
-
-    const authorizedPayload = AuthorizedPayloadSchema.parse({
-      payload: payloadOutput,
-      authorizedPayload: signature,
+    const payloadData = LoginPayloadDataSchema.parse({
+      address: signerAddress,
+      ...options,
     });
 
-    return authorizedPayload;
+    const message = this.generateMessage(domain, payloadData);
+    const signature = await this.wallet.sign(message);
+    
+    return {
+      payload: payloadData,
+      signature,
+    }
   }
 
   /**
-   * Sign Authorized Payload
-   *
-   * @remarks Sign a payload authorized by the server with the client side wallet to
-   * create a token that can used for authentication.
-   *
+   * Verify Logged In Address
+   * @remarks Server-side function to securely verify the address of the logged in client-side wallet 
+   * by validating the provided client-side login request.
+   * 
+   * @param domain - The domain of the server-side application to verify the login request for
+   * @param payload - The login payload to verify
+   * @returns Address of the logged in wallet
+   * 
    * @example
    * ```javascript
-   *
+   * const domain = "thirdweb.com";
+   * const loginPayload = await sdk.auth.login(domain);
+   * 
+   * // Verify the login request
+   * const address = sdk.auth.verifyLogin(domain, loginPayload);
    * ```
-   *
-   * @param authorizedPayload - The payload signed and authorized by the server side wallet
-   * @returns - The authenticated payload that can be used to send to the server
    */
-  public async sign(
-    authorizedPayload: AuthorizedPayload,
-  ): Promise<AuthenticatedPayload> {
-    // Ensure that admin address is the same as the issuer
-    const adminAddress = this.recoverAddress(
-      JSON.stringify(authorizedPayload.payload),
-      authorizedPayload.authorizedPayload,
-    );
-    if (
-      authorizedPayload.payload.iss.split(":")[1]?.toLowerCase() !==
-      adminAddress.toLowerCase()
-    ) {
-      throw Error(
-        "Payload issuer is not the same as the address that authorized the payload.",
+  public verify(
+    domain: string, 
+    payload: LoginPayload
+  ): string {
+    if (isBrowser()) {
+      throw new Error("Should not verify login on the browser.");
+    }
+
+    const message = this.generateMessage(domain, payload.payload);
+    const userAddress = this.recoverAddress(message, payload.signature);
+    if (userAddress.toLowerCase() !== payload.payload.address.toLowerCase()) {
+      throw new Error(
+        `User address ${userAddress.toLowerCase()} does not match payload address ${payload.payload.address.toLowerCase()}`
       );
     }
 
-    const signerAddress = await this.wallet.getAddress();
-    if (
-      authorizedPayload.payload.sub.toLowerCase() !==
-      signerAddress.toLowerCase()
-    ) {
-      throw Error(
-        "Payload subject is not the same as the wallet connected to the SDK.",
-      );
+    const currentTime = new Date();
+    if (currentTime > new Date(payload.payload.expirationTime)) {
+      throw new Error(`Login request has expired.`);
     }
 
-    const message = this.generateMessage(authorizedPayload);
-    const authenticatedPayload = await this.wallet.sign(message);
-    const payload = AuthenticatedPayloadSchema.parse({
-      ...authorizedPayload,
-      authenticatedPayload,
-    });
-
-    return payload;
+    return userAddress;
   }
 
-  public async verify(
-    authenticatedPayload: AuthenticatedPayload,
-    application: string,
-    endpoint?: string,
-  ): Promise<boolean> {
-    // Ensure that application of the payload is the same as the issuer application
-    if (authenticatedPayload.payload.iss.split(":")[0] !== application) {
-      return false;
+  /**
+   * Generate Authentication Token
+   * @remarks Server-side function that generates a JWT token from the provided login request that the
+   * client-side wallet can use to authenticate to the server-side application.
+   * 
+   * @param domain - The domain of the server-side application to authenticate to
+   * @param payload - The login payload to authenticate with
+   * @param options - Optional configuration options for the authentication request
+   * @returns A authentication payload that can be used by the client to make authenticated requests
+   * 
+   * @example
+   * ```javascript
+   * const domain = "thirdweb.com";
+   * const loginPayload = await sdk.auth.login(domain);
+   * 
+   * // Generate a JWT token that can be sent to the client-side wallet and used for authentication
+   * const token = await sdk.auth.generate(domain, loginPayload);
+   * ```
+   */
+  public async generate(
+    domain: string,
+    payload: LoginPayload,
+    options?: AuthenticationOptions
+  ): Promise<string> {
+    if (isBrowser()) {
+      throw new Error("Authentication tokens should not be generated in the browser.");
     }
 
-    // Ensure that the verification is called from a valid endpoint
-    if (
-      (endpoint && !authenticatedPayload.payload.aud.includes(endpoint)) ||
-      (!endpoint && !authenticatedPayload.payload.aud.includes("*"))
-    ) {
-      return false;
+    const userAddress = this.verify(domain, payload);
+    const adminAddress = await this.wallet.getAddress();
+    const payloadData = AuthenticationPayloadDataSchema.parse({
+      iss: adminAddress,
+      sub: userAddress,
+      aud: domain,
+      nbf: options?.invalidBefore,
+      exp: options?.expirationTime,
+    })
+
+    const message = JSON.stringify(payloadData);
+    const signature = await this.wallet.sign(message);
+
+    // Header used for JWT token specifying hash algorithm
+    const header = {
+      // Specify ECDSA with SHA-256 for hashing algorithm
+      alg: "ES256",
+      typ: "JWT",
     }
 
-    // Recover both of the signing addresses for the payload
-    const adminAddress = this.recoverAddress(
-      JSON.stringify(authenticatedPayload.payload),
-      authenticatedPayload.authorizedPayload,
-    );
-    const signerAddress = this.recoverAddress(
-      this.generateMessage(authenticatedPayload),
-      authenticatedPayload.authenticatedPayload,
-    );
+    const encodedHeader = Buffer.from(JSON.stringify(header)).toString("base64");
+    const encodedData = Buffer.from(JSON.stringify(payloadData)).toString("base64");
+    const encodedSignature = Buffer.from(signature).toString("base64");
 
-    const payload = authenticatedPayload.payload;
-    const issuerAddress = payload.iss.split(":")[1];
+    // Generate a JWT token with base64 encoded header, payload, and signature
+    const token = `${encodedHeader}.${encodedData}.${encodedSignature}`;
+  
+    return token;
+  }
+
+  /**
+   * Authenticate With Token
+   * @remarks Server-side function that authenticates the provided JWT token. This function verifies that
+   * the provided authentication token is valid and returns the address of the authenticated wallet.
+   * 
+   * @param domain - The domain of the server-side application doing authentication
+   * @param token - The authentication token being used
+   * @returns The address of the authenticated wallet
+   * 
+   * @example
+   * ```javascript
+   * 
+   * ```
+   */
+  public async authenticate(
+    domain: string,
+    token: string,
+  ): Promise<string> {
+    if (isBrowser()) {
+      throw new Error("Should not authenticate tokens in the browser.");
+    }
+
+    const encodedPayload = token.split(".")[1];
+    const encodedSignature = token.split(".")[2];
+
+    const payload: AuthenticationPayloadData = JSON.parse(Buffer.from(encodedPayload, "base64").toString());
+    const signature = Buffer.from(encodedSignature, "base64").toString();
+
     const connectedAddress = await this.wallet.getAddress();
-
-    // Reject if the issuer is not the connected wallet doing verification
-    if (issuerAddress.toLowerCase() !== connectedAddress.toLowerCase()) {
-      return false;
+    if (connectedAddress.toLowerCase() !== payload.iss.toLowerCase()) {
+      throw new Error(
+        `Expected the connected wallet address ${connectedAddress} to match the token issuer address ${payload.iss}`
+      );
     }
 
-    // Reject if the issuer is not the same as the authorizer of the message
-    if (issuerAddress?.toLowerCase() !== adminAddress.toLowerCase()) {
-      return false;
+    const adminAddress = this.recoverAddress(JSON.stringify(payload), signature,);
+    if (connectedAddress.toLowerCase() === adminAddress.toLowerCase()) {
+      throw new Error(
+        `Expected token signer address ${adminAddress} to match the connected wallet address ${connectedAddress}`
+      );
     }
 
-    // Reject if the subject is not the same as the authenticator of the message
-    if (payload.sub.toLowerCase() !== signerAddress.toLowerCase()) {
-      return false;
+    if (payload.aud !== domain) {
+      throw new Error(
+        `Expected token to be for the domain ${domain}, but found token with domain ${payload.aud}`
+      );
     }
 
     const currentTime = Math.floor(new Date().getTime() / 1000);
-
-    // Reject if its before the invalid before time
     if (currentTime < payload.nbf) {
-      return false;
+      throw new Error(`This token is invalid before epoch time ${payload.nbf}, current epoch time is ${currentTime}`);
     }
 
     // Reject if its after the expires at time
     if (currentTime > payload.exp) {
-      return false;
+      throw new Error(`This token expired at epoch time ${payload.exp}, current epcoh time is ${currentTime}`);
     }
 
-    return true;
+    return payload.sub;
   }
 
-  private generateMessage(payload: AuthorizedPayload): string {
-    const application = payload.payload.iss.split(":")[0];
+  /**
+   * Generates a EIP-4361 compliant message to sign based on the 
+   */
+  private generateMessage(domain: string, payload: LoginPayloadData): string {
+    let message = ``;
 
-    // Add the payload data to the signature so users can see what they're signing
-    // This is important because it also gaurantess that they never accidentally sign a transaction
-    const message = `Authenticating ${payload.payload.sub} with ${application}: \n${payload.authorizedPayload}`;
+    // Add the domain and login address for transparency
+    message += `${domain} wants you to sign in with your account:\n${payload.address}\n\n`
+
+    // Prompt user to make sure domain is correct to prevent phishing attacks
+    message += `Make sure that the request domain above matches the URL of the current website.\n\n`
+
+    // Add data fields in copliance with the AIP-4361 standard
+    if (payload.chainId) {
+      message += `Chain ID: ${payload.chainId}\n`;
+    }
+
+    message += `Nonce: ${payload.nonce}\n`;
+    message += `Expiration Time: ${payload.expirationTime}\n`;
+
     return message;
   }
 
+  /**
+   * Recover the signing address from a signed message
+   */
   private recoverAddress(message: string, signature: string): string {
     const messageHash = ethers.utils.hashMessage(message);
     const messageHashBytes = ethers.utils.arrayify(messageHash);
