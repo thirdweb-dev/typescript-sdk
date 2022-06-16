@@ -318,7 +318,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     message += `${payload.domain} wants you to sign in with your account:\n${payload.address}\n\n`;
 
     // Prompt user to make sure domain is correct to prevent phishing attacks
-    message += `Make sure that the request domain above matches the URL of the current website.\n\n`;
+    message += `Make sure that the requesting domain above matches the URL of the current website.\n\n`;
 
     // Add data fields in copliance with the AIP-4361 standard
     if (payload.chainId) {
