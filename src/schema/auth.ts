@@ -41,10 +41,7 @@ export const LoginPayloadDataSchema = z.object({
   /**
    * The time after which the login payload will be invalid, defaults to 5 minutes from now
    */
-  expirationTime: z
-    .date()
-    .default(new Date(Date.now() + 1000 * 60 * 5))
-    .transform((d) => d.toISOString()),
+  expirationTime: z.date().transform((d) => d.toISOString()),
   /**
    * The chain ID that the login request was intended for, defaults to none
    */
@@ -112,17 +109,15 @@ export const AuthenticationPayloadDataSchema = z.object({
   /**
    * The date before which the authentication payload is invalid
    */
-  exp: RawDateSchema.transform((b) => b.toNumber()).default(
-    new Date(Date.now() + 1000 * 60 * 60 * 5),
-  ),
+  exp: RawDateSchema.transform((b) => b.toNumber()),
   /**
    * The date after which the authentication payload is invalid
    */
-  nbf: RawDateSchema.transform((b) => b.toNumber()).default(new Date()),
+  nbf: RawDateSchema.transform((b) => b.toNumber()),
   /**
    * The date on which the payload was issued
    */
-  iat: RawDateSchema.transform((b) => b.toNumber()).default(new Date()),
+  iat: RawDateSchema.transform((b) => b.toNumber()),
   /**
    * The unique identifier of the payload
    */

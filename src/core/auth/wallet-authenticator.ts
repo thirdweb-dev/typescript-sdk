@@ -81,10 +81,14 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     const parsedOptions = LoginOptionsSchema.parse(options);
 
     const signerAddress = await this.wallet.getAddress();
+    const expirationTime =
+      parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 5);
     const payloadData = LoginPayloadDataSchema.parse({
       domain,
+      expirationTime,
       address: signerAddress,
-      ...parsedOptions,
+      nonce: parsedOptions?.nonce,
+      chainId: parsedOptions?.chainId,
     });
 
     const message = this.generateMessage(payloadData);
@@ -198,8 +202,11 @@ export class WalletAuthenticator extends RPCConnectionHandler {
       iss: adminAddress,
       sub: userAddress,
       aud: domain,
-      nbf: parsedOptions?.invalidBefore,
-      exp: parsedOptions?.expirationTime,
+      nbf: parsedOptions?.invalidBefore || new Date(),
+      exp:
+        parsedOptions?.expirationTime ||
+        new Date(Date.now() + 1000 * 60 * 60 * 5),
+      iat: new Date(),
     });
 
     const message = JSON.stringify(payloadData);
