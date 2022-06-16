@@ -8,7 +8,7 @@ describe("Wallet Authentication", async () => {
     signerWallet: SignerWithAddress,
     attackerWallet: SignerWithAddress;
   let sdk: ThirdwebSDK;
-  let domain = "thirdweb.com";
+  const domain = "thirdweb.com";
 
   before(async () => {
     [adminWallet, signerWallet, attackerWallet] = signers;
@@ -26,22 +26,21 @@ describe("Wallet Authentication", async () => {
     const address = sdk.auth.verify(domain, payload);
 
     expect(address).to.equal(signerWallet.address);
-  })
+  });
 
   it("Should verify logged in wallet with chain ID and expiration", async () => {
     const payload = await sdk.auth.login(domain, {
       expirationTime: new Date(Date.now() + 1000 * 60 * 5),
-      chainId: 137
+      chainId: 137,
     });
 
     sdk.updateSignerOrProvider(adminWallet);
     const address = sdk.auth.verify(domain, payload, {
-      chainId: 137
+      chainId: 137,
     });
 
     expect(address).to.equal(signerWallet.address);
-  })
-
+  });
 
   it("Should reject payload with incorrect domain", async () => {
     const payload = await sdk.auth.login(domain);
@@ -51,9 +50,11 @@ describe("Wallet Authentication", async () => {
       sdk.auth.verify("test.thirdweb.com", payload);
       expect.fail();
     } catch (err) {
-      expect(err.message).to.equal("Expected domain test.thirdweb.com does not match domain on payload thirdweb.com");
+      expect(err.message).to.equal(
+        "Expected domain test.thirdweb.com does not match domain on payload thirdweb.com",
+      );
     }
-  })
+  });
 
   it("Should reject expired login payload", async () => {
     const payload = await sdk.auth.login(domain, {
@@ -77,11 +78,13 @@ describe("Wallet Authentication", async () => {
     sdk.updateSignerOrProvider(adminWallet);
     try {
       sdk.auth.verify(domain, payload, {
-        chainId: 137
+        chainId: 137,
       });
       expect.fail();
     } catch (err) {
-      expect(err.message).to.equal("Chain ID 137 does not match payload chain ID 1");
+      expect(err.message).to.equal(
+        "Chain ID 137 does not match payload chain ID 1",
+      );
     }
   });
 
@@ -100,7 +103,7 @@ describe("Wallet Authentication", async () => {
 
   it("Should generate valid authentication token", async () => {
     const payload = await sdk.auth.login(domain);
-    
+
     sdk.updateSignerOrProvider(adminWallet);
     const token = await sdk.auth.generate(domain, payload);
     const address = await sdk.auth.authenticate(domain, token);
@@ -110,7 +113,7 @@ describe("Wallet Authentication", async () => {
 
   it("Should reject token with incorrect domain", async () => {
     const payload = await sdk.auth.login(domain);
-    
+
     sdk.updateSignerOrProvider(adminWallet);
     const token = await sdk.auth.generate(domain, payload);
 
@@ -119,14 +122,14 @@ describe("Wallet Authentication", async () => {
       expect.fail();
     } catch (err) {
       expect(err.message).to.contain(
-        "Expected token to be for the domain test.thirdweb.com, but found token with domain thirdweb.com"
+        "Expected token to be for the domain test.thirdweb.com, but found token with domain thirdweb.com",
       );
     }
-  })
+  });
 
   it("Should reject token before invalid before", async () => {
     const payload = await sdk.auth.login(domain);
-    
+
     sdk.updateSignerOrProvider(adminWallet);
     const token = await sdk.auth.generate(domain, payload, {
       invalidBefore: new Date(Date.now() + 1000 * 60 * 5),
@@ -138,11 +141,11 @@ describe("Wallet Authentication", async () => {
     } catch (err) {
       expect(err.message).to.contain("This token is invalid before");
     }
-  })
+  });
 
   it("Should reject expired authentication token", async () => {
     const payload = await sdk.auth.login(domain);
-    
+
     sdk.updateSignerOrProvider(adminWallet);
     const token = await sdk.auth.generate(domain, payload, {
       expirationTime: new Date(Date.now() - 1000 * 60 * 5),
@@ -158,7 +161,7 @@ describe("Wallet Authentication", async () => {
 
   it("Should reject if admin address is not connected wallet address", async () => {
     const payload = await sdk.auth.login(domain);
-    
+
     sdk.updateSignerOrProvider(adminWallet);
     const token = await sdk.auth.generate(domain, payload);
 
@@ -168,8 +171,8 @@ describe("Wallet Authentication", async () => {
       expect.fail();
     } catch (err) {
       expect(err.message).to.contain(
-        `Expected the connected wallet address ${signerWallet.address} to match the token issuer address ${adminWallet.address}`
+        `Expected the connected wallet address ${signerWallet.address} to match the token issuer address ${adminWallet.address}`,
       );
     }
-  })
+  });
 });
