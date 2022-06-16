@@ -204,7 +204,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     }
 
     const encodedHeader = Buffer.from(JSON.stringify(header)).toString("base64");
-    const encodedData = Buffer.from(JSON.stringify(payloadData)).toString("base64");
+    const encodedData = Buffer.from(JSON.stringify(payloadData)).toString("base64").replaceAll("=", "");
     const encodedSignature = Buffer.from(signature).toString("base64");
 
     // Generate a JWT token with base64 encoded header, payload, and signature
