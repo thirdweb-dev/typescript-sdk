@@ -50,6 +50,7 @@ const additionalClassesToParse = [
   "ContractDeployer",
   "MarketplaceDirect",
   "MarketplaceAuction",
+  "ContractMetadata",
 ];
 
 const modules = json.members[0].members.filter(
