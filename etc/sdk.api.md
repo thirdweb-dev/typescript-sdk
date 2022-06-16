@@ -4983,11 +4983,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-incompatible-release-tags) The symbol "fromPrivateKey" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
     //
     // @beta
-    static fromPrivateKey(privateKey: string, network: ChainOrRpc, options?: SDKOptions): ThirdwebSDK;
+    static fromPrivateKey(privateKey: string, network: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
     // Warning: (ae-incompatible-release-tags) The symbol "fromSigner" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
     //
     // @beta
-    static fromSigner(signer: Signer, network?: ChainOrRpc, options?: SDKOptions): ThirdwebSDK;
+    static fromSigner(signer: Signer, network?: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
     // @internal (undocumented)
     getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     // @beta
