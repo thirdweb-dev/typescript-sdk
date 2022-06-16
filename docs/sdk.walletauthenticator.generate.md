@@ -7,47 +7,40 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
-Generate an Authorized Payload
+Generate Authentication Token
 
 <b>Signature:</b>
 
 ```typescript
-generate(payload: AuthenticationPayloadInput): Promise<AuthorizedPayload>;
+generate(domain: string, payload: LoginPayload, options?: AuthenticationOptions): Promise<string>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  payload | AuthenticationPayloadInput | The configuration used to generate an authentication payload |
+|  domain | string | The domain of the server-side application to authenticate to |
+|  payload | LoginPayload | The login payload to authenticate with |
+|  options | AuthenticationOptions | <i>(Optional)</i> Optional configuration options for the authentication request |
 
 <b>Returns:</b>
 
-Promise&lt;AuthorizedPayload&gt;
+Promise&lt;string&gt;
 
-- A payload authorized by the server that the client can sign for authentication
+A authentication payload that can be used by the client to make authenticated requests
 
 ## Remarks
 
-Generate a payload on the server side for a client side wallet to sign and use for authentication. This payload enables the server side wallet to specify exactly when the wallet is authorized to authenticate, and for which services they are able to access.
+Server-side function that generates a JWT token from the provided login request that the client-side wallet can use to authenticate to the server-side application.
 
 ## Example
 
 
 ```javascript
-const payload = {
-  // The name of the server-side application authorizing the payload
-  appication: "my-app-name",
-  // The address of the client side wallet requesting to authenticate
-  subject: "0x...",
-  // The server-side endpoints the wallet is authorized to access (defaults to ["*"] for access to all)
-  endpoints: ["endpoint1", "endpoint2"],
-  // The date object representing the time before which the authentication is invalid (defaults to now)
-  invalidBefore: new Date(),
-  // The date object representing the time at which the authentication expires (5 hours from now)
-  expiresAt: new Date(Date.now() + 5 * 60 * 60 * 1000),
-}
+const domain = "thirdweb.com";
+const loginPayload = await sdk.auth.login(domain);
 
-const authorizedPayload = await sdk.auth.generate(payload)
+// Generate a JWT token that can be sent to the client-side wallet and used for authentication
+const token = await sdk.auth.generate(domain, loginPayload);
 ```
 

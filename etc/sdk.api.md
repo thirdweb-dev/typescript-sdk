@@ -5607,13 +5607,14 @@ export enum VoteType {
 // @beta
 export class WalletAuthenticator extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, wallet: UserWallet, options: SDKOptions);
-    // Warning: (ae-forgotten-export) The symbol "AuthenticationPayloadInput" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "AuthorizedPayload" needs to be exported by the entry point index.d.ts
-    generate(payload: AuthenticationPayloadInput): Promise<AuthorizedPayload>;
-    // Warning: (ae-forgotten-export) The symbol "AuthenticatedPayload" needs to be exported by the entry point index.d.ts
-    sign(authorizedPayload: AuthorizedPayload): Promise<AuthenticatedPayload>;
-    // (undocumented)
-    verify(authenticatedPayload: AuthenticatedPayload, application: string, endpoint?: string): Promise<boolean>;
+    authenticate(domain: string, token: string): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "AuthenticationOptions" needs to be exported by the entry point index.d.ts
+    generate(domain: string, payload: LoginPayload, options?: AuthenticationOptions): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "LoginOptions" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "LoginPayload" needs to be exported by the entry point index.d.ts
+    login(domain: string, options?: LoginOptions): Promise<LoginPayload>;
+    // Warning: (ae-forgotten-export) The symbol "VerifyOptions" needs to be exported by the entry point index.d.ts
+    verify(domain: string, payload: LoginPayload, options?: VerifyOptions): string;
 }
 
 // @public

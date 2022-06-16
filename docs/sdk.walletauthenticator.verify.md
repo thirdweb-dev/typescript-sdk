@@ -7,21 +7,40 @@
 > This API is provided as a preview for developers and may change based on feedback that we receive. Do not use this API in a production environment.
 > 
 
+Verify Logged In Address
+
 <b>Signature:</b>
 
 ```typescript
-verify(authenticatedPayload: AuthenticatedPayload, application: string, endpoint?: string): Promise<boolean>;
+verify(domain: string, payload: LoginPayload, options?: VerifyOptions): string;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  authenticatedPayload | AuthenticatedPayload |  |
-|  application | string |  |
-|  endpoint | string | <i>(Optional)</i> |
+|  domain | string | The domain of the server-side application to verify the login request for |
+|  payload | LoginPayload | The login payload to verify |
+|  options | VerifyOptions | <i>(Optional)</i> |
 
 <b>Returns:</b>
 
-Promise&lt;boolean&gt;
+string
+
+Address of the logged in wallet
+
+## Remarks
+
+Server-side function to securely verify the address of the logged in client-side wallet by validating the provided client-side login request.
+
+## Example
+
+
+```javascript
+const domain = "thirdweb.com";
+const loginPayload = await sdk.auth.login(domain);
+
+// Verify the login request
+const address = sdk.auth.verifyLogin(domain, loginPayload);
+```
 
