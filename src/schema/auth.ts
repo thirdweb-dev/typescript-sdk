@@ -18,12 +18,16 @@ export const LoginOptionsSchema = z.object({
    * The optional chain ID that the login request was intended for
    */
   chainId: z.number().optional(),
-})
+}).optional();
 
 /**
  * @internal
  */
 export const LoginPayloadDataSchema = z.object({
+  /**
+   * The domain that the user is attempting to login to
+   */
+  domain: z.string(),
   /**
    * The address of the account that is logging in
    */
@@ -59,6 +63,16 @@ export const LoginPayloadSchema = z.object({
 /**
  * @internal
  */
+export const VerifyOptionsSchema = z.object({
+  /**
+   * The optional chain ID to expect the request to be for
+   */
+  chainId: z.number().optional(),
+}).optional();
+
+/**
+ * @internal
+ */
 export const AuthenticationOptionsSchema = z.object({
   /**
    * The date before which the authentication payload is invalid
@@ -68,7 +82,7 @@ export const AuthenticationOptionsSchema = z.object({
    * The date after which the authentication payload is invalid
    */
   expirationTime: z.date().optional(),
-})
+}).optional();
 
 /**
  * @internal
@@ -135,6 +149,11 @@ export type LoginPayloadData = z.output<typeof LoginPayloadDataSchema>;
  * @public
  */
 export type LoginPayload = z.output<typeof LoginPayloadSchema>;
+
+/**
+ * @public
+ */
+export type VerifyOptions = z.input<typeof VerifyOptionsSchema>;
 
 /**
  * @public

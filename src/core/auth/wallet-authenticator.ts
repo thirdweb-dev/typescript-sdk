@@ -9,6 +9,10 @@ import {
   LoginPayloadDataSchema,
   AuthenticationPayloadDataSchema,
   AuthenticationPayloadData,
+  LoginOptionsSchema,
+  VerifyOptionsSchema,
+  VerifyOptions,
+  AuthenticationOptionsSchema,
 } from "../../schema/auth";
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
 import { NetworkOrSignerOrProvider } from "../types";
@@ -16,27 +20,28 @@ import { UserWallet } from "../wallet";
 
 /**
  * Wallet Authenticator
- * @remarks Enables the connected wallet to securely authenticate to a backend server.
- * The wallet authenticator makes use of a JSON token to authenticate the wallet that
- * contains an embedded JWT token. The authentication token can be reused multiple times
- * after authenticating and doesn't need to be stored on any database - instead it can be
- * stored on the client side for later use.
+ * @remarks The wallet authenticator enables server-side applications to securely identify the 
+ * connected wallet address of users on the client-side, and also enables users to authenticate
+ * to any backend using just their wallet. It implements the JSON Web Token (JWT) authentication
+ * standard.
+ * 
  * @example
  * ```javascript
- * // We choose an application name on the server side
- * const application = "my-app-name"
+ * // We specify the domain of the application to authenticate to
+ * const domain = "thirdweb.com"
  *
- * // On the server side, we can generate a payload for a wallet requesting to authenticate
- * const payloadWithSignature = await sdk.auth.generate({
- *   application,
- *   subject: "0x...",
- * })
+ * // On the server side, we can generate a payload for the connected wallet to login
+ * const loginPayload = await sdk.auth.login(domain);
  *
- * // Then on the client side, we can sign this payload with the wallet requesting to authenticate
- * const authenticatedPayload = await sdk.auth.sign(payloadWithSignature)
- *
- * // Finally, on the server side, we can verify if this payload is valid
- * const isValid = await sdk.auth.verify(application, authenticatedPayload)
+ * // Then on the server side, we can securely verify the connected client-side address
+ * const address = sdk.auth.verify(domain, loginPayload);
+ * 
+ * // And we can also generate an authentication token to send to the client
+ * const token = sdk.auth.generate(domain, loginPayload);
+ * 
+ * // Finally, the token can be send from the client to the server to make authenticated requests
+ * // And the server can use the following function to authenticate a token and verify the associated address
+ * const address = sdk.auth.authenticate(domain, token);
  * ```
  * @beta
  */
@@ -73,13 +78,16 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     domain: string, 
     options?: LoginOptions
   ): Promise<LoginPayload> {
+    const parsedOptions = LoginOptionsSchema.parse(options);
+
     const signerAddress = await this.wallet.getAddress();
     const payloadData = LoginPayloadDataSchema.parse({
+      domain,
       address: signerAddress,
-      ...options,
+      ...parsedOptions,
     });
 
-    const message = this.generateMessage(domain, payloadData);
+    const message = this.generateMessage(payloadData);
     const signature = await this.wallet.sign(message);
     
     return {
@@ -108,23 +116,38 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    */
   public verify(
     domain: string, 
-    payload: LoginPayload
+    payload: LoginPayload,
+    options?: VerifyOptions,
   ): string {
     if (isBrowser()) {
       throw new Error("Should not verify login on the browser.");
     }
 
-    const message = this.generateMessage(domain, payload.payload);
+    const parsedOptions = VerifyOptionsSchema.parse(options);
+
+    // Check that the intended domain matches the domain of the payload
+    if (payload.payload.domain !== domain) {
+      throw new Error(`Expected domain ${domain} does not match domain on payload ${payload.payload.domain}`);
+    }
+
+    // Check that the payload hasn't expired
+    const currentTime = new Date();
+    if (currentTime > new Date(payload.payload.expirationTime)) {
+      throw new Error(`Login request has expired`);
+    }
+
+    // If chain ID is specified, check that it matches the chain ID of the signature
+    if (parsedOptions?.chainId !== undefined && parsedOptions.chainId !== payload.payload.chainId) {
+      throw new Error(`Chain ID ${parsedOptions.chainId} does not match payload chain ID ${payload.payload.chainId}`);
+    }
+
+    // Check that the signing address is the claimed wallet address
+    const message = this.generateMessage(payload.payload);
     const userAddress = this.recoverAddress(message, payload.signature);
     if (userAddress.toLowerCase() !== payload.payload.address.toLowerCase()) {
       throw new Error(
-        `User address ${userAddress.toLowerCase()} does not match payload address ${payload.payload.address.toLowerCase()}`
+        `Signer address ${userAddress.toLowerCase()} does not match payload address ${payload.payload.address.toLowerCase()}`
       );
-    }
-
-    const currentTime = new Date();
-    if (currentTime > new Date(payload.payload.expirationTime)) {
-      throw new Error(`Login request has expired.`);
     }
 
     return userAddress;
@@ -158,14 +181,16 @@ export class WalletAuthenticator extends RPCConnectionHandler {
       throw new Error("Authentication tokens should not be generated in the browser.");
     }
 
+    const parsedOptions = AuthenticationOptionsSchema.parse(options);
+
     const userAddress = this.verify(domain, payload);
     const adminAddress = await this.wallet.getAddress();
     const payloadData = AuthenticationPayloadDataSchema.parse({
       iss: adminAddress,
       sub: userAddress,
       aud: domain,
-      nbf: options?.invalidBefore,
-      exp: options?.expirationTime,
+      nbf: parsedOptions?.invalidBefore,
+      exp: parsedOptions?.expirationTime,
     })
 
     const message = JSON.stringify(payloadData);
@@ -199,7 +224,12 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    * 
    * @example
    * ```javascript
+   * const domain = "thirdweb.com";
+   * const loginPayload = await sdk.auth.login(domain);
+   * const token = await sdk.auth.generate(domain, loginPayload);
    * 
+   * // Authenticate the token and get the address of authenticating users wallet
+   * const address = sdk.auth.authenticate(domain, token);
    * ```
    */
   public async authenticate(
@@ -212,10 +242,28 @@ export class WalletAuthenticator extends RPCConnectionHandler {
 
     const encodedPayload = token.split(".")[1];
     const encodedSignature = token.split(".")[2];
-
     const payload: AuthenticationPayloadData = JSON.parse(Buffer.from(encodedPayload, "base64").toString());
     const signature = Buffer.from(encodedSignature, "base64").toString();
 
+    // Check that the token audience matches the domain
+    if (payload.aud !== domain) {
+      throw new Error(
+        `Expected token to be for the domain ${domain}, but found token with domain ${payload.aud}`
+      );
+    }
+
+    // Check that the token is past the invalid before time
+    const currentTime = Math.floor(new Date().getTime() / 1000);
+    if (currentTime < payload.nbf) {
+      throw new Error(`This token is invalid before epoch time ${payload.nbf}, current epoch time is ${currentTime}`);
+    }
+
+    // Check that the token hasn't expired
+    if (currentTime > payload.exp) {
+      throw new Error(`This token expired at epoch time ${payload.exp}, current epoch time is ${currentTime}`);
+    }
+
+    // Check that the connected wallet matches the token issuer
     const connectedAddress = await this.wallet.getAddress();
     if (connectedAddress.toLowerCase() !== payload.iss.toLowerCase()) {
       throw new Error(
@@ -223,27 +271,12 @@ export class WalletAuthenticator extends RPCConnectionHandler {
       );
     }
 
-    const adminAddress = this.recoverAddress(JSON.stringify(payload), signature,);
-    if (connectedAddress.toLowerCase() === adminAddress.toLowerCase()) {
+    // Check that the connected wallet signed the token
+    const adminAddress = this.recoverAddress(JSON.stringify(payload), signature);
+    if (connectedAddress.toLowerCase() !== adminAddress.toLowerCase()) {
       throw new Error(
         `Expected token signer address ${adminAddress} to match the connected wallet address ${connectedAddress}`
       );
-    }
-
-    if (payload.aud !== domain) {
-      throw new Error(
-        `Expected token to be for the domain ${domain}, but found token with domain ${payload.aud}`
-      );
-    }
-
-    const currentTime = Math.floor(new Date().getTime() / 1000);
-    if (currentTime < payload.nbf) {
-      throw new Error(`This token is invalid before epoch time ${payload.nbf}, current epoch time is ${currentTime}`);
-    }
-
-    // Reject if its after the expires at time
-    if (currentTime > payload.exp) {
-      throw new Error(`This token expired at epoch time ${payload.exp}, current epcoh time is ${currentTime}`);
     }
 
     return payload.sub;
@@ -252,11 +285,11 @@ export class WalletAuthenticator extends RPCConnectionHandler {
   /**
    * Generates a EIP-4361 compliant message to sign based on the 
    */
-  private generateMessage(domain: string, payload: LoginPayloadData): string {
+  private generateMessage(payload: LoginPayloadData): string {
     let message = ``;
 
     // Add the domain and login address for transparency
-    message += `${domain} wants you to sign in with your account:\n${payload.address}\n\n`
+    message += `${payload.domain} wants you to sign in with your account:\n${payload.address}\n\n`
 
     // Prompt user to make sure domain is correct to prevent phishing attacks
     message += `Make sure that the request domain above matches the URL of the current website.\n\n`

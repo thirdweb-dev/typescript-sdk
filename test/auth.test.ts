@@ -2,13 +2,13 @@ import { signers } from "./before-setup";
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ThirdwebSDK } from "../src";
-import { AuthenticationPayloadInput } from "../src/schema/auth";
 
 describe("Wallet Authentication", async () => {
   let adminWallet: SignerWithAddress,
     signerWallet: SignerWithAddress,
     attackerWallet: SignerWithAddress;
   let sdk: ThirdwebSDK;
+  let domain = "thirdweb.com";
 
   before(async () => {
     [adminWallet, signerWallet, attackerWallet] = signers;
@@ -16,194 +16,160 @@ describe("Wallet Authentication", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
-  });
-
-  it("Should generate payload with default settings", async () => {
-    const payloadWithSignature = await sdk.auth.generate({
-      application: "thirdweb",
-      subject: signerWallet.address,
-    });
-
-    expect(payloadWithSignature.payload.iss).to.equal(
-      `thirdweb:${adminWallet.address}`,
-    );
-    expect(payloadWithSignature.payload.sub).to.equal(signerWallet.address);
-    expect(payloadWithSignature.payload.aud).to.deep.equal(["*"]);
-    expect(payloadWithSignature.payload.nbf).to.equal(
-      payloadWithSignature.payload.iat,
-    );
-    expect(payloadWithSignature.payload.iat).to.equal(
-      payloadWithSignature.payload.exp - 60 * 60 * 5,
-    );
-  });
-
-  it("should generate payload with custom settings", async () => {
-    const invalidBefore = new Date(Date.now() - 60 * 60);
-    const expiresAt = new Date(Date.now() + 60 * 60);
-    const payload: AuthenticationPayloadInput = {
-      application: "thirdweb",
-      subject: signerWallet.address,
-      endpoints: ["endpoint1", "endpoint2"],
-      invalidBefore,
-      expiresAt,
-    };
-    const payloadWithSignature = await sdk.auth.generate(payload);
-
-    expect(payloadWithSignature.payload.iss).to.equal(
-      `thirdweb:${adminWallet.address}`,
-    );
-    expect(payloadWithSignature.payload.sub).to.equal(signerWallet.address);
-    expect(payloadWithSignature.payload.aud).to.deep.equal([
-      "endpoint1",
-      "endpoint2",
-    ]);
-    expect(payloadWithSignature.payload.nbf).to.equal(
-      Math.floor(invalidBefore.getTime() / 1000),
-    );
-    expect(payloadWithSignature.payload.exp).to.equal(
-      Math.floor(expiresAt.getTime() / 1000),
-    );
-  });
-
-  it("Should not sign payload with incorrect issuer", async () => {
-    const payloadWithSignature = await sdk.auth.generate({
-      application: "thirdweb",
-      subject: signerWallet.address,
-    });
-    payloadWithSignature.payload.iss = `thirdweb${attackerWallet.address}`;
-
     sdk.updateSignerOrProvider(signerWallet);
+  });
 
+  it("Should verify logged in wallet", async () => {
+    const payload = await sdk.auth.login(domain);
+
+    sdk.updateSignerOrProvider(adminWallet);
+    const address = sdk.auth.verify(domain, payload);
+
+    expect(address).to.equal(signerWallet.address);
+  })
+
+  it("Should verify logged in wallet with chain ID and expiration", async () => {
+    const payload = await sdk.auth.login(domain, {
+      expirationTime: new Date(Date.now() + 1000 * 60 * 5),
+      chainId: 137
+    });
+
+    sdk.updateSignerOrProvider(adminWallet);
+    const address = sdk.auth.verify(domain, payload, {
+      chainId: 137
+    });
+
+    expect(address).to.equal(signerWallet.address);
+  })
+
+
+  it("Should reject payload with incorrect domain", async () => {
+    const payload = await sdk.auth.login(domain);
+
+    sdk.updateSignerOrProvider(adminWallet);
     try {
-      await sdk.auth.sign(payloadWithSignature);
-      expect(false).to.equal(true);
-    } catch {
-      expect(true).to.equal(true);
+      sdk.auth.verify("test.thirdweb.com", payload);
+      expect.fail();
+    } catch (err) {
+      expect(err.message).to.equal("Expected domain test.thirdweb.com does not match domain on payload thirdweb.com");
+    }
+  })
+
+  it("Should reject expired login payload", async () => {
+    const payload = await sdk.auth.login(domain, {
+      expirationTime: new Date(Date.now() - 1000 * 60 * 5),
+    });
+
+    sdk.updateSignerOrProvider(adminWallet);
+    try {
+      sdk.auth.verify(domain, payload);
+      expect.fail();
+    } catch (err) {
+      expect(err.message).to.equal("Login request has expired");
     }
   });
 
-  it("Should not sign payload with incorrect subject", async () => {
-    const payloadWithSignature = await sdk.auth.generate({
-      application: "thirdweb",
-      subject: signerWallet.address,
+  it("Should reject payload with incorrect chain ID", async () => {
+    const payload = await sdk.auth.login(domain, {
+      chainId: 1,
     });
-    payloadWithSignature.payload.sub = attackerWallet.address;
 
-    sdk.updateSignerOrProvider(signerWallet);
+    sdk.updateSignerOrProvider(adminWallet);
     try {
-      await sdk.auth.sign(payloadWithSignature);
-      expect(false).to.equal(true);
-    } catch {
-      expect(true).to.equal(true);
+      sdk.auth.verify(domain, payload, {
+        chainId: 137
+      });
+      expect.fail();
+    } catch (err) {
+      expect(err.message).to.equal("Chain ID 137 does not match payload chain ID 1");
     }
   });
 
-  it("Should not sign payload with incorrect signer", async () => {
-    const payloadWithSignature = await sdk.auth.generate({
-      application: "thirdweb",
-      subject: signerWallet.address,
-    });
+  it("Should reject payload with incorrect signer", async () => {
+    const payload = await sdk.auth.login(domain);
+    payload.payload.address = attackerWallet.address;
 
-    sdk.updateSignerOrProvider(attackerWallet);
+    sdk.updateSignerOrProvider(adminWallet);
     try {
-      await sdk.auth.sign(payloadWithSignature);
-      expect(false).to.equal(true);
-    } catch {
-      expect(true).to.equal(true);
+      sdk.auth.verify(domain, payload);
+      expect.fail();
+    } catch (err) {
+      expect(err.message).to.contain("does not match payload address");
     }
   });
 
-  it("Should reject payload before invalid before time", async () => {
-    const payloadWithSignature = await sdk.auth.generate({
-      application: "thirdweb",
-      subject: signerWallet.address,
-      invalidBefore: new Date(Date.now() + 60 * 60),
-    });
-
-    sdk.updateSignerOrProvider(signerWallet);
-    const signedPayload = await sdk.auth.sign(payloadWithSignature);
-
+  it("Should generate valid authentication token", async () => {
+    const payload = await sdk.auth.login(domain);
+    
     sdk.updateSignerOrProvider(adminWallet);
-    const isValid = await sdk.auth.verify(signedPayload, "thirdweb");
+    const token = await sdk.auth.generate(domain, payload);
+    const address = await sdk.auth.authenticate(domain, token);
 
-    // eslint-disable-next-line no-unused-expressions
-    expect(isValid).to.be.false;
+    expect(address).to.equal(signerWallet.address);
   });
 
-  it("Should reject payload after expiration time", async () => {
-    const payloadWithSignature = await sdk.auth.generate({
-      application: "thirdweb",
-      subject: signerWallet.address,
-      expiresAt: new Date(Date.now() - 60 * 60),
+  it("Should reject token with incorrect domain", async () => {
+    const payload = await sdk.auth.login(domain);
+    
+    sdk.updateSignerOrProvider(adminWallet);
+    const token = await sdk.auth.generate(domain, payload);
+
+    try {
+      await sdk.auth.authenticate("test.thirdweb.com", token);
+      expect.fail();
+    } catch (err) {
+      expect(err.message).to.contain(
+        "Expected token to be for the domain test.thirdweb.com, but found token with domain thirdweb.com"
+      );
+    }
+  })
+
+  it("Should reject token before invalid before", async () => {
+    const payload = await sdk.auth.login(domain);
+    
+    sdk.updateSignerOrProvider(adminWallet);
+    const token = await sdk.auth.generate(domain, payload, {
+      invalidBefore: new Date(Date.now() + 1000 * 60 * 5),
     });
 
-    sdk.updateSignerOrProvider(signerWallet);
-    const signedPayload = await sdk.auth.sign(payloadWithSignature);
+    try {
+      await sdk.auth.authenticate(domain, token);
+      expect.fail();
+    } catch (err) {
+      expect(err.message).to.contain("This token is invalid before");
+    }
+  })
 
+  it("Should reject expired authentication token", async () => {
+    const payload = await sdk.auth.login(domain);
+    
     sdk.updateSignerOrProvider(adminWallet);
-    const isValid = await sdk.auth.verify(signedPayload, "thirdweb");
-
-    // eslint-disable-next-line no-unused-expressions
-    expect(isValid).to.be.false;
-  });
-
-  it("Should reject payload on unauthorized endpoints", async () => {
-    const payloadWithSignature = await sdk.auth.generate({
-      application: "thirdweb",
-      subject: signerWallet.address,
-      endpoints: ["endpoint1", "endpoint2"],
+    const token = await sdk.auth.generate(domain, payload, {
+      expirationTime: new Date(Date.now() - 1000 * 60 * 5),
     });
 
-    sdk.updateSignerOrProvider(signerWallet);
-    const signedPayload = await sdk.auth.sign(payloadWithSignature);
-
-    sdk.updateSignerOrProvider(adminWallet);
-    const isValid = await sdk.auth.verify(
-      signedPayload,
-      "thirdweb",
-      "endpoint3",
-    );
-
-    // eslint-disable-next-line no-unused-expressions
-    expect(isValid).to.be.false;
+    try {
+      await sdk.auth.authenticate(domain, token);
+      expect.fail();
+    } catch (err) {
+      expect(err.message).to.contain("This token expired");
+    }
   });
 
-  it("Should reject if no endpoint specified and not all allowed", async () => {
-    const payloadWithSignature = await sdk.auth.generate({
-      application: "thirdweb",
-      subject: signerWallet.address,
-      endpoints: ["endpoint1", "endpoint2"],
-    });
+  it("Should reject if admin address is not connected wallet address", async () => {
+    const payload = await sdk.auth.login(domain);
+    
+    sdk.updateSignerOrProvider(adminWallet);
+    const token = await sdk.auth.generate(domain, payload);
 
     sdk.updateSignerOrProvider(signerWallet);
-    const signedPayload = await sdk.auth.sign(payloadWithSignature);
-
-    sdk.updateSignerOrProvider(adminWallet);
-    const isValid = await sdk.auth.verify(signedPayload, "thirdweb");
-
-    // eslint-disable-next-line no-unused-expressions
-    expect(isValid).to.be.false;
-  });
-
-  it("Should verify payload with valid settings", async () => {
-    const payloadWithSignature = await sdk.auth.generate({
-      application: "thirdweb",
-      subject: signerWallet.address,
-      endpoints: ["endpoint1"],
-    });
-
-    sdk.updateSignerOrProvider(signerWallet);
-    const signedPayload = await sdk.auth.sign(payloadWithSignature);
-
-    sdk.updateSignerOrProvider(adminWallet);
-    const isValid = await sdk.auth.verify(
-      signedPayload,
-      "thirdweb",
-      "endpoint1",
-    );
-
-    // eslint-disable-next-line no-unused-expressions
-    expect(isValid).to.be.true;
-  });
+    try {
+      await sdk.auth.authenticate(domain, token);
+      expect.fail();
+    } catch (err) {
+      expect(err.message).to.contain(
+        `Expected the connected wallet address ${signerWallet.address} to match the token issuer address ${adminWallet.address}`
+      );
+    }
+  })
 });
