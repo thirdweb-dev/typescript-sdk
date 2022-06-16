@@ -30,7 +30,7 @@ import { UserWallet } from "../wallet";
  * // We specify the domain of the application to authenticate to
  * const domain = "thirdweb.com"
  *
- * // On the server side, we can generate a payload for the connected wallet to login
+ * // On the client side, we can generate a payload for the connected wallet to login
  * const loginPayload = await sdk.auth.login(domain);
  *
  * // Then on the server side, we can securely verify the connected client-side address
@@ -115,7 +115,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    * const loginPayload = await sdk.auth.login(domain);
    *
    * // Verify the login request
-   * const address = sdk.auth.verifyLogin(domain, loginPayload);
+   * const address = sdk.auth.verify(domain, loginPayload);
    * ```
    */
   public verify(
@@ -172,7 +172,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    * @param domain - The domain of the server-side application to authenticate to
    * @param payload - The login payload to authenticate with
    * @param options - Optional configuration options for the authentication request
-   * @returns A authentication payload that can be used by the client to make authenticated requests
+   * @returns A authentication token that can be used by the client to make authenticated requests
    *
    * @example
    * ```javascript
@@ -309,7 +309,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
   }
 
   /**
-   * Generates a EIP-4361 compliant message to sign based on the
+   * Generates a EIP-4361 compliant message to sign based on the login payload
    */
   private generateMessage(payload: LoginPayloadData): string {
     let message = ``;

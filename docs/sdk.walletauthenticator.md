@@ -27,7 +27,7 @@ The wallet authenticator enables server-side applications to securely identify t
 // We specify the domain of the application to authenticate to
 const domain = "thirdweb.com"
 
-// On the server side, we can generate a payload for the connected wallet to login
+// On the client side, we can generate a payload for the connected wallet to login
 const loginPayload = await sdk.auth.login(domain);
 
 // Then on the server side, we can securely verify the connected client-side address

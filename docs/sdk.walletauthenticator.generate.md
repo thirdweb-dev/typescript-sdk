@@ -27,7 +27,7 @@ generate(domain: string, payload: LoginPayload, options?: AuthenticationOptions)
 
 Promise&lt;string&gt;
 
-A authentication payload that can be used by the client to make authenticated requests
+A authentication token that can be used by the client to make authenticated requests
 
 ## Remarks
 

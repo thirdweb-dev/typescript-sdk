@@ -41,6 +41,6 @@ const domain = "thirdweb.com";
 const loginPayload = await sdk.auth.login(domain);
 
 // Verify the login request
-const address = sdk.auth.verifyLogin(domain, loginPayload);
+const address = sdk.auth.verify(domain, loginPayload);
 ```
 
