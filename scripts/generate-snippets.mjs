@@ -52,6 +52,11 @@ const additionalClassesToParse = [
   "MarketplaceAuction",
   "ContractMetadata",
   "ContractEvents",
+  "DelayedReveal",
+  "ContractRoles",
+  "IpfsStorage",
+  "GasCostEstimator",
+  "ContractInterceptor",
 ];
 
 const modules = json.members[0].members.filter(
