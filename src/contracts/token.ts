@@ -3,6 +3,7 @@ import { TokenERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import {
+  Erc20SignatureMinting,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -57,6 +58,7 @@ export class Token extends Erc20<TokenERC20> {
    * @internal
    */
   public analytics: ContractAnalytics<TokenERC20>;
+
   /**
    * @internal
    */
@@ -90,6 +92,10 @@ export class Token extends Erc20<TokenERC20> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.signature = new Erc20SignatureMinting(
+      this.contractWrapper,
+      this.roles,
+    );
   }
 
   /** ******************************

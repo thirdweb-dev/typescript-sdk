@@ -37,15 +37,13 @@ import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
  * @public
  */
 export class Erc1155<
-  T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseERC1155,
+  T extends DropERC1155 | TokenERC1155 | BaseSignatureMintERC1155,
 > implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_EDITION.name;
   public query: Erc1155Enumerable | undefined;
   public mint: Erc1155Mintable | undefined;
-  public signature:
-    | Erc1155SignatureMintable<BaseSignatureMintERC1155>
-    | undefined;
+  public signature: Erc1155SignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
@@ -324,7 +322,7 @@ export class Erc1155<
   }
 
   private detectErc1155SignatureMintable():
-    | Erc1155SignatureMintable<BaseSignatureMintERC1155>
+    | Erc1155SignatureMintable
     | undefined {
     if (
       detectContractFeature<BaseSignatureMintERC1155>(

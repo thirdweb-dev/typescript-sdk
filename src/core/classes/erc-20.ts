@@ -348,7 +348,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
     if (
       detectContractFeature<BaseSignatureMintERC20>(
         this.contractWrapper,
-        "ERC20",
+        "ERC20SignatureMintable",
       )
     ) {
       return new Erc20SignatureMintable(this.contractWrapper);

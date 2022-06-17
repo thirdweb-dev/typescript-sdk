@@ -47,16 +47,14 @@ export class Erc721<
     | SignatureDrop
     | DropERC721
     | TokenERC721
-    | BaseERC721 = BaseERC721,
+    | BaseSignatureMintERC721,
 > implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_NFT.name;
   public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
   public drop: Erc721Dropable | undefined;
-  public signature:
-    | Erc721WithQuantitySignatureMintable<BaseSignatureMintERC721>
-    | undefined;
+  public signature: Erc721WithQuantitySignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
@@ -298,7 +296,7 @@ export class Erc721<
   }
 
   private detectErc721SignatureMintable():
-    | Erc721WithQuantitySignatureMintable<BaseSignatureMintERC721>
+    | Erc721WithQuantitySignatureMintable
     | undefined {
     if (
       detectContractFeature<BaseSignatureMintERC721>(

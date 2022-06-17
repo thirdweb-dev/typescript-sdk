@@ -70,12 +70,12 @@ export const FEATURE_NFT_MINTABLE = {
   },
 } as const;
 
-export const FEATURE_NFT_SIGNATURE_MINT = {
+export const FEATURE_NFT_SIGNATURE_MINTABLE = {
   name: "ERC721SignatureMint",
   namespace: "nft.signature",
   docLinks: {
     sdk: "sdk.erc721signaturemint",
-    contracts: "IMintableERC721",
+    contracts: "ISignatureMintERC721",
   },
   abis: [Erc721Abi, SignatureMintERC721Abi],
   features: {},
@@ -117,5 +117,6 @@ export const FEATURE_NFT = {
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
     [FEATURE_NFT_DROPABLE.name]: FEATURE_NFT_DROPABLE,
+    [FEATURE_NFT_SIGNATURE_MINTABLE.name]: FEATURE_NFT_SIGNATURE_MINTABLE,
   },
 } as const;

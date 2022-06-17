@@ -21,24 +21,23 @@ import { uploadOrExtractURIs } from "../../common/nft";
 import { TokensMintedWithSignatureEvent } from "contracts/ITokenERC1155";
 import { BaseSignatureMintERC1155 } from "../../types/eips";
 import { FEATURE_EDITION_SIGNATURE_MINTABLE } from "../../constants/erc1155-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
  * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
  * @public
  */
-export class Erc1155SignatureMintable<
-  TContract extends BaseSignatureMintERC1155 | TokenERC1155,
-> {
+export class Erc1155SignatureMintable implements DetectableFeature {
   featureName = FEATURE_EDITION_SIGNATURE_MINTABLE.name;
 
-  private contractWrapper: ContractWrapper<TContract>;
+  private contractWrapper: ContractWrapper<BaseSignatureMintERC1155>;
   private storage: IStorage;
   private roles:
     | ContractRoles<TokenERC1155, typeof NFTCollection.contractRoles[number]>
     | undefined;
 
   constructor(
-    contractWrapper: ContractWrapper<TContract>,
+    contractWrapper: ContractWrapper<BaseSignatureMintERC1155>,
     storage: IStorage,
     roles?: ContractRoles<
       TokenERC1155,

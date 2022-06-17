@@ -19,19 +19,17 @@ import { NFTCollection } from "../../contracts";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { TokensMintedWithSignatureEvent } from "contracts/ITokenERC721";
 import { BaseSignatureMintERC721 } from "../../types/eips";
-import { FEATURE_NFT_SIGNATURE_MINT } from "../../constants/erc721-features";
+import { FEATURE_NFT_SIGNATURE_MINTABLE } from "../../constants/erc721-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
  * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
  * @public
  */
-// TODO consolidate into a single class
-export class Erc721WithQuantitySignatureMintable<
-  TContract extends BaseSignatureMintERC721,
-> {
-  featureName = FEATURE_NFT_SIGNATURE_MINT.name;
+export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
+  featureName = FEATURE_NFT_SIGNATURE_MINTABLE.name;
 
-  private contractWrapper: ContractWrapper<TContract>;
+  private contractWrapper: ContractWrapper<BaseSignatureMintERC721>;
   private storage: IStorage;
   private roles?: ContractRoles<
     TokenERC721,
@@ -39,7 +37,7 @@ export class Erc721WithQuantitySignatureMintable<
   >;
 
   constructor(
-    contractWrapper: ContractWrapper<TContract>,
+    contractWrapper: ContractWrapper<BaseSignatureMintERC721>,
     storage: IStorage,
     roles?: ContractRoles<
       TokenERC721,
@@ -81,7 +79,6 @@ export class Erc721WithQuantitySignatureMintable<
       mintRequest.currencyAddress,
       overrides,
     );
-    console.log("Before");
     const receipt = await this.contractWrapper.sendTransaction(
       "mintWithSignature",
       [message, signature],

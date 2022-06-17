@@ -1,12 +1,14 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
-import { NFTCollection, Token } from "../src";
-import { sdk, signers, storage } from "./before-setup";
+import { BigNumber } from "ethers";
 import {
-  PayloadToSign721,
-  SignedPayload721,
-} from "../src/schema/contracts/common/signature";
+  NFTCollection,
+  PayloadToSign721withQuantity,
+  SignedPayload721WithQuantitySignature,
+  Token,
+} from "../src";
+import { sdk, signers, storage } from "./before-setup";
+import { SignedPayload721 } from "../src/schema/contracts/common/signature";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 
 global.fetch = require("cross-fetch");
@@ -18,7 +20,7 @@ describe("NFT sig minting", async () => {
 
   let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
-  let meta: PayloadToSign721;
+  let meta: PayloadToSign721withQuantity;
 
   before(() => {
     [adminWallet, samWallet] = signers;
@@ -70,8 +72,8 @@ describe("NFT sig minting", async () => {
   describe("Generating Signatures", () => {
     // let voucher: SignaturePayload;
     // let signature: string, badSignature: string;
-    let goodPayload: SignedPayload721;
-    let badPayload: SignedPayload721;
+    let goodPayload: SignedPayload721WithQuantitySignature;
+    let badPayload: SignedPayload721WithQuantitySignature;
 
     beforeEach(async () => {
       goodPayload = await nftContract.signature.generate(meta);

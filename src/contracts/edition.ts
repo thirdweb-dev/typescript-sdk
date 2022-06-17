@@ -30,6 +30,7 @@ import { QueryAllParams } from "../types";
 import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
 import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { Erc1155SignatureMintable } from "../core";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -90,6 +91,7 @@ export class Edition extends Erc1155<TokenERC1155> {
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC1155>;
+  public signature = this.signature as Erc1155SignatureMintable;
   private _query = this.query as Erc1155Enumerable;
   private _mint = this.mint as Erc1155Mintable;
   private _batchMint = this._mint.batch as Erc1155BatchMintable;
