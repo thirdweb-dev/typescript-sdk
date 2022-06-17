@@ -172,6 +172,25 @@
     "properties": [],
     "reference": "https://docs.thirdweb.com/typescript/sdk.ContractEvents"
   },
+  "ContractInterceptor": {
+    "name": "ContractInterceptor",
+    "summary": "Allows overriding transaction behavior for this contract\n\n\n",
+    "remarks": null,
+    "examples": {},
+    "methods": [
+      {
+        "name": "overrideNextTransaction",
+        "summary": "The next transaction executed will add/replace any overrides passed via the passed in hook.\n\n",
+        "remarks": "\n\nOverridden values will be applied to the next transaction executed.\n\n",
+        "examples": {
+          "javascript": "contract.interceptor.overrideNextTransaction(() => ({\n  gasLimit: 3000000,\n}));"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractInterceptor.overrideNextTransaction"
+      }
+    ],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.ContractInterceptor"
+  },
   "ContractMetadata": {
     "name": "ContractMetadata",
     "summary": "Handles metadata for a Contract\n\n",
