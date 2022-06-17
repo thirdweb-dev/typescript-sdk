@@ -1,5 +1,5 @@
 import { providers, Signer } from "ethers";
-import { getProviderForChain } from "../../constants/urls";
+import { chainNameToId, getProviderForChain } from "../../constants/urls";
 import { ConnectionInfo } from "../types";
 import { ChainOrRpc } from "../../constants";
 import { EventEmitter2 } from "eventemitter2";
@@ -14,7 +14,7 @@ import {
  */
 export class RPCConnectionHandler extends EventEmitter2 {
   protected options: SDKOptionsOutput;
-  private chainId: ChainOrRpc;
+  private chainId: ChainOrRpc; // TODO (rpc) enforce this to be a pure ChainId
   private provider: providers.Provider;
   private signer: Signer | undefined;
 

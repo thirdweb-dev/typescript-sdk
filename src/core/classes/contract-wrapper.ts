@@ -30,7 +30,7 @@ import { getContractAddressByChainId } from "../../constants/addresses";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { getPolygonGasPriorityFee } from "../../common/gas-price";
-import { ChainId } from "../../constants";
+import { ChainId, chainNameToId } from "../../constants";
 import { convertToTWError } from "../../common";
 import { isBrowser } from "../../common/utils";
 
@@ -50,12 +50,12 @@ export class ContractWrapper<
   public abi;
 
   constructor(
-    network: ConnectionInfo,
+    connection: ConnectionInfo,
     contractAddress: string,
     contractAbi: ContractInterface,
     options: SDKOptions,
   ) {
-    super(network, options);
+    super(connection, options);
     this.abi = contractAbi;
     // set up the contract
     this.writeContract = new Contract(
@@ -269,7 +269,24 @@ export class ContractWrapper<
       }
     }
 
-    // TODO: check if write and read contracts are on the same network
+    // check if the signer is present and on the expected chain
+    const signer = this.getSigner();
+    invariant(signer, "Cannot execute a transaction without valid signer");
+    const chainId = await signer.getChainId();
+    // get the expected chainId from the passed in network (network name or chainId or rpc url)
+    const passedInNetwork = this.getConnectionInfo().chainId;
+    const expectedChainId: number =
+      typeof passedInNetwork === "string"
+        ? chainNameToId[passedInNetwork]
+        : passedInNetwork;
+    // expectedChainId might not be found if we got passed a rpc url directly, in that case let the tx go through
+    // TODO create a provider from the url
+    if (expectedChainId) {
+      invariant(
+        chainId === expectedChainId,
+        `Chain mismatch Error: Trying to call a contract on chain '${expectedChainId}', but the connected signer is on chain '${chainId}'.`,
+      );
+    }
 
     if (!callOverrides) {
       callOverrides = await this.getCallOverrides();

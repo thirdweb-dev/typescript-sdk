@@ -238,7 +238,7 @@ describe("Publishing", async () => {
         [adminWallet.address, samWallet.address],
       ]),
     ]);
-    const c = await sdk.getContract(addr);
+    const c = await realSDK.getContract(addr);
     const uri = await c.call("contractUri");
     expect(uri).to.eq(ethers.utils.hexZeroPad("0x1234", 32));
 

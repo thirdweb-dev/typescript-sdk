@@ -53,7 +53,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    *
    * @param signer - a ethers Signer to be used for transactions
-   * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
+   * @param chainId - the chainId to connect to (e.g. ChainId.Mainnet, ChainId.Rinkeby, ChainId.Polygon, ChainId.Mumbai...)
    * @param options - the SDK options to use
    * @param storage - the storage handler to use
    * @returns an instance of the SDK
@@ -62,11 +62,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromSigner(
     signer: Signer,
-    network: ChainOrRpc,
+    chainId: ChainOrRpc,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
-    return new ThirdwebSDK(network, signer, options, storage);
+    return new ThirdwebSDK(chainId, signer, options, storage);
   }
 
   /**
@@ -82,7 +82,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    *
    * @param privateKey - the private key - **DO NOT EXPOSE THIS TO THE PUBLIC**
-   * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
+   * @param chainId - the chainId to connect to (e.g. ChainId.Mainnet, ChainId.Rinkeby, ChainId.Polygon, ChainId.Mumbai...)
    * @param options - the SDK options to use
    * @param storage - the storage handler to use
    * @returns an instance of the SDK
@@ -91,12 +91,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromPrivateKey(
     privateKey: string,
-    network: ChainOrRpc,
+    chainId: ChainOrRpc,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
     const signer = new ethers.Wallet(privateKey);
-    return ThirdwebSDK.fromSigner(signer, network, options, storage);
+    return ThirdwebSDK.fromSigner(signer, chainId, options, storage);
   }
 
   /**
