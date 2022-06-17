@@ -39,6 +39,7 @@ import {
 } from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
 import { Multiwrap } from "../contracts/multiwrap";
+import { WalletAuthenticator } from "./auth/wallet-authenticator";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -135,11 +136,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * Interact with the connected wallet
    */
   public wallet: UserWallet;
-
   /**
    * Upload and download files from IPFS or from your own storage service
    */
   public storage: RemoteStorage;
+  /**
+   * Enable authentication with the connected wallet
+   */
+  public auth: WalletAuthenticator;
 
   constructor(
     network: ChainOrRpc | SignerOrProvider,
@@ -150,8 +154,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     super(signerOrProvider, options);
     this.storageHandler = storage;
     this.storage = new RemoteStorage(storage);
-    this.deployer = new ContractDeployer(signerOrProvider, options, storage);
     this.wallet = new UserWallet(signerOrProvider, options);
+    this.deployer = new ContractDeployer(signerOrProvider, options, storage);
+    this.auth = new WalletAuthenticator(signerOrProvider, this.wallet, options);
     this._publisher = new ContractPublisher(
       signerOrProvider,
       this.options,
@@ -409,6 +414,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   private updateContractSignerOrProvider() {
+    this.auth.updateSignerOrProvider(this.getSignerOrProvider());
     this.wallet.onNetworkUpdated(this.getSignerOrProvider());
     this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
     this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
