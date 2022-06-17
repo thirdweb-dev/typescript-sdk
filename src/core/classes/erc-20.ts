@@ -2,9 +2,9 @@ import { ContractWrapper } from "./contract-wrapper";
 import { DropERC20, IMintableERC20, TokenERC20 } from "contracts";
 import { BigNumber, BigNumberish, ethers, Signer } from "ethers";
 import { IStorage } from "../interfaces";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
+import { TransactionResult } from "../types";
+import { SDKOptions } from "../../schema/sdk-options";
 import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import {
   fetchCurrencyMetadata,

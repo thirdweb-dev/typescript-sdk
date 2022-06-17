@@ -17,7 +17,7 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, options, storage)](./sdk.thirdwebsdk._constructor_.md) |  | Constructs a new instance of the <code>ThirdwebSDK</code> class |
+|  [(constructor)(chainId, signer, options, storage)](./sdk.thirdwebsdk._constructor_.md) |  | Constructs a new instance of the <code>ThirdwebSDK</code> class |
 
 ## Properties
 
@@ -48,5 +48,4 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 |  [getTokenDrop(address)](./sdk.thirdwebsdk.gettokendrop.md) |  | Get an instance of a Token Drop contract |
 |  [getVote(address)](./sdk.thirdwebsdk.getvote.md) |  | Get an instance of a Vote contract |
 |  [resolveContractType(contractAddress)](./sdk.thirdwebsdk.resolvecontracttype.md) |  |  |
-|  [updateSignerOrProvider(network)](./sdk.thirdwebsdk.updatesignerorprovider.md) |  | Update the active signer or provider for all contracts |
 

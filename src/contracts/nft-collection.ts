@@ -1,9 +1,5 @@
 import { IStorage } from "../core/interfaces/IStorage";
-import type {
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../core/types";
+import type { TransactionResult, TransactionResultWithId } from "../core/types";
 import { Erc721BatchMintable } from "../core/classes/erc-721-batch-mintable";
 import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
 import { Erc721Mintable } from "../core/classes/erc-721-mintable";
@@ -28,6 +24,7 @@ import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
 import { QueryAllParams } from "../types";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { ConnectionInfo } from "../core/types";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -110,12 +107,12 @@ export class NFTCollection extends Erc721<TokenERC721> {
   private _owned = this._query.owned as Erc721Enumerable;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<TokenERC721>(
-      network,
+      connection,
       address,
       NFTCollection.contractAbi,
       options,

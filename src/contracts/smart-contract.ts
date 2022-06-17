@@ -1,5 +1,5 @@
 import { ContractMetadata } from "../core/classes/contract-metadata";
-import { IStorage, NetworkOrSignerOrProvider } from "../core";
+import { ConnectionInfo, IStorage } from "../core";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
@@ -21,7 +21,7 @@ import {
 } from "contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { CallOverrides, ContractInterface } from "ethers";
+import { CallOverrides, ContractInterface, Signer } from "ethers";
 import { ALL_ROLES, detectContractFeature } from "../common";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
@@ -101,13 +101,13 @@ export class SmartContract<
   public edition: Erc1155 | undefined;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     abi: ContractInterface,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<TContract>(
-      network,
+      connection,
       address,
       abi,
       options,

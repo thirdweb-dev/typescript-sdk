@@ -110,6 +110,8 @@
 |  Variable | Description |
 |  --- | --- |
 |  [ALL\_ROLES](./sdk.all_roles.md) |  |
+|  [chainNameToId](./sdk.chainnametoid.md) |  |
+|  [defaultRPCMap](./sdk.defaultrpcmap.md) |  |
 |  [MintRequest1155](./sdk.mintrequest1155.md) |  |
 |  [MintRequest20](./sdk.mintrequest20.md) |  |
 |  [MintRequest721](./sdk.mintrequest721.md) |  |
@@ -129,6 +131,7 @@
 |  [ClaimCondition](./sdk.claimcondition.md) | Represents a claim condition fetched from the SDK |
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
 |  [ClaimVerification](./sdk.claimverification.md) |  |
+|  [ConnectionInfo](./sdk.connectioninfo.md) |  |
 |  [ContractEvent](./sdk.contractevent.md) |  |
 |  [ContractForContractType](./sdk.contractforcontracttype.md) |  |
 |  [ContractType](./sdk.contracttype.md) |  |

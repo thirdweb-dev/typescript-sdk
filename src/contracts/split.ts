@@ -3,7 +3,7 @@ import { IERC20, Split as SplitContract } from "contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { IStorage } from "../core/interfaces/IStorage";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
+import { ConnectionInfo, TransactionResult } from "../core/types";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";
@@ -56,12 +56,12 @@ export class Split implements UpdateableNetwork {
   public analytics: ContractAnalytics<SplitContract>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<SplitContract>(
-      network,
+      connection,
       address,
       Split.contractAbi,
       options,

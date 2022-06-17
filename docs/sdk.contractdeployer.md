@@ -17,7 +17,7 @@ export declare class ContractDeployer extends RPCConnectionHandler
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, options, storage)](./sdk.contractdeployer._constructor_.md) |  | Constructs a new instance of the <code>ContractDeployer</code> class |
+|  [(constructor)(connection, options, storage)](./sdk.contractdeployer._constructor_.md) |  | Constructs a new instance of the <code>ContractDeployer</code> class |
 
 ## Methods
 
@@ -34,5 +34,5 @@ export declare class ContractDeployer extends RPCConnectionHandler
 |  [deployToken(metadata)](./sdk.contractdeployer.deploytoken.md) |  | Deploys a new Token contract |
 |  [deployTokenDrop(metadata)](./sdk.contractdeployer.deploytokendrop.md) |  | Deploys a new Token Drop contract |
 |  [deployVote(metadata)](./sdk.contractdeployer.deployvote.md) |  | Deploys a new Vote contract |
-|  [updateSignerOrProvider(network)](./sdk.contractdeployer.updatesignerorprovider.md) |  |  |
+|  [updateSigner(signer)](./sdk.contractdeployer.updatesigner.md) |  |  |
 

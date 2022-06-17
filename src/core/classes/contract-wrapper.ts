@@ -17,6 +17,7 @@ import {
   SDKOptionsSchema,
 } from "../../schema/sdk-options";
 import {
+  ConnectionInfo,
   ForwardRequestMessage,
   GaslessTransaction,
   PermitRequestMessage,
@@ -36,7 +37,6 @@ import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { ChainId } from "../../constants";
 import { convertToTWError } from "../../common";
 import { isBrowser } from "../../common/utils";
-import { Provider } from "@ethersproject/providers";
 
 /**
  * @internal
@@ -55,13 +55,12 @@ export class ContractWrapper<
   public abi;
 
   constructor(
-    network: Provider,
-    signer: Signer | undefined,
+    network: ConnectionInfo,
     contractAddress: string,
     contractAbi: ContractInterface,
     options: SDKOptions,
   ) {
-    super(network, signer);
+    super(network);
     this.abi = contractAbi;
     // set up the contract
     this.writeContract = new Contract(

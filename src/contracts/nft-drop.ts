@@ -12,7 +12,7 @@ import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core/interfaces/IStorage";
 import {
-  NetworkOrSignerOrProvider,
+  ConnectionInfo,
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
@@ -163,12 +163,12 @@ export class NFTDrop extends Erc721<DropERC721> {
   private _owned = this._query.owned as Erc721Enumerable;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<DropERC721>(
-      network,
+      connection,
       address,
       NFTDrop.contractAbi,
       options,

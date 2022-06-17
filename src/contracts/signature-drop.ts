@@ -13,7 +13,7 @@ import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core/interfaces/IStorage";
 import {
-  NetworkOrSignerOrProvider,
+  ConnectionInfo,
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
@@ -179,12 +179,12 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   private _owned = this._query.owned as Erc721Enumerable;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<SignatureDropContract>(
-      network,
+      connection,
       address,
       SignatureDrop.contractAbi,
       options,

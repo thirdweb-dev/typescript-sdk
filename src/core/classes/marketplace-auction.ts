@@ -200,7 +200,7 @@ export class MarketplaceAuction {
     validateNewListingParam(listing);
 
     await handleTokenApproval(
-      this.contractWrapper.getSignerOrProvider(),
+      this.contractWrapper,
       this.getAddress(),
       listing.assetContractAddress,
       listing.tokenId,

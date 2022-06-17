@@ -1,5 +1,4 @@
 import { ethers, providers } from "ethers";
-import { SignerOrProvider } from "../core/types";
 import { Provider } from "@ethersproject/providers";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 /**
@@ -114,10 +113,7 @@ export function getRpcUrl(
  * @param network - the chain name or rpc url
  * @returns the rpc url for that chain
  */
-export function getProviderForChain(network: ChainOrRpc | Provider): Provider {
-  if (typeof network !== "string" && typeof network !== "number") {
-    return network;
-  }
+export function getProviderForChain(network: ChainOrRpc): Provider {
   const rpcUrl = getRpcUrl(network);
   return getReadOnlyProvider(rpcUrl);
 }

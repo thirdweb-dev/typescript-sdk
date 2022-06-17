@@ -2,7 +2,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { BigNumber, BigNumberish, constants, Signer } from "ethers";
 import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces/IStorage";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import { TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { fetchTokenMetadata } from "../../common/nft";

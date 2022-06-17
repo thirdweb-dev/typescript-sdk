@@ -8,7 +8,7 @@ import {
 import { BigNumber, BigNumberish, BytesLike, Signer } from "ethers";
 import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import { TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import {
@@ -242,7 +242,7 @@ export class Erc1155<
    * const addresses = [
    *  "0x...", "0x...", "0x...",
    * ]
-   * 
+   *
    * await contract.airdrop(tokenId, addresses);
    * ```
    */

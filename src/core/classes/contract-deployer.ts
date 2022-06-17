@@ -1,4 +1,4 @@
-import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
+import { ConnectionInfo, ValidContractClass } from "../types";
 import { z } from "zod";
 import { ContractRegistry } from "./registry";
 import { getContractAddressByChainId } from "../../constants/addresses";
@@ -12,8 +12,8 @@ import {
   Marketplace,
   NFTCollection,
   NFTDrop,
-  SignatureDrop,
   Pack,
+  SignatureDrop,
   Split,
   Token,
   Vote,
@@ -28,7 +28,7 @@ import {
 } from "../../types/deploy/deploy-metadata";
 import { TokenDrop } from "../../contracts/token-drop";
 import { Multiwrap } from "../../contracts/multiwrap";
-import { Provider } from "@ethersproject/providers";
+import { Signer } from "ethers";
 
 /**
  * Handles deploying new contracts
@@ -48,8 +48,12 @@ export class ContractDeployer extends RPCConnectionHandler {
   private storage: IStorage;
   private options: SDKOptions;
 
-  constructor(network: Provider, options: SDKOptions, storage: IStorage) {
-    super(network);
+  constructor(
+    connection: ConnectionInfo,
+    options: SDKOptions,
+    storage: IStorage,
+  ) {
+    super(connection);
     this.options = options;
     this.storage = storage;
   }
@@ -363,7 +367,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         );
         return new ContractRegistry(
           registryAddress,
-          this.getSignerOrProvider(),
+          this.getConnectionInfo(),
           this.options,
         );
       }));
@@ -382,27 +386,18 @@ export class ContractDeployer extends RPCConnectionHandler {
     return (this._factory = this.getProvider()
       .getNetwork()
       .then(async ({ chainId }) => {
+        console.log("chainId", chainId);
         const factoryAddress = getContractAddressByChainId(
           chainId,
           "twFactory",
         );
         return new ContractFactory(
           factoryAddress,
-          this.getSignerOrProvider(),
+          this.getConnectionInfo(),
           this.storage,
           this.options,
         );
       }));
-  }
-
-  public override updateProvider(provider: Provider) {
-    super.updateProvider(provider);
-    this._factory?.then((factory) => {
-      factory.updateProvider(provider);
-    });
-    this._registry?.then((registry) => {
-      registry.updateProvider(provider);
-    });
   }
 
   public override updateSigner(signer: Signer | undefined) {

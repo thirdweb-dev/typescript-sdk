@@ -7,7 +7,7 @@ import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
 import { IStorage } from "../core/interfaces/IStorage";
 import {
-  NetworkOrSignerOrProvider,
+  ConnectionInfo,
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
@@ -124,12 +124,12 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   public interceptor: ContractInterceptor<DropERC1155>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<DropERC1155>(
-      network,
+      connection,
       address,
       EditionDrop.contractAbi,
       options,

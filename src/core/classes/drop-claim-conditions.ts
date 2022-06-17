@@ -292,7 +292,7 @@ export class DropClaimConditions<
         }
       } else {
         const erc20 = new ContractWrapper<IERC20>(
-          provider,
+          this.contractWrapper.getConnectionInfo(),
           claimCondition.currencyAddress,
           ERC20Abi,
           {},

@@ -12,14 +12,14 @@ Constructs a new instance of the `Multiwrap` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<MultiwrapContract>);
+constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<MultiwrapContract>);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  connection | [ConnectionInfo](./sdk.connectioninfo.md) |  |
 |  address | string |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> |

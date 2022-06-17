@@ -1,36 +1,37 @@
-import { ethers, Signer, providers } from "ethers";
-import EventEmitter from "eventemitter3";
-import { getReadOnlyProvider } from "../../constants/urls";
-import {
-  SDKOptions,
-  SDKOptionsOutput,
-  SDKOptionsSchema,
-} from "../../schema/sdk-options";
-import { NetworkOrSignerOrProvider, SignerOrProvider } from "../types";
+import { providers, Signer } from "ethers";
+import { getProviderForChain } from "../../constants/urls";
+import { ConnectionInfo } from "../types";
 import { ChainOrRpc } from "../../constants";
-import { Provider } from "@ethersproject/providers";
+import { EventEmitter2 } from "eventemitter2";
 
 /**
  * @internal
  */
-export class RPCConnectionHandler extends EventEmitter {
+export class RPCConnectionHandler extends EventEmitter2 {
+  private chainId: ChainOrRpc;
   private provider: providers.Provider;
   private signer: Signer | undefined;
 
-  constructor(provider: Provider, signer?: Signer) {
+  // TODO (rpc) needs the options to be passed in to override RPC urls
+  constructor(connection: ConnectionInfo) {
     super();
-    this.signer = signer;
-    this.provider = provider;
+    this.chainId = connection.chainId;
+    this.provider = connection.provider
+      ? connection.provider
+      : getProviderForChain(connection.chainId);
+    this.signer = connection.signer;
   }
+
+  // TODO (rpc) see if we need to expose this
+  // public updateProvider(provider: Provider) {
+  //   this.provider = provider;
+  // }
+
   /**
    * The function to call whenever the network changes, such as when the users connects their wallet, disconnects their wallet, the connected chain changes, etc.
    *
-   * @param network - a network, signer or provider that ethers js can interpret
+   * @param signer
    */
-  public updateProvider(provider: Provider) {
-    this.provider = provider;
-  }
-
   public updateSigner(signer: Signer | undefined) {
     this.signer = signer;
   }
@@ -64,6 +65,14 @@ export class RPCConnectionHandler extends EventEmitter {
    */
   public getSignerOrProvider(): Signer | providers.Provider {
     return this.getSigner() || this.getProvider();
+  }
+
+  public getConnectionInfo(): ConnectionInfo {
+    return {
+      chainId: this.chainId,
+      signer: this.getSigner(),
+      provider: this.getProvider(),
+    };
   }
   //
   // /** ********************

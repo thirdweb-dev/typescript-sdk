@@ -14,7 +14,7 @@ import { Vote } from "../../contracts/vote";
 import { Token } from "../../contracts/token";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
-import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
+import { ConnectionInfo, ValidContractClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 
 import {
@@ -36,11 +36,11 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
 
   constructor(
     factoryAddr: string,
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     storage: IStorage,
     options?: SDKOptions,
   ) {
-    super(network, factoryAddr, TWFactory__factory.abi, options);
+    super(connection, factoryAddr, TWFactory__factory.abi, options);
     this.storage = storage;
   }
 
@@ -123,11 +123,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       case SignatureDrop.contractType:
         const signatureDropmetadata =
           SignatureDrop.schema.deploy.parse(metadata);
-        const chainId = await this.getChainID();
-        const signMintAddress = getContractAddressByChainId(chainId, "sigMint");
-        if (signMintAddress === AddressZero) {
-          throw new Error("SignatureDrop contract not deployable yet");
-        }
         return [
           await this.getSignerAddress(),
           signatureDropmetadata.name,

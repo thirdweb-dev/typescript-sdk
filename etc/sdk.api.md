@@ -15,7 +15,7 @@ import { ContractInterface } from 'ethers';
 import type { ContractTransaction } from 'ethers';
 import { ethers } from 'ethers';
 import { Event as Event_2 } from 'ethers';
-import EventEmitter from 'eventemitter3';
+import { EventEmitter2 } from 'eventemitter2';
 import type { EventFilter } from 'ethers';
 import type { EventFragment } from '@ethersproject/abi';
 import { extendShape } from 'zod';
@@ -25,11 +25,11 @@ import { ListenerFn } from 'eventemitter3';
 import type { Overrides } from 'ethers';
 import type { PayableOverrides } from 'ethers';
 import type { PopulatedTransaction } from 'ethers';
-import type { Provider } from '@ethersproject/providers';
-import { Provider as Provider_2 } from '@ethersproject/abstract-provider';
+import { Provider } from '@ethersproject/providers';
 import { providers } from 'ethers';
 import type { Result } from '@ethersproject/abi';
 import { Signer } from 'ethers';
+import StrictEventEmitter from 'strict-event-emitter-types';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
 import { utils } from 'ethers';
 import { z } from 'zod';
@@ -189,10 +189,13 @@ export enum ChainId {
     Rinkeby = 4
 }
 
+// @public (undocumented)
+export const chainNameToId: Record<string, number>;
+
 // Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "avalanche" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | (string & {});
+export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "avalanche" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | (string & {}) | (number & {});
 
 // Warning: (ae-internal-missing-underscore) The name "CidWithFileName" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -203,11 +206,6 @@ export interface CidWithFileName {
     // (undocumented)
     fileNames: string[];
 }
-
-// Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export type ChainOrRpc = "mumbai" | "polygon" | "rinkeby" | "goerli" | "mainnet" | "fantom" | "avalanche" | `https://${string}`;
 
 // Warning: (ae-incompatible-release-tags) The symbol "ClaimCondition" is marked as @public, but its signature references "ClaimConditionOutputSchema" which is marked as @internal
 //
@@ -549,6 +547,13 @@ export const CommonTrustedForwarderSchema: z.ZodObject<{
     trusted_forwarders?: string[] | undefined;
 }>;
 
+// @public (undocumented)
+export type ConnectionInfo = {
+    chainId: ChainOrRpc;
+    signer: Signer | undefined;
+    provider?: providers.Provider;
+};
+
 // Warning: (ae-internal-missing-underscore) The name "CONTRACT_ADDRESSES" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -566,7 +571,7 @@ export const CONTRACT_ADDRESSES: Record<SUPPORTED_CHAIN_ID, {
 //
 // @public
 export class ContractDeployer extends RPCConnectionHandler {
-    constructor(network: NetworkOrSignerOrProvider, options: SDKOptions, storage: IStorage);
+    constructor(connection: ConnectionInfo, options: SDKOptions, storage: IStorage);
     // @internal
     deployBuiltInContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;
     deployEdition(metadata: NFTContractDeployMetadata): Promise<string>;
@@ -588,7 +593,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     // @internal (undocumented)
     getRegistry(): Promise<ContractRegistry>;
     // (undocumented)
-    updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
+    updateSigner(signer: Signer | undefined): void;
 }
 
 // @public
@@ -851,6 +856,9 @@ export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
 // @internal (undocumented)
 export const DEFAULT_QUERY_ALL_COUNT = 100;
 
+// @public (undocumented)
+export const defaultRPCMap: Record<SUPPORTED_CHAIN_ID, string>;
+
 // Warning: (ae-forgotten-export) The symbol "DropERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseDelayedRevealERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "SignatureDrop" needs to be exported by the entry point index.d.ts
@@ -955,7 +963,7 @@ export class DuplicateLeafsError extends Error {
 //
 // @public
 export class Edition extends Erc1155<TokenERC1155> {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
+    constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
     // @internal (undocumented)
     analytics: ContractAnalytics<TokenERC1155>;
     burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
@@ -1100,7 +1108,7 @@ export class Edition extends Erc1155<TokenERC1155> {
 
 // @public
 export class EditionDrop extends Erc1155<DropERC1155> {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
+    constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
     // @internal (undocumented)
     analytics: ContractAnalytics<DropERC1155>;
     burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
@@ -1555,7 +1563,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseER
     // (undocumented)
     mint: Erc1155Mintable | undefined;
     // @internal (undocumented)
-    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    onSignerUpdated(signer: Signer | undefined): void;
     // (undocumented)
     protected options: SDKOptions;
     // (undocumented)
@@ -1642,7 +1650,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20> imp
     // @internal
     normalizeAmount(amount: Amount): Promise<BigNumber>;
     // @internal (undocumented)
-    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    onSignerUpdated(signer: Signer | undefined): void;
     // (undocumented)
     protected options: SDKOptions;
     setAllowance(spender: string, amount: Amount): Promise<TransactionResult>;
@@ -1714,7 +1722,7 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     // @internal
     nextTokenIdToMint(): Promise<BigNumber>;
     // @internal (undocumented)
-    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    onSignerUpdated(signer: Signer | undefined): void;
     // (undocumented)
     protected options: SDKOptions;
     ownerOf(tokenId: BigNumberish): Promise<string>;
@@ -1977,22 +1985,23 @@ export function getContractPublisherAddress(): string;
 // @public
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken;
 
-// Warning: (ae-internal-missing-underscore) The name "getProviderForNetwork" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-internal-missing-underscore) The name "getProviderForChain" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-<<<<<<< HEAD
-export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider): `https://${string}` | Signer | Provider_2;
-=======
-export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider): string | ethers.Signer | ethers.providers.Provider;
+export function getProviderForChain(network: ChainOrRpc): Provider;
 
 // @public (undocumented)
 export function getReadOnlyProvider(network: string, chainId?: number): ethers.providers.BaseProvider;
->>>>>>> main
 
 // Warning: (ae-internal-missing-underscore) The name "getRoleHash" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export function getRoleHash(role: Role): BytesLike;
+
+// Warning: (ae-internal-missing-underscore) The name "getRpcUrl" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function getRpcUrl(network: ChainOrRpc, customRpcMap?: Record<number, string>): string;
 
 // Warning: (ae-internal-missing-underscore) The name "hasFunction" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -2145,7 +2154,7 @@ export enum ListingType {
 
 // @public
 export class Marketplace implements UpdateableNetwork {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Marketplace_2>);
+    constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Marketplace_2>);
     allowListingFromAnyAsset(): Promise<void>;
     allowListingFromSpecificAssetOnly(contractAddress: string): Promise<void>;
     // @internal (undocumented)
@@ -2183,7 +2192,7 @@ export class Marketplace implements UpdateableNetwork {
     // (undocumented)
     metadata: ContractMetadata<Marketplace_2, typeof Marketplace.schema>;
     // (undocumented)
-    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    onSignerUpdated(signer: Signer | undefined): void;
     // (undocumented)
     platformFees: ContractPlatformFee<Marketplace_2>;
     // (undocumented)
@@ -2370,7 +2379,7 @@ export class MissingRoleError extends Error {
 
 // @beta
 export class Multiwrap extends Erc721<Multiwrap_2> {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Multiwrap_2>);
+    constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Multiwrap_2>);
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -2548,7 +2557,7 @@ export interface NewDirectListing {
 
 // @public
 export class NFTCollection extends Erc721<TokenERC721> {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
+    constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
     // @internal (undocumented)
     analytics: ContractAnalytics<TokenERC721>;
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
@@ -2707,7 +2716,7 @@ export interface NFTContractDeployMetadata {
 
 // @public
 export class NFTDrop extends Erc721<DropERC721> {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
+    constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
     // @internal (undocumented)
     analytics: ContractAnalytics<DropERC721>;
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
@@ -2921,7 +2930,7 @@ export const OZ_DEFENDER_FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7
 //
 // @public
 export class Pack extends Erc1155<Pack_2> {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Pack_2>);
+    constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Pack_2>);
     // @internal (undocumented)
     analytics: ContractAnalytics<Pack_2>;
     // (undocumented)
@@ -4274,7 +4283,7 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
 //
 // @internal
 export class SignatureDrop extends Erc721<SignatureDrop_2> {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<SignatureDrop_2>);
+    constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<SignatureDrop_2>);
     // (undocumented)
     analytics: ContractAnalytics<SignatureDrop_2>;
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
@@ -4467,7 +4476,7 @@ export type SignerOrProvider = Signer | providers.Provider;
 
 // @beta
 export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract> implements UpdateableNetwork {
-    constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
+    constructor(connection: ConnectionInfo, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
     // @internal (undocumented)
     analytics: ContractAnalytics<TContract>;
     call(functionName: string, ...args: unknown[] | [...unknown[], CallOverrides]): Promise<any>;
@@ -4488,7 +4497,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     metadata: ContractMetadata<ThirdwebContract, any>;
     nft: Erc721 | undefined;
     // (undocumented)
-    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    onSignerUpdated(signer: Signer | undefined): void;
     // (undocumented)
     platformFees: ContractPlatformFee<IPlatformFee> | undefined;
     // Warning: (ae-incompatible-release-tags) The symbol "publishedMetadata" is marked as @beta, but its signature references "ContractPublishedMetadata" which is marked as @internal
@@ -4759,7 +4768,7 @@ export const SnapshotSchema: z.ZodObject<{
 
 // @public
 export class Split implements UpdateableNetwork {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Split_2>);
+    constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Split_2>);
     // @internal (undocumented)
     analytics: ContractAnalytics<Split_2>;
     balanceOf(address: string): Promise<BigNumber>;
@@ -4799,7 +4808,7 @@ export class Split implements UpdateableNetwork {
     // (undocumented)
     metadata: ContractMetadata<Split_2, typeof Split.schema>;
     // (undocumented)
-    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    onSignerUpdated(signer: Signer | undefined): void;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<    {
@@ -4988,7 +4997,7 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
 // @public
 export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "ChainOrRpc" which is marked as @internal
-    constructor(network: ChainOrRpc | SignerOrProvider, options?: SDKOptions, storage?: IStorage);
+    constructor(chainId: ChainOrRpc, signer?: Signer | undefined, options?: SDKOptions, storage?: IStorage);
     deployer: ContractDeployer;
     // Warning: (ae-incompatible-release-tags) The symbol "fromPrivateKey" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
     //
@@ -4997,7 +5006,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-incompatible-release-tags) The symbol "fromSigner" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
     //
     // @beta
-    static fromSigner(signer: Signer, network?: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
+    static fromSigner(signer: Signer, network: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
     // @internal (undocumented)
     getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     // @beta
@@ -5030,13 +5039,12 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
     storage: RemoteStorage;
-    updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
     wallet: UserWallet;
 }
 
 // @public
 export class Token extends Erc20<TokenERC20> {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC20>);
+    constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC20>);
     // @internal (undocumented)
     analytics: ContractAnalytics<TokenERC20>;
     burn(amount: Amount): Promise<TransactionResult>;
@@ -5174,7 +5182,7 @@ export interface TokenContractDeployMetadata {
 
 // @public
 export class TokenDrop extends Erc20<DropERC20> {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC20>);
+    constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC20>);
     // @internal (undocumented)
     analytics: ContractAnalytics<DropERC20>;
     burn(amount: Amount): Promise<TransactionResult>;
@@ -5404,11 +5412,17 @@ export type UploadResult = {
 
 // @public
 export class UserWallet {
-    constructor(network: NetworkOrSignerOrProvider, options: SDKOptions);
+    constructor(connection: ConnectionInfo, options: SDKOptions);
     balance(currencyAddress?: string): Promise<CurrencyValue>;
-    getAddress(): Promise<string>;
     // (undocumented)
-    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    connect(signer: Signer): void;
+    // (undocumented)
+    disconnect(): void;
+    // Warning: (ae-forgotten-export) The symbol "WalletEvent" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    events: StrictEventEmitter<EventEmitter2, WalletEvent>;
+    getAddress(): Promise<string>;
     sendRawTransaction(transactionRequest: providers.TransactionRequest): Promise<TransactionResult>;
     sign(message: string): Promise<string>;
     transfer(to: string, amount: Amount, currencyAddress?: string): Promise<TransactionResult>;
@@ -5427,7 +5441,7 @@ export type ValueOf<T> = T[keyof T];
 
 // @public
 export class Vote implements UpdateableNetwork {
-    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<VoteERC20>);
+    constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<VoteERC20>);
     // @internal (undocumented)
     analytics: ContractAnalytics<VoteERC20>;
     balance(): Promise<CurrencyValue>;
@@ -5457,7 +5471,7 @@ export class Vote implements UpdateableNetwork {
     // (undocumented)
     metadata: ContractMetadata<VoteERC20, typeof Vote.schema>;
     // (undocumented)
-    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    onSignerUpdated(signer: Signer | undefined): void;
     propose(description: string, executions?: ProposalExecutable[]): Promise<TransactionResultWithId>;
     // @internal (undocumented)
     static schema: {
@@ -5625,6 +5639,10 @@ export type WrappedTokens = {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/src/core/types.d.ts:21:5 - (ae-incompatible-release-tags) The symbol "chainId" is marked as @public, but its signature references "ChainOrRpc" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 

@@ -3,7 +3,7 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { IStorage } from "../core/interfaces/IStorage";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
+import { ConnectionInfo, TransactionResult } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { UpdateableNetwork } from "../core/interfaces/contract";
@@ -142,12 +142,12 @@ export class Marketplace implements UpdateableNetwork {
   public auction: MarketplaceAuction;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<MarketplaceContract>(
-      network,
+      connection,
       address,
       Marketplace.contractAbi,
       options,

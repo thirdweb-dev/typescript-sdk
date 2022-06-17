@@ -1,5 +1,5 @@
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import { ConnectionInfo, TransactionResult } from "../types";
 import { SDKOptions } from "../../schema";
 import invariant from "tiny-invariant";
 import { Amount, CurrencyValue } from "../../types";
@@ -15,7 +15,6 @@ import { IERC20 } from "contracts";
 import { BigNumber, providers, Signer } from "ethers";
 import { EventEmitter2 } from "eventemitter2";
 import StrictEventEmitter from "strict-event-emitter-types";
-import { Provider } from "@ethersproject/providers";
 
 interface WalletEvent {
   connected: Signer;
@@ -38,8 +37,9 @@ export class UserWallet {
   public events: StrictEventEmitter<EventEmitter2, WalletEvent> =
     new EventEmitter2();
 
-  constructor(network: Provider, options: SDKOptions) {
-    this.readOnlyProvider = new RPCConnectionHandler(network);
+  constructor(connection: ConnectionInfo, options: SDKOptions) {
+    this.readOnlyProvider = new RPCConnectionHandler(connection);
+    this.signer = connection.signer;
     this.options = options;
   }
 
@@ -180,7 +180,7 @@ export class UserWallet {
 
   private createErc20(currencyAddress: string) {
     return new ContractWrapper<IERC20>(
-      this.readOnlyProvider.getProvider(),
+      this.readOnlyProvider.getConnectionInfo(),
       currencyAddress,
       ERC20Abi,
       this.options,

@@ -1,5 +1,4 @@
-import { BaseContract, ethers, Event } from "ethers";
-import { ChainId } from "../../constants";
+import { BaseContract, Event } from "ethers";
 import { ContractWrapper } from "./contract-wrapper";
 
 export class ContractAnalytics<TContract extends BaseContract> {
@@ -17,29 +16,14 @@ export class ContractAnalytics<TContract extends BaseContract> {
     );
     const filter = this.contractWrapper.readContract.filters[event.name];
 
+    // TODO limit the number of blocks queried
     const fromBlock = 0;
     const toBlock =
       await this.contractWrapper.readContract.provider.getBlockNumber();
-
-    const network =
-      await this.contractWrapper.readContract.provider.getNetwork();
-    const alchemyContractWrapper = new ContractWrapper(
-      network.chainId === ChainId.Localhost ||
-      network.chainId === ChainId.Hardhat
-        ? this.contractWrapper.readContract.provider
-        : new ethers.providers.AlchemyProvider(network.name),
-      this.contractWrapper.readContract.address,
-      this.contractWrapper.abi,
-      {},
-    );
-
-    let events: Event[] = [];
-    events = await alchemyContractWrapper.readContract.queryFilter(
+    return await this.contractWrapper.readContract.queryFilter(
       filter(),
       fromBlock,
       toBlock,
     );
-
-    return events;
   }
 }

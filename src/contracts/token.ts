@@ -2,11 +2,7 @@ import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
 import { TokenERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
-import {
-  IStorage,
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-} from "../core";
+import { ConnectionInfo, IStorage, TransactionResult } from "../core";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenMintInput } from "../schema/tokens/token";
@@ -82,12 +78,12 @@ export class Token extends Erc20<TokenERC20> {
   public interceptor: ContractInterceptor<TokenERC20>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<TokenERC20>(
-      network,
+      connection,
       address,
       Token.contractAbi,
       options,

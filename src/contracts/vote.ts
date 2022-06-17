@@ -3,7 +3,7 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { IStorage } from "../core/interfaces/IStorage";
 import {
-  NetworkOrSignerOrProvider,
+  ConnectionInfo,
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
@@ -67,12 +67,12 @@ export class Vote implements UpdateableNetwork {
   public interceptor: ContractInterceptor<VoteERC20>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<VoteERC20>(
-      network,
+      connection,
       address,
       Vote.contractAbi,
       options,

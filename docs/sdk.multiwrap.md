@@ -30,7 +30,7 @@ const contract = sdk.getMultiwrap("{{contract_address}}");
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, storage, options, contractWrapper)](./sdk.multiwrap._constructor_.md) |  | <b><i>(BETA)</i></b> Constructs a new instance of the <code>Multiwrap</code> class |
+|  [(constructor)(connection, address, storage, options, contractWrapper)](./sdk.multiwrap._constructor_.md) |  | <b><i>(BETA)</i></b> Constructs a new instance of the <code>Multiwrap</code> class |
 
 ## Properties
 

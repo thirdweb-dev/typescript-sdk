@@ -1,10 +1,9 @@
 import { TWRegistry, TWRegistry__factory } from "contracts";
 import { SDKOptions } from "../../schema/sdk-options";
-import { NetworkOrSignerOrProvider } from "../types";
+import { ConnectionInfo } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { constants, utils } from "ethers";
 import { TransactionResult } from "..";
-import { Provider } from "@ethersproject/providers";
 
 /**
  * @internal
@@ -12,10 +11,10 @@ import { Provider } from "@ethersproject/providers";
 export class ContractRegistry extends ContractWrapper<TWRegistry> {
   constructor(
     registryAddress: string,
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     options?: SDKOptions,
   ) {
-    super(network, registryAddress, TWRegistry__factory.abi, options);
+    super(connection, registryAddress, TWRegistry__factory.abi, options);
   }
 
   public async getContractAddresses(walletAddress: string) {

@@ -88,10 +88,8 @@ export async function setErc20Allowance(
   if (isNativeToken(currencyAddress)) {
     overrides["value"] = value;
   } else {
-    const signer = contractToApprove.getSigner();
-    const provider = contractToApprove.getProvider();
     const erc20 = new ContractWrapper<IERC20>(
-      signer || provider,
+      contractToApprove.getConnectionInfo(),
       currencyAddress,
       ERC20Abi,
       {},
@@ -115,10 +113,8 @@ export async function approveErc20Allowance(
   quantity: BigNumberish,
   tokenDecimals: number,
 ) {
-  const signer = contractToApprove.getSigner();
-  const provider = contractToApprove.getProvider();
   const erc20 = new ContractWrapper<IERC20>(
-    signer || provider,
+    contractToApprove.getConnectionInfo(),
     currencyAddress,
     ERC20Abi,
     {},
@@ -142,9 +138,8 @@ export async function hasERC20Allowance(
   currencyAddress: string,
   value: BigNumber,
 ) {
-  const provider = contractToApprove.getProvider();
   const erc20 = new ContractWrapper<IERC20>(
-    provider,
+    contractToApprove.getConnectionInfo(),
     currencyAddress,
     ERC20Abi,
     {},

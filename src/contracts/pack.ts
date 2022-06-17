@@ -1,10 +1,7 @@
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { IStorage } from "../core/interfaces/IStorage";
-import {
-  NetworkOrSignerOrProvider,
-  TransactionResultWithId,
-} from "../core/types";
+import { ConnectionInfo, TransactionResultWithId } from "../core/types";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";
@@ -99,12 +96,12 @@ export class Pack extends Erc1155<PackContract> {
   private _query = this.query as Erc1155Enumerable;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<PackContract>(
-      network,
+      connection,
       address,
       Pack.contractAbi,
       options,
