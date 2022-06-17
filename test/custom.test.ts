@@ -1,8 +1,7 @@
 import { expectError, signers } from "./before-setup";
-import { expect } from "chai";
+import { assert, expect } from "chai";
 import invariant from "tiny-invariant";
 import {
-  DropERC721__factory,
   SignatureDrop__factory,
   TokenERC1155__factory,
   TokenERC20__factory,
@@ -11,7 +10,12 @@ import {
 } from "contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { uploadContractMetadata } from "./publisher.test";
-import { IpfsStorage, ThirdwebSDK } from "../src";
+import {
+  IpfsStorage,
+  NATIVE_TOKEN_ADDRESS,
+  SignedPayload721WithQuantitySignature,
+  ThirdwebSDK,
+} from "../src";
 import { ethers } from "ethers";
 
 require("./before-setup");
@@ -324,5 +328,38 @@ describe("Custom Contracts", async () => {
     const nfts = await c.edition.query.all();
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
+  });
+
+  it("should detect feature: erc721 signature mintable", async () => {
+    const c = await sdk.getContractFromAbi(
+      sigDropContractAddress,
+      SignatureDrop__factory.abi,
+    );
+
+    invariant(c, "Contract undefined");
+    invariant(c.nft, "ERC721 undefined");
+    invariant(c.nft.signature, "ERC721 drop");
+
+    const payload = {
+      metadata: {
+        name: "OUCH VOUCH",
+      },
+      to: samWallet.address, // Who will receive the NFT (or AddressZero for anyone)
+      price: 0.5, // the price to pay for minting
+      currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
+      royaltyBps: 100, // custom royalty fees for this NFT (in bps)
+      quantity: "1",
+    };
+
+    let goodPayload: SignedPayload721WithQuantitySignature;
+
+    goodPayload = await c.nft.signature.generate(payload);
+
+    const valid = await c.nft.signature.verify(goodPayload);
+    assert.isTrue(valid, "This voucher should be valid");
+    //
+    // const nft = await c.nft.signature.mint(goodPayload);
+    //
+    // console.log("NFT", nft);
   });
 });
