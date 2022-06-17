@@ -1,5 +1,6 @@
 import { ethers, providers } from "ethers";
 import { SignerOrProvider } from "../core/types";
+import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
 /**
  * @internal
  */
@@ -23,6 +24,42 @@ export const PINATA_IPFS_URL = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 
 /**
  * @internal
+ * This is a community API key that is subject to rate limiting. Please use your own key.
+ */
+const DEFAULT_API_KEY = "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
+
+export const chainNameToId: Record<string, number> = {
+  mumbai: ChainId.Mumbai,
+  rinkeby: ChainId.Rinkeby,
+  goerli: ChainId.Goerli,
+  polygon: ChainId.Polygon,
+  mainnet: ChainId.Mainnet,
+  optimism: ChainId.Optimism,
+  "optimism-testnet": ChainId.OptimismTestnet,
+  arbitrum: ChainId.Arbitrum,
+  "arbitrum-testnet": ChainId.ArbitrumTestnet,
+  fantom: ChainId.Fantom,
+  avalanche: ChainId.Avalanche,
+};
+
+export const defaultRPCMap: Record<SUPPORTED_CHAIN_ID, string> = {
+  [ChainId.Polygon]: `https://polygon-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`,
+  [ChainId.Mumbai]: `https://polygon-mumbai.g.alchemy.com/v2/${DEFAULT_API_KEY}`,
+  [ChainId.Mainnet]: `https://eth-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`,
+  [ChainId.Rinkeby]: `https://eth-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`,
+  [ChainId.Goerli]: `https://eth-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`,
+  [ChainId.Optimism]: `https://opt-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`,
+  [ChainId.OptimismTestnet]: "https://kovan.optimism.io",
+  [ChainId.Arbitrum]: `https://arb-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`,
+  [ChainId.ArbitrumTestnet]: `https://arb-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`,
+  [ChainId.Fantom]: "https://rpc.ftm.tools",
+  [ChainId.FantomTestnet]: "https://rpc.testnet.fantom.network",
+  [ChainId.Avalanche]: "https://rpc.ankr.com/avalanche",
+  [ChainId.AvalancheFujiTestnet]: "https://api.avax-test.network/ext/bc/C/rpc",
+};
+
+/**
+ * @internal
  */
 export type ChainOrRpc =
   | "mumbai"
@@ -40,60 +77,38 @@ export type ChainOrRpc =
   | "optimism-testnet"
   | "arbitrum"
   | "arbitrum-testnet"
-  // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
-  | (string & {});
-
-/**
- * @internal
- * This is a community API key that is subject to rate limiting. Please use your own key.
- */
-const DEFAULT_API_KEY = "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
+  | (string & {})
+  | (number & {});
 
 /**
  * @internal
  * @param network - the chain name or rpc url
+ * @param customRpcMap
  * @returns the rpc url for that chain
  */
-export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
-  if (typeof network !== "string") {
+export function getRpcUrlOrSigner(
+  network: ChainOrRpc | SignerOrProvider,
+  customRpcMap?: Record<number, string>,
+): string | SignerOrProvider {
+  if (typeof network !== "number" && typeof network !== "string") {
     return network;
   }
-  switch (network) {
-    case "mumbai":
-      return `https://polygon-mumbai.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "rinkeby":
-      return `https://eth-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "goerli":
-      return `https://eth-goerli.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "polygon":
-    case "matic":
-      return `https://polygon-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "mainnet":
-    case "ethereum":
-      return `https://eth-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "optimism":
-      // TODO test this RPC
-      return `https://opt-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "optimism-testnet":
-      // alchemy optimism kovan rpc doesn't link to the testnet sequencer...
-      return "https://kovan.optimism.io";
-    case "arbitrum":
-      // TODO test this RPC
-      return `https://arb-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "arbitrum-testnet":
-      // TODO test this RPC
-      return `https://arb-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
-    case "fantom":
-      return "https://rpc.ftm.tools";
-    case "avalanche":
-      return "https://rpc.ankr.com/avalanche";
-    default:
-      if (network.startsWith("http") || network.startsWith("ws")) {
-        return network;
-      } else {
-        throw new Error(`Unrecognized chain name or RPC url: ${network}`);
-      }
+  if (
+    typeof network === "string" &&
+    (network.startsWith("http") || network.startsWith("ws"))
+  ) {
+    return network;
   }
+  const chainId: number =
+    typeof network === "string" ? chainNameToId[network] : network;
+  const fullRpcMap: Record<number, string> = {
+    ...defaultRPCMap,
+    ...customRpcMap,
+  };
+  if (chainId in fullRpcMap) {
+    return fullRpcMap[chainId];
+  }
+  throw new Error(`Unrecognized chain name or RPC url: ${network}`);
 }
 
 /**

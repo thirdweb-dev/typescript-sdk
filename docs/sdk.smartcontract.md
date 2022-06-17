@@ -42,7 +42,7 @@ const tx = await contract.nft.mint.to("0x...", {
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, abi, storage, options, contractWrapper)](./sdk.smartcontract._constructor_.md) |  | <b><i>(BETA)</i></b> Constructs a new instance of the <code>SmartContract</code> class |
+|  [(constructor)(network, address, abi, storage, chainOrRpc, options, contractWrapper)](./sdk.smartcontract._constructor_.md) |  | <b><i>(BETA)</i></b> Constructs a new instance of the <code>SmartContract</code> class |
 
 ## Properties
 
@@ -68,5 +68,6 @@ const tx = await contract.nft.mint.to("0x...", {
 |  --- | --- | --- |
 |  [call(functionName, args)](./sdk.smartcontract.call.md) |  | <b><i>(BETA)</i></b> Call any function on this contract |
 |  [getAddress()](./sdk.smartcontract.getaddress.md) |  | <b><i>(BETA)</i></b> |
+|  [getChainOrRpc()](./sdk.smartcontract.getchainorrpc.md) |  | <b><i>(BETA)</i></b> |
 |  [onNetworkUpdated(network)](./sdk.smartcontract.onnetworkupdated.md) |  | <b><i>(BETA)</i></b> |
 

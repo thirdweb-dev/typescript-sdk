@@ -25,6 +25,7 @@ import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { Erc721Dropable } from "./erc-721-dropable";
+import { ChainOrRpc } from "../../constants/index";
 
 /**
  * Standard ERC721 NFT functions
@@ -52,13 +53,16 @@ export class Erc721<
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
+  private chainOrRpc: ChainOrRpc;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
   ) {
     this.contractWrapper = contractWrapper;
+    this.chainOrRpc = chainOrRpc;
     this.storage = storage;
     try {
       this.options = SDKOptionsSchema.parse(options);
@@ -83,6 +87,10 @@ export class Erc721<
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainOrRpc(): ChainOrRpc {
+    return this.chainOrRpc;
   }
 
   /** ******************************

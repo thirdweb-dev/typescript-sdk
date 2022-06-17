@@ -27,6 +27,7 @@ import { ContractEvents } from "../core/classes/contract-events";
 import { ProposalCreatedEvent } from "contracts/VoteERC20";
 import ERC20Abi from "../../abis/IERC20.json";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { ChainOrRpc } from "../constants/index";
 
 /**
  * Create a decentralized organization for token holders to vote on proposals.
@@ -52,6 +53,7 @@ export class Vote implements UpdateableNetwork {
 
   private contractWrapper: ContractWrapper<VoteERC20>;
   private storage: IStorage;
+  private chainOrRpc: ChainOrRpc;
 
   public metadata: ContractMetadata<VoteERC20, typeof Vote.schema>;
   public encoder: ContractEncoder<VoteERC20>;
@@ -70,6 +72,7 @@ export class Vote implements UpdateableNetwork {
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<VoteERC20>(
       network,
@@ -90,6 +93,7 @@ export class Vote implements UpdateableNetwork {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.chainOrRpc = chainOrRpc;
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider) {
@@ -98,6 +102,10 @@ export class Vote implements UpdateableNetwork {
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainOrRpc(): ChainOrRpc {
+    return this.chainOrRpc;
   }
 
   /** ******************************

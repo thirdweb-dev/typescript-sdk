@@ -9,7 +9,7 @@ Constructs a new instance of the `EditionDrop` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
+constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, chainOrRpc: ChainOrRpc, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
 ```
 
 ## Parameters
@@ -19,6 +19,7 @@ constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStora
 |  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 |  address | string |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |
+|  chainOrRpc | ChainOrRpc |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> |
 |  contractWrapper | ContractWrapper&lt;DropERC1155&gt; | <i>(Optional)</i> |
 

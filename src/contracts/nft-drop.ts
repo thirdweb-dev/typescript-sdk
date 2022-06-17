@@ -46,6 +46,7 @@ import {
 } from "contracts/DropERC721";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { UploadProgressEvent } from "../types/events";
+import { ChainOrRpc } from "../constants/index";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -166,6 +167,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<DropERC721>(
       network,
@@ -174,7 +176,7 @@ export class NFTDrop extends Erc721<DropERC721> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage, chainOrRpc, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       NFTDrop.schema,

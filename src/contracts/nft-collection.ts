@@ -28,6 +28,7 @@ import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
 import { QueryAllParams } from "../types";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { ChainOrRpc } from "../constants/index";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -113,6 +114,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<TokenERC721>(
       network,
@@ -121,7 +123,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage, chainOrRpc, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       NFTCollection.schema,

@@ -27,7 +27,7 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, storage, options, contractWrapper)](./sdk.editiondrop._constructor_.md) |  | Constructs a new instance of the <code>EditionDrop</code> class |
+|  [(constructor)(network, address, storage, chainOrRpc, options, contractWrapper)](./sdk.editiondrop._constructor_.md) |  | Constructs a new instance of the <code>EditionDrop</code> class |
 
 ## Properties
 

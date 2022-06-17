@@ -24,6 +24,7 @@ import { Erc1155Enumerable } from "./erc-1155-enumerable";
 import { Erc1155Mintable } from "./erc-1155-mintable";
 import { FEATURE_EDITION } from "../../constants/erc1155-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { ChainOrRpc } from "../../constants/index";
 
 /**
  * Standard ERC1155 NFT functions
@@ -43,6 +44,7 @@ export class Erc1155<
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
+  private chainOrRpc: ChainOrRpc;
 
   public query: Erc1155Enumerable | undefined;
   public mint: Erc1155Mintable | undefined;
@@ -50,10 +52,12 @@ export class Erc1155<
   constructor(
     contractWrapper: ContractWrapper<T>,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
+    this.chainOrRpc = chainOrRpc;
     try {
       this.options = SDKOptionsSchema.parse(options);
     } catch (optionParseError) {
@@ -76,6 +80,10 @@ export class Erc1155<
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainOrRpc(): ChainOrRpc {
+    return this.chainOrRpc;
   }
 
   /** ******************************
@@ -242,7 +250,7 @@ export class Erc1155<
    * const addresses = [
    *  "0x...", "0x...", "0x...",
    * ]
-   * 
+   *
    * await contract.airdrop(tokenId, addresses);
    * ```
    */

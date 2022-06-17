@@ -16,6 +16,7 @@ import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractEvents } from "../core/classes/contract-events";
 import ERC20Abi from "../../abis/IERC20.json";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { ChainOrRpc } from "../constants/index";
 
 /**
  * Create custom royalty splits to distribute funds.
@@ -34,6 +35,9 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
 export class Split implements UpdateableNetwork {
   static contractType = "split" as const;
   static contractAbi = require("../../abis/Split.json");
+
+  private chainOrRpc: ChainOrRpc;
+
   /**
    * @internal
    */
@@ -59,6 +63,7 @@ export class Split implements UpdateableNetwork {
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<SplitContract>(
       network,
@@ -67,6 +72,7 @@ export class Split implements UpdateableNetwork {
       options,
     ),
   ) {
+    this.chainOrRpc = chainOrRpc;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.metadata = new ContractMetadata(
@@ -87,6 +93,10 @@ export class Split implements UpdateableNetwork {
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainOrRpc(): ChainOrRpc {
+    return this.chainOrRpc;
   }
 
   /** ******************************

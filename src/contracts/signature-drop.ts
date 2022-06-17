@@ -46,6 +46,7 @@ import {
 import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { Erc721WithQuantitySignatureMinting } from "../core/classes/erc-721-with-quantity-signature-minting";
 import { DelayedReveal } from "../core/index";
+import { ChainOrRpc } from "../constants/index";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -182,6 +183,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<SignatureDropContract>(
       network,
@@ -190,7 +192,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage, chainOrRpc, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       SignatureDrop.schema,

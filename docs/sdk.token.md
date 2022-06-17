@@ -27,7 +27,7 @@ const contract = sdk.getToken("{{contract_address}}");
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, storage, options, contractWrapper)](./sdk.token._constructor_.md) |  | Constructs a new instance of the <code>Token</code> class |
+|  [(constructor)(network, address, storage, chainOrRpc, options, contractWrapper)](./sdk.token._constructor_.md) |  | Constructs a new instance of the <code>Token</code> class |
 
 ## Properties
 

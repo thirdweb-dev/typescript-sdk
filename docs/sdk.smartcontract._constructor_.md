@@ -12,7 +12,7 @@ Constructs a new instance of the `SmartContract` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
+constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, chainOrRpc: ChainOrRpc, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
 ```
 
 ## Parameters
@@ -23,6 +23,7 @@ constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractIn
 |  address | string |  |
 |  abi | ContractInterface |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |
+|  chainOrRpc | ChainOrRpc |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> |
 |  contractWrapper | ContractWrapper&lt;TContract&gt; | <i>(Optional)</i> |
 

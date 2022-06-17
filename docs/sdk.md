@@ -110,6 +110,8 @@
 |  Variable | Description |
 |  --- | --- |
 |  [ALL\_ROLES](./sdk.all_roles.md) |  |
+|  [chainNameToId](./sdk.chainnametoid.md) |  |
+|  [defaultRPCMap](./sdk.defaultrpcmap.md) |  |
 |  [MintRequest1155](./sdk.mintrequest1155.md) |  |
 |  [MintRequest20](./sdk.mintrequest20.md) |  |
 |  [MintRequest721](./sdk.mintrequest721.md) |  |

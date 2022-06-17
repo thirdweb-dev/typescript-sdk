@@ -27,7 +27,7 @@ const contract = sdk.getEdition("{{contract_address}}");
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, storage, options, contractWrapper)](./sdk.edition._constructor_.md) |  | Constructs a new instance of the <code>Edition</code> class |
+|  [(constructor)(network, address, storage, chainOrRpc, options, contractWrapper)](./sdk.edition._constructor_.md) |  | Constructs a new instance of the <code>Edition</code> class |
 
 ## Properties
 

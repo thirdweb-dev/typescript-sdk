@@ -29,7 +29,7 @@ await contract.nft.transfer(walletAddress, tokenId);
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(contractWrapper, storage, options)](./sdk.erc721._constructor_.md) |  | Constructs a new instance of the <code>Erc721</code> class |
+|  [(constructor)(contractWrapper, storage, chainOrRpc, options)](./sdk.erc721._constructor_.md) |  | Constructs a new instance of the <code>Erc721</code> class |
 
 ## Properties
 
@@ -51,6 +51,7 @@ await contract.nft.transfer(walletAddress, tokenId);
 |  [balanceOf(address)](./sdk.erc721.balanceof.md) |  | Get NFT Balance |
 |  [get(tokenId)](./sdk.erc721.get.md) |  | Get a single NFT Metadata |
 |  [getAddress()](./sdk.erc721.getaddress.md) |  |  |
+|  [getChainOrRpc()](./sdk.erc721.getchainorrpc.md) |  |  |
 |  [isApproved(address, operator)](./sdk.erc721.isapproved.md) |  | Get whether this wallet has approved transfers from the given operator |
 |  [ownerOf(tokenId)](./sdk.erc721.ownerof.md) |  | Get the current owner of a given NFT within this Contract |
 |  [transfer(to, tokenId)](./sdk.erc721.transfer.md) |  | Transfer a single NFT |

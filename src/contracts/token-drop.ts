@@ -19,6 +19,7 @@ import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { prepareClaim } from "../common/claim-conditions";
 import { getRoleHash } from "../common";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { ChainOrRpc } from "../constants/index";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -87,6 +88,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<DropERC20>(
       network,
@@ -95,7 +97,7 @@ export class TokenDrop extends Erc20<DropERC20> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage, chainOrRpc, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenDrop.schema,

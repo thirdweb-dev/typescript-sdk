@@ -27,7 +27,7 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, storage, options, contractWrapper)](./sdk.marketplace._constructor_.md) |  | Constructs a new instance of the <code>Marketplace</code> class |
+|  [(constructor)(network, address, storage, chainOrRpc, options, contractWrapper)](./sdk.marketplace._constructor_.md) |  | Constructs a new instance of the <code>Marketplace</code> class |
 
 ## Properties
 
@@ -56,6 +56,7 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 |  [getAddress()](./sdk.marketplace.getaddress.md) |  |  |
 |  [getAllListings(filter)](./sdk.marketplace.getalllistings.md) |  | Get all the listings |
 |  [getBidBufferBps()](./sdk.marketplace.getbidbufferbps.md) |  | Get the buffer in basis points between offers |
+|  [getChainOrRpc()](./sdk.marketplace.getchainorrpc.md) |  |  |
 |  [getListing(listingId)](./sdk.marketplace.getlisting.md) |  | Convenience function to get either a direct or auction listing |
 |  [getTimeBufferInSeconds()](./sdk.marketplace.gettimebufferinseconds.md) |  | get the buffer time in seconds between offers |
 |  [getTotalCount()](./sdk.marketplace.gettotalcount.md) |  | Get the total number of Listings |

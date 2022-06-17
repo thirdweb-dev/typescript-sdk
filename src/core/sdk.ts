@@ -22,7 +22,6 @@ import type {
   ContractForContractType,
   ContractType,
   NetworkOrSignerOrProvider,
-  SignerOrProvider,
   ValidContractInstance,
 } from "./types";
 import { IThirdwebContract__factory } from "contracts";
@@ -34,7 +33,7 @@ import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
 import {
   ChainOrRpc,
-  getProviderForNetwork,
+  getRpcUrlOrSigner,
   getReadOnlyProvider,
 } from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
@@ -58,19 +57,20 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    *
    * @param signer - a ethers Signer to be used for transactions
-   * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
+   * @param chainOrRpc - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
+   * @param storage - optionally override the storage handler
    * @returns an instance of the SDK
    *
    * @beta
    */
   static fromSigner(
     signer: Signer,
-    network?: ChainOrRpc,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
-    const sdk = new ThirdwebSDK(network || signer, options, storage);
+    const sdk = new ThirdwebSDK(chainOrRpc, options, storage);
     sdk.updateSignerOrProvider(signer);
     return sdk;
   }
@@ -90,6 +90,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param privateKey - the private key - **DO NOT EXPOSE THIS TO THE PUBLIC**
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
+   * @param storage - optionally override the storage handler
    * @returns an instance of the SDK
    *
    * @beta
@@ -100,7 +101,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
-    const signerOrProvider = getProviderForNetwork(network);
+    const signerOrProvider = getRpcUrlOrSigner(network);
     const provider = Signer.isSigner(signerOrProvider)
       ? signerOrProvider.provider
       : typeof signerOrProvider === "string"
@@ -118,6 +119,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     string,
     ValidContractInstance | SmartContract
   >();
+  /**
+   * The originally passed in chain or RPC url
+   * @private
+   */
+  private chainOrRpc: ChainOrRpc;
   /**
    * @internal
    * should never be accessed directly, use {@link ThirdwebSDK.getPublisher} instead
@@ -142,18 +148,22 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public storage: RemoteStorage;
 
   constructor(
-    network: ChainOrRpc | SignerOrProvider,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ) {
-    const signerOrProvider = getProviderForNetwork(network);
-    super(signerOrProvider, options);
+    const rpcUrlOrSigner = getRpcUrlOrSigner(
+      chainOrRpc,
+      options.chainIdToRPCUrlMap,
+    );
+    super(rpcUrlOrSigner, options);
+    this.chainOrRpc = chainOrRpc;
     this.storageHandler = storage;
     this.storage = new RemoteStorage(storage);
-    this.deployer = new ContractDeployer(signerOrProvider, options, storage);
-    this.wallet = new UserWallet(signerOrProvider, options);
+    this.deployer = new ContractDeployer(rpcUrlOrSigner, options, storage);
+    this.wallet = new UserWallet(rpcUrlOrSigner, options);
     this._publisher = new ContractPublisher(
-      signerOrProvider,
+      rpcUrlOrSigner,
       this.options,
       this.storageHandler,
     );
@@ -317,7 +327,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
     const newContract = new KNOWN_CONTRACTS_MAP[
       contractType as keyof typeof KNOWN_CONTRACTS_MAP
-    ](this.getSignerOrProvider(), address, this.storageHandler, this.options);
+    ](
+      this.getSignerOrProvider(),
+      address,
+      this.storageHandler,
+      this.chainOrRpc,
+      this.options,
+    );
 
     this.contractCache.set(address, newContract);
 
@@ -454,6 +470,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       address,
       abi,
       this.storageHandler,
+      this.chainOrRpc,
       this.options,
     );
     this.contractCache.set(address, contract);

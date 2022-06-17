@@ -27,7 +27,7 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, storage, options, contractWrapper)](./sdk.nftdrop._constructor_.md) |  | Constructs a new instance of the <code>NFTDrop</code> class |
+|  [(constructor)(network, address, storage, chainOrRpc, options, contractWrapper)](./sdk.nftdrop._constructor_.md) |  | Constructs a new instance of the <code>NFTDrop</code> class |
 
 ## Properties
 

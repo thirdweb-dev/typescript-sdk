@@ -31,6 +31,7 @@ import { QueryAllParams } from "../types";
 import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
 import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { ChainOrRpc } from "../constants/index";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -115,6 +116,7 @@ export class Edition extends Erc1155<TokenERC1155> {
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<TokenERC1155>(
       network,
@@ -123,7 +125,7 @@ export class Edition extends Erc1155<TokenERC1155> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage, chainOrRpc, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Edition.schema,

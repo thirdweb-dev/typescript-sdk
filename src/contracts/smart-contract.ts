@@ -28,6 +28,7 @@ import { ContractPublishedMetadata } from "../core/classes/contract-published-me
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { CallOverrideSchema } from "../schema/index";
+import { ChainOrRpc } from "../constants/index";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -68,6 +69,7 @@ export class SmartContract<
   private contractWrapper;
   private storage;
   private options;
+  private chainOrRpc;
 
   // utilities
   public events: ContractEvents<TContract>;
@@ -105,6 +107,7 @@ export class SmartContract<
     address: string,
     abi: ContractInterface,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<TContract>(
       network,
@@ -113,6 +116,7 @@ export class SmartContract<
       options,
     ),
   ) {
+    this.chainOrRpc = chainOrRpc;
     this.options = options;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
@@ -150,6 +154,10 @@ export class SmartContract<
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainOrRpc(): ChainOrRpc {
+    return this.chainOrRpc;
   }
 
   /**
@@ -275,21 +283,36 @@ export class SmartContract<
 
   private detectErc20() {
     if (detectContractFeature<BaseERC20>(this.contractWrapper, "ERC20")) {
-      return new Erc20(this.contractWrapper, this.storage, this.options);
+      return new Erc20(
+        this.contractWrapper,
+        this.storage,
+        this.chainOrRpc,
+        this.options,
+      );
     }
     return undefined;
   }
 
   private detectErc721() {
     if (detectContractFeature<BaseERC721>(this.contractWrapper, "ERC721")) {
-      return new Erc721(this.contractWrapper, this.storage, this.options);
+      return new Erc721(
+        this.contractWrapper,
+        this.storage,
+        this.chainOrRpc,
+        this.options,
+      );
     }
     return undefined;
   }
 
   private detectErc1155() {
     if (detectContractFeature<BaseERC1155>(this.contractWrapper, "ERC1155")) {
-      return new Erc1155(this.contractWrapper, this.storage, this.options);
+      return new Erc1155(
+        this.contractWrapper,
+        this.storage,
+        this.chainOrRpc,
+        this.options,
+      );
     }
     return undefined;
   }

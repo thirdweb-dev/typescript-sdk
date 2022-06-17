@@ -29,7 +29,7 @@ await contract.token.transfer(walletAddress, amount);
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(contractWrapper, storage, options)](./sdk.erc20._constructor_.md) |  | Constructs a new instance of the <code>Erc20</code> class |
+|  [(constructor)(contractWrapper, storage, chainOrRpc, options)](./sdk.erc20._constructor_.md) |  | Constructs a new instance of the <code>Erc20</code> class |
 
 ## Properties
 
@@ -50,6 +50,7 @@ await contract.token.transfer(walletAddress, amount);
 |  [balance()](./sdk.erc20.balance.md) |  | Get Token Balance for the currently connected wallet |
 |  [balanceOf(address)](./sdk.erc20.balanceof.md) |  | Get Token Balance |
 |  [get()](./sdk.erc20.get.md) |  | Get the token Metadata (name, symbol, etc...) |
+|  [getChainOrRpc()](./sdk.erc20.getchainorrpc.md) |  |  |
 |  [setAllowance(spender, amount)](./sdk.erc20.setallowance.md) |  | Allows the specified <code>spender</code> wallet to transfer the given <code>amount</code> of tokens to another wallet |
 |  [totalSupply()](./sdk.erc20.totalsupply.md) |  | The total supply for this Token |
 |  [transfer(to, amount)](./sdk.erc20.transfer.md) |  | Transfer Tokens |

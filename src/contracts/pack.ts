@@ -40,6 +40,7 @@ import { EditionMetadata, EditionMetadataOwner } from "../schema";
 import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
 import { QueryAllParams } from "../types";
 import { getRoleHash } from "../common/role";
+import { ChainOrRpc } from "../constants/index";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.
@@ -102,6 +103,7 @@ export class Pack extends Erc1155<PackContract> {
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<PackContract>(
       network,
@@ -110,7 +112,7 @@ export class Pack extends Erc1155<PackContract> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage, chainOrRpc, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Pack.schema,

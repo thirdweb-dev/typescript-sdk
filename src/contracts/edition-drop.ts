@@ -34,6 +34,7 @@ import { getRoleHash } from "../common";
 
 import { EditionMetadata, EditionMetadataOwner } from "../schema";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { ChainOrRpc } from "../constants/index";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -127,6 +128,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<DropERC1155>(
       network,
@@ -135,7 +137,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage, chainOrRpc, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       EditionDrop.schema,

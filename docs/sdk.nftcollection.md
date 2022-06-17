@@ -27,7 +27,7 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, storage, options, contractWrapper)](./sdk.nftcollection._constructor_.md) |  | Constructs a new instance of the <code>NFTCollection</code> class |
+|  [(constructor)(network, address, storage, chainOrRpc, options, contractWrapper)](./sdk.nftcollection._constructor_.md) |  | Constructs a new instance of the <code>NFTCollection</code> class |
 
 ## Properties
 

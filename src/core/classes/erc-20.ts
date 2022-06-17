@@ -17,6 +17,7 @@ import { detectContractFeature } from "../../common";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { FEATURE_TOKEN } from "../../constants/erc20-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { ChainOrRpc } from "../../constants/index";
 
 /**
  * Standard ERC20 Token functions
@@ -35,6 +36,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
+  private chainOrRpc: ChainOrRpc;
 
   /**
    * Mint tokens
@@ -44,10 +46,12 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
   constructor(
     contractWrapper: ContractWrapper<T>,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
+    this.chainOrRpc = chainOrRpc;
     try {
       this.options = SDKOptionsSchema.parse(options);
     } catch (optionParseError) {
@@ -72,6 +76,10 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    */
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainOrRpc(): ChainOrRpc {
+    return this.chainOrRpc;
   }
 
   /** ******************************

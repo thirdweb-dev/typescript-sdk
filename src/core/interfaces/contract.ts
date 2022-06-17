@@ -1,4 +1,5 @@
 import { NetworkOrSignerOrProvider } from "../types";
+import { ChainOrRpc } from "../../constants/index";
 
 /**
  * @public
@@ -6,4 +7,5 @@ import { NetworkOrSignerOrProvider } from "../types";
 export interface UpdateableNetwork {
   onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
   getAddress(): string;
+  getChainOrRpc(): ChainOrRpc;
 }

@@ -27,7 +27,7 @@ const contract = sdk.getVote("{{contract_address}}");
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, storage, options, contractWrapper)](./sdk.vote._constructor_.md) |  | Constructs a new instance of the <code>Vote</code> class |
+|  [(constructor)(network, address, storage, chainOrRpc, options, contractWrapper)](./sdk.vote._constructor_.md) |  | Constructs a new instance of the <code>Vote</code> class |
 
 ## Properties
 
@@ -51,6 +51,7 @@ const contract = sdk.getVote("{{contract_address}}");
 |  [get(proposalId)](./sdk.vote.get.md) |  | Get a proposal by id. |
 |  [getAddress()](./sdk.vote.getaddress.md) |  |  |
 |  [getAll()](./sdk.vote.getall.md) |  | Get All Proposals |
+|  [getChainOrRpc()](./sdk.vote.getchainorrpc.md) |  |  |
 |  [getProposalVotes(proposalId)](./sdk.vote.getproposalvotes.md) |  | Get the votes for a specific proposal |
 |  [hasVoted(proposalId, account)](./sdk.vote.hasvoted.md) |  | Check If Wallet Voted |
 |  [onNetworkUpdated(network)](./sdk.vote.onnetworkupdated.md) |  |  |

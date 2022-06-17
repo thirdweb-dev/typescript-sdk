@@ -34,6 +34,7 @@ import { QueryAllParams } from "../types";
 import { isTokenApprovedForTransfer } from "../common/marketplace";
 import { Erc721Supply } from "../core/classes/erc-721-supply";
 import { IStorage } from "../core/interfaces/IStorage";
+import { ChainOrRpc } from "../constants/index";
 
 /**
  * Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.
@@ -93,6 +94,7 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<MultiwrapContract>(
       network,
@@ -101,7 +103,7 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage, chainOrRpc, options);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Multiwrap.schema,

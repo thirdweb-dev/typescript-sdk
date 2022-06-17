@@ -23,6 +23,7 @@ import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { ChainOrRpc } from "../constants/index";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -49,6 +50,7 @@ export class Marketplace implements UpdateableNetwork {
 
   private contractWrapper: ContractWrapper<MarketplaceContract>;
   private storage: IStorage;
+  private chainOrRpc: ChainOrRpc;
 
   public encoder: ContractEncoder<MarketplaceContract>;
   public events: ContractEvents<MarketplaceContract>;
@@ -145,6 +147,7 @@ export class Marketplace implements UpdateableNetwork {
     network: NetworkOrSignerOrProvider,
     address: string,
     storage: IStorage,
+    chainOrRpc: ChainOrRpc,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<MarketplaceContract>(
       network,
@@ -153,6 +156,7 @@ export class Marketplace implements UpdateableNetwork {
       options,
     ),
   ) {
+    this.chainOrRpc = chainOrRpc;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
     this.metadata = new ContractMetadata(
@@ -180,6 +184,10 @@ export class Marketplace implements UpdateableNetwork {
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainOrRpc(): ChainOrRpc {
+    return this.chainOrRpc;
   }
 
   /** ******************************

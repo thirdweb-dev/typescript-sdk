@@ -9,7 +9,7 @@ Constructs a new instance of the `Erc20` class
 <b>Signature:</b>
 
 ```typescript
-constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
+constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, chainOrRpc: ChainOrRpc, options?: SDKOptions);
 ```
 
 ## Parameters
@@ -18,5 +18,6 @@ constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SD
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;T&gt; |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |
+|  chainOrRpc | ChainOrRpc |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> |
 
