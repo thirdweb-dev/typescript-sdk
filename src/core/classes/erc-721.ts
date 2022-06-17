@@ -29,7 +29,7 @@ import {
 import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { Erc721Dropable } from "./erc-721-dropable";
-import { Erc721SignatureMintable } from "./erc-721-signature-mintable";
+import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
 
 /**
  * Standard ERC721 NFT functions
@@ -55,7 +55,7 @@ export class Erc721<
   public mint: Erc721Mintable | undefined;
   public drop: Erc721Dropable | undefined;
   public signature:
-    | Erc721SignatureMintable<BaseSignatureMintERC721>
+    | Erc721WithQuantitySignatureMintable<BaseSignatureMintERC721>
     | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
@@ -298,7 +298,7 @@ export class Erc721<
   }
 
   private detectErc721SignatureMintable():
-    | Erc721SignatureMintable<BaseSignatureMintERC721>
+    | Erc721WithQuantitySignatureMintable<BaseSignatureMintERC721>
     | undefined {
     if (
       detectContractFeature<BaseSignatureMintERC721>(
@@ -306,7 +306,10 @@ export class Erc721<
         "ERC721SignatureMint",
       )
     ) {
-      return new Erc721SignatureMintable(this.contractWrapper, this.storage);
+      return new Erc721WithQuantitySignatureMintable(
+        this.contractWrapper,
+        this.storage,
+      );
     }
     return undefined;
   }

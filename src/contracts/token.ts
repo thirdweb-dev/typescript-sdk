@@ -18,7 +18,6 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { Erc20 } from "../core/classes/erc-20";
 import { Amount, CurrencyValue } from "../types";
 import { TokenERC20History } from "../core/classes/erc-20-history";
-import { Erc20SignatureMinting } from "../core/classes/erc-20-signature-minting";
 import { getRoleHash } from "../common";
 import { Erc20Mintable } from "../core/classes/erc-20-mintable";
 import { Erc20BatchMintable } from "../core/classes/erc-20-batch-mintable";
@@ -47,10 +46,6 @@ export class Token extends Erc20<TokenERC20> {
    * @internal
    */
   static schema = TokenErc20ContractSchema;
-
-  private _mint = this.mint as Erc20Mintable;
-  private _batchMint = this._mint.batch as Erc20BatchMintable;
-
   public metadata: ContractMetadata<TokenERC20, typeof Token.schema>;
   public roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
   public encoder: ContractEncoder<TokenERC20>;
@@ -63,23 +58,11 @@ export class Token extends Erc20<TokenERC20> {
    */
   public analytics: ContractAnalytics<TokenERC20>;
   /**
-   * Signature Minting
-   * @remarks Generate tokens that can be minted only with your own signature, attaching your own set of mint conditions.
-   * @example
-   * ```javascript
-   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
-   * const signedPayload = contract.signature.generate(payload);
-   *
-   * // now anyone can mint the tokens
-   * const tx = contract.signature.mint(signedPayload);
-   * const receipt = tx.receipt; // the mint transaction receipt
-   * ```
-   */
-  public signature: Erc20SignatureMinting;
-  /**
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC20>;
+  private _mint = this.mint as Erc20Mintable;
+  private _batchMint = this._mint.batch as Erc20BatchMintable;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -107,10 +90,6 @@ export class Token extends Erc20<TokenERC20> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.signature = new Erc20SignatureMinting(
-      this.contractWrapper,
-      this.roles,
-    );
   }
 
   /** ******************************

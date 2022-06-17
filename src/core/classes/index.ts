@@ -25,7 +25,7 @@ export * from "./erc-1155";
 export * from "./erc-1155-enumerable";
 export * from "./erc-1155-mintable";
 export * from "./erc-1155-batch-mintable";
-export * from "./erc-1155-signature-minting";
+export * from "./erc-1155-signature-mintable";
 export * from "./marketplace-direct";
 export * from "./marketplace-auction";
 export * from "./contract-deployer";

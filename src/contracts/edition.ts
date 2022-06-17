@@ -24,7 +24,6 @@ import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { BigNumber, BigNumberish, constants } from "ethers";
-import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-minting";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { getRoleHash } from "../common";
 import { QueryAllParams } from "../types";
@@ -50,15 +49,10 @@ export class Edition extends Erc1155<TokenERC1155> {
   static contractType = "edition" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = require("../../abis/TokenERC1155.json");
-
-  private _query = this.query as Erc1155Enumerable;
-  private _mint = this.mint as Erc1155Mintable;
-  private _batchMint = this._mint.batch as Erc1155BatchMintable;
   /**
    * @internal
    */
   static schema = TokenErc1155ContractSchema;
-
   public metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;
   public roles: ContractRoles<
     TokenERC1155,
@@ -91,25 +85,14 @@ export class Edition extends Erc1155<TokenERC1155> {
    * ```
    */
   public royalties: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
-  /**
-   * Signature Minting
-   * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
-   * @example
-   * ```javascript
-   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
-   * const signedPayload = contract.signature.generate(payload);
-   *
-   * // now anyone can mint the NFT
-   * const tx = contract.signature.mint(signedPayload);
-   * const receipt = tx.receipt; // the mint transaction receipt
-   * const mintedId = tx.id; // the id of the NFT minted
-   * ```
-   */
-  public signature: Erc1155SignatureMinting;
+
   /**
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC1155>;
+  private _query = this.query as Erc1155Enumerable;
+  private _mint = this.mint as Erc1155Mintable;
+  private _batchMint = this._mint.batch as Erc1155BatchMintable;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -138,11 +121,6 @@ export class Edition extends Erc1155<TokenERC1155> {
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.analytics = new ContractAnalytics(this.contractWrapper);
-    this.signature = new Erc1155SignatureMinting(
-      this.contractWrapper,
-      this.roles,
-      this.storage,
-    );
   }
 
   /** ******************************

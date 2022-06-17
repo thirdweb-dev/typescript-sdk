@@ -1,44 +1,50 @@
 import {
-  FilledSignaturePayload1155WithTokenId,
-  MintRequest1155,
-  PayloadToSign1155,
-  PayloadToSign1155WithTokenId,
-  PayloadWithUri1155,
-  Signature1155PayloadInputWithTokenId,
-  Signature1155PayloadOutput,
-  SignedPayload1155,
+  FilledSignature721WithQuantity,
+  MintRequest721withQuantity,
+  PayloadToSign721withQuantity,
+  PayloadWithUri721withQuantity,
+  Signature721WithQuantityInput,
+  Signature721WithQuantityOutput,
+  SignedPayload721WithQuantitySignature,
 } from "../../schema/contracts/common/signature";
 import { TransactionResultWithId } from "../types";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
+import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ITokenERC1155, TokenERC1155 } from "contracts";
+import { ISignatureMintERC721, TokenERC721 } from "contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
-import { BigNumber, ethers } from "ethers";
 import { uploadOrExtractURIs } from "../../common/nft";
-import { TokensMintedWithSignatureEvent } from "contracts/ITokenERC1155";
+import { TokensMintedWithSignatureEvent } from "contracts/ITokenERC721";
+import { BaseSignatureMintERC721 } from "../../types/eips";
+import { FEATURE_NFT_SIGNATURE_MINT } from "../../constants/erc721-features";
 
 /**
- * Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely
+ * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
  * @public
  */
-export class Erc1155SignatureMinting {
-  private contractWrapper: ContractWrapper<TokenERC1155>;
+// TODO consolidate into a single class
+export class Erc721WithQuantitySignatureMintable<
+  TContract extends BaseSignatureMintERC721,
+> {
+  featureName = FEATURE_NFT_SIGNATURE_MINT.name;
+
+  private contractWrapper: ContractWrapper<TContract>;
   private storage: IStorage;
-  private roles: ContractRoles<
-    TokenERC1155,
+  private roles?: ContractRoles<
+    TokenERC721,
     typeof NFTCollection.contractRoles[number]
   >;
 
   constructor(
-    contractWrapper: ContractWrapper<TokenERC1155>,
-    roles: ContractRoles<
-      TokenERC1155,
+    contractWrapper: ContractWrapper<TContract>,
+    storage: IStorage,
+    roles?: ContractRoles<
+      TokenERC721,
       typeof NFTCollection.contractRoles[number]
     >,
-    storage: IStorage,
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
@@ -63,7 +69,7 @@ export class Erc1155SignatureMinting {
    * @param signedPayload - the previously generated payload and signature with {@link Erc721SignatureMinting.generate}
    */
   public async mint(
-    signedPayload: SignedPayload1155,
+    signedPayload: SignedPayload721WithQuantitySignature,
   ): Promise<TransactionResultWithId> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
@@ -71,15 +77,17 @@ export class Erc1155SignatureMinting {
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
       this.contractWrapper,
-      message.pricePerToken.mul(message.quantity),
+      BigNumber.from(message.pricePerToken),
       mintRequest.currencyAddress,
       overrides,
     );
+    console.log("Before");
     const receipt = await this.contractWrapper.sendTransaction(
       "mintWithSignature",
       [message, signature],
       overrides,
     );
+
     const t = this.contractWrapper.parseLogs<TokensMintedWithSignatureEvent>(
       "TokensMintedWithSignature",
       receipt.logs,
@@ -100,7 +108,7 @@ export class Erc1155SignatureMinting {
    * @param signedPayloads - the array of signed payloads to mint
    */
   public async mintBatch(
-    signedPayloads: SignedPayload1155[],
+    signedPayloads: SignedPayload721WithQuantitySignature[],
   ): Promise<TransactionResultWithId[]> {
     const contractPayloads = await Promise.all(
       signedPayloads.map(async (s) => {
@@ -143,7 +151,9 @@ export class Erc1155SignatureMinting {
    * Verify that a payload is correctly signed
    * @param signedPayload - the payload to verify
    */
-  public async verify(signedPayload: SignedPayload1155): Promise<boolean> {
+  public async verify(
+    signedPayload: SignedPayload721WithQuantitySignature,
+  ): Promise<boolean> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
     const message = await this.mapPayloadToContractStruct(mintRequest);
@@ -153,7 +163,7 @@ export class Erc1155SignatureMinting {
   }
 
   /**
-   * Generate a signature that can be used to mint an NFT dynamically.
+   * Generate a signature that can be used to mint a dynamic NFT
    *
    * @remarks Takes in an NFT and some information about how it can be minted, uploads the metadata and signs it with your private key. The generated signature can then be used to mint an NFT using the exact payload and signature generated.
    *
@@ -170,11 +180,10 @@ export class Erc1155SignatureMinting {
    * const payload = {
    *   metadata: nftMetadata, // The NFT to mint
    *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
-   *   quantity: 2, // the quantity of NFTs to mint
-   *   price: 0.5, // the price per NFT
+   *   price: 0.5, // the price to pay for minting
    *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
    *   mintStartTime: startTime, // can mint anytime from now
-   *   mintEndTime: endTime, // to 24h from now
+   *   mintEndTime: endTime, // to 24h from now,
    *   royaltyRecipient: "0x...", // custom royalty recipient for this NFT
    *   royaltyBps: 100, // custom royalty fees for this NFT (in bps)
    *   primarySaleRecipient: "0x...", // custom sale recipient for this NFT
@@ -183,96 +192,34 @@ export class Erc1155SignatureMinting {
    * const signedPayload = contract.signature.generate(payload);
    * // now anyone can use these to mint the NFT using `contract.signature.mint(signedPayload)`
    * ```
-   * @param payloadToSign - the payload to sign
+   * @param mintRequest - the payload to sign
    * @returns the signed payload and the corresponding signature
    */
   public async generate(
-    payloadToSign: PayloadToSign1155,
-  ): Promise<SignedPayload1155> {
-    const payload = {
-      ...payloadToSign,
-      tokenId: ethers.constants.MaxUint256,
-    };
-    return this.generateFromTokenId(payload);
+    mintRequest: PayloadToSign721withQuantity,
+  ): Promise<SignedPayload721WithQuantitySignature> {
+    return (await this.generateBatch([mintRequest]))[0];
   }
 
   /**
-   * Generate a signature that can be used to mint additionaly supply to an existing NFT.
+   * Genrate a batch of signatures that can be used to mint many dynamic NFTs.
    *
-   * @remarks Takes in a payload with the token ID of an existing NFT, and signs it with your private key. The generated signature can then be used to mint additional supply to the NFT using the exact payload and signature generated.
-   *
-   * @example
-   * ```javascript
-   * const nftMetadata = {
-   *   name: "Cool NFT #1",
-   *   description: "This is a cool NFT",
-   *   image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
-   * };
-   *
-   * const startTime = new Date();
-   * const endTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
-   * const payload = {
-   *   tokenId: 0, // Instead of metadata, we specificy the token ID of the NFT to mint supply to
-   *   to: {{wallet_address}}, // Who will receive the NFT (or AddressZero for anyone)
-   *   quantity: 2, // the quantity of NFTs to mint
-   *   price: 0.5, // the price per NFT
-   *   currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
-   *   mintStartTime: startTime, // can mint anytime from now
-   *   mintEndTime: endTime, // to 24h from now
-   *   royaltyRecipient: "0x...", // custom royalty recipient for this NFT
-   *   royaltyBps: 100, // custom royalty fees for this NFT (in bps)
-   *   primarySaleRecipient: "0x...", // custom sale recipient for this NFT
-   * };
-   *
-   * const signedPayload = contract.signature.generate(payload);
-   * // now anyone can use these to mint the NFT using `contract.signature.mint(signedPayload)`
-   * ```
-   * @param payloadToSign - the payload to sign
-   * @returns the signed payload and the corresponding signature
-   */
-  public async generateFromTokenId(
-    payloadToSign: PayloadToSign1155WithTokenId,
-  ): Promise<SignedPayload1155> {
-    const payloads = await this.generateBatchFromTokenIds([payloadToSign]);
-    return payloads[0];
-  }
-
-  /**
-   * Generate a batch of signatures that can be used to mint many new NFTs dynamically.
-   *
-   * @remarks See {@link Erc1155SignatureMinting.generate}
+   * @remarks See {@link Erc721SignatureMinting.generate}
    *
    * @param payloadsToSign - the payloads to sign
    * @returns an array of payloads and signatures
    */
   public async generateBatch(
-    payloadsToSign: PayloadToSign1155[],
-  ): Promise<SignedPayload1155[]> {
-    const payloads = payloadsToSign.map((payload) => ({
-      ...payload,
-      tokenId: ethers.constants.MaxUint256,
-    }));
-    return this.generateBatchFromTokenIds(payloads);
-  }
-
-  /**
-   * Genrate a batch of signatures that can be used to mint new NFTs or additionaly supply to existing NFTs dynamically.
-   *
-   * @remarks See {@link Erc1155SignatureMinting.generateFromTokenId}
-   *
-   * @param payloadsToSign - the payloads to sign with tokenIds specified
-   * @returns an array of payloads and signatures
-   */
-  public async generateBatchFromTokenIds(
-    payloadsToSign: PayloadToSign1155WithTokenId[],
-  ): Promise<SignedPayload1155[]> {
-    await this.roles.verify(
+    payloadsToSign: PayloadToSign721withQuantity[],
+  ): Promise<SignedPayload721WithQuantitySignature[]> {
+    await this.roles?.verify(
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );
 
-    const parsedRequests: FilledSignaturePayload1155WithTokenId[] =
-      payloadsToSign.map((m) => Signature1155PayloadInputWithTokenId.parse(m));
+    const parsedRequests: FilledSignature721WithQuantity[] = payloadsToSign.map(
+      (m) => Signature721WithQuantityInput.parse(m),
+    );
 
     const metadatas = parsedRequests.map((r) => r.metadata);
     const uris = await uploadOrExtractURIs(metadatas, this.storage);
@@ -284,19 +231,19 @@ export class Erc1155SignatureMinting {
     return await Promise.all(
       parsedRequests.map(async (m, i) => {
         const uri = uris[i];
-        const finalPayload = Signature1155PayloadOutput.parse({
+        const finalPayload = Signature721WithQuantityOutput.parse({
           ...m,
           uri,
         });
         const signature = await this.contractWrapper.signTypedData(
           signer,
           {
-            name: "TokenERC1155",
+            name: "SignatureMintERC721",
             version: "1",
             chainId,
             verifyingContract: this.contractWrapper.readContract.address,
           },
-          { MintRequest: MintRequest1155 }, // TYPEHASH
+          { MintRequest: MintRequest721withQuantity },
           await this.mapPayloadToContractStruct(finalPayload),
         );
         return {
@@ -320,8 +267,8 @@ export class Erc1155SignatureMinting {
    * @returns - The mapped payload.
    */
   private async mapPayloadToContractStruct(
-    mintRequest: PayloadWithUri1155,
-  ): Promise<ITokenERC1155.MintRequestStructOutput> {
+    mintRequest: PayloadWithUri721withQuantity,
+  ): Promise<ISignatureMintERC721.MintRequestStructOutput> {
     const normalizedPricePerToken = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       mintRequest.price,
@@ -329,17 +276,16 @@ export class Erc1155SignatureMinting {
     );
     return {
       to: mintRequest.to,
-      tokenId: mintRequest.tokenId,
+      royaltyRecipient: mintRequest.royaltyRecipient,
+      royaltyBps: mintRequest.royaltyBps,
+      primarySaleRecipient: mintRequest.primarySaleRecipient,
       uri: mintRequest.uri,
       quantity: mintRequest.quantity,
       pricePerToken: normalizedPricePerToken,
       currency: mintRequest.currencyAddress,
-      validityStartTimestamp: mintRequest.mintStartTime,
       validityEndTimestamp: mintRequest.mintEndTime,
+      validityStartTimestamp: mintRequest.mintStartTime,
       uid: mintRequest.uid,
-      royaltyRecipient: mintRequest.royaltyRecipient,
-      royaltyBps: mintRequest.royaltyBps,
-      primarySaleRecipient: mintRequest.primarySaleRecipient,
-    } as ITokenERC1155.MintRequestStructOutput;
+    } as ISignatureMintERC721.MintRequestStructOutput;
   }
 }

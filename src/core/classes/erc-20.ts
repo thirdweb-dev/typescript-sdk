@@ -12,11 +12,12 @@ import {
 } from "../../common/currency";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { PriceSchema } from "../../schema";
-import { BaseERC20 } from "../../types/eips";
+import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
 import { detectContractFeature } from "../../common";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { FEATURE_TOKEN } from "../../constants/erc20-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
 
 /**
  * Standard ERC20 Token functions
@@ -32,14 +33,14 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
   implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_TOKEN.name;
-  protected contractWrapper: ContractWrapper<T>;
-  protected storage: IStorage;
-  protected options: SDKOptions;
-
   /**
    * Mint tokens
    */
   public mint: Erc20Mintable | undefined;
+  public signature: Erc20SignatureMintable | undefined;
+  protected contractWrapper: ContractWrapper<T>;
+  protected storage: IStorage;
+  protected options: SDKOptions;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -58,6 +59,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
       this.options = SDKOptionsSchema.parse({});
     }
     this.mint = this.detectErc20Mintable();
+    this.signature = this.detectErc20SignatureMintable();
   }
 
   /**
@@ -315,6 +317,16 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    *******************************/
 
   /**
+   * returns the wei amount from a token amount
+   * @internal
+   * @param amount
+   */
+  public async normalizeAmount(amount: Amount): Promise<BigNumber> {
+    const decimals = await this.contractWrapper.readContract.decimals();
+    return ethers.utils.parseUnits(PriceSchema.parse(amount), decimals);
+  }
+
+  /**
    * @internal
    */
   protected async getValue(value: BigNumberish): Promise<CurrencyValue> {
@@ -325,19 +337,21 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
     );
   }
 
-  /**
-   * returns the wei amount from a token amount
-   * @internal
-   * @param amount
-   */
-  public async normalizeAmount(amount: Amount): Promise<BigNumber> {
-    const decimals = await this.contractWrapper.readContract.decimals();
-    return ethers.utils.parseUnits(PriceSchema.parse(amount), decimals);
-  }
-
   private detectErc20Mintable(): Erc20Mintable | undefined {
     if (detectContractFeature<IMintableERC20>(this.contractWrapper, "ERC20")) {
       return new Erc20Mintable(this, this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc20SignatureMintable(): Erc20SignatureMintable | undefined {
+    if (
+      detectContractFeature<BaseSignatureMintERC20>(
+        this.contractWrapper,
+        "ERC20",
+      )
+    ) {
+      return new Erc20SignatureMintable(this.contractWrapper);
     }
     return undefined;
   }

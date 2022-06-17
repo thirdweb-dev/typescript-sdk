@@ -44,7 +44,6 @@ import {
   TokensLazyMintedEvent,
 } from "contracts/DropERC721";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
-import { Erc721WithQuantitySignatureMinting } from "../core/classes/erc-721-with-quantity-signature-minting";
 import { DelayedReveal } from "../core/index";
 
 /**
@@ -159,21 +158,6 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * ```
    */
   public revealer: DelayedReveal<SignatureDropContract>;
-  /**
-   * Signature Minting
-   * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
-   * @example
-   * ```javascript
-   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
-   * const signedPayload = contract.signature.generate(payload);
-   *
-   * // now anyone can mint the NFT
-   * const tx = contract.signature.mint(signedPayload);
-   * const receipt = tx.receipt; // the mint transaction receipt
-   * const mintedId = tx.id; // the id of the NFT minted
-   * ```
-   */
-  public signature: Erc721WithQuantitySignatureMinting;
 
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
@@ -209,11 +193,6 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.revealer = new DelayedReveal(this, this.contractWrapper, this.storage);
-    this.signature = new Erc721WithQuantitySignatureMinting(
-      this.contractWrapper,
-      this.roles,
-      this.storage,
-    );
     this.claimCondition = new DropSingleClaimConditions(
       this.contractWrapper,
       this.metadata,

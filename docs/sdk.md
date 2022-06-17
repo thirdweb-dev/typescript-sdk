@@ -27,7 +27,7 @@
 |  [Erc1155BatchMintable](./sdk.erc1155batchmintable.md) | Mint Many ERC1155 NFTs at once |
 |  [Erc1155Enumerable](./sdk.erc1155enumerable.md) | List ERC1155 NFTs |
 |  [Erc1155Mintable](./sdk.erc1155mintable.md) | Mint ERC1155 NFTs |
-|  [Erc1155SignatureMinting](./sdk.erc1155signatureminting.md) | Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely |
+|  [Erc1155SignatureMintable](./sdk.erc1155signaturemintable.md) | Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc20](./sdk.erc20.md) | Standard ERC20 Token functions |
 |  [Erc20BatchMintable](./sdk.erc20batchmintable.md) | Mint Many ERC20 Tokens at once |
 |  [Erc20Mintable](./sdk.erc20mintable.md) | Mint ERC20 Tokens |

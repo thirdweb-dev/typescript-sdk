@@ -423,15 +423,6 @@
           "javascript": "// royalties on the whole contract\ncontract.royalties.setDefaultRoyaltyInfo({\n  seller_fee_basis_points: 100, // 1%\n  fee_recipient: \"0x...\"\n});\n// override royalty for a particular token\ncontract.royalties.setTokenRoyaltyInfo(tokenId, {\n  seller_fee_basis_points: 500, // 5%\n  fee_recipient: \"0x...\"\n});"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.contractroyalty"
-      },
-      {
-        "name": "signature",
-        "summary": "Signature Minting\n\n",
-        "remarks": "\n\nGenerate dynamic NFTs with your own signature, and let others mint them using that signature.\n\n",
-        "examples": {
-          "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.erc1155signatureminting"
       }
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.Edition"
@@ -964,15 +955,6 @@
           "javascript": "// royalties on the whole contract\ncontract.royalties.setDefaultRoyaltyInfo({\n  seller_fee_basis_points: 100, // 1%\n  fee_recipient: \"0x...\"\n});\n// override royalty for a particular token\ncontract.royalties.setTokenRoyaltyInfo(tokenId, {\n  seller_fee_basis_points: 500, // 5%\n  fee_recipient: \"0x...\"\n});"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.contractroyalty"
-      },
-      {
-        "name": "signature",
-        "summary": "Signature Minting\n\n",
-        "remarks": "\n\nGenerate dynamic NFTs with your own signature, and let others mint them using that signature.\n\n",
-        "examples": {
-          "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.erc721signatureminting"
       }
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.NFTCollection"
@@ -1478,17 +1460,7 @@
         "reference": "https://docs.thirdweb.com/typescript/sdk.Erc20.transferFrom"
       }
     ],
-    "properties": [
-      {
-        "name": "signature",
-        "summary": "Signature Minting\n\n",
-        "remarks": "\n\nGenerate tokens that can be minted only with your own signature, attaching your own set of mint conditions.\n\n",
-        "examples": {
-          "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the tokens\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.erc20signatureminting"
-      }
-    ],
+    "properties": [],
     "reference": "https://docs.thirdweb.com/typescript/sdk.Token"
   },
   "TokenDrop": {

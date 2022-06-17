@@ -1083,7 +1083,6 @@ export class Edition extends Erc1155<TokenERC1155> {
         name: string;
         }>;
     };
-    signature: Erc1155SignatureMinting;
 }
 
 // @public
@@ -1550,6 +1549,10 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseER
     query: Erc1155Enumerable | undefined;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "BaseSignatureMintERC1155" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    signature: Erc1155SignatureMintable<BaseSignatureMintERC1155> | undefined;
     // (undocumented)
     protected storage: IStorage;
     totalSupply(tokenId: BigNumberish): Promise<BigNumber>;
@@ -1589,8 +1592,10 @@ export class Erc1155Mintable implements DetectableFeature {
 }
 
 // @public
-export class Erc1155SignatureMinting {
-    constructor(contractWrapper: ContractWrapper<TokenERC1155>, roles: ContractRoles<TokenERC1155, typeof NFTCollection.contractRoles[number]>, storage: IStorage);
+export class Erc1155SignatureMintable<TContract extends BaseSignatureMintERC1155 | TokenERC1155> {
+    constructor(contractWrapper: ContractWrapper<TContract>, storage: IStorage, roles?: ContractRoles<TokenERC1155, typeof NFTCollection.contractRoles[number]>);
+    // (undocumented)
+    featureName: "ERC1155SignatureMintable";
     generate(payloadToSign: PayloadToSign1155): Promise<SignedPayload1155>;
     generateBatch(payloadsToSign: PayloadToSign1155[]): Promise<SignedPayload1155[]>;
     generateBatchFromTokenIds(payloadsToSign: PayloadToSign1155WithTokenId[]): Promise<SignedPayload1155[]>;
@@ -1634,6 +1639,10 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20> imp
     // (undocumented)
     protected options: SDKOptions;
     setAllowance(spender: string, amount: Amount): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "Erc20SignatureMintable" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    signature: Erc20SignatureMintable | undefined;
     // (undocumented)
     protected storage: IStorage;
     totalSupply(): Promise<CurrencyValue>;
@@ -1712,6 +1721,11 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
     // @internal
     setApprovalForToken(operator: string, tokenId: BigNumberish): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "Erc721WithQuantitySignatureMintable" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "BaseSignatureMintERC721" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    signature: Erc721WithQuantitySignatureMintable<BaseSignatureMintERC721> | undefined;
     // (undocumented)
     protected storage: IStorage;
     transfer(to: string, tokenId: BigNumberish): Promise<TransactionResult>;
@@ -2670,7 +2684,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
         name: string;
         }>;
     };
-    signature: Erc721SignatureMinting;
     totalSupply(): Promise<BigNumber>;
 }
 
@@ -4415,8 +4428,6 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
         name: string;
         }>;
     };
-    // Warning: (ae-forgotten-export) The symbol "Erc721WithQuantitySignatureMinting" needs to be exported by the entry point index.d.ts
-    signature: Erc721WithQuantitySignatureMinting;
     totalClaimedSupply(): Promise<BigNumber>;
     totalSupply(): Promise<BigNumber>;
     totalUnclaimedSupply(): Promise<BigNumber>;
@@ -5140,7 +5151,6 @@ export class Token extends Erc20<TokenERC20> {
         name: string;
         }>;
     };
-    signature: Erc20SignatureMinting;
 }
 
 // @public

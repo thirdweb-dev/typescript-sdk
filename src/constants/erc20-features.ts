@@ -1,6 +1,18 @@
 import ERC20Abi from "../../abis/IERC20.json";
 import IMintableERC20Abi from "../../abis/IMintableERC20.json";
 import MulticallAbi from "../../abis/IMulticall.json";
+import ISignatureMintERC20Abi from "../../abis/ISignatureMintERC20.json";
+
+export const FEATURE_TOKEN_SIGNATURE_MINTABLE = {
+  name: "ERC20SignatureMintable",
+  namespace: "token.signature",
+  docLinks: {
+    sdk: "sdk.erc20signaturemintable",
+    contracts: "ISignatureMintERC20",
+  },
+  abis: [ERC20Abi, ISignatureMintERC20Abi],
+  features: {},
+} as const;
 
 export const FEATURE_TOKEN_BATCH_MINTABLE = {
   name: "ERC20BatchMintable",

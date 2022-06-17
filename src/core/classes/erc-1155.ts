@@ -19,11 +19,12 @@ import { fetchTokenMetadata } from "../../common/nft";
 import { detectContractFeature, NotFoundError } from "../../common";
 import { AirdropInput } from "../../types/airdrop/airdrop";
 import { AirdropInputSchema } from "../../schema/contracts/common/airdrop";
-import { BaseERC1155 } from "../../types/eips";
+import { BaseERC1155, BaseSignatureMintERC1155 } from "../../types/eips";
 import { Erc1155Enumerable } from "./erc-1155-enumerable";
 import { Erc1155Mintable } from "./erc-1155-mintable";
 import { FEATURE_EDITION } from "../../constants/erc1155-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
 
 /**
  * Standard ERC1155 NFT functions
@@ -40,12 +41,14 @@ export class Erc1155<
 > implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_EDITION.name;
+  public query: Erc1155Enumerable | undefined;
+  public mint: Erc1155Mintable | undefined;
+  public signature:
+    | Erc1155SignatureMintable<BaseSignatureMintERC1155>
+    | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
-
-  public query: Erc1155Enumerable | undefined;
-  public mint: Erc1155Mintable | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<T>,
@@ -65,6 +68,7 @@ export class Erc1155<
     }
     this.query = this.detectErc1155Enumerable();
     this.mint = this.detectErc1155Mintable();
+    this.signature = this.detectErc1155SignatureMintable();
   }
 
   /**
@@ -242,7 +246,7 @@ export class Erc1155<
    * const addresses = [
    *  "0x...", "0x...", "0x...",
    * ]
-   * 
+   *
    * await contract.airdrop(tokenId, addresses);
    * ```
    */
@@ -315,6 +319,20 @@ export class Erc1155<
       )
     ) {
       return new Erc1155Mintable(this, this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectErc1155SignatureMintable():
+    | Erc1155SignatureMintable<BaseSignatureMintERC1155>
+    | undefined {
+    if (
+      detectContractFeature<BaseSignatureMintERC1155>(
+        this.contractWrapper,
+        "ERC1155SignatureMintable",
+      )
+    ) {
+      return new Erc1155SignatureMintable(this.contractWrapper, this.storage);
     }
     return undefined;
   }
