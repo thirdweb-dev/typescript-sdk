@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-signature: Erc1155SignatureMintable<BaseSignatureMintERC1155> | undefined;
+signature: Erc1155SignatureMintable | undefined;
 ```

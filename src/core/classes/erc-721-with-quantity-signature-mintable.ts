@@ -12,13 +12,16 @@ import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { BigNumber } from "ethers";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ISignatureMintERC721, TokenERC721 } from "contracts";
+import {
+  ISignatureMintERC721,
+  SignatureDrop as SignatureDropContract,
+  TokenERC721,
+} from "contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { TokensMintedWithSignatureEvent } from "contracts/ITokenERC721";
-import { BaseSignatureMintERC721 } from "../../types/eips";
 import { FEATURE_NFT_SIGNATURE_MINTABLE } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 
@@ -29,7 +32,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   featureName = FEATURE_NFT_SIGNATURE_MINTABLE.name;
 
-  private contractWrapper: ContractWrapper<BaseSignatureMintERC721>;
+  private contractWrapper: ContractWrapper<SignatureDropContract>;
   private storage: IStorage;
   private roles?: ContractRoles<
     TokenERC721,
@@ -37,7 +40,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   >;
 
   constructor(
-    contractWrapper: ContractWrapper<BaseSignatureMintERC721>,
+    contractWrapper: ContractWrapper<SignatureDropContract>,
     storage: IStorage,
     roles?: ContractRoles<
       TokenERC721,

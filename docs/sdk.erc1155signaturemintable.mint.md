@@ -16,7 +16,7 @@ mint(signedPayload: SignedPayload1155): Promise<TransactionResultWithId>;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  signedPayload | [SignedPayload1155](./sdk.signedpayload1155.md) | the previously generated payload and signature with [Erc721SignatureMinting.generate()](./sdk.erc721signatureminting.generate.md) |
+|  signedPayload | [SignedPayload1155](./sdk.signedpayload1155.md) | the previously generated payload and signature with  |
 
 <b>Returns:</b>
 

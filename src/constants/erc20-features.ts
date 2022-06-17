@@ -48,5 +48,6 @@ export const FEATURE_TOKEN = {
   abis: [ERC20Abi],
   features: {
     [FEATURE_TOKEN_MINTABLE.name]: FEATURE_TOKEN_MINTABLE,
+    [FEATURE_TOKEN_SIGNATURE_MINTABLE.name]: FEATURE_TOKEN_SIGNATURE_MINTABLE,
   },
 } as const;

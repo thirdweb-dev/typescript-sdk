@@ -89,6 +89,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
    */
   public interceptor: ContractInterceptor<TokenERC721>;
 
+  public signature = this.sig;
   private _mint = this.mint as Erc721Mintable;
   private _batchMint = this._mint.batch as Erc721BatchMintable;
   private _query = this.query as Erc721Supply;

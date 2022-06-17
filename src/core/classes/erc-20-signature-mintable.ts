@@ -12,11 +12,9 @@ import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import { BigNumber, ethers } from "ethers";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ISignatureMintERC20, TokenERC20 } from "contracts";
+import { ITokenERC20, TokenERC20 } from "contracts";
 import { ContractRoles } from "./contract-roles";
 import { Token } from "../../contracts";
-import { BaseSignatureMintERC20 } from "../../types/eips";
-import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
 
 /**
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
@@ -24,15 +22,13 @@ import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features
  */
 // TODO consolidate into a single class
 export class Erc20SignatureMintable {
-  featureName = FEATURE_TOKEN_SIGNATURE_MINTABLE.name;
-
-  private contractWrapper: ContractWrapper<BaseSignatureMintERC20>;
+  private contractWrapper: ContractWrapper<TokenERC20>;
   private roles:
     | ContractRoles<TokenERC20, typeof Token.contractRoles[number]>
     | undefined;
 
   constructor(
-    contractWrapper: ContractWrapper<BaseSignatureMintERC20>,
+    contractWrapper: ContractWrapper<TokenERC20>,
     roles?: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>,
   ) {
     this.contractWrapper = contractWrapper;
@@ -54,7 +50,7 @@ export class Erc20SignatureMintable {
    * const receipt = tx.receipt; // the mint transaction receipt
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
-   * @param signedPayload - the previously generated payload and signature with {@link Erc20SignatureMinting.generate}
+   * @param signedPayload - the previously generated payload and signature with {@link Erc20SignatureMintable.generate}
    */
   public async mint(
     signedPayload: SignedPayload20,
@@ -65,7 +61,7 @@ export class Erc20SignatureMintable {
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
       this.contractWrapper,
-      BigNumber.from(message.pricePerToken),
+      BigNumber.from(message.price),
       mintRequest.currencyAddress,
       overrides,
     );
@@ -160,7 +156,7 @@ export class Erc20SignatureMintable {
   /**
    * Generate a batch of signatures that can be used to mint many token signatures.
    *
-   * @remarks See {@link Erc20SignatureMinting.generate}
+   * @remarks See {@link Erc20SignatureMintable.generate}
    *
    * @param payloadsToSign - the payloads to sign
    * @returns an array of payloads and signatures
@@ -220,7 +216,7 @@ export class Erc20SignatureMintable {
    */
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri20,
-  ): Promise<ISignatureMintERC20.MintRequestStruct> {
+  ): Promise<ITokenERC20.MintRequestStructOutput> {
     const normalizedPrice = await normalizePriceValue(
       this.contractWrapper.getProvider(),
       mintRequest.price,
@@ -234,11 +230,11 @@ export class Erc20SignatureMintable {
       to: mintRequest.to,
       primarySaleRecipient: mintRequest.primarySaleRecipient,
       quantity: amountWithDecimals,
-      pricePerToken: normalizedPrice,
+      price: normalizedPrice,
       currency: mintRequest.currencyAddress,
       validityEndTimestamp: mintRequest.mintEndTime,
       validityStartTimestamp: mintRequest.mintStartTime,
       uid: mintRequest.uid,
-    } as ISignatureMintERC20.MintRequestStruct;
+    } as ITokenERC20.MintRequestStructOutput;
   }
 }

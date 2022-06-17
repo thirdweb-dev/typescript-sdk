@@ -31,13 +31,13 @@
 |  [Erc20](./sdk.erc20.md) | Standard ERC20 Token functions |
 |  [Erc20BatchMintable](./sdk.erc20batchmintable.md) | Mint Many ERC20 Tokens at once |
 |  [Erc20Mintable](./sdk.erc20mintable.md) | Mint ERC20 Tokens |
-|  [Erc20SignatureMinting](./sdk.erc20signatureminting.md) | Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely |
+|  [Erc20SignatureMintable](./sdk.erc20signaturemintable.md) | Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 NFT functions |
 |  [Erc721BatchMintable](./sdk.erc721batchmintable.md) | Mint Many ERC721 NFTs at once |
 |  [Erc721Dropable](./sdk.erc721dropable.md) | Lazily mint and claim ERC721 NFTs |
 |  [Erc721Enumerable](./sdk.erc721enumerable.md) | List owned ERC721 NFTs |
 |  [Erc721Mintable](./sdk.erc721mintable.md) | Mint ERC721 NFTs |
-|  [Erc721SignatureMinting](./sdk.erc721signatureminting.md) | Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely |
+|  [Erc721SignatureMintable](./sdk.erc721signaturemintable.md) | Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc721Supply](./sdk.erc721supply.md) | List ERC721 NFTs |
 |  [GasCostEstimator](./sdk.gascostestimator.md) | Estimates the gas cost of Contract calls |
 |  [IpfsStorage](./sdk.ipfsstorage.md) | IPFS Storage implementation, accepts custom IPFS gateways |

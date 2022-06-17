@@ -9,8 +9,9 @@ Enables generating dynamic ERC1155 NFTs with rules and an associated signature, 
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc1155SignatureMintable<TContract extends BaseSignatureMintERC1155 | TokenERC1155> 
+export declare class Erc1155SignatureMintable implements DetectableFeature 
 ```
+<b>Implements:</b> DetectableFeature
 
 ## Constructors
 

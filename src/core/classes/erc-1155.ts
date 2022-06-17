@@ -37,7 +37,11 @@ import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
  * @public
  */
 export class Erc1155<
-  T extends DropERC1155 | TokenERC1155 | BaseSignatureMintERC1155,
+  T extends
+    | DropERC1155
+    | TokenERC1155
+    | BaseSignatureMintERC1155
+    | BaseERC1155 = BaseERC1155,
 > implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_EDITION.name;

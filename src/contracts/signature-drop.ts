@@ -45,6 +45,7 @@ import {
 } from "contracts/DropERC721";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { DelayedReveal } from "../core/index";
+import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -157,8 +158,9 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * await contract.revealer.reveal(batchId, "my secret password");
    * ```
    */
-  public revealer: DelayedReveal<SignatureDropContract>;
 
+  public revealer: DelayedReveal<SignatureDropContract>;
+  public signature: Erc721WithQuantitySignatureMintable;
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
 
@@ -196,6 +198,10 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     this.claimCondition = new DropSingleClaimConditions(
       this.contractWrapper,
       this.metadata,
+      this.storage,
+    );
+    this.signature = new Erc721WithQuantitySignatureMintable(
+      this.contractWrapper,
       this.storage,
     );
   }

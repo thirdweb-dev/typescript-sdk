@@ -12,7 +12,7 @@ import {
 } from "../../common/currency";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { PriceSchema } from "../../schema";
-import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
+import { BaseERC20 } from "../../types/eips";
 import { detectContractFeature } from "../../common";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { FEATURE_TOKEN } from "../../constants/erc20-features";
@@ -346,7 +346,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
 
   private detectErc20SignatureMintable(): Erc20SignatureMintable | undefined {
     if (
-      detectContractFeature<BaseSignatureMintERC20>(
+      detectContractFeature<TokenERC20>(
         this.contractWrapper,
         "ERC20SignatureMintable",
       )
