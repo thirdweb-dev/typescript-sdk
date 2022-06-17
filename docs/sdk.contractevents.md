@@ -26,6 +26,6 @@ export declare class ContractEvents<TContract extends BaseContract>
 |  [addTransactionListener(listener)](./sdk.contractevents.addtransactionlistener.md) |  | Subscribe to transactions in this contract. |
 |  [listenToAllEvents(listener)](./sdk.contractevents.listentoallevents.md) |  | Listen to all events emitted from this contract |
 |  [removeAllListeners()](./sdk.contractevents.removealllisteners.md) |  | Remove all listeners on this contract |
-|  [removeEventListener(eventName, listener)](./sdk.contractevents.removeeventlistener.md) |  |  |
+|  [removeEventListener(eventName, listener)](./sdk.contractevents.removeeventlistener.md) |  | Remove an event listener from this contract |
 |  [removeTransactionListener(listener)](./sdk.contractevents.removetransactionlistener.md) |  | Remove a transaction listener |
 

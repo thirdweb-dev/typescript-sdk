@@ -4,6 +4,8 @@
 
 ## ContractEvents.removeEventListener() method
 
+Remove an event listener from this contract
+
 <b>Signature:</b>
 
 ```typescript
@@ -20,4 +22,17 @@ removeEventListener(eventName: keyof TContract["filters"] | (string & {}), liste
 <b>Returns:</b>
 
 void
+
+## Remarks
+
+Remove a listener that was added with addEventListener
+
+## Example
+
+
+```javascript
+contract.events.removeEventListener("TokensMinted", (event) => {
+  console.log(event);
+});
+```
 
