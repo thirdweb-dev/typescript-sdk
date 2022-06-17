@@ -19,6 +19,7 @@ import { UploadResult } from "../interfaces";
 
 /**
  * IPFS Storage implementation, accepts custom IPFS gateways
+ * @remarks By default, thirdweb automatically uploads files to IPFS when you perform operations such as minting, this class allows you to do it manually.
  * @public
  */
 export class IpfsStorage implements IStorage {
@@ -51,7 +52,15 @@ export class IpfsStorage implements IStorage {
   }
 
   /**
-   * {@inheritDoc IStorage.upload}
+   * Upload a file to IPFS and return the hash
+   * @remarks This method is a wrapper around {@link IStorage.upload}
+   * @example
+   * ```javascript
+   * const file = './path/to/file.png'; // Can be a path or a File object such as a file from an input element.
+   * const hash = await sdk.storage.upload(file);
+   * ```
+   *
+   *
    */
   public async upload(
     data: string | FileOrBuffer,

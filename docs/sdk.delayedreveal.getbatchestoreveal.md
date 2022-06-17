@@ -15,3 +15,14 @@ getBatchesToReveal(): Promise<BatchToReveal[]>;
 
 Promise&lt;[BatchToReveal](./sdk.batchtoreveal.md)<!-- -->\[\]&gt;
 
+## Remarks
+
+Gets the list of unrevealed NFT batches.
+
+## Example
+
+
+```javascript
+const batches = await contract.revealer.getBatchesToReveal();
+```
+

@@ -27,6 +27,10 @@ createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataIn
 
 Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->\[\]&gt;
 
+## Remarks
+
+Create a batch of encrypted NFTs that can be revealed at a later time.
+
 ## Example
 
 

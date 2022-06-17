@@ -621,6 +621,7 @@ export type ContractForContractType<TContractType extends ContractType> = Instan
 // @internal
 export class ContractInterceptor<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
+    // @public
     overrideNextTransaction(hook: () => CallOverrides): void;
 }
 
@@ -632,7 +633,6 @@ export class ContractMetadata<TContract extends BaseContract, TSchema extends IG
     constructor(contractWrapper: ContractWrapper<TContract>, schema: TSchema, storage: IStorage);
     // (undocumented)
     featureName: "ContractMetadata";
-    // (undocumented)
     get(): Promise<z.output<TSchema["output"]>>;
     // @internal (undocumented)
     _parseAndUploadMetadata(metadata: z.input<TSchema["input"]>): Promise<string>;
@@ -640,7 +640,6 @@ export class ContractMetadata<TContract extends BaseContract, TSchema extends IG
     parseInputMetadata(metadata: any): z.input<TSchema["input"]>;
     // @internal (undocumented)
     parseOutputMetadata(metadata: any): z.output<TSchema["output"]>;
-    // (undocumented)
     set(metadata: z.input<TSchema["input"]>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
@@ -648,7 +647,6 @@ export class ContractMetadata<TContract extends BaseContract, TSchema extends IG
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
     } : never : never>;
-    // (undocumented)
     update(metadata: Partial<z.input<TSchema["input"]>>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;

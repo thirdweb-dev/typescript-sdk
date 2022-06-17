@@ -54,7 +54,7 @@ const additionalClassesToParse = [
   "ContractEvents",
   "DelayedReveal",
   "ContractRoles",
-  "IpfsStorage",
+  "RemoteStorage",
   "GasCostEstimator",
   "ContractInterceptor",
 ];
