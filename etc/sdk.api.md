@@ -623,7 +623,6 @@ export class ContractEvents<TContract extends BaseContract> {
     addTransactionListener(listener: ListenerFn): void;
     listenToAllEvents(listener: (event: ContractEvent) => void): void;
     removeAllListeners(): void;
-    // (undocumented)
     removeEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: providers.Listener): void;
     removeTransactionListener(listener: ListenerFn): void;
 }
@@ -634,9 +633,7 @@ export class ContractEvents<TContract extends BaseContract> {
 // @public (undocumented)
 export type ContractForContractType<TContractType extends ContractType> = Instance<typeof CONTRACTS_MAP[TContractType]>;
 
-// Warning: (ae-internal-missing-underscore) The name "ContractInterceptor" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @public
 export class ContractInterceptor<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     overrideNextTransaction(hook: () => CallOverrides): void;
@@ -650,7 +647,6 @@ export class ContractMetadata<TContract extends BaseContract, TSchema extends IG
     constructor(contractWrapper: ContractWrapper<TContract>, schema: TSchema, storage: IStorage);
     // (undocumented)
     featureName: "ContractMetadata";
-    // (undocumented)
     get(): Promise<z.output<TSchema["output"]>>;
     // @internal (undocumented)
     _parseAndUploadMetadata(metadata: z.input<TSchema["input"]>): Promise<string>;
@@ -658,7 +654,6 @@ export class ContractMetadata<TContract extends BaseContract, TSchema extends IG
     parseInputMetadata(metadata: any): z.input<TSchema["input"]>;
     // @internal (undocumented)
     parseOutputMetadata(metadata: any): z.output<TSchema["output"]>;
-    // (undocumented)
     set(metadata: z.input<TSchema["input"]>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
@@ -666,7 +661,6 @@ export class ContractMetadata<TContract extends BaseContract, TSchema extends IG
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
     } : never : never>;
-    // (undocumented)
     update(metadata: Partial<z.input<TSchema["input"]>>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
@@ -3536,6 +3530,14 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
     uid: string;
     primarySaleRecipient: string;
     quantity: string;
+<<<<<<< HEAD
+=======
+    uid: string;
+    price: string;
+    currencyAddress: string;
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
+>>>>>>> main
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3547,16 +3549,24 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+<<<<<<< HEAD
     royaltyRecipient: string;
     royaltyBps: number;
+=======
+>>>>>>> main
 }, {
     to?: string | undefined;
     currencyAddress?: string | undefined;
+<<<<<<< HEAD
     price?: string | number | undefined;
     mintStartTime?: Date | undefined;
     mintEndTime?: Date | undefined;
     uid?: string | undefined;
     primarySaleRecipient?: string | undefined;
+=======
+    mintStartTime?: Date | undefined;
+    mintEndTime?: Date | undefined;
+>>>>>>> main
     metadata?: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3568,8 +3578,11 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     } | undefined;
+<<<<<<< HEAD
     royaltyRecipient?: string | undefined;
     royaltyBps?: number | undefined;
+=======
+>>>>>>> main
     quantity: string | number | bigint | BigNumber;
 }>;
 
@@ -3662,6 +3675,14 @@ export const Signature1155PayloadInputWithTokenId: z.ZodObject<z.extendShape<z.e
     uid: string;
     primarySaleRecipient: string;
     quantity: string;
+<<<<<<< HEAD
+=======
+    uid: string;
+    price: string;
+    currencyAddress: string;
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
+>>>>>>> main
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3673,17 +3694,25 @@ export const Signature1155PayloadInputWithTokenId: z.ZodObject<z.extendShape<z.e
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+<<<<<<< HEAD
     royaltyRecipient: string;
     royaltyBps: number;
     tokenId: string;
+=======
+>>>>>>> main
 }, {
     to?: string | undefined;
     currencyAddress?: string | undefined;
+<<<<<<< HEAD
     price?: string | number | undefined;
     mintStartTime?: Date | undefined;
     mintEndTime?: Date | undefined;
     uid?: string | undefined;
     primarySaleRecipient?: string | undefined;
+=======
+    mintStartTime?: Date | undefined;
+    mintEndTime?: Date | undefined;
+>>>>>>> main
     metadata?: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3695,8 +3724,12 @@ export const Signature1155PayloadInputWithTokenId: z.ZodObject<z.extendShape<z.e
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     } | undefined;
+<<<<<<< HEAD
     royaltyRecipient?: string | undefined;
     royaltyBps?: number | undefined;
+=======
+    tokenId: string | number | bigint | BigNumber;
+>>>>>>> main
     quantity: string | number | bigint | BigNumber;
     tokenId: string | number | bigint | BigNumber;
 }>;
@@ -3762,8 +3795,15 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     mintStartTime: BigNumber;
     mintEndTime: BigNumber;
     uid: string;
+<<<<<<< HEAD
     primarySaleRecipient: string;
     quantity: BigNumber;
+=======
+    price: string;
+    currencyAddress: string;
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
+>>>>>>> main
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3775,9 +3815,12 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+<<<<<<< HEAD
     royaltyRecipient: string;
     royaltyBps: BigNumber;
     tokenId: BigNumber;
+=======
+>>>>>>> main
 }, {
     to?: string | undefined;
     currencyAddress?: string | undefined;
@@ -3789,6 +3832,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     mintStartTime: string | number | bigint | BigNumber;
     mintEndTime: string | number | bigint | BigNumber;
     quantity: string | number | bigint | BigNumber;
+    mintStartTime: string | number | bigint | BigNumber;
+    mintEndTime: string | number | bigint | BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3800,8 +3845,11 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+<<<<<<< HEAD
     royaltyBps: string | number | bigint | BigNumber;
     tokenId: string | number | bigint | BigNumber;
+=======
+>>>>>>> main
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature20PayloadInput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3921,11 +3969,16 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
 }>, "strip", z.ZodTypeAny, {
     to: string;
     currencyAddress: string;
+<<<<<<< HEAD
     price: string;
     mintStartTime: BigNumber;
     mintEndTime: BigNumber;
     uid: string;
     primarySaleRecipient: string;
+=======
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
+>>>>>>> main
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3937,8 +3990,11 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+<<<<<<< HEAD
     royaltyRecipient: string;
     royaltyBps: number;
+=======
+>>>>>>> main
 }, {
     to?: string | undefined;
     currencyAddress?: string | undefined;
@@ -4020,7 +4076,14 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     mintStartTime: BigNumber;
     mintEndTime: BigNumber;
     uid: string;
+<<<<<<< HEAD
     primarySaleRecipient: string;
+=======
+    price: string;
+    currencyAddress: string;
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
+>>>>>>> main
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -4032,8 +4095,11 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+<<<<<<< HEAD
     royaltyRecipient: string;
     royaltyBps: BigNumber;
+=======
+>>>>>>> main
 }, {
     to?: string | undefined;
     currencyAddress?: string | undefined;
@@ -4042,6 +4108,10 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     primarySaleRecipient?: string | undefined;
     royaltyRecipient?: string | undefined;
     uri: string;
+<<<<<<< HEAD
+=======
+    royaltyBps: string | number | bigint | BigNumber;
+>>>>>>> main
     mintStartTime: string | number | bigint | BigNumber;
     mintEndTime: string | number | bigint | BigNumber;
     metadata: string | {
@@ -4055,7 +4125,10 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+<<<<<<< HEAD
     royaltyBps: string | number | bigint | BigNumber;
+=======
+>>>>>>> main
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature721WithQuantityInput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -4145,6 +4218,14 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
     uid: string;
     primarySaleRecipient: string;
     quantity: string;
+<<<<<<< HEAD
+=======
+    uid: string;
+    price: string;
+    currencyAddress: string;
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
+>>>>>>> main
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -4156,16 +4237,24 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+<<<<<<< HEAD
     royaltyRecipient: string;
     royaltyBps: number;
+=======
+>>>>>>> main
 }, {
     to?: string | undefined;
     currencyAddress?: string | undefined;
+<<<<<<< HEAD
     price?: string | number | undefined;
     mintStartTime?: Date | undefined;
     mintEndTime?: Date | undefined;
     uid?: string | undefined;
     primarySaleRecipient?: string | undefined;
+=======
+    mintStartTime?: Date | undefined;
+    mintEndTime?: Date | undefined;
+>>>>>>> main
     metadata?: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -4177,8 +4266,11 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     } | undefined;
+<<<<<<< HEAD
     royaltyRecipient?: string | undefined;
     royaltyBps?: number | undefined;
+=======
+>>>>>>> main
     quantity: string | number | bigint | BigNumber;
 }>;
 
@@ -4242,8 +4334,15 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
     mintStartTime: BigNumber;
     mintEndTime: BigNumber;
     uid: string;
+<<<<<<< HEAD
     primarySaleRecipient: string;
     quantity: BigNumber;
+=======
+    price: string;
+    currencyAddress: string;
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
+>>>>>>> main
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -4255,8 +4354,11 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+<<<<<<< HEAD
     royaltyRecipient: string;
     royaltyBps: BigNumber;
+=======
+>>>>>>> main
 }, {
     to?: string | undefined;
     currencyAddress?: string | undefined;
@@ -4268,6 +4370,8 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
     mintStartTime: string | number | bigint | BigNumber;
     mintEndTime: string | number | bigint | BigNumber;
     quantity: string | number | bigint | BigNumber;
+    mintStartTime: string | number | bigint | BigNumber;
+    mintEndTime: string | number | bigint | BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -4279,7 +4383,10 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+<<<<<<< HEAD
     royaltyBps: string | number | bigint | BigNumber;
+=======
+>>>>>>> main
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "SignatureDrop" should be prefixed with an underscore because the declaration is marked as @internal
@@ -4492,8 +4599,6 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     events: ContractEvents<TContract>;
     // (undocumented)
     getAddress(): string;
-    // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @beta, but its signature references "ContractInterceptor" which is marked as @internal
-    //
     // (undocumented)
     interceptor: ContractInterceptor<TContract>;
     // (undocumented)
@@ -5000,7 +5105,13 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
 // @public
 export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "ChainOrRpc" which is marked as @internal
+<<<<<<< HEAD
     constructor(chainId: ChainOrRpc, signer?: Signer | undefined, options?: SDKOptions, storage?: IStorage);
+=======
+    constructor(network: ChainOrRpc | SignerOrProvider, options?: SDKOptions, storage?: IStorage);
+    // Warning: (ae-incompatible-release-tags) The symbol "auth" is marked as @public, but its signature references "WalletAuthenticator" which is marked as @beta
+    auth: WalletAuthenticator;
+>>>>>>> main
     deployer: ContractDeployer;
     // Warning: (ae-incompatible-release-tags) The symbol "fromPrivateKey" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
     //
@@ -5627,6 +5738,19 @@ export enum VoteType {
     Against = 0,
     // (undocumented)
     For = 1
+}
+
+// @beta
+export class WalletAuthenticator extends RPCConnectionHandler {
+    constructor(network: NetworkOrSignerOrProvider, wallet: UserWallet, options: SDKOptions);
+    authenticate(domain: string, token: string): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "AuthenticationOptions" needs to be exported by the entry point index.d.ts
+    generateAuthToken(domain: string, payload: LoginPayload, options?: AuthenticationOptions): Promise<string>;
+    // Warning: (ae-forgotten-export) The symbol "LoginOptions" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "LoginPayload" needs to be exported by the entry point index.d.ts
+    login(domain: string, options?: LoginOptions): Promise<LoginPayload>;
+    // Warning: (ae-forgotten-export) The symbol "VerifyOptions" needs to be exported by the entry point index.d.ts
+    verify(domain: string, payload: LoginPayload, options?: VerifyOptions): string;
 }
 
 // @public

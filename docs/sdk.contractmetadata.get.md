@@ -4,6 +4,8 @@
 
 ## ContractMetadata.get() method
 
+Get the metadata of a contract
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,4 +16,15 @@ get(): Promise<z.output<TSchema["output"]>>;
 Promise&lt;z.output&lt;TSchema\["output"\]&gt;&gt;
 
 the metadata of the given contract
+
+## Remarks
+
+Get the metadata of a contract
+
+## Example
+
+
+```javascript
+const metadata = await contract.metadata.get();
+```
 

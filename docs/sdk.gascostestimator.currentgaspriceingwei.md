@@ -15,3 +15,16 @@ currentGasPriceInGwei(): Promise<string>;
 
 Promise&lt;string&gt;
 
+the current gas price in gwei
+
+## Remarks
+
+Get the current gas price in gwei
+
+## Example
+
+
+```javascript
+const gasCostInGwei = await contract.estimator.currentGasPriceInGwei();
+```
+

@@ -45,6 +45,7 @@ export class DelayedReveal<
 
   /**
    * Create a batch of encrypted NFTs that can be revealed at a later time.
+   * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
    * @example
    * ```javascript
    * // the real NFTs, these will be encrypted until your reveal them!
@@ -72,6 +73,7 @@ export class DelayedReveal<
    * const batchId = 0; // the batch to reveal
    * await contract.revealer.reveal(batchId, "my secret password");
    * ```
+   * @public
    * @param placeholder - the placeholder NFT to show before the reveal
    * @param metadatas - the final NFTs that will be hidden
    * @param password - the password that will be used to reveal these NFTs
@@ -139,6 +141,15 @@ export class DelayedReveal<
 
   /**
    * Reveal a batch of hidden NFTs
+   * @remarks Reveal the NFTs of a batch using the password.
+   * @example
+   * ```javascript
+   * // the batch to reveal
+   * const batchId = 0;
+   * // reveal the batch
+   * await contract.revealer.reveal(batchId, "my secret password");
+   * ```
+   * @public
    * @param batchId - the id of the batch to reveal
    * @param password - the password
    */
@@ -175,6 +186,12 @@ export class DelayedReveal<
 
   /**
    * Gets the list of unrevealed NFT batches.
+   * @remarks Gets the list of unrevealed NFT batches.
+   * @example
+   * ```javascript
+   * const batches = await contract.revealer.getBatchesToReveal();
+   * ```
+   * @public
    */
   public async getBatchesToReveal(): Promise<BatchToReveal[]> {
     const count = await this.contractWrapper.readContract.getBaseURICount();

@@ -4,7 +4,7 @@
 
 ## IpfsStorage.upload() method
 
-Uploads a file to the storage.
+Upload a file to IPFS and return the hash
 
 <b>Signature:</b>
 
@@ -18,14 +18,24 @@ upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: st
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  data | string \| [FileOrBuffer](./sdk.fileorbuffer.md) | The data to be uploaded. Can be a file/buffer (which will be loaded), or a string. |
-|  contractAddress | string | <i>(Optional)</i> Optional. The contract address the data belongs to. |
-|  signerAddress | string | <i>(Optional)</i> Optional. The address of the signer. |
-|  options | { onProgress: (event: [UploadProgressEvent](./sdk.uploadprogressevent.md)<!-- -->) =&gt; void; } | <i>(Optional)</i> Optional. Upload progress callback. |
+|  data | string \| [FileOrBuffer](./sdk.fileorbuffer.md) |  |
+|  contractAddress | string | <i>(Optional)</i> |
+|  signerAddress | string | <i>(Optional)</i> |
+|  options | { onProgress: (event: [UploadProgressEvent](./sdk.uploadprogressevent.md)<!-- -->) =&gt; void; } | <i>(Optional)</i> |
 
 <b>Returns:</b>
 
 Promise&lt;string&gt;
 
-- The hash of the uploaded data.
+## Remarks
+
+This method is a wrapper around [IStorage.upload()](./sdk.istorage.upload.md)
+
+## Example
+
+
+```javascript
+const file = './path/to/file.png'; // Can be a path or a File object such as a file from an input element.
+const hash = await sdk.storage.upload(file);
+```
 

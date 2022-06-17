@@ -1,7 +1,7 @@
 import { providers, Signer } from "ethers";
 import { ConnectionInfo } from "../types";
 import { ChainOrRpc, getProviderForChain } from "../../constants";
-import { EventEmitter2 } from "eventemitter2";
+import { EventEmitter } from "eventemitter3";
 import {
   SDKOptions,
   SDKOptionsOutput,
@@ -11,7 +11,7 @@ import {
 /**
  * @internal
  */
-export class RPCConnectionHandler extends EventEmitter2 {
+export class RPCConnectionHandler extends EventEmitter {
   protected options: SDKOptionsOutput;
   private chainId: ChainOrRpc; // TODO (rpc) enforce this to be a pure ChainId
   private provider: providers.Provider;

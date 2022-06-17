@@ -15,3 +15,14 @@ removeAllListeners(): void;
 
 void
 
+## Remarks
+
+Remove all listeners from a contract
+
+## Example
+
+
+```javascript
+contract.events.removeAllListeners();
+```
+

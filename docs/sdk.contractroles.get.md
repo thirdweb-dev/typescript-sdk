@@ -37,6 +37,6 @@ See [ContractRoles.getAll()](./sdk.contractroles.getall.md) to get get a list of
 Say you want to get the list of addresses that are members of the minter role.
 
 ```javascript
-const minterAddresses: string[] = await contract.getRoleMemberList("minter");
+const minterAddresses = await contract.roles.get("minter");
 ```
 

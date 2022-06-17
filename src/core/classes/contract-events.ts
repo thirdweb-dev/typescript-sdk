@@ -34,6 +34,13 @@ export class ContractEvents<TContract extends BaseContract> {
 
   /**
    * Remove a transaction listener
+   * @remarks Remove a listener that was added with addTransactionListener
+   * @example
+   * ```javascript
+   * contract.events.removeTransactionListener((event) => {
+   *  console.log(event);
+   * }
+   * ```
    * @param listener - the receiver to remove
    * @public
    */
@@ -73,7 +80,7 @@ export class ContractEvents<TContract extends BaseContract> {
 
   /**
    * Listen to all events emitted from this contract
-   * @param listener - the receiver that will be called on every new event
+   * @remarks Remove a listener that was added with addEventListener
    * @example
    * ```javascript
    * contract.events.listenToAllEvents((event) => {
@@ -81,6 +88,8 @@ export class ContractEvents<TContract extends BaseContract> {
    *   console.log(event.data) // event payload
    * }
    * ```
+   * @public
+   * @param listener - the receiver that will be called on every new event
    */
   public listenToAllEvents(listener: (event: ContractEvent) => void) {
     const address = this.contractWrapper.readContract.address;
@@ -97,6 +106,14 @@ export class ContractEvents<TContract extends BaseContract> {
   }
 
   /**
+   * Remove an event listener from this contract
+   * @remarks Remove a listener that was added with addEventListener
+   * @example
+   * ```javascript
+   * contract.events.removeEventListener("TokensMinted", (event) => {
+   *   console.log(event);
+   * });
+   * ```
    * @public
    * @param eventName - the event name as defined in the contract
    * @param listener - the listener to unregister
@@ -114,6 +131,12 @@ export class ContractEvents<TContract extends BaseContract> {
 
   /**
    * Remove all listeners on this contract
+   * @remarks Remove all listeners from a contract
+   * @example
+   * ```javascript
+   * contract.events.removeAllListeners();
+   * ```
+   * @public
    */
   public removeAllListeners() {
     this.contractWrapper.readContract.removeAllListeners();
