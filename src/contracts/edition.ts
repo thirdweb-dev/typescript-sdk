@@ -4,13 +4,13 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
+import { IStorage } from "../core/interfaces/IStorage";
 import {
-  Erc1155Enumerable,
-  IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core";
+} from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenErc1155ContractSchema } from "../schema/contracts/token-erc1155";
@@ -19,12 +19,10 @@ import {
   EditionMetadataOrUri,
   EditionMetadataOwner,
 } from "../schema/tokens/edition";
-import {
-  ContractEncoder,
-  ContractEvents,
-  ContractInterceptor,
-  ContractPlatformFee,
-} from "../core/classes";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { BigNumber, BigNumberish, constants } from "ethers";
 import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-minting";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
@@ -42,9 +40,7 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * // You can switch out this provider with any wallet or provider setup you like.
- * const provider = ethers.Wallet.createRandom();
- * const sdk = new ThirdwebSDK(provider);
+ * const sdk = new ThirdwebSDK("rinkeby");
  * const contract = sdk.getEdition("{{contract_address}}");
  * ```
  *
@@ -68,8 +64,8 @@ export class Edition extends Erc1155<TokenERC1155> {
     TokenERC1155,
     typeof Edition.contractRoles[number]
   >;
-  public primarySale: ContractPrimarySale<TokenERC1155>;
-  public platformFee: ContractPlatformFee<TokenERC1155>;
+  public sales: ContractPrimarySale<TokenERC1155>;
+  public platformFees: ContractPlatformFee<TokenERC1155>;
   public encoder: ContractEncoder<TokenERC1155>;
   public estimator: GasCostEstimator<TokenERC1155>;
   public events: ContractEvents<TokenERC1155>;
@@ -83,18 +79,18 @@ export class Edition extends Erc1155<TokenERC1155> {
    * @example
    * ```javascript
    * // royalties on the whole contract
-   * contract.royalty.setDefaultRoyaltyInfo({
+   * contract.royalties.setDefaultRoyaltyInfo({
    *   seller_fee_basis_points: 100, // 1%
    *   fee_recipient: "0x..."
    * });
    * // override royalty for a particular token
-   * contract.royalty.setTokenRoyaltyInfo(tokenId, {
+   * contract.royalties.setTokenRoyaltyInfo(tokenId, {
    *   seller_fee_basis_points: 500, // 5%
    *   fee_recipient: "0x..."
    * });
    * ```
    */
-  public royalty: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
+  public royalties: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
   /**
    * Signature Minting
    * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
@@ -134,12 +130,12 @@ export class Edition extends Erc1155<TokenERC1155> {
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, Edition.contractRoles);
-    this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    this.primarySale = new ContractPrimarySale(this.contractWrapper);
+    this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
+    this.sales = new ContractPrimarySale(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
-    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.analytics = new ContractAnalytics(this.contractWrapper);
     this.signature = new Erc1155SignatureMinting(
@@ -199,7 +195,7 @@ export class Edition extends Erc1155<TokenERC1155> {
    * @public
    */
   public async getTotalCount(): Promise<BigNumber> {
-    return this._query.getTotalCount();
+    return this._query.totalCount();
   }
 
   /**

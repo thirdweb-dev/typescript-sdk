@@ -19,9 +19,7 @@ export declare class NFTDrop extends Erc721<DropERC721>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// You can switch out this provider with any wallet or provider setup you like.
-const provider = ethers.Wallet.createRandom();
-const sdk = new ThirdwebSDK(provider);
+const sdk = new ThirdwebSDK("rinkeby");
 const contract = sdk.getNFTDrop("{{contract_address}}");
 ```
 
@@ -43,11 +41,11 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [estimator](./sdk.nftdrop.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;DropERC721&gt; |  |
 |  [events](./sdk.nftdrop.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;DropERC721&gt; |  |
 |  [metadata](./sdk.nftdrop.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;DropERC721, typeof NFTDrop.schema&gt; |  |
-|  [platformFee](./sdk.nftdrop.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;DropERC721&gt; |  |
-|  [primarySale](./sdk.nftdrop.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;DropERC721&gt; |  |
+|  [platformFees](./sdk.nftdrop.platformfees.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;DropERC721&gt; |  |
 |  [revealer](./sdk.nftdrop.revealer.md) |  | [DelayedReveal](./sdk.delayedreveal.md)<!-- -->&lt;DropERC721&gt; | Delayed reveal |
 |  [roles](./sdk.nftdrop.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;DropERC721, typeof [NFTDrop.contractRoles](./sdk.nftdrop.contractroles.md)<!-- -->\[number\]&gt; |  |
-|  [royalty](./sdk.nftdrop.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;DropERC721, typeof NFTDrop.schema&gt; | Configure royalties |
+|  [royalties](./sdk.nftdrop.royalties.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;DropERC721, typeof NFTDrop.schema&gt; | Configure royalties |
+|  [sales](./sdk.nftdrop.sales.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;DropERC721&gt; |  |
 
 ## Methods
 
@@ -56,7 +54,7 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 |  [burn(tokenId)](./sdk.nftdrop.burn.md) |  | Burn a single NFT |
 |  [claim(quantity, proofs)](./sdk.nftdrop.claim.md) |  | Claim NFTs to the connected wallet. |
 |  [claimTo(destinationAddress, quantity, proofs)](./sdk.nftdrop.claimto.md) |  | Claim unique NFTs to a specific Wallet |
-|  [createBatch(metadatas)](./sdk.nftdrop.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |
+|  [createBatch(metadatas, options)](./sdk.nftdrop.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |
 |  [getAll(queryParams)](./sdk.nftdrop.getall.md) |  | Get All Minted NFTs |
 |  [getAllClaimed(queryParams)](./sdk.nftdrop.getallclaimed.md) |  | Get All Claimed NFTs |
 |  [getAllUnclaimed(queryParams)](./sdk.nftdrop.getallunclaimed.md) |  | Get All Unclaimed NFTs |

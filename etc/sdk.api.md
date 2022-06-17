@@ -15,13 +15,13 @@ import { ContractInterface } from 'ethers';
 import type { ContractTransaction } from 'ethers';
 import { ethers } from 'ethers';
 import { Event as Event_2 } from 'ethers';
-import { EventEmitter2 } from 'eventemitter2';
+import EventEmitter from 'eventemitter3';
 import type { EventFilter } from 'ethers';
 import type { EventFragment } from '@ethersproject/abi';
 import { extendShape } from 'zod';
 import type { FunctionFragment } from '@ethersproject/abi';
 import type { Listener } from '@ethersproject/providers';
-import { ListenerFn } from 'eventemitter2';
+import { ListenerFn } from 'eventemitter3';
 import type { Overrides } from 'ethers';
 import type { PayableOverrides } from 'ethers';
 import type { PopulatedTransaction } from 'ethers';
@@ -61,7 +61,7 @@ export class AdminRoleMissingError extends Error {
 export type AirdropInput = z.input<typeof AirdropInputSchema>;
 
 // @public (undocumented)
-export const ALL_ROLES: ("transfer" | "lister" | "minter" | "admin" | "pauser" | "editor" | "asset")[];
+export const ALL_ROLES: ("transfer" | "unwrap" | "lister" | "admin" | "minter" | "pauser" | "asset")[];
 
 // Warning: (ae-forgotten-export) The symbol "PriceSchema" needs to be exported by the entry point index.d.ts
 //
@@ -115,8 +115,8 @@ export const BaseSignaturePayloadInput: z.ZodObject<{
     to: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
-    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
     uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
     primarySaleRecipient: z.ZodDefault<z.ZodString>;
 }, "strip", z.ZodTypeAny, {
@@ -125,8 +125,8 @@ export const BaseSignaturePayloadInput: z.ZodObject<{
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -156,11 +156,13 @@ export type BufferOrStringWithName = {
 // @public (undocumented)
 export enum ChainId {
     // (undocumented)
+    Arbitrum = 42161,
+    // (undocumented)
+    ArbitrumTestnet = 421611,
+    // (undocumented)
     Avalanche = 43114,
     // (undocumented)
     AvalancheFujiTestnet = 43113,
-    // (undocumented)
-    BSC = 56,
     // (undocumented)
     Fantom = 250,
     // (undocumented)
@@ -172,39 +174,35 @@ export enum ChainId {
     // (undocumented)
     Harmony = 1666600000,
     // (undocumented)
-    Kovan = 42,
-    // (undocumented)
     Localhost = 1337,
     // (undocumented)
     Mainnet = 1,
     // (undocumented)
-    Moonriver = 1285,
-    // (undocumented)
     Mumbai = 80001,
+    // (undocumented)
+    Optimism = 10,
+    // (undocumented)
+    OptimismTestnet = 69,
     // (undocumented)
     Polygon = 137,
     // (undocumented)
-    Rinkeby = 4,
-    // (undocumented)
-    Ropsten = 3,
-    // (undocumented)
-    xDai = 100
+    Rinkeby = 4
 }
 
-// Warning: (ae-internal-missing-underscore) The name "ChainlinkInfo" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type ChainlinkInfo = {
-    vrfCoordinator: string;
-    linkTokenAddress: string;
-    keyHash: string;
-    fees: BigNumber;
-};
+export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "avalanche" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | (string & {});
 
-// Warning: (ae-internal-missing-underscore) The name "ChainlinkVrf" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-internal-missing-underscore) The name "CidWithFileName" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const ChainlinkVrf: Record<number, ChainlinkInfo>;
+export interface CidWithFileName {
+    // (undocumented)
+    cid: string;
+    // (undocumented)
+    fileNames: string[];
+}
 
 // Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -357,14 +355,14 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
         displayValue: z.ZodString;
     }>, "strip", z.ZodTypeAny, {
         symbol: string;
-        name: string;
         value: BigNumber;
+        name: string;
         decimals: number;
         displayValue: string;
     }, {
         symbol: string;
-        name: string;
         value: string | number | bigint | BigNumber;
+        name: string;
         decimals: number;
         displayValue: string;
     }>>;
@@ -387,8 +385,8 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     currentMintSupply: string;
     currencyMetadata: {
         symbol: string;
-        name: string;
         value: BigNumber;
+        name: string;
         decimals: number;
         displayValue: string;
     };
@@ -405,8 +403,8 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
     currentMintSupply?: string | number | undefined;
     currencyMetadata?: {
         symbol: string;
-        name: string;
         value: string | number | bigint | BigNumber;
+        name: string;
         decimals: number;
         displayValue: string;
     } | undefined;
@@ -429,6 +427,8 @@ export enum ClaimEligibility {
     NotEnoughSupply = "There is not enough supply to claim.",
     // (undocumented)
     NotEnoughTokens = "There are not enough tokens in the wallet to pay for the claim.",
+    // (undocumented)
+    NoWallet = "No wallet connected.",
     // (undocumented)
     Unknown = "No claim conditions found.",
     // (undocumented)
@@ -557,7 +557,9 @@ export const CONTRACT_ADDRESSES: Record<SUPPORTED_CHAIN_ID, {
     twFactory: string;
     twRegistry: string;
     twBYOCRegistry: string;
-    byocFactory: string;
+    contractDeployer: string;
+    contractMetadataRegistry: string;
+    sigMint: string;
 }>;
 
 // Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
@@ -570,9 +572,13 @@ export class ContractDeployer extends RPCConnectionHandler {
     deployEdition(metadata: NFTContractDeployMetadata): Promise<string>;
     deployEditionDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deployMarketplace(metadata: MarketplaceContractDeployMetadata): Promise<string>;
+    // @beta
+    deployMultiwrap(metadata: MultiwrapContractDeployMetadata): Promise<string>;
     deployNFTCollection(metadata: NFTContractDeployMetadata): Promise<string>;
     deployNFTDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deployPack(metadata: NFTContractDeployMetadata): Promise<string>;
+    // @internal
+    deploySignatureDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deploySplit(metadata: SplitContractDeployMetadata): Promise<string>;
     deployToken(metadata: TokenContractDeployMetadata): Promise<string>;
     deployTokenDrop(metadata: TokenContractDeployMetadata): Promise<string>;
@@ -593,11 +599,18 @@ export class ContractEncoder<TContract extends BaseContract> {
     encode(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): string;
 }
 
+// @public (undocumented)
+export type ContractEvent = {
+    eventName: string;
+    data: Record<string, any>;
+};
+
 // @public
 export class ContractEvents<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     addEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: (event: Record<string, any>) => void): void;
     addTransactionListener(listener: ListenerFn): void;
+    listenToAllEvents(listener: (event: ContractEvent) => void): void;
     removeAllListeners(): void;
     // (undocumented)
     removeEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: providers.Listener): void;
@@ -618,13 +631,14 @@ export class ContractInterceptor<TContract extends BaseContract> {
     overrideNextTransaction(hook: () => CallOverrides): void;
 }
 
-// Warning: (ae-forgotten-export) The symbol "IThirdwebContract" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "ThirdwebContract" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "DetectableFeature" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractMetadata" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
-export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebContract, TSchema extends IGenericSchemaType> {
+export class ContractMetadata<TContract extends BaseContract, TSchema extends IGenericSchemaType> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>, schema: TSchema, storage: IStorage);
+    // (undocumented)
+    featureName: "ContractMetadata";
     // (undocumented)
     get(): Promise<z.output<TSchema["output"]>>;
     // @internal (undocumented)
@@ -634,25 +648,24 @@ export class ContractMetadata<TContract extends IThirdwebContract | ThirdwebCont
     // @internal (undocumented)
     parseOutputMetadata(metadata: any): z.output<TSchema["output"]>;
     // (undocumented)
-    set(metadata: z.input<TSchema["input"]>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+    set(metadata: z.input<TSchema["input"]>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
     }, "data"> : {
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
-    }>;
+    } : never : never>;
     // (undocumented)
-    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<(<A>() => A extends never ? 1 : 0 extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends 1 ? Omit<{
+    update(metadata: Partial<z.input<TSchema["input"]>>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
     }, "data"> : {
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
-    }>;
+    } : never : never>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "IPlatformFee" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "DetectableFeature" needs to be exported by the entry point index.d.ts
 //
 // @public
 export class ContractPlatformFee<TContract extends IPlatformFee> implements DetectableFeature {
@@ -678,6 +691,7 @@ export class ContractPrimarySale<TContract extends IPrimarySale> implements Dete
     setRecipient(recipient: string): Promise<TransactionResult>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "ThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "ContractPublishedMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -704,6 +718,8 @@ export class ContractRoles<TContract extends IPermissionsEnumerable, TRole exten
     getAll(): Promise<Record<TRole, string[]>>;
     grant(role: TRole, address: string): Promise<TransactionResult>;
     revoke(role: TRole, address: string): Promise<TransactionResult>;
+    // @internal (undocumented)
+    readonly roles: readonly TRole[];
     setAll(rolesWithAddresses: {
         [key in TRole]?: string[];
     }): Promise<TransactionResult>;
@@ -712,6 +728,7 @@ export class ContractRoles<TContract extends IPermissionsEnumerable, TRole exten
 }
 
 // Warning: (ae-forgotten-export) The symbol "IRoyalty" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "IThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractRoyalty" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
@@ -745,6 +762,7 @@ export class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | T
 export const CONTRACTS_MAP: {
     readonly custom: typeof SmartContract;
     readonly "nft-drop": typeof NFTDrop;
+    readonly "signature-drop": typeof SignatureDrop;
     readonly "nft-collection": typeof NFTCollection;
     readonly "edition-drop": typeof EditionDrop;
     readonly edition: typeof Edition;
@@ -754,6 +772,7 @@ export const CONTRACTS_MAP: {
     readonly split: typeof Split;
     readonly marketplace: typeof Marketplace;
     readonly pack: typeof Pack;
+    readonly multiwrap: typeof Multiwrap;
 };
 
 // Warning: (ae-incompatible-release-tags) The symbol "ContractType" is marked as @public, but its signature references "CONTRACTS_MAP" which is marked as @internal
@@ -810,14 +829,14 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
     displayValue: z.ZodString;
 }>, "strip", z.ZodTypeAny, {
     symbol: string;
-    name: string;
     value: BigNumber;
+    name: string;
     decimals: number;
     displayValue: string;
 }, {
     symbol: string;
-    name: string;
     value: string | number | bigint | BigNumber;
+    name: string;
     decimals: number;
     displayValue: string;
 }>;
@@ -833,11 +852,17 @@ export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
 export const DEFAULT_QUERY_ALL_COUNT = 100;
 
 // Warning: (ae-forgotten-export) The symbol "DropERC721" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BaseDelayedRevealERC721" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "SignatureDrop" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DelayedReveal<T extends DropERC721> {
-    constructor(contractWrapper: ContractWrapper<T>, storage: IStorage);
-    createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string): Promise<TransactionResultWithId[]>;
+export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop_2> {
+    constructor(erc721: Erc721, contractWrapper: ContractWrapper<T>, storage: IStorage);
+    createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId[]>;
+    // (undocumented)
+    featureName: "ERC721Revealable";
     getBatchesToReveal(): Promise<BatchToReveal[]>;
     reveal(batchId: BigNumberish, password: string): Promise<TransactionResult>;
 }
@@ -874,14 +899,17 @@ export interface DirectListing {
 }
 
 // Warning: (ae-forgotten-export) The symbol "DropERC20" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BaseClaimConditionERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
+export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | BaseClaimConditionERC721> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
     canClaim(quantity: Amount, addressToCheck?: string): Promise<boolean>;
     getActive(): Promise<ClaimCondition>;
     getAll(): Promise<ClaimCondition[]>;
     getClaimIneligibilityReasons(quantity: Amount, addressToCheck?: string): Promise<ClaimEligibility[]>;
+    // @internal
+    prepareClaim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<ClaimVerification>;
     set(claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
     update(index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
 }
@@ -896,6 +924,9 @@ export class DropErc1155ClaimConditions {
     getAll(tokenId: BigNumberish): Promise<ClaimCondition[]>;
     getClaimIneligibilityReasons(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
     set(tokenId: BigNumberish, claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
+    setBatch(tokenIds: BigNumberish[], claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<{
+        receipt: ethers.providers.TransactionReceipt;
+    }>;
     update(tokenId: BigNumberish, index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
 }
 
@@ -955,12 +986,12 @@ export class Edition extends Erc1155<TokenERC1155> {
     mintTo(to: string, metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
     mintToSelf(metadataWithSupply: EditionMetadataOrUri): Promise<TransactionResultWithId<EditionMetadata>>;
     // (undocumented)
-    platformFee: ContractPlatformFee<TokenERC1155>;
-    // (undocumented)
-    primarySale: ContractPrimarySale<TokenERC1155>;
+    platformFees: ContractPlatformFee<TokenERC1155>;
     // (undocumented)
     roles: ContractRoles<TokenERC1155, typeof Edition.contractRoles[number]>;
-    royalty: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
+    royalties: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
+    // (undocumented)
+    sales: ContractPrimarySale<TokenERC1155>;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<    {
@@ -1100,12 +1131,12 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     // (undocumented)
     metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
     // (undocumented)
-    platformFee: ContractPlatformFee<DropERC1155>;
-    // (undocumented)
-    primarySale: ContractPrimarySale<DropERC1155>;
+    platformFees: ContractPlatformFee<DropERC1155>;
     // (undocumented)
     roles: ContractRoles<DropERC1155, typeof EditionDrop.contractRoles[number]>;
-    royalty: ContractRoyalty<DropERC1155, typeof EditionDrop.schema>;
+    royalties: ContractRoyalty<DropERC1155, typeof EditionDrop.schema>;
+    // (undocumented)
+    sales: ContractPrimarySale<DropERC1155>;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<extendShape<    {
@@ -1554,8 +1585,9 @@ export class Erc1155Enumerable implements DetectableFeature {
     all(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
     // (undocumented)
     featureName: "ERC1155Enumerable";
-    getTotalCount(): Promise<BigNumber>;
     owned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
+    totalCirculatingSupply(tokenId: BigNumberish): Promise<BigNumber>;
+    totalCount(): Promise<BigNumber>;
 }
 
 // @public
@@ -1571,12 +1603,21 @@ export class Erc1155Mintable implements DetectableFeature {
 // @public
 export class Erc1155SignatureMinting {
     constructor(contractWrapper: ContractWrapper<TokenERC1155>, roles: ContractRoles<TokenERC1155, typeof NFTCollection.contractRoles[number]>, storage: IStorage);
-    generate(mintRequest: PayloadToSign1155): Promise<SignedPayload1155>;
+    generate(payloadToSign: PayloadToSign1155): Promise<SignedPayload1155>;
     generateBatch(payloadsToSign: PayloadToSign1155[]): Promise<SignedPayload1155[]>;
+    generateBatchFromTokenIds(payloadsToSign: PayloadToSign1155WithTokenId[]): Promise<SignedPayload1155[]>;
+    generateFromTokenId(payloadToSign: PayloadToSign1155WithTokenId): Promise<SignedPayload1155>;
     mint(signedPayload: SignedPayload1155): Promise<TransactionResultWithId>;
     mintBatch(signedPayloads: SignedPayload1155[]): Promise<TransactionResultWithId[]>;
     verify(signedPayload: SignedPayload1155): Promise<boolean>;
 }
+
+// @public
+export type ERC1155Wrappable = {
+    contractAddress: string;
+    quantity: Amount;
+    tokenId: BigNumberish;
+};
 
 // Warning: (ae-forgotten-export) The symbol "TokenERC20" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseERC20" needs to be exported by the entry point index.d.ts
@@ -1593,7 +1634,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20> imp
     // (undocumented)
     featureName: "ERC20";
     get(): Promise<Currency>;
-    // (undocumented)
+    // @internal (undocumented)
     getAddress(): string;
     // @internal (undocumented)
     protected getValue(value: BigNumberish): Promise<CurrencyValue>;
@@ -1641,26 +1682,37 @@ export class Erc20SignatureMinting {
     verify(signedPayload: SignedPayload20): Promise<boolean>;
 }
 
+// @public
+export type ERC20Wrappable = {
+    contractAddress: string;
+    quantity: Amount;
+};
+
+// Warning: (ae-forgotten-export) The symbol "Multiwrap" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "TokenERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721 = BaseERC721> implements UpdateableNetwork, DetectableFeature {
+export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | TokenERC721 | BaseERC721 = BaseERC721> implements UpdateableNetwork, DetectableFeature {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     balance(): Promise<BigNumber>;
     balanceOf(address: string): Promise<BigNumber>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
     // (undocumented)
+    drop: Erc721Dropable | undefined;
+    // (undocumented)
     featureName: "ERC721";
     get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
     // (undocumented)
     getAddress(): string;
     // @internal (undocumented)
-    protected getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
+    getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
     mint: Erc721Mintable | undefined;
+    // @internal
+    nextTokenIdToMint(): Promise<BigNumber>;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -1670,6 +1722,8 @@ export class Erc721<T extends DropERC721 | TokenERC721 | BaseERC721 = BaseERC721
     query: Erc721Supply | undefined;
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
+    // @internal
+    setApprovalForToken(operator: string, tokenId: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     protected storage: IStorage;
     transfer(to: string, tokenId: BigNumberish): Promise<TransactionResult>;
@@ -1683,6 +1737,22 @@ export class Erc721BatchMintable implements DetectableFeature {
     featureName: "ERC721BatchMintable";
     // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     to(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+}
+
+// @public
+export class Erc721Dropable implements DetectableFeature {
+    constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseDropERC721>, storage: IStorage);
+    claim(quantity: BigNumberish, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // Warning: (ae-forgotten-export) The symbol "BaseDropERC721" needs to be exported by the entry point index.d.ts
+    claimConditions: DropClaimConditions<BaseDropERC721> | undefined;
+    claimTo(destinationAddress: string, quantity: BigNumberish, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // (undocumented)
+    featureName: "ERC721Dropable";
+    lazyMint(metadatas: NFTMetadataInput[], options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    // (undocumented)
+    revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
 }
 
 // @public
@@ -1727,6 +1797,12 @@ export class Erc721Supply implements DetectableFeature {
     totalCirculatingSupply(): Promise<BigNumber>;
 }
 
+// @public
+export type ERC721Wrappable = {
+    contractAddress: string;
+    tokenId: BigNumberish;
+};
+
 // @public (undocumented)
 export enum EventType {
     Signature = "signature",
@@ -1736,10 +1812,16 @@ export enum EventType {
 // Warning: (ae-internal-missing-underscore) The name "extractConstructorParams" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function extractConstructorParams(metadataUri: string, storage: IStorage): Promise<{
+export function extractConstructorParams(predeployMetadataUri: string, storage: IStorage): Promise<{
     [x: string]: any;
-    name: string;
+    stateMutability?: string | undefined;
+    components?: {
+        [x: string]: any;
+        type: string;
+        name: string;
+    }[] | undefined;
     type: string;
+    name: string;
 }[]>;
 
 // Warning: (ae-internal-missing-underscore) The name "extractConstructorParamsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1747,24 +1829,35 @@ export function extractConstructorParams(metadataUri: string, storage: IStorage)
 // @internal (undocumented)
 export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>): {
     [x: string]: any;
-    name: string;
+    stateMutability?: string | undefined;
+    components?: {
+        [x: string]: any;
+        type: string;
+        name: string;
+    }[] | undefined;
     type: string;
+    name: string;
 }[];
 
 // Warning: (ae-internal-missing-underscore) The name "extractFunctions" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function extractFunctions(metadataUri: string, storage: IStorage): Promise<AbiFunction[]>;
+export function extractFunctions(predeployMetadataUri: string, storage: IStorage): Promise<AbiFunction[]>;
 
 // Warning: (ae-internal-missing-underscore) The name "extractFunctionsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>): AbiFunction[];
 
-// Warning: (ae-internal-missing-underscore) The name "fetchContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-internal-missing-underscore) The name "fetchContractMetadataFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function fetchContractMetadata(metadataUri: string, storage: IStorage): Promise<PublishedMetadata>;
+export function fetchContractMetadataFromAddress(address: string, provider: ethers.providers.Provider, storage: IStorage): Promise<PublishedMetadata>;
+
+// Warning: (ae-internal-missing-underscore) The name "fetchContractMetadataFromBytecode" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function fetchContractMetadataFromBytecode(bytecode: string, storage: IStorage): Promise<PublishedMetadata>;
 
 // Warning: (ae-internal-missing-underscore) The name "FetchError" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -1774,6 +1867,18 @@ export class FetchError extends Error {
     // (undocumented)
     innerError?: Error;
 }
+
+// Warning: (ae-forgotten-export) The symbol "PreDeployMetadataFetched" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "fetchPreDeployMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function fetchPreDeployMetadata(publishMetadataUri: string, storage: IStorage): Promise<PreDeployMetadataFetched>;
+
+// Warning: (ae-forgotten-export) The symbol "ContractSource" needs to be exported by the entry point index.d.ts
+// Warning: (ae-internal-missing-underscore) The name "fetchSourceFilesFromMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function fetchSourceFilesFromMetadata(publishedMetadata: PublishedMetadata, storage: IStorage): Promise<ContractSource[]>;
 
 // Warning: (ae-internal-missing-underscore) The name "FileNameMissingError" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -1790,10 +1895,20 @@ export type FileOrBuffer = File | Buffer | BufferOrStringWithName;
 // @public (undocumented)
 export type FilledConditionInput = z.output<typeof ClaimConditionInputSchema>;
 
+// Warning: (ae-incompatible-release-tags) The symbol "FilledSignature721WithQuantity" is marked as @public, but its signature references "Signature721WithQuantityInput" which is marked as @internal
+//
+// @public (undocumented)
+export type FilledSignature721WithQuantity = z.output<typeof Signature721WithQuantityInput>;
+
 // Warning: (ae-incompatible-release-tags) The symbol "FilledSignaturePayload1155" is marked as @public, but its signature references "Signature1155PayloadInput" which is marked as @internal
 //
 // @public (undocumented)
 export type FilledSignaturePayload1155 = z.output<typeof Signature1155PayloadInput>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "FilledSignaturePayload1155WithTokenId" is marked as @public, but its signature references "Signature1155PayloadInputWithTokenId" which is marked as @internal
+//
+// @public (undocumented)
+export type FilledSignaturePayload1155WithTokenId = z.output<typeof Signature1155PayloadInputWithTokenId>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "FilledSignaturePayload20" is marked as @public, but its signature references "Signature20PayloadInput" which is marked as @internal
 //
@@ -1849,15 +1964,15 @@ export interface GaslessTransaction {
     to: string;
 }
 
-// Warning: (ae-internal-missing-underscore) The name "getBYOCRegistryAddress" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export function getBYOCRegistryAddress(): string;
-
 // Warning: (ae-internal-missing-underscore) The name "getContractAddressByChainId" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export function getContractAddressByChainId(chainId: SUPPORTED_CHAIN_ID | ChainId.Hardhat, contractName: keyof typeof CONTRACT_ADDRESSES[SUPPORTED_CHAIN_ID]): string;
+
+// Warning: (ae-internal-missing-underscore) The name "getContractPublisherAddress" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function getContractPublisherAddress(): string;
 
 // @public
 export function getNativeTokenByChainId(chainId: ChainId): NativeToken;
@@ -1865,12 +1980,24 @@ export function getNativeTokenByChainId(chainId: ChainId): NativeToken;
 // Warning: (ae-internal-missing-underscore) The name "getProviderForNetwork" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
+<<<<<<< HEAD
 export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider): `https://${string}` | Signer | Provider_2;
+=======
+export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider): string | ethers.Signer | ethers.providers.Provider;
+
+// @public (undocumented)
+export function getReadOnlyProvider(network: string, chainId?: number): ethers.providers.BaseProvider;
+>>>>>>> main
 
 // Warning: (ae-internal-missing-underscore) The name "getRoleHash" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
 export function getRoleHash(role: Role): BytesLike;
+
+// Warning: (ae-internal-missing-underscore) The name "hasFunction" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function hasFunction<TContract extends BaseContract>(functionName: string, contractWrapper: ContractWrapper<any>): contractWrapper is ContractWrapper<TContract>;
 
 // Warning: (ae-internal-missing-underscore) The name "hashLeafNode" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -1888,11 +2015,6 @@ export interface IGenericSchemaType {
     // (undocumented)
     output: z.AnyZodObject;
 }
-
-// Warning: (ae-internal-missing-underscore) The name "implementsInterface" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
-export function implementsInterface<C extends BaseContract>(contractWrapper: ContractWrapper<BaseContract>, interfaceToMatch: utils.Interface): contractWrapper is ContractWrapper<C>;
 
 // Warning: (ae-internal-missing-underscore) The name "includesErrorMessage" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -1916,44 +2038,33 @@ export class InvalidAddressError extends Error {
     constructor(address?: string);
 }
 
-// @beta (undocumented)
-export interface IPackBatchArgs {
-    // (undocumented)
-    amount: BigNumberish;
-    // (undocumented)
-    tokenId: BigNumberish;
-}
-
-// @public (undocumented)
-export interface IPackCreateArgs {
-    // (undocumented)
-    assetContract: string;
-    // (undocumented)
-    assets: {
-        tokenId: BigNumberish;
-        amount: BigNumberish;
-    }[];
-    // (undocumented)
-    metadata: NFTMetadataInput;
-    // (undocumented)
-    rewardsPerOpen?: BigNumberish;
-    // (undocumented)
-    secondsUntilOpenStart?: BigNumberish;
-}
-
 // @public
 export class IpfsStorage implements IStorage {
-    constructor(gatewayUrl?: string);
+    // Warning: (ae-forgotten-export) The symbol "IpfsUploader" needs to be exported by the entry point index.d.ts
+    constructor(gatewayUrl?: string, uploader?: IpfsUploader);
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "gatewayUrl"
+    //
+    // @internal (undocumented)
+    gatewayUrl: string;
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
-    getUploadToken(contractAddress: string): Promise<string>;
-    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<{
+    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<{
         baseUri: string;
-        metadataUris: string[];
+        uris: string[];
     }>;
+    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadResult>;
+    // @internal
+    uploadSingle(data: string | Record<string, any>, contractAddress?: string, signerAddress?: string): Promise<string>;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "isFeatureEnabled" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1961,16 +2072,32 @@ export class IpfsStorage implements IStorage {
 // @internal
 export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: FeatureName): boolean;
 
-// @public (undocumented)
+// @public
 export interface IStorage {
     get(hash: string): Promise<Record<string, any>>;
     getRaw(hash: string): Promise<string>;
-    getUploadToken(contractAddress: string): Promise<string>;
-    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<string>;
-    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string): Promise<string>;
-    // Warning: (ae-incompatible-release-tags) The symbol "uploadMetadataBatch" is marked as @public, but its signature references "UploadMetadataBatchResult" which is marked as @internal
-    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string): Promise<UploadMetadataBatchResult>;
+    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadResult>;
+    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<string>;
+    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadResult>;
+}
+
+// Warning: (ae-internal-missing-underscore) The name "IStorageUpload" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export interface IStorageUpload {
+    // (undocumented)
+    uploadBatchWithCid(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<CidWithFileName>;
 }
 
 // Warning: (ae-forgotten-export) The symbol "JsonLiteralOrFileOrBuffer" needs to be exported by the entry point index.d.ts
@@ -1988,6 +2115,7 @@ export type JsonObject = {
 // @internal (undocumented)
 export const KNOWN_CONTRACTS_MAP: {
     readonly "nft-drop": typeof NFTDrop;
+    readonly "signature-drop": typeof SignatureDrop;
     readonly "nft-collection": typeof NFTCollection;
     readonly "edition-drop": typeof EditionDrop;
     readonly edition: typeof Edition;
@@ -1997,6 +2125,7 @@ export const KNOWN_CONTRACTS_MAP: {
     readonly split: typeof Split;
     readonly marketplace: typeof Marketplace;
     readonly pack: typeof Pack;
+    readonly multiwrap: typeof Multiwrap;
 };
 
 // Warning: (ae-internal-missing-underscore) The name "ListingNotFoundError" should be prefixed with an underscore because the declaration is marked as @internal
@@ -2042,7 +2171,7 @@ export class Marketplace implements UpdateableNetwork {
     // (undocumented)
     getAddress(): string;
     // @internal (undocumented)
-    getAll: (filter?: MarketplaceFilter | undefined) => Promise<(AuctionListing | DirectListing)[]>;
+    getAll: (filter?: MarketplaceFilter) => Promise<(AuctionListing | DirectListing)[]>;
     getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
     getBidBufferBps(): Promise<BigNumber>;
     getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
@@ -2056,7 +2185,7 @@ export class Marketplace implements UpdateableNetwork {
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
-    platformFee: ContractPlatformFee<Marketplace_2>;
+    platformFees: ContractPlatformFee<Marketplace_2>;
     // (undocumented)
     roles: ContractRoles<Marketplace_2, typeof Marketplace.contractRoles[number]>;
     // @internal (undocumented)
@@ -2164,7 +2293,6 @@ export interface MarketplaceContractDeployMetadata {
 // @public
 export class MarketplaceDirect {
     constructor(contractWrapper: ContractWrapper<Marketplace_2>, storage: IStorage);
-    // (undocumented)
     acceptOffer(listingId: BigNumberish, addressOfOfferor: string): Promise<TransactionResult>;
     buyoutListing(listingId: BigNumberish, quantityDesired: BigNumberish, receiver?: string): Promise<TransactionResult>;
     cancelListing(listingId: BigNumberish): Promise<TransactionResult>;
@@ -2188,7 +2316,7 @@ export interface MarketplaceFilter extends QueryAllParams {
     // (undocumented)
     tokenContract?: string;
     // (undocumented)
-    tokenId?: number;
+    tokenId?: BigNumberish;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "MerkleSchema" should be prefixed with an underscore because the declaration is marked as @internal
@@ -2220,6 +2348,12 @@ export const MintRequest721: {
     type: string;
 }[];
 
+// @public (undocumented)
+export const MintRequest721withQuantity: {
+    name: string;
+    type: string;
+}[];
+
 // Warning: (ae-internal-missing-underscore) The name "MissingOwnerRoleError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -2234,6 +2368,136 @@ export class MissingRoleError extends Error {
     constructor(address: string, role: string);
 }
 
+// @beta
+export class Multiwrap extends Erc721<Multiwrap_2> {
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Multiwrap_2>);
+    // (undocumented)
+    static contractAbi: any;
+    // (undocumented)
+    static contractRoles: readonly ["transfer", "minter", "unwrap", "asset"];
+    // (undocumented)
+    static contractType: "multiwrap";
+    // (undocumented)
+    encoder: ContractEncoder<Multiwrap_2>;
+    // (undocumented)
+    estimator: GasCostEstimator<Multiwrap_2>;
+    // (undocumented)
+    events: ContractEvents<Multiwrap_2>;
+    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    getWrappedContents(wrappedTokenId: BigNumberish): Promise<WrappedTokens>;
+    // (undocumented)
+    metadata: ContractMetadata<Multiwrap_2, typeof Multiwrap.schema>;
+    // (undocumented)
+    roles: ContractRoles<Multiwrap_2, typeof Multiwrap.contractRoles[number]>;
+    royalties: ContractRoyalty<Multiwrap_2, typeof Multiwrap.schema>;
+    // @internal (undocumented)
+    static schema: {
+        deploy: ZodObject<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, {
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        }>, "strip", ZodTypeAny, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        trusted_forwarders: string[];
+        }, {
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
+        name: string;
+        }>;
+        output: ZodObject<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        image: ZodOptional<ZodString>;
+        }>, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        }, {
+        [x: string]: Json;
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+        }>;
+        input: ZodObject<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, "strip", ZodTypeAny, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        }, {
+        symbol?: string | undefined;
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+        }>;
+    };
+    unwrap(wrappedTokenId: BigNumberish, recipientAddress?: string): Promise<TransactionResult>;
+    wrap(contents: TokensToWrap, wrappedTokenMetadata: NFTMetadataOrUri, recipientAddress?: string): Promise<TransactionResultWithId<NFTMetadataOwner>>;
+}
+
+// @public
+export interface MultiwrapContractDeployMetadata {
+    description?: string;
+    external_link?: string;
+    fee_recipient?: string;
+    image?: FileBufferOrString;
+    name: string;
+    seller_fee_basis_points?: number;
+    symbol?: string;
+    trusted_forwarders?: string[];
+}
+
 // @public (undocumented)
 export const NATIVE_TOKEN_ADDRESS = "0xeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee";
 
@@ -2242,6 +2506,8 @@ export const NATIVE_TOKENS: Record<SUPPORTED_CHAIN_ID | ChainId.Hardhat, NativeT
 
 // @public (undocumented)
 export interface NativeToken extends Currency {
+    // (undocumented)
+    decimals: 18;
     // (undocumented)
     wrapped: {
         address: string;
@@ -2311,12 +2577,12 @@ export class NFTCollection extends Erc721<TokenERC721> {
     mintTo(walletAddress: string, metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     mintToSelf(metadata: NFTMetadataOrUri): Promise<TransactionResultWithId<NFTMetadataOwner>>;
     // (undocumented)
-    platformFee: ContractPlatformFee<TokenERC721>;
-    // (undocumented)
-    primarySale: ContractPrimarySale<TokenERC721>;
+    platformFees: ContractPlatformFee<TokenERC721>;
     // (undocumented)
     roles: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>;
-    royalty: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;
+    royalties: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;
+    // (undocumented)
+    sales: ContractPrimarySale<TokenERC721>;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<    {
@@ -2454,7 +2720,9 @@ export class NFTDrop extends Erc721<DropERC721> {
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "nft-drop";
-    createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    createBatch(metadatas: NFTMetadataInput[], options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC721>;
     // (undocumented)
@@ -2472,13 +2740,13 @@ export class NFTDrop extends Erc721<DropERC721> {
     // (undocumented)
     metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
     // (undocumented)
-    platformFee: ContractPlatformFee<DropERC721>;
-    // (undocumented)
-    primarySale: ContractPrimarySale<DropERC721>;
+    platformFees: ContractPlatformFee<DropERC721>;
     revealer: DelayedReveal<DropERC721>;
     // (undocumented)
     roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
-    royalty: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
+    royalties: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
+    // (undocumented)
+    sales: ContractPrimarySale<DropERC721>;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<extendShape<    {
@@ -2649,51 +2917,55 @@ export const OptionalPropertiesInput: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.Zod
 // @internal (undocumented)
 export const OZ_DEFENDER_FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7f6d98a81";
 
+// Warning: (ae-forgotten-export) The symbol "Pack" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class Pack implements UpdateableNetwork {
+export class Pack extends Erc1155<Pack_2> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Pack_2>);
     // @internal (undocumented)
     analytics: ContractAnalytics<Pack_2>;
-    // (undocumented)
-    balance(tokenId: string): Promise<BigNumber>;
-    balanceOf(address: string, tokenId: string): Promise<BigNumber>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
     static contractRoles: readonly ["admin", "minter", "pauser", "transfer"];
     // (undocumented)
     static contractType: "pack";
-    create(args: IPackCreateArgs): Promise<TransactionResultWithId<PackMetadata>>;
-    // (undocumented)
-    depositLink(amount: BigNumberish): Promise<TransactionResult>;
+    // Warning: (ae-forgotten-export) The symbol "PackMetadataInput" needs to be exported by the entry point index.d.ts
+    create(metadataWithRewards: PackMetadataInput): Promise<TransactionResultWithId<{
+        metadata: {
+            [x: string]: Json;
+            name?: string | undefined;
+            description?: string | null | undefined;
+            image?: string | null | undefined;
+            external_url?: string | null | undefined;
+            animation_url?: string | null | undefined;
+            uri: string;
+            id: BigNumber;
+        };
+        supply: BigNumber;
+    }>>;
+    createTo(to: string, metadataWithRewards: PackMetadataInput): Promise<TransactionResultWithId<EditionMetadata>>;
     // (undocumented)
     encoder: ContractEncoder<Pack_2>;
     // (undocumented)
     estimator: GasCostEstimator<Pack_2>;
     // (undocumented)
     events: ContractEvents<Pack_2>;
-    get(packId: BigNumberish): Promise<PackMetadata>;
-    // (undocumented)
-    getAddress(): string;
-    getAll(): Promise<PackMetadata[]>;
-    // (undocumented)
-    getLinkBalance(): Promise<CurrencyValue>;
-    getNFTs(packId: string): Promise<PackNFTMetadata[]>;
-    getOwned(_address?: string): Promise<PackMetadataWithBalance[]>;
+    getAll(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
+    getOwned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
+    // Warning: (ae-forgotten-export) The symbol "PackRewardsOutput" needs to be exported by the entry point index.d.ts
+    getPackContents(packId: BigNumberish): Promise<PackRewardsOutput>;
+    getTotalCount(): Promise<BigNumber>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<Pack_2>;
-    // (undocumented)
-    isApproved(address: string, operator: string): Promise<boolean>;
-    // Warning: (ae-forgotten-export) The symbol "Pack" needs to be exported by the entry point index.d.ts
-    //
+    isTransferRestricted(): Promise<boolean>;
     // (undocumented)
     metadata: ContractMetadata<Pack_2, typeof Pack.schema>;
-    // (undocumented)
-    onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
-    open(packId: string): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    // Warning: (ae-forgotten-export) The symbol "PackRewards" needs to be exported by the entry point index.d.ts
+    open(tokenId: BigNumberish, amount?: BigNumberish): Promise<PackRewards>;
     // (undocumented)
     roles: ContractRoles<Pack_2, typeof Pack.contractRoles[number]>;
-    royalty: ContractRoyalty<Pack_2, typeof Pack.schema>;
+    royalties: ContractRoyalty<Pack_2, typeof Pack.schema>;
     // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<    {
@@ -2793,45 +3065,6 @@ export class Pack implements UpdateableNetwork {
         name: string;
         }>;
     };
-    // (undocumented)
-    setApproval(operator: string, approved?: boolean): Promise<TransactionResult>;
-    transfer(to: string, tokenId: string, amount: BigNumber): Promise<TransactionResult>;
-    // Warning: (ae-incompatible-release-tags) The symbol "transferBatchFrom" is marked as @public, but its signature references "IPackBatchArgs" which is marked as @beta
-    //
-    // (undocumented)
-    transferBatchFrom(from: string, to: string, args: IPackBatchArgs[], data?: BytesLike): Promise<TransactionResult>;
-    // Warning: (ae-incompatible-release-tags) The symbol "transferFrom" is marked as @public, but its signature references "IPackBatchArgs" which is marked as @beta
-    //
-    // (undocumented)
-    transferFrom(from: string, to: string, args: IPackBatchArgs, data?: BytesLike): Promise<TransactionResult>;
-}
-
-// @public (undocumented)
-export interface PackMetadata {
-    // (undocumented)
-    creator: string;
-    // (undocumented)
-    currentSupply: BigNumber;
-    // (undocumented)
-    id: string;
-    // (undocumented)
-    metadata: NFTMetadata;
-    // (undocumented)
-    openStart: Date | null;
-}
-
-// @public (undocumented)
-export interface PackMetadataWithBalance extends PackMetadata {
-    // (undocumented)
-    ownedByAddress: BigNumber;
-}
-
-// @public (undocumented)
-export interface PackNFTMetadata {
-    // (undocumented)
-    metadata: NFTMetadata;
-    // (undocumented)
-    supply: BigNumber;
 }
 
 // Warning: (ae-internal-missing-underscore) The name "PartialClaimConditionInputSchema" should be prefixed with an underscore because the declaration is marked as @internal
@@ -2889,6 +3122,11 @@ export const PartialClaimConditionInputSchema: z.ZodObject<{
 // @public (undocumented)
 export type PayloadToSign1155 = z.input<typeof Signature1155PayloadInput>;
 
+// Warning: (ae-incompatible-release-tags) The symbol "PayloadToSign1155WithTokenId" is marked as @public, but its signature references "Signature1155PayloadInputWithTokenId" which is marked as @internal
+//
+// @public (undocumented)
+export type PayloadToSign1155WithTokenId = z.input<typeof Signature1155PayloadInputWithTokenId>;
+
 // Warning: (ae-incompatible-release-tags) The symbol "PayloadToSign20" is marked as @public, but its signature references "Signature20PayloadInput" which is marked as @internal
 //
 // @public (undocumented)
@@ -2898,6 +3136,11 @@ export type PayloadToSign20 = z.input<typeof Signature20PayloadInput>;
 //
 // @public (undocumented)
 export type PayloadToSign721 = z.input<typeof Signature721PayloadInput>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "PayloadToSign721withQuantity" is marked as @public, but its signature references "Signature721WithQuantityInput" which is marked as @internal
+//
+// @public (undocumented)
+export type PayloadToSign721withQuantity = z.input<typeof Signature721WithQuantityInput>;
 
 // Warning: (ae-incompatible-release-tags) The symbol "PayloadWithUri1155" is marked as @public, but its signature references "Signature1155PayloadOutput" which is marked as @internal
 //
@@ -2913,6 +3156,11 @@ export type PayloadWithUri20 = z.output<typeof Signature20PayloadOutput>;
 //
 // @public (undocumented)
 export type PayloadWithUri721 = z.output<typeof Signature721PayloadOutput>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "PayloadWithUri721withQuantity" is marked as @public, but its signature references "Signature721WithQuantityOutput" which is marked as @internal
+//
+// @public (undocumented)
+export type PayloadWithUri721withQuantity = z.output<typeof Signature721WithQuantityOutput>;
 
 // @public
 export type PermitRequestMessage = {
@@ -3014,6 +3262,7 @@ export interface QueryAllParams {
 // @internal (undocumented)
 export const REMOTE_CONTRACT_NAME: {
     readonly "nft-drop": "DropERC721";
+    readonly "signature-drop": "SignatureDrop";
     readonly "nft-collection": "TokenERC721";
     readonly "edition-drop": "DropERC1155";
     readonly edition: "TokenERC1155";
@@ -3024,6 +3273,7 @@ export const REMOTE_CONTRACT_NAME: {
     readonly marketplace: "Marketplace";
     readonly pack: "Pack";
     readonly custom: "Custom";
+    readonly multiwrap: "Multiwrap";
 };
 
 // Warning: (ae-internal-missing-underscore) The name "REMOTE_CONTRACT_TO_CONTRACT_TYPE" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3031,6 +3281,7 @@ export const REMOTE_CONTRACT_NAME: {
 // @internal (undocumented)
 export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
     readonly DropERC721: "nft-drop";
+    readonly SignatureDrop: "signature-drop";
     readonly TokenERC721: "nft-collection";
     readonly DropERC1155: "edition-drop";
     readonly TokenERC1155: "edition";
@@ -3040,7 +3291,22 @@ export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
     readonly Split: "split";
     readonly Marketplace: "marketplace";
     readonly Pack: "pack";
+    readonly Multiwrap: "multiwrap";
 };
+
+// @public
+export class RemoteStorage {
+    constructor(storage: IStorage);
+    fetch(hash: string): Promise<Record<string, any>>;
+    upload(data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject, options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<UploadResult>;
+}
+
+// Warning: (ae-internal-missing-underscore) The name "resolveContractUriFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function resolveContractUriFromAddress(address: string, provider: ethers.providers.Provider): Promise<string | undefined>;
 
 // Warning: (ae-internal-missing-underscore) The name "RestrictedTransferError" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -3178,8 +3444,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
     to: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
-    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
     uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
     primarySaleRecipient: z.ZodDefault<z.ZodString>;
 }, {
@@ -3189,9 +3455,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         image: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
         external_url: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
     }, {
-        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>; /**
-        * @internal
-        */
+        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
         properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
         attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
@@ -3225,9 +3489,7 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         image: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
         external_url: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
     }, {
-        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>; /**
-        * @internal
-        */
+        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
         properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
         attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
@@ -3252,20 +3514,16 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     }>, z.ZodString]>>;
-    tokenId: z.ZodDefault<z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>>;
-    quantity: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>, string, string | number | bigint | ethers.BigNumber>;
+    quantity: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
-    tokenId: string;
     royaltyRecipient: string;
     royaltyBps: number;
     quantity: string;
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3277,17 +3535,16 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    tokenId?: string | number | bigint | ethers.BigNumber | undefined;
     royaltyRecipient?: string | undefined;
     royaltyBps?: number | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
-    mintStartTime?: Date | undefined;
-    mintEndTime?: Date | undefined;
     metadata?: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3299,18 +3556,20 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     } | undefined;
-    quantity: string | number | bigint | ethers.BigNumber;
+    mintStartTime?: Date | undefined;
+    mintEndTime?: Date | undefined;
+    quantity: string | number | bigint | BigNumber;
 }>;
 
-// Warning: (ae-internal-missing-underscore) The name "Signature1155PayloadOutput" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-internal-missing-underscore) The name "Signature1155PayloadInputWithTokenId" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<{
+export const Signature1155PayloadInputWithTokenId: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<{
     to: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
-    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
     uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
     primarySaleRecipient: z.ZodDefault<z.ZodString>;
 }, {
@@ -3320,9 +3579,135 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         image: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
         external_url: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
     }, {
-        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>; /**
-        * @internal
-        */
+        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
+        properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+        attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    }, {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    }>, z.ZodString]>;
+    royaltyRecipient: z.ZodDefault<z.ZodString>;
+    royaltyBps: z.ZodDefault<z.ZodNumber>;
+}>, {
+    metadata: z.ZodDefault<z.ZodUnion<[z.ZodObject<z.extendShape<{
+        name: z.ZodOptional<z.ZodString>;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        image: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+        external_url: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+    }, {
+        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
+        properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+        attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    }, {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    }>, z.ZodString]>>;
+    quantity: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+}>, {
+    tokenId: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+}>, "strip", z.ZodTypeAny, {
+    to: string;
+    primarySaleRecipient: string;
+    tokenId: string;
+    royaltyRecipient: string;
+    royaltyBps: number;
+    quantity: string;
+    uid: string;
+    price: string;
+    currencyAddress: string;
+    metadata: string | {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    };
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
+}, {
+    to?: string | undefined;
+    primarySaleRecipient?: string | undefined;
+    royaltyRecipient?: string | undefined;
+    royaltyBps?: number | undefined;
+    uid?: string | undefined;
+    price?: string | number | undefined;
+    currencyAddress?: string | undefined;
+    metadata?: string | {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    } | undefined;
+    mintStartTime?: Date | undefined;
+    mintEndTime?: Date | undefined;
+    tokenId: string | number | bigint | BigNumber;
+    quantity: string | number | bigint | BigNumber;
+}>;
+
+// Warning: (ae-internal-missing-underscore) The name "Signature1155PayloadOutput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<{
+    to: z.ZodDefault<z.ZodString>;
+    price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
+    currencyAddress: z.ZodDefault<z.ZodString>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
+    primarySaleRecipient: z.ZodDefault<z.ZodString>;
+}, {
+    metadata: z.ZodUnion<[z.ZodObject<z.extendShape<{
+        name: z.ZodOptional<z.ZodString>;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        image: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+        external_url: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+    }, {
+        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
         properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
         attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
@@ -3351,25 +3736,23 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     royaltyBps: z.ZodDefault<z.ZodNumber>;
 }>, {
     uri: z.ZodString;
-    royaltyBps: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
+    royaltyBps: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
 }>, {
-    tokenId: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    quantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
+    tokenId: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    quantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
     uri: string;
-    tokenId: ethers.BigNumber;
+    tokenId: BigNumber;
     royaltyRecipient: string;
-    royaltyBps: ethers.BigNumber;
-    quantity: ethers.BigNumber;
+    royaltyBps: BigNumber;
+    quantity: BigNumber;
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3381,6 +3764,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -3389,11 +3774,9 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
     uri: string;
-    tokenId: string | number | bigint | ethers.BigNumber;
-    royaltyBps: string | number | bigint | ethers.BigNumber;
-    quantity: string | number | bigint | ethers.BigNumber;
-    mintStartTime: string | number | bigint | ethers.BigNumber;
-    mintEndTime: string | number | bigint | ethers.BigNumber;
+    tokenId: string | number | bigint | BigNumber;
+    royaltyBps: string | number | bigint | BigNumber;
+    quantity: string | number | bigint | BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3405,6 +3788,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: string | number | bigint | BigNumber;
+    mintEndTime: string | number | bigint | BigNumber;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature20PayloadInput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3414,8 +3799,8 @@ export const Signature20PayloadInput: z.ZodObject<z.extendShape<{
     to: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
-    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
     uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
     primarySaleRecipient: z.ZodDefault<z.ZodString>;
 }, {
@@ -3427,8 +3812,8 @@ export const Signature20PayloadInput: z.ZodObject<z.extendShape<{
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -3447,15 +3832,15 @@ export const Signature20PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<{
     to: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
-    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
     uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
     primarySaleRecipient: z.ZodDefault<z.ZodString>;
 }, {
     quantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>;
 }>, {
-    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
+    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
@@ -3463,8 +3848,8 @@ export const Signature20PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<{
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -3472,8 +3857,8 @@ export const Signature20PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<{
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
     quantity: string | number;
-    mintStartTime: string | number | bigint | ethers.BigNumber;
-    mintEndTime: string | number | bigint | ethers.BigNumber;
+    mintStartTime: string | number | bigint | BigNumber;
+    mintEndTime: string | number | bigint | BigNumber;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "Signature721PayloadInput" should be prefixed with an underscore because the declaration is marked as @internal
@@ -3483,8 +3868,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
     to: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
-    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
     uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
     primarySaleRecipient: z.ZodDefault<z.ZodString>;
 }, {
@@ -3494,9 +3879,7 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
         image: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
         external_url: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
     }, {
-        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>; /**
-        * @internal
-        */
+        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
         properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
         attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
@@ -3531,8 +3914,6 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3544,6 +3925,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -3574,8 +3957,8 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     to: z.ZodDefault<z.ZodString>;
     price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
     currencyAddress: z.ZodDefault<z.ZodString>;
-    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
-    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, ethers.BigNumber, Date>>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
     uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
     primarySaleRecipient: z.ZodDefault<z.ZodString>;
 }, {
@@ -3585,9 +3968,7 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
         image: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
         external_url: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
     }, {
-        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>; /**
-        * @internal
-        */
+        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
         properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
         attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
@@ -3616,20 +3997,18 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     royaltyBps: z.ZodDefault<z.ZodNumber>;
 }>, {
     uri: z.ZodString;
-    royaltyBps: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
-    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<ethers.BigNumber, z.ZodTypeDef, ethers.BigNumber>]>, ethers.BigNumber, string | number | bigint | ethers.BigNumber>;
+    royaltyBps: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
     uri: string;
     royaltyRecipient: string;
-    royaltyBps: ethers.BigNumber;
+    royaltyBps: BigNumber;
     uid: string;
     price: string;
     currencyAddress: string;
-    mintStartTime: ethers.BigNumber;
-    mintEndTime: ethers.BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3641,6 +4020,8 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
@@ -3649,9 +4030,7 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
     uri: string;
-    royaltyBps: string | number | bigint | ethers.BigNumber;
-    mintStartTime: string | number | bigint | ethers.BigNumber;
-    mintEndTime: string | number | bigint | ethers.BigNumber;
+    royaltyBps: string | number | bigint | BigNumber;
     metadata: string | {
         [x: string]: Json;
         name?: string | undefined;
@@ -3663,7 +4042,401 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
         properties?: Record<string, Json> | Record<string, Json>[] | undefined;
         attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
     };
+    mintStartTime: string | number | bigint | BigNumber;
+    mintEndTime: string | number | bigint | BigNumber;
 }>;
+
+// Warning: (ae-internal-missing-underscore) The name "Signature721WithQuantityInput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendShape<{
+    to: z.ZodDefault<z.ZodString>;
+    price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
+    currencyAddress: z.ZodDefault<z.ZodString>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
+    primarySaleRecipient: z.ZodDefault<z.ZodString>;
+}, {
+    metadata: z.ZodUnion<[z.ZodObject<z.extendShape<{
+        name: z.ZodOptional<z.ZodString>;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        image: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+        external_url: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+    }, {
+        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
+        properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+        attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    }, {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    }>, z.ZodString]>;
+    royaltyRecipient: z.ZodDefault<z.ZodString>;
+    royaltyBps: z.ZodDefault<z.ZodNumber>;
+}>, {
+    metadata: z.ZodDefault<z.ZodUnion<[z.ZodObject<z.extendShape<{
+        name: z.ZodOptional<z.ZodString>;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        image: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+        external_url: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+    }, {
+        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
+        properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+        attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    }, {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    }>, z.ZodString]>>;
+    quantity: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+}>, "strip", z.ZodTypeAny, {
+    to: string;
+    primarySaleRecipient: string;
+    royaltyRecipient: string;
+    royaltyBps: number;
+    quantity: string;
+    uid: string;
+    price: string;
+    currencyAddress: string;
+    metadata: string | {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    };
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
+}, {
+    to?: string | undefined;
+    primarySaleRecipient?: string | undefined;
+    royaltyRecipient?: string | undefined;
+    royaltyBps?: number | undefined;
+    uid?: string | undefined;
+    price?: string | number | undefined;
+    currencyAddress?: string | undefined;
+    metadata?: string | {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    } | undefined;
+    mintStartTime?: Date | undefined;
+    mintEndTime?: Date | undefined;
+    quantity: string | number | bigint | BigNumber;
+}>;
+
+// Warning: (ae-internal-missing-underscore) The name "Signature721WithQuantityOutput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendShape<z.extendShape<{
+    to: z.ZodDefault<z.ZodString>;
+    price: z.ZodDefault<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>>;
+    currencyAddress: z.ZodDefault<z.ZodString>;
+    mintStartTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    mintEndTime: z.ZodDefault<z.ZodEffects<z.ZodDate, BigNumber, Date>>;
+    uid: z.ZodEffects<z.ZodOptional<z.ZodString>, string, string | undefined>;
+    primarySaleRecipient: z.ZodDefault<z.ZodString>;
+}, {
+    metadata: z.ZodUnion<[z.ZodObject<z.extendShape<{
+        name: z.ZodOptional<z.ZodString>;
+        description: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+        image: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+        external_url: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+    }, {
+        animation_url: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        background_color: z.ZodOptional<z.ZodUnion<[z.ZodEffects<z.ZodString, string, string>, z.ZodString]>>;
+        properties: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+        attributes: z.ZodOptional<z.ZodUnion<[z.ZodArray<z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>, "many">, z.ZodRecord<z.ZodString, z.ZodType<Json, z.ZodTypeDef, Json>>]>>;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    }, {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    }>, z.ZodString]>;
+    royaltyRecipient: z.ZodDefault<z.ZodString>;
+    royaltyBps: z.ZodDefault<z.ZodNumber>;
+}>, {
+    uri: z.ZodString;
+    royaltyBps: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    mintStartTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+    mintEndTime: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+}>, {
+    quantity: z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>;
+}>, "strip", z.ZodTypeAny, {
+    to: string;
+    primarySaleRecipient: string;
+    uri: string;
+    royaltyRecipient: string;
+    royaltyBps: BigNumber;
+    quantity: BigNumber;
+    uid: string;
+    price: string;
+    currencyAddress: string;
+    metadata: string | {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    };
+    mintStartTime: BigNumber;
+    mintEndTime: BigNumber;
+}, {
+    to?: string | undefined;
+    primarySaleRecipient?: string | undefined;
+    royaltyRecipient?: string | undefined;
+    uid?: string | undefined;
+    price?: string | number | undefined;
+    currencyAddress?: string | undefined;
+    uri: string;
+    royaltyBps: string | number | bigint | BigNumber;
+    quantity: string | number | bigint | BigNumber;
+    metadata: string | {
+        [x: string]: Json;
+        name?: string | undefined;
+        description?: string | null | undefined;
+        image?: any;
+        external_url?: any;
+        animation_url?: any;
+        background_color?: string | undefined;
+        properties?: Record<string, Json> | Record<string, Json>[] | undefined;
+        attributes?: Record<string, Json> | Record<string, Json>[] | undefined;
+    };
+    mintStartTime: string | number | bigint | BigNumber;
+    mintEndTime: string | number | bigint | BigNumber;
+}>;
+
+// Warning: (ae-internal-missing-underscore) The name "SignatureDrop" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export class SignatureDrop extends Erc721<SignatureDrop_2> {
+    constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<SignatureDrop_2>);
+    // (undocumented)
+    analytics: ContractAnalytics<SignatureDrop_2>;
+    burn(tokenId: BigNumberish): Promise<TransactionResult>;
+    claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // Warning: (ae-forgotten-export) The symbol "DropSingleClaimConditions" needs to be exported by the entry point index.d.ts
+    claimCondition: DropSingleClaimConditions<SignatureDrop_2>;
+    claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // (undocumented)
+    static contractAbi: any;
+    // (undocumented)
+    static contractRoles: readonly ["admin", "minter", "transfer"];
+    // (undocumented)
+    static contractType: "signature-drop";
+    createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    // (undocumented)
+    encoder: ContractEncoder<SignatureDrop_2>;
+    // (undocumented)
+    estimator: GasCostEstimator<SignatureDrop_2>;
+    // (undocumented)
+    events: ContractEvents<SignatureDrop_2>;
+    getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
+    getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
+    getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
+    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "tokendIds"
+    //
+    // (undocumented)
+    getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
+    // (undocumented)
+    interceptor: ContractInterceptor<SignatureDrop_2>;
+    isTransferRestricted(): Promise<boolean>;
+    // (undocumented)
+    metadata: ContractMetadata<SignatureDrop_2, typeof SignatureDrop.schema>;
+    // (undocumented)
+    platformFees: ContractPlatformFee<SignatureDrop_2>;
+    revealer: DelayedReveal<SignatureDrop_2>;
+    // (undocumented)
+    roles: ContractRoles<SignatureDrop_2, typeof SignatureDrop.contractRoles[number]>;
+    royalties: ContractRoyalty<SignatureDrop_2, typeof SignatureDrop.schema>;
+    // (undocumented)
+    sales: ContractPrimarySale<SignatureDrop_2>;
+    // (undocumented)
+    static schema: {
+        deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, {
+        platform_fee_basis_points: ZodDefault<ZodNumber>;
+        platform_fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        primary_sale_recipient: ZodEffects<ZodString, string, string>;
+        }>, {
+        trusted_forwarders: ZodDefault<ZodArray<ZodEffects<ZodString, string, string>, "many">>;
+        }>, "strip", ZodTypeAny, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        primary_sale_recipient: string;
+        platform_fee_basis_points: number;
+        platform_fee_recipient: string;
+        trusted_forwarders: string[];
+        }, {
+        symbol?: string | undefined;
+        description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        platform_fee_basis_points?: number | undefined;
+        platform_fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
+        name: string;
+        primary_sale_recipient: string;
+        }>;
+        output: ZodObject<extendShape<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        image: ZodOptional<ZodString>;
+        }>, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, "strip", ZodLazy<ZodType<Json, ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        description?: string | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        }, {
+        [x: string]: Json;
+        symbol?: string | undefined;
+        description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+        }>;
+        input: ZodObject<extendShape<extendShape<extendShape<    {
+        name: ZodString;
+        description: ZodOptional<ZodString>;
+        image: ZodOptional<ZodUnion<[ZodTypeAny, ZodString]>>;
+        external_link: ZodOptional<ZodString>;
+        }, {
+        seller_fee_basis_points: ZodDefault<ZodNumber>;
+        fee_recipient: ZodDefault<ZodEffects<ZodString, string, string>>;
+        }>, {
+        merkle: ZodDefault<ZodRecord<ZodString, ZodString>>;
+        }>, {
+        symbol: ZodDefault<ZodOptional<ZodString>>;
+        }>, "strip", ZodTypeAny, {
+        description?: string | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        symbol: string;
+        name: string;
+        merkle: Record<string, string>;
+        seller_fee_basis_points: number;
+        fee_recipient: string;
+        }, {
+        symbol?: string | undefined;
+        description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+        }>;
+    };
+    // Warning: (ae-forgotten-export) The symbol "Erc721WithQuantitySignatureMinting" needs to be exported by the entry point index.d.ts
+    signature: Erc721WithQuantitySignatureMinting;
+    totalClaimedSupply(): Promise<BigNumber>;
+    totalSupply(): Promise<BigNumber>;
+    totalUnclaimedSupply(): Promise<BigNumber>;
+}
 
 // @public (undocumented)
 export type SignedPayload1155 = {
@@ -3684,6 +4457,12 @@ export type SignedPayload721 = {
 };
 
 // @public (undocumented)
+export type SignedPayload721WithQuantitySignature = {
+    payload: PayloadWithUri721withQuantity;
+    signature: string;
+};
+
+// @public (undocumented)
 export type SignerOrProvider = Signer | providers.Provider;
 
 // @beta
@@ -3691,6 +4470,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
     // @internal (undocumented)
     analytics: ContractAnalytics<TContract>;
+    call(functionName: string, ...args: unknown[] | [...unknown[], CallOverrides]): Promise<any>;
     // (undocumented)
     static contractType: "custom";
     edition: Erc1155 | undefined;
@@ -3698,7 +4478,6 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     estimator: GasCostEstimator<TContract>;
     // (undocumented)
     events: ContractEvents<TContract>;
-    readonly functions: any;
     // (undocumented)
     getAddress(): string;
     // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @beta, but its signature references "ContractInterceptor" which is marked as @internal
@@ -3706,7 +4485,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     // (undocumented)
     interceptor: ContractInterceptor<TContract>;
     // (undocumented)
-    metadata: ContractMetadata<ThirdwebContract, any> | undefined;
+    metadata: ContractMetadata<ThirdwebContract, any>;
     nft: Erc721 | undefined;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
@@ -3991,8 +4770,8 @@ export class Split implements UpdateableNetwork {
     balanceOfTokenAllRecipients(tokenAddress: string): Promise<{
         [key: string]: {
             symbol: string;
-            name: string;
             value: BigNumber;
+            name: string;
             decimals: number;
             displayValue: string;
         };
@@ -4201,7 +4980,7 @@ export interface SplitRecipientInput {
 }
 
 // @public (undocumented)
-export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet;
+export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet | ChainId.Optimism | ChainId.OptimismTestnet | ChainId.Arbitrum | ChainId.ArbitrumTestnet;
 
 // @public (undocumented)
 export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
@@ -4211,6 +4990,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "ChainOrRpc" which is marked as @internal
     constructor(network: ChainOrRpc | SignerOrProvider, options?: SDKOptions, storage?: IStorage);
     deployer: ContractDeployer;
+    // Warning: (ae-incompatible-release-tags) The symbol "fromPrivateKey" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
+    //
+    // @beta
+    static fromPrivateKey(privateKey: string, network: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
+    // Warning: (ae-incompatible-release-tags) The symbol "fromSigner" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
+    //
+    // @beta
+    static fromSigner(signer: Signer, network?: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
     // @internal (undocumented)
     getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     // @beta
@@ -4219,26 +5006,30 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ThirdwebContract>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "split" | "custom" | "token" | "pack" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "nft-drop" | "nft-collection";
+        contractType: "custom" | "token" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
     getEdition(address: string): Edition;
     getEditionDrop(address: string): EditionDrop;
     getMarketplace(address: string): Marketplace;
+    // @beta
+    getMultiwrap(address: string): Multiwrap;
     getNFTCollection(address: string): NFTCollection;
     getNFTDrop(contractAddress: string): NFTDrop;
     getPack(address: string): Pack;
     // Warning: (ae-forgotten-export) The symbol "ContractPublisher" needs to be exported by the entry point index.d.ts
     //
     // @internal (undocumented)
-    getPublisher(): Promise<ContractPublisher>;
+    getPublisher(): ContractPublisher;
+    // @internal
+    getSignatureDrop(contractAddress: string): SignatureDrop;
     getSplit(address: string): Split;
     getToken(address: string): Token;
     getTokenDrop(address: string): TokenDrop;
     getVote(address: string): Vote;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
-    storage: IStorage;
+    storage: RemoteStorage;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
     wallet: UserWallet;
 }
@@ -4280,7 +5071,7 @@ export class Token extends Erc20<TokenERC20> {
     mintTo(to: string, amount: Amount): Promise<TransactionResult>;
     mintToSelf(amount: Amount): Promise<TransactionResult>;
     // (undocumented)
-    platformFee: ContractPlatformFee<TokenERC20>;
+    platformFees: ContractPlatformFee<TokenERC20>;
     // (undocumented)
     roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
     // @internal (undocumented)
@@ -4414,7 +5205,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     // (undocumented)
     metadata: ContractMetadata<DropERC20, typeof TokenDrop.schema>;
     // (undocumented)
-    platformFee: ContractPlatformFee<DropERC20>;
+    platformFees: ContractPlatformFee<DropERC20>;
     // (undocumented)
     roles: ContractRoles<DropERC20, typeof TokenDrop.contractRoles[number]>;
     // (undocumented)
@@ -4546,6 +5337,13 @@ export const TokenMintInputSchema: z.ZodObject<{
     toAddress: string;
 }>;
 
+// @public
+export type TokensToWrap = {
+    erc20Tokens?: ERC20Wrappable[];
+    erc721Tokens?: ERC721Wrappable[];
+    erc1155Tokens?: ERC1155Wrappable[];
+};
+
 // @public (undocumented)
 export class TransactionError extends Error {
     constructor(reason: string, from: string, to: string, data: string, network: providers.Network, rpcUrl: string, raw: string);
@@ -4585,16 +5383,6 @@ export type TransactionResultWithId<T = never> = TransactionResult<T> & {
 // @internal (undocumented)
 export const TW_IPFS_SERVER_URL = "https://upload.nftlabs.co";
 
-// @public (undocumented)
-export enum UnderlyingType {
-    // (undocumented)
-    ERC20 = 1,
-    // (undocumented)
-    ERC721 = 2,
-    // (undocumented)
-    None = 0
-}
-
 // Warning: (ae-internal-missing-underscore) The name "UploadError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -4602,21 +5390,23 @@ export class UploadError extends Error {
     constructor(message: string);
 }
 
-// Warning: (ae-internal-missing-underscore) The name "UploadMetadataBatchResult" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export interface UploadMetadataBatchResult {
-    // (undocumented)
-    baseUri: string;
-    // (undocumented)
-    metadataUris: string[];
+// @public (undocumented)
+export interface UploadProgressEvent {
+    progress: number;
+    total: number;
 }
+
+// @public
+export type UploadResult = {
+    baseUri: string;
+    uris: string[];
+};
 
 // @public
 export class UserWallet {
     constructor(network: NetworkOrSignerOrProvider, options: SDKOptions);
-    address(): Promise<string>;
     balance(currencyAddress?: string): Promise<CurrencyValue>;
+    getAddress(): Promise<string>;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     sendRawTransaction(transactionRequest: providers.TransactionRequest): Promise<TransactionResult>;
@@ -4821,6 +5611,13 @@ export enum VoteType {
     // (undocumented)
     For = 1
 }
+
+// @public
+export type WrappedTokens = {
+    erc20Tokens: ERC20Wrappable[];
+    erc721Tokens: ERC721Wrappable[];
+    erc1155Tokens: ERC1155Wrappable[];
+};
 
 // Warning: (ae-internal-missing-underscore) The name "WrongListingTypeError" should be prefixed with an underscore because the declaration is marked as @internal
 //

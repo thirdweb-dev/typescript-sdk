@@ -1,17 +1,15 @@
 import { ContractMetadata } from "../core/classes/contract-metadata";
-import {
-  ContractEvents,
-  ContractInterceptor,
-  ContractPrimarySale,
-  ContractRoles,
-  ContractRoyalty,
-  Erc1155,
-  Erc20,
-  Erc721,
-  GasCostEstimator,
-  IStorage,
-  NetworkOrSignerOrProvider,
-} from "../core";
+import { IStorage, NetworkOrSignerOrProvider } from "../core";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { ContractRoles } from "../core/classes/contract-roles";
+import { ContractRoyalty } from "../core/classes/contract-royalty";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { Erc1155 } from "../core/classes/erc-1155";
+import { Erc20 } from "../core/classes/erc-20";
+import { Erc721 } from "../core/classes/erc-721";
+
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
@@ -23,12 +21,13 @@ import {
 } from "contracts";
 import { CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { ContractInterface, Signer } from "ethers";
+import { CallOverrides, ContractInterface } from "ethers";
 import { ALL_ROLES, detectContractFeature } from "../common";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { CallOverrideSchema } from "../schema/index";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -38,12 +37,11 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * // You can switch out this provider with any wallet or provider setup you like.
  * const sdk = new ThirdwebSDK(provider);
  * const contract = await sdk.getContract("{{contract_address}}");
  *
  * // call any function in your contract
- * await contract.functions.myCustomFunction(params);
+ * await contract.call("myCustomFunction", param1, param2);
  *
  * // if your contract follows the ERC721 standard, contract.nft will be present
  * const allNFTs = await contract.nft.query.all()
@@ -71,13 +69,6 @@ export class SmartContract<
   private storage;
   private options;
 
-  // raw contract
-  /**
-   * Call any function in this contract using the function signature
-   * ex: contract.functions.mint(address, quantity)
-   */
-  public readonly functions: any;
-
   // utilities
   public events: ContractEvents<TContract>;
   public interceptor: ContractInterceptor<TContract>;
@@ -89,7 +80,7 @@ export class SmartContract<
   public analytics: ContractAnalytics<TContract>;
 
   // features
-  public metadata: ContractMetadata<ThirdwebContract, any> | undefined;
+  public metadata: ContractMetadata<ThirdwebContract, any>;
   public royalties:
     | ContractRoyalty<IRoyalty & ThirdwebContract, any>
     | undefined;
@@ -125,7 +116,6 @@ export class SmartContract<
     this.options = options;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
-    this.functions = contractWrapper.writeContract;
 
     this.events = new ContractEvents(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
@@ -152,9 +142,6 @@ export class SmartContract<
     this.token = this.detectErc20();
     this.nft = this.detectErc721();
     this.edition = this.detectErc1155();
-
-    // TODO detect sigmint
-    // this.sigmint = this.detectSigmint();
   }
 
   onSignerUpdated(signer: Signer | undefined): void {
@@ -165,12 +152,79 @@ export class SmartContract<
     return this.contractWrapper.readContract.address;
   }
 
+  /**
+   * Call any function on this contract
+   * @example
+   * ```javascript
+   * // read functions will return the data from the contract
+   * const myValue = await contract.call("myReadFunction");
+   * console.log(myValue);
+   *
+   * // write functions will return the transaction receipt
+   * const tx = await contract.call("myWriteFunction", arg1, arg2);
+   * const receipt = tx.receipt;
+   *
+   * // Optionally override transaction options
+   * await contract.call("myWriteFunction", arg1, arg2, {
+   *  gasLimit: 1000000, // override default gas limit
+   *  value: ethers.utils.parseEther("0.1"), // send 0.1 ether with the contract call
+   * };
+   * ```
+   * @param functionName - the name of the function to call
+   * @param args - the arguments of the function
+   */
+  public async call(
+    functionName: string,
+    ...args: unknown[] | [...unknown[], CallOverrides]
+  ): Promise<any> {
+    // parse last arg as tx options if present
+    let txOptions: CallOverrides | undefined;
+    try {
+      if (args.length > 1 && typeof args[args.length - 1] === "object") {
+        const last = args[args.length - 1];
+        txOptions = CallOverrideSchema.parse(last);
+        // if call overrides found, remove it from args array
+        args = args.slice(0, args.length - 1);
+      }
+    } catch (e) {
+      // no-op
+    }
+
+    const functions = this.publishedMetadata.extractFunctions();
+    const fn = functions.find((f) => f.name === functionName);
+    if (!fn) {
+      throw new Error(
+        `Function "${functionName}" not found in contract. Check your dashboard for the list of functions available`,
+      );
+    }
+    // TODO extract this and re-use for deploy function to check constructor args
+    if (fn.inputs.length !== args.length) {
+      throw new Error(
+        `Function "${functionName}" requires ${fn.inputs.length} arguments, but ${args.length} were provided.\nExpected function signature: ${fn.signature}`,
+      );
+    }
+    // TODO validate each argument
+    if (fn.stateMutability === "view" || fn.stateMutability === "pure") {
+      // read function
+      return (this.contractWrapper.readContract as any)[functionName](...args);
+    } else {
+      // write function
+      const receipt = await this.contractWrapper.sendTransaction(
+        functionName,
+        args,
+        txOptions,
+      );
+      return {
+        receipt,
+      };
+    }
+  }
+
   /** ********************
    * FEATURE DETECTION
    * ********************/
 
   private detectRoyalties() {
-    // TODO (byoc) change to ThirdwebContract
     if (
       detectContractFeature<IRoyalty & ThirdwebContract>(
         this.contractWrapper,

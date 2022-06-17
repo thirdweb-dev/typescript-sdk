@@ -1,0 +1,7 @@
+contact_links:
+  - name: Feedback
+    url: https://feedback.thirdweb.com/
+    about: Submit suggestions and feature requests.
+  - name: Discord
+    url: https://discord.gg/thirdweb/
+    about: Join our community of builders.

@@ -1,4 +1,5 @@
 import { QueryAllParams } from "../QueryParams";
+import { BigNumberish } from "ethers";
 
 /**
  * @public
@@ -6,5 +7,5 @@ import { QueryAllParams } from "../QueryParams";
 export interface MarketplaceFilter extends QueryAllParams {
   seller?: string;
   tokenContract?: string;
-  tokenId?: number;
+  tokenId?: BigNumberish;
 }

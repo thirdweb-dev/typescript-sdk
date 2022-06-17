@@ -1,32 +1,32 @@
 import { TWFactory, TWFactory__factory } from "contracts";
 import { BigNumber, Contract, ethers, constants } from "ethers";
 import { z } from "zod";
-import {
-  CONTRACTS_MAP,
-  Edition,
-  EditionDrop,
-  Marketplace,
-  NFTCollection,
-  NFTDrop,
-  Pack,
-  REMOTE_CONTRACT_NAME,
-  Split,
-  Token,
-  Vote,
-} from "../../contracts";
+import { CONTRACTS_MAP, REMOTE_CONTRACT_NAME } from "../../contracts/maps";
+import { Edition } from "../../contracts/edition";
+import { EditionDrop } from "../../contracts/edition-drop";
+import { NFTCollection } from "../../contracts/nft-collection";
+import { NFTDrop } from "../../contracts/nft-drop";
+import { Marketplace } from "../../contracts/marketplace";
+import { SignatureDrop } from "../../contracts/signature-drop";
+import { Pack } from "../../contracts/pack";
+import { Split } from "../../contracts/split";
+import { Vote } from "../../contracts/vote";
+import { Token } from "../../contracts/token";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
 import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 
-import { ChainlinkVrf } from "../../constants/chainlink";
 import {
   CONTRACT_ADDRESSES,
+  getContractAddressByChainId,
   OZ_DEFENDER_FORWARDER_ADDRESS,
   SUPPORTED_CHAIN_IDS,
 } from "../../constants";
 import { TokenDrop } from "../../contracts/token-drop";
 import { ProxyDeployedEvent } from "contracts/TWFactory";
+import { Multiwrap } from "../../contracts/multiwrap";
+import { AddressZero } from "@ethersproject/constants";
 
 /**
  * @internal
@@ -67,10 +67,22 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
 
     const contractName = REMOTE_CONTRACT_NAME[contractType];
     const encodedType = ethers.utils.formatBytes32String(contractName);
-    const receipt = await this.sendTransaction("deployProxy", [
-      encodedType,
-      encodedFunc,
-    ]);
+    let receipt;
+    try {
+      receipt = await this.sendTransaction("deployProxy", [
+        encodedType,
+        encodedFunc,
+      ]);
+    } catch (e) {
+      // deploy might fail due to salt already used, fallback to deterministic deploy
+      const blockNumber = await this.getProvider().getBlockNumber();
+      receipt = await this.sendTransaction("deployProxyDeterministic", [
+        encodedType,
+        encodedFunc,
+        ethers.utils.formatBytes32String(blockNumber.toString()),
+      ]);
+    }
+
     const events = this.parseLogs<ProxyDeployedEvent>(
       "ProxyDeployed",
       receipt.logs,
@@ -107,6 +119,37 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           erc721metadata.seller_fee_basis_points,
           erc721metadata.platform_fee_basis_points,
           erc721metadata.platform_fee_recipient,
+        ];
+      case SignatureDrop.contractType:
+        const signatureDropmetadata =
+          SignatureDrop.schema.deploy.parse(metadata);
+        const chainId = await this.getChainID();
+        const signMintAddress = getContractAddressByChainId(chainId, "sigMint");
+        if (signMintAddress === AddressZero) {
+          throw new Error("SignatureDrop contract not deployable yet");
+        }
+        return [
+          await this.getSignerAddress(),
+          signatureDropmetadata.name,
+          signatureDropmetadata.symbol,
+          contractURI,
+          trustedForwarders,
+          signatureDropmetadata.primary_sale_recipient,
+          signatureDropmetadata.fee_recipient,
+          signatureDropmetadata.seller_fee_basis_points,
+          signatureDropmetadata.platform_fee_basis_points,
+          signatureDropmetadata.platform_fee_recipient,
+        ];
+      case Multiwrap.contractType:
+        const multiwrapMetadata = Multiwrap.schema.deploy.parse(metadata);
+        return [
+          await this.getSignerAddress(),
+          multiwrapMetadata.name,
+          multiwrapMetadata.symbol,
+          contractURI,
+          trustedForwarders,
+          multiwrapMetadata.fee_recipient,
+          multiwrapMetadata.seller_fee_basis_points,
         ];
       case EditionDrop.contractType:
       case Edition.contractType:
@@ -168,7 +211,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         ];
       case Pack.contractType:
         const packsMetadata = Pack.schema.deploy.parse(metadata);
-        const vrf = ChainlinkVrf[await this.getChainID()];
         return [
           await this.getSignerAddress(),
           packsMetadata.name,
@@ -177,8 +219,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
           trustedForwarders,
           packsMetadata.fee_recipient,
           packsMetadata.seller_fee_basis_points,
-          vrf.fees,
-          vrf.keyHash,
         ];
       default:
         return [];

@@ -1,4 +1,4 @@
-import { BigNumber, BigNumberish, Contract, providers } from "ethers";
+import { BigNumber, BigNumberish, Contract, ethers, providers } from "ethers";
 import {
   CommonNFTInput,
   CommonNFTOutput,
@@ -6,7 +6,7 @@ import {
   NFTMetadataInput,
   NFTMetadataOrUri,
 } from "../schema/tokens/common";
-import { IStorage } from "../core";
+import type { IStorage } from "../core";
 import { IERC1155Metadata, IERC165, IERC721Metadata } from "contracts";
 import { NotFoundError } from "./error";
 import {
@@ -16,6 +16,10 @@ import {
 import ERC721MetadataAbi from "../../abis/IERC721Metadata.json";
 import ERC1155MetadataAbi from "../../abis/IERC1155Metadata.json";
 import ERC165MetadataAbi from "../../abis/IERC165.json";
+
+const FALLBACK_METADATA = {
+  name: "Failed to load NFT metadata",
+};
 
 /**
  * fetches the token metadata
@@ -32,9 +36,22 @@ export async function fetchTokenMetadata(
 ): Promise<NFTMetadata> {
   const parsedUri = tokenUri.replace(
     "{id}",
-    BigNumber.from(tokenId).toHexString().slice(2),
+    ethers.utils.hexZeroPad(BigNumber.from(tokenId).toHexString(), 32).slice(2),
   );
-  const jsonMetadata = await storage.get(parsedUri);
+  let jsonMetadata;
+  try {
+    jsonMetadata = await storage.get(parsedUri);
+  } catch (err) {
+    console.warn(
+      `failed to get token metadata: ${JSON.stringify({
+        tokenId,
+        tokenUri,
+      })} -- falling back to default metadata`,
+      err,
+    );
+    jsonMetadata = FALLBACK_METADATA;
+  }
+
   return CommonNFTOutput.parse({
     id: BigNumber.from(tokenId),
     uri: tokenUri,
@@ -115,10 +132,10 @@ export async function uploadOrExtractURIs(
   if (isUriList(metadatas)) {
     return metadatas;
   } else if (isMetadataList(metadatas)) {
-    const { metadataUris } = await storage.uploadMetadataBatch(
+    const { uris } = await storage.uploadMetadataBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),
     );
-    return metadataUris;
+    return uris;
   } else {
     throw new Error(
       "NFT metadatas must all be of the same type (all URI or all NFTMetadataInput)",

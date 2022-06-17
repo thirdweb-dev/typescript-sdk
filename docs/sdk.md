@@ -33,6 +33,7 @@
 |  [Erc20SignatureMinting](./sdk.erc20signatureminting.md) | Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 NFT functions |
 |  [Erc721BatchMintable](./sdk.erc721batchmintable.md) | Mint Many ERC721 NFTs at once |
+|  [Erc721Dropable](./sdk.erc721dropable.md) | Lazily mint and claim ERC721 NFTs |
 |  [Erc721Enumerable](./sdk.erc721enumerable.md) | List owned ERC721 NFTs |
 |  [Erc721Mintable](./sdk.erc721mintable.md) | Mint ERC721 NFTs |
 |  [Erc721SignatureMinting](./sdk.erc721signatureminting.md) | Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely |
@@ -42,9 +43,11 @@
 |  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [MarketplaceAuction](./sdk.marketplaceauction.md) | Handles auction listings |
 |  [MarketplaceDirect](./sdk.marketplacedirect.md) | Handles direct listings |
+|  [Multiwrap](./sdk.multiwrap.md) | <b><i>(BETA)</i></b> Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle. |
 |  [NFTCollection](./sdk.nftcollection.md) | Create a collection of one-of-one NFTs. |
 |  [NFTDrop](./sdk.nftdrop.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [Pack](./sdk.pack.md) | Create lootboxes of NFTs with rarity based open mechanics. |
+|  [RemoteStorage](./sdk.remotestorage.md) | Fetch and upload files to IPFS or any other storage. |
 |  [SmartContract](./sdk.smartcontract.md) | <b><i>(BETA)</i></b> Custom contract dynamic class with feature detection |
 |  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The main entry point for the thirdweb SDK |
@@ -64,7 +67,6 @@
 |  [EventType](./sdk.eventtype.md) |  |
 |  [ListingType](./sdk.listingtype.md) |  |
 |  [ProposalState](./sdk.proposalstate.md) |  |
-|  [UnderlyingType](./sdk.underlyingtype.md) |  |
 |  [VoteType](./sdk.votetype.md) |  |
 
 ## Functions
@@ -72,6 +74,7 @@
 |  Function | Description |
 |  --- | --- |
 |  [getNativeTokenByChainId(chainId)](./sdk.getnativetokenbychainid.md) | Returns the native token for a given chain |
+|  [getReadOnlyProvider(network, chainId)](./sdk.getreadonlyprovider.md) |  |
 
 ## Interfaces
 
@@ -81,19 +84,15 @@
 |  [BatchToReveal](./sdk.batchtoreveal.md) |  |
 |  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
 |  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
-|  [IPackBatchArgs](./sdk.ipackbatchargs.md) | <b><i>(BETA)</i></b> |
-|  [IPackCreateArgs](./sdk.ipackcreateargs.md) |  |
-|  [IStorage](./sdk.istorage.md) |  |
+|  [IStorage](./sdk.istorage.md) | Interface for any storage provider |
 |  [MarketplaceContractDeployMetadata](./sdk.marketplacecontractdeploymetadata.md) | Options for deploying a Marketplace contract |
 |  [MarketplaceFilter](./sdk.marketplacefilter.md) |  |
+|  [MultiwrapContractDeployMetadata](./sdk.multiwrapcontractdeploymetadata.md) | Options for deploying an Multiwrap contract |
 |  [NativeToken](./sdk.nativetoken.md) |  |
 |  [NewAuctionListing](./sdk.newauctionlisting.md) | Represents a new marketplace auction listing. |
 |  [NewDirectListing](./sdk.newdirectlisting.md) | Represents a new marketplace direct listing. |
 |  [NFTContractDeployMetadata](./sdk.nftcontractdeploymetadata.md) | Options for deploying an NFT contract |
 |  [Offer](./sdk.offer.md) |  |
-|  [PackMetadata](./sdk.packmetadata.md) |  |
-|  [PackMetadataWithBalance](./sdk.packmetadatawithbalance.md) |  |
-|  [PackNFTMetadata](./sdk.packnftmetadata.md) |  |
 |  [Proposal](./sdk.proposal.md) |  |
 |  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
 |  [ProposalVote](./sdk.proposalvote.md) |  |
@@ -102,6 +101,7 @@
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
 |  [SplitRecipientInput](./sdk.splitrecipientinput.md) |  |
 |  [TokenContractDeployMetadata](./sdk.tokencontractdeploymetadata.md) | Options for deploying a Token contract |
+|  [UploadProgressEvent](./sdk.uploadprogressevent.md) |  |
 |  [VoteContractDeployMetadata](./sdk.votecontractdeploymetadata.md) | Options for deploying a Vote contract |
 |  [VoteSettings](./sdk.votesettings.md) |  |
 
@@ -113,6 +113,7 @@
 |  [MintRequest1155](./sdk.mintrequest1155.md) |  |
 |  [MintRequest20](./sdk.mintrequest20.md) |  |
 |  [MintRequest721](./sdk.mintrequest721.md) |  |
+|  [MintRequest721withQuantity](./sdk.mintrequest721withquantity.md) |  |
 |  [NATIVE\_TOKEN\_ADDRESS](./sdk.native_token_address.md) |  |
 |  [NATIVE\_TOKENS](./sdk.native_tokens.md) |  |
 |  [SDKOptionsSchema](./sdk.sdkoptionsschema.md) |  |
@@ -128,6 +129,7 @@
 |  [ClaimCondition](./sdk.claimcondition.md) | Represents a claim condition fetched from the SDK |
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
 |  [ClaimVerification](./sdk.claimverification.md) |  |
+|  [ContractEvent](./sdk.contractevent.md) |  |
 |  [ContractForContractType](./sdk.contractforcontracttype.md) |  |
 |  [ContractType](./sdk.contracttype.md) |  |
 |  [Currency](./sdk.currency.md) |  |
@@ -136,9 +138,14 @@
 |  [EditionMetadataInput](./sdk.editionmetadatainput.md) |  |
 |  [EditionMetadataOrUri](./sdk.editionmetadataoruri.md) |  |
 |  [EditionMetadataOwner](./sdk.editionmetadataowner.md) |  |
+|  [ERC1155Wrappable](./sdk.erc1155wrappable.md) | Represents a certain amount of ERC1155 NFTs that can be wrapped |
+|  [ERC20Wrappable](./sdk.erc20wrappable.md) | Represents a certain amount of ERC20 tokens that can be wrapped |
+|  [ERC721Wrappable](./sdk.erc721wrappable.md) | Represents a ERC721 NFT that can be wrapped |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [FilledConditionInput](./sdk.filledconditioninput.md) |  |
+|  [FilledSignature721WithQuantity](./sdk.filledsignature721withquantity.md) |  |
 |  [FilledSignaturePayload1155](./sdk.filledsignaturepayload1155.md) |  |
+|  [FilledSignaturePayload1155WithTokenId](./sdk.filledsignaturepayload1155withtokenid.md) |  |
 |  [FilledSignaturePayload20](./sdk.filledsignaturepayload20.md) |  |
 |  [FilledSignaturePayload721](./sdk.filledsignaturepayload721.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
@@ -149,11 +156,14 @@
 |  [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
 |  [NFTMetadataOwner](./sdk.nftmetadataowner.md) |  |
 |  [PayloadToSign1155](./sdk.payloadtosign1155.md) |  |
+|  [PayloadToSign1155WithTokenId](./sdk.payloadtosign1155withtokenid.md) |  |
 |  [PayloadToSign20](./sdk.payloadtosign20.md) |  |
 |  [PayloadToSign721](./sdk.payloadtosign721.md) |  |
+|  [PayloadToSign721withQuantity](./sdk.payloadtosign721withquantity.md) |  |
 |  [PayloadWithUri1155](./sdk.payloadwithuri1155.md) |  |
 |  [PayloadWithUri20](./sdk.payloadwithuri20.md) |  |
 |  [PayloadWithUri721](./sdk.payloadwithuri721.md) |  |
+|  [PayloadWithUri721withQuantity](./sdk.payloadwithuri721withquantity.md) |  |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
 |  [Price](./sdk.price.md) | Represents a currency price already formatted. ie. "1" for 1 ether. |
 |  [Role](./sdk.role.md) |  |
@@ -161,6 +171,7 @@
 |  [SignedPayload1155](./sdk.signedpayload1155.md) |  |
 |  [SignedPayload20](./sdk.signedpayload20.md) |  |
 |  [SignedPayload721](./sdk.signedpayload721.md) |  |
+|  [SignedPayload721WithQuantitySignature](./sdk.signedpayload721withquantitysignature.md) |  |
 |  [SignerOrProvider](./sdk.signerorprovider.md) |  |
 |  [Snapshot](./sdk.snapshot.md) |  |
 |  [SnapshotInfo](./sdk.snapshotinfo.md) |  |
@@ -168,10 +179,13 @@
 |  [SUPPORTED\_CHAIN\_ID](./sdk.supported_chain_id.md) |  |
 |  [TokenHolderBalance](./sdk.tokenholderbalance.md) | A token holder address and its current balance |
 |  [TokenMintInput](./sdk.tokenmintinput.md) |  |
+|  [TokensToWrap](./sdk.tokenstowrap.md) | Input for wrapping any number of tokens |
 |  [TransactionResult](./sdk.transactionresult.md) |  |
 |  [TransactionResultWithAddress](./sdk.transactionresultwithaddress.md) |  |
 |  [TransactionResultWithId](./sdk.transactionresultwithid.md) |  |
+|  [UploadResult](./sdk.uploadresult.md) | The result of an IPFS upload, including the URI of the upload director and the URIs of the uploaded files. |
 |  [ValidContractClass](./sdk.validcontractclass.md) |  |
 |  [ValidContractInstance](./sdk.validcontractinstance.md) |  |
 |  [ValueOf](./sdk.valueof.md) |  |
+|  [WrappedTokens](./sdk.wrappedtokens.md) | Output for the contents of a bundle wrapped token |
 

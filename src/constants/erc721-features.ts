@@ -3,6 +3,47 @@ import Erc721EnumerableAbi from "../../abis/IERC721Enumerable.json";
 import Erc721SupplyAbi from "../../abis/IERC721Supply.json";
 import IMintableERC721Abi from "../../abis/IMintableERC721.json";
 import MulticallAbi from "../../abis/IMulticall.json";
+import DropAbi from "../../abis/IDrop.json";
+import DelayedRevealAbi from "../../abis/DelayedReveal.json";
+import LazyMintERC721Abi from "../../abis/LazyMintERC721.json";
+import IClaimConditionsMultiPhaseAbi from "../../abis/IClaimConditionsMultiPhase.json";
+
+export const FEATURE_NFT_REVEALABLE = {
+  name: "ERC721Revealable",
+  namespace: "nft.drop.revealer",
+  docLinks: {
+    sdk: "sdk.drop.delayedreveal",
+    contracts: "IDelayedReveal",
+  },
+  abis: [Erc721Abi, DropAbi, LazyMintERC721Abi, DelayedRevealAbi],
+  features: {},
+} as const;
+
+// Update ABI dependencies
+export const FEATURE_NFT_CLAIM_CONDITIONS = {
+  name: "ERC721ClaimConditions",
+  namespace: "nft.drop.claimConditions",
+  docLinks: {
+    sdk: "sdk.dropClaimConditions",
+    contracts: "IClaimConditions",
+  },
+  abis: [Erc721Abi, DropAbi, IClaimConditionsMultiPhaseAbi],
+  features: {},
+} as const;
+
+export const FEATURE_NFT_DROPABLE = {
+  name: "ERC721Dropable",
+  namespace: "nft.drop",
+  docLinks: {
+    sdk: "sdk.erc721dropable",
+    contracts: "Drop",
+  },
+  abis: [Erc721Abi, DropAbi],
+  features: {
+    [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
+    [FEATURE_NFT_CLAIM_CONDITIONS.name]: FEATURE_NFT_CLAIM_CONDITIONS,
+  },
+} as const;
 
 export const FEATURE_NFT_BATCH_MINTABLE = {
   name: "ERC721BatchMintable",
@@ -33,7 +74,7 @@ export const FEATURE_NFT_ENUMERABLE = {
   namespace: "nft.query.owned",
   docLinks: {
     sdk: "sdk.erc721enumerable",
-    contracts: "ERC721Enumerable",
+    contracts: "IERC721Enumerable",
   },
   abis: [Erc721Abi, Erc721EnumerableAbi],
   features: {},
@@ -44,7 +85,7 @@ export const FEATURE_NFT_SUPPLY = {
   namespace: "nft.query",
   docLinks: {
     sdk: "sdk.erc721supply",
-    contracts: "ERC721Supply",
+    contracts: "IERC721Supply",
   },
   abis: [Erc721Abi, Erc721SupplyAbi],
   features: {
@@ -57,11 +98,12 @@ export const FEATURE_NFT = {
   namespace: "nft",
   docLinks: {
     sdk: "sdk.erc721",
-    contracts: "ERC721",
+    contracts: "IERC721",
   },
   abis: [Erc721Abi],
   features: {
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
+    [FEATURE_NFT_DROPABLE.name]: FEATURE_NFT_DROPABLE,
   },
 } as const;

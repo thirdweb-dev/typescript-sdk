@@ -25,7 +25,7 @@ Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
 
 ## Remarks
 
-Make a bid on an auction listings
+Make a bid on an auction listing
 
 ## Example
 

@@ -19,9 +19,7 @@ export declare class Token extends Erc20<TokenERC20>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// You can switch out this provider with any wallet or provider setup you like.
-const provider = ethers.Wallet.createRandom();
-const sdk = new ThirdwebSDK(provider);
+const sdk = new ThirdwebSDK("rinkeby");
 const contract = sdk.getToken("{{contract_address}}");
 ```
 
@@ -43,7 +41,7 @@ const contract = sdk.getToken("{{contract_address}}");
 |  [events](./sdk.token.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;TokenERC20&gt; |  |
 |  [history](./sdk.token.history.md) |  | [TokenERC20History](./sdk.tokenerc20history.md) |  |
 |  [metadata](./sdk.token.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC20, typeof Token.schema&gt; |  |
-|  [platformFee](./sdk.token.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;TokenERC20&gt; |  |
+|  [platformFees](./sdk.token.platformfees.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;TokenERC20&gt; |  |
 |  [roles](./sdk.token.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC20, typeof [Token.contractRoles](./sdk.token.contractroles.md)<!-- -->\[number\]&gt; |  |
 |  [signature](./sdk.token.signature.md) |  | [Erc20SignatureMinting](./sdk.erc20signatureminting.md) | Signature Minting |
 

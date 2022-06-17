@@ -9,52 +9,32 @@ Create Pack
 <b>Signature:</b>
 
 ```typescript
-create(args: IPackCreateArgs): Promise<TransactionResultWithId<PackMetadata>>;
+create(metadataWithRewards: PackMetadataInput): Promise<TransactionResultWithId<{
+        metadata: {
+            [x: string]: import("../core/types").Json;
+            name?: string | undefined;
+            description?: string | null | undefined;
+            image?: string | null | undefined;
+            external_url?: string | null | undefined;
+            animation_url?: string | null | undefined;
+            uri: string;
+            id: BigNumber;
+        };
+        supply: BigNumber;
+    }>>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  args | [IPackCreateArgs](./sdk.ipackcreateargs.md) | Args for the pack creation |
+|  metadataWithRewards | PackMetadataInput | the metadata and rewards to include in the pack |
 
 <b>Returns:</b>
 
-Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[PackMetadata](./sdk.packmetadata.md)<!-- -->&gt;&gt;
-
-- The newly created pack metadata
+Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;{ metadata: { \[x: string\]: import("../core/types").[Json](./sdk.json.md)<!-- -->; name?: string \| undefined; description?: string \| null \| undefined; image?: string \| null \| undefined; external\_url?: string \| null \| undefined; animation\_url?: string \| null \| undefined; uri: string; id: BigNumber; }; supply: BigNumber; }&gt;&gt;
 
 ## Remarks
 
-Create a new pack with its own rewards.
-
-## Example
-
-
-```javascript
-// Data to create the pack
-const pack = {
-  // The address of the contract that holds the rewards you want to include
-  assetContract: "0x...",
-  // The metadata of the pack
-  metadata: {
-    name: "Cool Pack",
-    description: "This is a cool pack",
-    // This can be an image url or image file
-    image: readFileSync("path/to/image.png"),
-  },
-  // The NFTs you want to include in the pack
-  assets: [
-    {
-      tokenId: 0, // The token ID of the asset you want to add
-      amount: 1, // The amount of the asset you want to add
-    }, {
-      tokenId: 1,
-      amount: 1,
-    }
-  ],
-};
-
-await contract.create(pack);
-```
+See [Pack.createTo()](./sdk.pack.createto.md)
 

@@ -2,13 +2,14 @@ import IThirdwebPrimarySaleAbi from "../../abis/IPrimarySale.json";
 import IThirdwebPlatformFeeAbi from "../../abis/IPlatformFee.json";
 import IThirdwebRoyaltyAbi from "../../abis/IRoyalty.json";
 import IPermissionsEnumerableAbi from "../../abis/IPermissionsEnumerable.json";
+import IContractMetadataAbi from "../../abis/IContractMetadata.json";
 
 export const FEATURE_ROYALTY = {
   name: "Royalty",
-  namespace: "sales",
+  namespace: "royalty",
   docLinks: {
     sdk: "sdk.contractroyalty",
-    contracts: "IThirdwebPrimarySale",
+    contracts: "Royalty",
   },
   abis: [IThirdwebRoyaltyAbi],
   features: {},
@@ -19,7 +20,7 @@ export const FEATURE_PRIMARY_SALE = {
   namespace: "sales",
   docLinks: {
     sdk: "sdk.contractprimarysale",
-    contracts: "IThirdwebPrimarySale",
+    contracts: "PrimarySale",
   },
   abis: [IThirdwebPrimarySaleAbi],
   features: {},
@@ -30,7 +31,7 @@ export const FEATURE_PLATFORM_FEE = {
   namespace: "platformFee",
   docLinks: {
     sdk: "sdk.platformfee",
-    contracts: "IThirdwebPlatformFee",
+    contracts: "PlatformFee",
   },
   abis: [IThirdwebPlatformFeeAbi],
   features: {},
@@ -41,8 +42,19 @@ export const FEATURE_PERMISSIONS = {
   namespace: "roles",
   docLinks: {
     sdk: "sdk.contractroles",
-    contracts: "IPermissionsEnumerable",
+    contracts: "PermissionsEnumerable",
   },
   abis: [IPermissionsEnumerableAbi],
+  features: {},
+} as const;
+
+export const FEATURE_METADATA = {
+  name: "ContractMetadata",
+  namespace: "metadata",
+  docLinks: {
+    sdk: "sdk.contractmetadata",
+    contracts: "ContractMetadata",
+  },
+  abis: [IContractMetadataAbi],
   features: {},
 } as const;

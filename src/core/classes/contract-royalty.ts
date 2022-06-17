@@ -1,4 +1,9 @@
-import { IRoyalty, IThirdwebContract, ThirdwebContract } from "contracts";
+import {
+  ContractMetadata as ContractMetadataContract,
+  IRoyalty,
+  IThirdwebContract,
+  ThirdwebContract,
+} from "contracts";
 import { CommonRoyaltySchema } from "../../schema/contracts/common";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
@@ -7,6 +12,7 @@ import { TransactionResult } from "../types";
 import { BigNumberish } from "ethers";
 import { FEATURE_ROYALTY } from "../../constants/thirdweb-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { hasFunction } from "../../common";
 
 /**
  * Handle contract royalties
@@ -89,23 +95,36 @@ export class ContractRoyalty<
       mergedMetadata,
     );
 
-    // encode both the functions we want to send
-    const encoded = [
-      this.contractWrapper.readContract.interface.encodeFunctionData(
-        "setDefaultRoyaltyInfo",
-        [mergedMetadata.fee_recipient, mergedMetadata.seller_fee_basis_points],
-      ),
-      this.contractWrapper.readContract.interface.encodeFunctionData(
+    if (
+      hasFunction<ContractMetadataContract>(
         "setContractURI",
-        [contractURI],
-      ),
-    ];
-
-    // actually send the transaction and return the receipt + a way to get the new royalty info
-    return {
-      receipt: await this.contractWrapper.multiCall(encoded),
-      data: () => this.getDefaultRoyaltyInfo(),
-    };
+        this.contractWrapper,
+      )
+    ) {
+      // encode both the functions we want to send
+      const encoded = [
+        this.contractWrapper.readContract.interface.encodeFunctionData(
+          "setDefaultRoyaltyInfo",
+          [
+            mergedMetadata.fee_recipient,
+            mergedMetadata.seller_fee_basis_points,
+          ],
+        ),
+        this.contractWrapper.readContract.interface.encodeFunctionData(
+          "setContractURI",
+          [contractURI],
+        ),
+      ];
+      // actually send the transaction and return the receipt + a way to get the new royalty info
+      return {
+        receipt: await this.contractWrapper.multiCall(encoded),
+        data: () => this.getDefaultRoyaltyInfo(),
+      };
+    } else {
+      throw new Error(
+        "Updating royalties requires implementing ContractMetadata in your contract to support marketplaces like OpenSea.",
+      );
+    }
   }
 
   /**

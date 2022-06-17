@@ -36,7 +36,7 @@ import {
 } from "../../constants/contract";
 import {
   handleTokenApproval,
-  isTokenApprovedForMarketplace,
+  isTokenApprovedForTransfer,
   mapOffer,
   validateNewListingParam,
 } from "../../common/marketplace";
@@ -215,6 +215,28 @@ export class MarketplaceDirect {
   /**
    * Make an offer for a Direct Listing
    *
+   * @remarks Make an offer on a direct listing
+   *
+   * @example
+   * ```javascript
+   * import { ChainId, NATIVE_TOKENS } from "@thirdweb-dev/sdk";
+   *
+   * // The listing ID of the asset you want to offer on
+   * const listingId = 0;
+   * // The price you are willing to offer per token
+   * const pricePerToken = 1;
+   * // The quantity of tokens you want to receive for this offer
+   * const quantity = 1;
+   * // The address of the currency you are making the offer in (must be ERC-20)
+   * const currencyContractAddress = NATIVE_TOKENS[ChainId.Rinkeby].wrapped.address
+   *
+   * await contract.direct.makeOffer(
+   *   listingId,
+   *   quantity,
+   *   currencyContractAddress,
+   *   pricePerToken
+   * );
+   * ```
    */
   public async makeOffer(
     listingId: BigNumberish,
@@ -274,6 +296,21 @@ export class MarketplaceDirect {
     };
   }
 
+  /**
+   * Accept an offer on a direct listing
+   *
+   * @remarks Accept an offer on a direct listing
+   *
+   * @example
+   * ```javascript
+   * // The listing ID of the asset you want to bid on
+   * const listingId = 0;
+   * // The price you are willing to bid for a single token of the listing
+   * const offeror = "0x...";
+   *
+   * await contract.direct.acceptOffer(listingId, offeror);
+   * ```
+   */
   public async acceptOffer(
     listingId: BigNumberish,
     addressOfOfferor: string,
@@ -465,7 +502,7 @@ export class MarketplaceDirect {
     listing: DirectListing,
     quantity?: BigNumberish,
   ): Promise<boolean> {
-    const approved = await isTokenApprovedForMarketplace(
+    const approved = await isTokenApprovedForTransfer(
       this.contractWrapper.getProvider(),
       this.getAddress(),
       listing.assetContractAddress,

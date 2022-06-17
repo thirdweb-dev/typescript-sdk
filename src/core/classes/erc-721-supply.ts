@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { IERC721Enumerable, IERC721Supply, TokenERC721 } from "contracts";
+import { IERC721Enumerable, IERC721Supply } from "contracts";
 import { BigNumber } from "ethers";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../../types";
 import { NFTMetadataOwner } from "../../schema";
@@ -56,10 +56,7 @@ export class Erc721Supply implements DetectableFeature {
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
 
-    let maxSupply = await this.totalCirculatingSupply();
-    if (this.hasNextIdToMint(this.contractWrapper)) {
-      maxSupply = await this.contractWrapper.readContract.nextTokenIdToMint();
-    }
+    const maxSupply = await this.erc721.nextTokenIdToMint();
     const maxId = Math.min(maxSupply.toNumber(), start + count);
     return await Promise.all(
       [...Array(maxId - start).keys()].map((i) =>
@@ -75,12 +72,6 @@ export class Erc721Supply implements DetectableFeature {
    */
   public async totalCirculatingSupply(): Promise<BigNumber> {
     return await this.contractWrapper.readContract.totalSupply();
-  }
-
-  private hasNextIdToMint(
-    contractWrapper: ContractWrapper<any>,
-  ): contractWrapper is ContractWrapper<TokenERC721> {
-    return "nextTokenIdToMint" in contractWrapper.readContract.functions;
   }
 
   private detectErc721Owned(): Erc721Enumerable | undefined {

@@ -19,9 +19,7 @@ export declare class EditionDrop extends Erc1155<DropERC1155>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// You can switch out this provider with any wallet or provider setup you like.
-const provider = ethers.Wallet.createRandom();
-const sdk = new ThirdwebSDK(provider);
+const sdk = new ThirdwebSDK("rinkeby");
 const contract = sdk.getEditionDrop("{{contract_address}}");
 ```
 
@@ -44,10 +42,10 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 |  [events](./sdk.editiondrop.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;DropERC1155&gt; |  |
 |  [history](./sdk.editiondrop.history.md) |  | [DropErc1155History](./sdk.droperc1155history.md) |  |
 |  [metadata](./sdk.editiondrop.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;DropERC1155, typeof EditionDrop.schema&gt; |  |
-|  [platformFee](./sdk.editiondrop.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;DropERC1155&gt; |  |
-|  [primarySale](./sdk.editiondrop.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;DropERC1155&gt; |  |
+|  [platformFees](./sdk.editiondrop.platformfees.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;DropERC1155&gt; |  |
 |  [roles](./sdk.editiondrop.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;DropERC1155, typeof [EditionDrop.contractRoles](./sdk.editiondrop.contractroles.md)<!-- -->\[number\]&gt; |  |
-|  [royalty](./sdk.editiondrop.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;DropERC1155, typeof EditionDrop.schema&gt; | Configure royalties |
+|  [royalties](./sdk.editiondrop.royalties.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;DropERC1155, typeof EditionDrop.schema&gt; | Configure royalties |
+|  [sales](./sdk.editiondrop.sales.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;DropERC1155&gt; |  |
 
 ## Methods
 

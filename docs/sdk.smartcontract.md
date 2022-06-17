@@ -22,12 +22,11 @@ export declare class SmartContract<TContract extends ThirdwebContract = Thirdweb
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// You can switch out this provider with any wallet or provider setup you like.
 const sdk = new ThirdwebSDK(provider);
 const contract = await sdk.getContract("{{contract_address}}");
 
 // call any function in your contract
-await contract.functions.myCustomFunction(params);
+await contract.call("myCustomFunction", param1, param2);
 
 // if your contract follows the ERC721 standard, contract.nft will be present
 const allNFTs = await contract.nft.query.all()
@@ -53,9 +52,8 @@ const tx = await contract.nft.mint.to("0x...", {
 |  [edition](./sdk.smartcontract.edition.md) |  | [Erc1155](./sdk.erc1155.md) \| undefined | <b><i>(BETA)</i></b> Auto-detects ERC1155 standard functions. |
 |  [estimator](./sdk.smartcontract.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TContract&gt; | <b><i>(BETA)</i></b> |
 |  [events](./sdk.smartcontract.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;TContract&gt; | <b><i>(BETA)</i></b> |
-|  [functions](./sdk.smartcontract.functions.md) |  | any | <b><i>(BETA)</i></b> Call any function in this contract using the function signature ex: contract.functions.mint(address, quantity) |
 |  [interceptor](./sdk.smartcontract.interceptor.md) |  | ContractInterceptor&lt;TContract&gt; | <b><i>(BETA)</i></b> |
-|  [metadata](./sdk.smartcontract.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;ThirdwebContract, any&gt; \| undefined | <b><i>(BETA)</i></b> |
+|  [metadata](./sdk.smartcontract.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;ThirdwebContract, any&gt; | <b><i>(BETA)</i></b> |
 |  [nft](./sdk.smartcontract.nft.md) |  | [Erc721](./sdk.erc721.md) \| undefined | <b><i>(BETA)</i></b> Auto-detects ERC721 standard functions. |
 |  [platformFees](./sdk.smartcontract.platformfees.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;IPlatformFee&gt; \| undefined | <b><i>(BETA)</i></b> |
 |  [publishedMetadata](./sdk.smartcontract.publishedmetadata.md) |  | ContractPublishedMetadata&lt;TContract&gt; | <b><i>(BETA)</i></b> |
@@ -68,6 +66,7 @@ const tx = await contract.nft.mint.to("0x...", {
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [call(functionName, args)](./sdk.smartcontract.call.md) |  | <b><i>(BETA)</i></b> Call any function on this contract |
 |  [getAddress()](./sdk.smartcontract.getaddress.md) |  | <b><i>(BETA)</i></b> |
 |  [onNetworkUpdated(network)](./sdk.smartcontract.onnetworkupdated.md) |  | <b><i>(BETA)</i></b> |
 

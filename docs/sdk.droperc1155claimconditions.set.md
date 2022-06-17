@@ -4,7 +4,7 @@
 
 ## DropErc1155ClaimConditions.set() method
 
-Set public mint conditions on a NFT
+Set claim conditions on a single NFT
 
 <b>Signature:</b>
 
@@ -26,7 +26,7 @@ Promise&lt;[TransactionResult](./sdk.transactionresult.md)<!-- -->&gt;
 
 ## Remarks
 
-Sets the public mint conditions that need to be fulfilled by users to claim a particular NFT in this bundle.
+Sets the public mint conditions that need to be fulfilled by users to claim a particular NFT in this contract.
 
 ## Example
 

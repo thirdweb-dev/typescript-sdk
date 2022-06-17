@@ -1,5 +1,4 @@
 export * from "./addresses";
-export * from "./chainlink";
 export * from "./chains";
 export * from "./contract";
 export * from "./currency";

@@ -9,12 +9,12 @@ import {
   SnapshotInput,
 } from "../types/claim-conditions/claim-conditions";
 import { DuplicateLeafsError } from "./error";
-import keccak256 from "keccak256";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish, utils } from "ethers";
 
 /**
  * Create a snapshot (merkle tree) from a list of addresses and uploads it to IPFS
  * @param snapshotInput - the list of addresses to hash
+ * @param tokenDecimals - the token decimals
  * @param storage - the storage to upload to
  * @returns the generated snapshot and URI
  * @internal
@@ -32,12 +32,9 @@ export async function createSnapshot(
   }
 
   const hashedLeafs = input.map((i) =>
-    hashLeafNode(
-      i.address,
-      ethers.utils.parseUnits(i.maxClaimable, tokenDecimals),
-    ),
+    hashLeafNode(i.address, utils.parseUnits(i.maxClaimable, tokenDecimals)),
   );
-  const tree = new MerkleTree(hashedLeafs, keccak256, {
+  const tree = new MerkleTree(hashedLeafs, utils.keccak256, {
     sort: true,
   });
 
@@ -71,7 +68,7 @@ export function hashLeafNode(
   address: string,
   maxClaimableAmount: BigNumberish,
 ): string {
-  return ethers.utils.solidityKeccak256(
+  return utils.solidityKeccak256(
     ["address", "uint256"],
     [address, BigNumber.from(maxClaimableAmount)],
   );

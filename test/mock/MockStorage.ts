@@ -1,6 +1,8 @@
 import { FileOrBuffer, JsonObject } from "../../src/core/types";
 import { v4 as uuidv4 } from "uuid";
-import { IStorage, NotFoundError, UploadMetadataBatchResult } from "../../src";
+import { IStorage, NotFoundError } from "../../src";
+import { UploadResult } from "../../src/core/interfaces/IStorageUpload";
+import { File } from "@web-std/file";
 
 export class MockStorage implements IStorage {
   private objects: { [key: string]: any } = {};
@@ -32,8 +34,9 @@ export class MockStorage implements IStorage {
     fileStartNumber?: number,
     _contractAddress?: string,
     _signerAddress?: string,
-  ): Promise<string> {
+  ): Promise<UploadResult> {
     const cid = uuidv4();
+    const uris: string[] = [];
     this.folders[cid] = {};
 
     let index = fileStartNumber ? fileStartNumber : 0;
@@ -53,11 +56,14 @@ export class MockStorage implements IStorage {
         continue;
       }
       this.folders[cid][index.toString()] = contents;
-
+      uris.push(`${cid}/${index}`);
       index += 1;
     }
 
-    return Promise.resolve(`mock://${cid}`);
+    return Promise.resolve({
+      baseUri: `mock://${cid}`,
+      uris,
+    });
   }
 
   public async getUploadToken(_contractAddress: string): Promise<string> {
@@ -98,13 +104,13 @@ export class MockStorage implements IStorage {
     _signerAddress?: string,
   ): Promise<string> {
     // since there's only single object, always use the first index
-    const { metadataUris } = await this.uploadMetadataBatch(
+    const { uris } = await this.uploadMetadataBatch(
       [metadata],
       0,
       contractAddress,
     );
 
-    return metadataUris[0];
+    return uris[0];
   }
 
   public async uploadMetadataBatch(
@@ -112,14 +118,14 @@ export class MockStorage implements IStorage {
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
-  ): Promise<UploadMetadataBatchResult> {
+  ): Promise<UploadResult> {
     await this.batchUploadProperties(metadatas);
 
     const metadataToUpload: string[] = metadatas.map((m: any) =>
       JSON.stringify(m),
     );
 
-    const cid = await this.uploadBatch(
+    const { baseUri: cid } = await this.uploadBatch(
       metadataToUpload,
       fileStartNumber,
       contractAddress,
@@ -127,7 +133,7 @@ export class MockStorage implements IStorage {
     );
     const baseUri = `${cid}/`;
     return {
-      metadataUris: metadataToUpload.map((_, i) => `${baseUri}${i}`),
+      uris: metadataToUpload.map((_, i) => `${baseUri}${i}`),
       baseUri,
     };
   }

@@ -1,15 +1,13 @@
+import { IStorage } from "../core/interfaces/IStorage";
 import type {
-  IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core";
-import {
-  Erc721BatchMintable,
-  Erc721Enumerable,
-  Erc721Mintable,
-  Erc721Supply,
-} from "../core/classes";
+} from "../core/types";
+import { Erc721BatchMintable } from "../core/classes/erc-721-batch-mintable";
+import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
+import { Erc721Mintable } from "../core/classes/erc-721-mintable";
+import { Erc721Supply } from "../core/classes/erc-721-supply";
 import { TokenErc721ContractSchema } from "../schema/contracts/token-erc721";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenERC721 } from "contracts";
@@ -39,9 +37,7 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * // You can switch out this provider with any wallet or provider setup you like.
- * const provider = ethers.Wallet.createRandom();
- * const sdk = new ThirdwebSDK(provider);
+ * const sdk = new ThirdwebSDK("rinkeby");
  * const contract = sdk.getNFTCollection("{{contract_address}}");
  * ```
  *
@@ -64,8 +60,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
   public encoder: ContractEncoder<TokenERC721>;
   public estimator: GasCostEstimator<TokenERC721>;
   public events: ContractEvents<TokenERC721>;
-  public primarySale: ContractPrimarySale<TokenERC721>;
-  public platformFee: ContractPlatformFee<TokenERC721>;
+  public sales: ContractPrimarySale<TokenERC721>;
+  public platformFees: ContractPlatformFee<TokenERC721>;
   /**
    * @internal
    */
@@ -76,18 +72,18 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * @example
    * ```javascript
    * // royalties on the whole contract
-   * contract.royalty.setDefaultRoyaltyInfo({
+   * contract.royalties.setDefaultRoyaltyInfo({
    *   seller_fee_basis_points: 100, // 1%
    *   fee_recipient: "0x..."
    * });
    * // override royalty for a particular token
-   * contract.royalty.setTokenRoyaltyInfo(tokenId, {
+   * contract.royalties.setTokenRoyaltyInfo(tokenId, {
    *   seller_fee_basis_points: 500, // 5%
    *   fee_recipient: "0x..."
    * });
    * ```
    */
-  public royalty: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;
+  public royalties: ContractRoyalty<TokenERC721, typeof NFTCollection.schema>;
   /**
    * Signature Minting
    * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
@@ -135,8 +131,8 @@ export class NFTCollection extends Erc721<TokenERC721> {
       this.contractWrapper,
       NFTCollection.contractRoles,
     );
-    this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    this.primarySale = new ContractPrimarySale(this.contractWrapper);
+    this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
+    this.sales = new ContractPrimarySale(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.signature = new Erc721SignatureMinting(
@@ -146,7 +142,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
     );
     this.analytics = new ContractAnalytics(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
-    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 

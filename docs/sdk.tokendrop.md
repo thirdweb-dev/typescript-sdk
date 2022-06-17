@@ -19,9 +19,7 @@ export declare class TokenDrop extends Erc20<DropERC20>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// You can switch out this provider with any wallet or provider setup you like.
-const provider = ethers.Wallet.createRandom();
-const sdk = new ThirdwebSDK(provider);
+const sdk = new ThirdwebSDK("rinkeby");
 const contract = sdk.getTokenDrop("{{contract_address}}");
 ```
 
@@ -42,7 +40,7 @@ const contract = sdk.getTokenDrop("{{contract_address}}");
 |  [encoder](./sdk.tokendrop.encoder.md) |  | [ContractEncoder](./sdk.contractencoder.md)<!-- -->&lt;DropERC20&gt; |  |
 |  [estimator](./sdk.tokendrop.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;DropERC20&gt; |  |
 |  [metadata](./sdk.tokendrop.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;DropERC20, typeof TokenDrop.schema&gt; |  |
-|  [platformFee](./sdk.tokendrop.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;DropERC20&gt; |  |
+|  [platformFees](./sdk.tokendrop.platformfees.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;DropERC20&gt; |  |
 |  [roles](./sdk.tokendrop.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;DropERC20, typeof [TokenDrop.contractRoles](./sdk.tokendrop.contractroles.md)<!-- -->\[number\]&gt; |  |
 |  [sales](./sdk.tokendrop.sales.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;DropERC20&gt; |  |
 

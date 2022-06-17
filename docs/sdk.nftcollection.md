@@ -19,9 +19,7 @@ export declare class NFTCollection extends Erc721<TokenERC721>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// You can switch out this provider with any wallet or provider setup you like.
-const provider = ethers.Wallet.createRandom();
-const sdk = new ThirdwebSDK(provider);
+const sdk = new ThirdwebSDK("rinkeby");
 const contract = sdk.getNFTCollection("{{contract_address}}");
 ```
 
@@ -42,10 +40,10 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 |  [estimator](./sdk.nftcollection.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TokenERC721&gt; |  |
 |  [events](./sdk.nftcollection.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;TokenERC721&gt; |  |
 |  [metadata](./sdk.nftcollection.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC721, typeof NFTCollection.schema&gt; |  |
-|  [platformFee](./sdk.nftcollection.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;TokenERC721&gt; |  |
-|  [primarySale](./sdk.nftcollection.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;TokenERC721&gt; |  |
+|  [platformFees](./sdk.nftcollection.platformfees.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;TokenERC721&gt; |  |
 |  [roles](./sdk.nftcollection.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC721, typeof [NFTCollection.contractRoles](./sdk.nftcollection.contractroles.md)<!-- -->\[number\]&gt; |  |
-|  [royalty](./sdk.nftcollection.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;TokenERC721, typeof NFTCollection.schema&gt; | Configure royalties |
+|  [royalties](./sdk.nftcollection.royalties.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;TokenERC721, typeof NFTCollection.schema&gt; | Configure royalties |
+|  [sales](./sdk.nftcollection.sales.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;TokenERC721&gt; |  |
 |  [signature](./sdk.nftcollection.signature.md) |  | [Erc721SignatureMinting](./sdk.erc721signatureminting.md) | Signature Minting |
 
 ## Methods

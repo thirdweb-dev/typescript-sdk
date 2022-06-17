@@ -270,7 +270,7 @@ export class ContractWrapper<
    * @internal
    */
   public async sendTransaction(
-    fn: keyof TContract["functions"],
+    fn: keyof TContract["functions"] | (string & {}),
     args: any[],
     callOverrides?: CallOverrides,
   ): Promise<providers.TransactionReceipt> {
@@ -333,7 +333,7 @@ export class ContractWrapper<
       fn
     ];
     if (!func) {
-      throw new Error("invalid function");
+      throw new Error(`invalid function: "${fn.toString()}"`);
     }
     try {
       return await func(...args, callOverrides);

@@ -24,3 +24,15 @@ Promise&lt;[AuctionListing](./sdk.auctionlisting.md) \| [DirectListing](./sdk.di
 
 either a direct or auction listing
 
+## Remarks
+
+Get a listing by its listing id
+
+## Example
+
+
+```javascript
+const listingId = 0;
+const listing = await contract.getListing(listingId);
+```
+

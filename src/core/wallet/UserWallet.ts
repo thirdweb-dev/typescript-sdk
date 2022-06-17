@@ -120,29 +120,28 @@ export class UserWallet {
   async balance(
     currencyAddress = NATIVE_TOKEN_ADDRESS,
   ): Promise<CurrencyValue> {
+    const signer = this.connectedWallet();
+    invariant(signer, "Wallet not connected");
+    const provider = this.readOnlyProvider.getProvider();
     let balance: BigNumber;
     if (isNativeToken(currencyAddress)) {
-      balance = await this.connectedWallet().getBalance();
+      balance = await provider.getBalance(await this.getAddress());
     } else {
       balance = await this.createErc20(currencyAddress).readContract.balanceOf(
-        await this.address(),
+        await this.getAddress(),
       );
     }
-    return await fetchCurrencyValue(
-      this.readOnlyProvider.getProvider(),
-      currencyAddress,
-      balance,
-    );
+    return await fetchCurrencyValue(provider, currencyAddress, balance);
   }
 
   /**
    * Get the currently connected address
    * @example
    * ```javascript
-   * const address = await sdk.wallet.address();
+   * const address = await sdk.wallet.getAddress();
    * ```
    */
-  async address(): Promise<string> {
+  async getAddress(): Promise<string> {
     return await this.connectedWallet().getAddress();
   }
 

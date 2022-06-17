@@ -29,8 +29,8 @@ const balance = await sdk.wallet.balance();
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [address()](./sdk.userwallet.address.md) |  | Get the currently connected address |
 |  [balance(currencyAddress)](./sdk.userwallet.balance.md) |  | Fetch the native or ERC20 token balance of this wallet |
+|  [getAddress()](./sdk.userwallet.getaddress.md) |  | Get the currently connected address |
 |  [onNetworkUpdated(network)](./sdk.userwallet.onnetworkupdated.md) |  |  |
 |  [sendRawTransaction(transactionRequest)](./sdk.userwallet.sendrawtransaction.md) |  | Send a raw transaction to the blockchain from the connected wallet |
 |  [sign(message)](./sdk.userwallet.sign.md) |  | Sign any message with the connected wallet private key |

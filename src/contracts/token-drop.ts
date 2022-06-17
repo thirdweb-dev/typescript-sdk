@@ -1,23 +1,18 @@
 import { DropERC20 } from "contracts";
-import {
-  IStorage,
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-} from "../core";
+import { IStorage } from "../core/interfaces/IStorage";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { BigNumberish, BytesLike, constants, utils } from "ethers";
-import {
-  GasCostEstimator,
-  ContractEncoder,
-  ContractInterceptor,
-  ContractPlatformFee,
-  ContractPrimarySale,
-  ContractMetadata,
-  ContractRoles,
-  DropClaimConditions,
-  Erc20,
-} from "../core/classes";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { ContractPrimarySale } from "../core/classes/contract-sales";
+import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractRoles } from "../core/classes/contract-roles";
+import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
+import { Erc20 } from "../core/classes/erc-20";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { Amount, ClaimVerification, CurrencyValue } from "../types";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 
@@ -33,9 +28,7 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * // You can switch out this provider with any wallet or provider setup you like.
- * const provider = ethers.Wallet.createRandom();
- * const sdk = new ThirdwebSDK(provider);
+ * const sdk = new ThirdwebSDK("rinkeby");
  * const contract = sdk.getTokenDrop("{{contract_address}}");
  * ```
  *
@@ -57,7 +50,7 @@ export class TokenDrop extends Erc20<DropERC20> {
   public encoder: ContractEncoder<DropERC20>;
   public estimator: GasCostEstimator<DropERC20>;
   public sales: ContractPrimarySale<DropERC20>;
-  public platformFee: ContractPlatformFee<DropERC20>;
+  public platformFees: ContractPlatformFee<DropERC20>;
   /**
    * @internal
    */
@@ -115,7 +108,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.sales = new ContractPrimarySale(this.contractWrapper);
-    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.analytics = new ContractAnalytics(this.contractWrapper);
     this.claimConditions = new DropClaimConditions<DropERC20>(

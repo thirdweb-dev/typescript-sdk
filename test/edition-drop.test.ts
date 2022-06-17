@@ -286,15 +286,15 @@ describe("Edition Drop Contract", async () => {
   });
 
   it("Platform fees", async () => {
-    const fees = await bdContract.platformFee.get();
+    const fees = await bdContract.platformFees.get();
     expect(fees.platform_fee_recipient).to.eq(adminWallet.address);
     expect(fees.platform_fee_basis_points).to.eq(10);
 
-    await bdContract.platformFee.set({
+    await bdContract.platformFees.set({
       platform_fee_recipient: samWallet.address,
       platform_fee_basis_points: 500,
     });
-    const fees2 = await bdContract.platformFee.get();
+    const fees2 = await bdContract.platformFees.get();
     expect(fees2.platform_fee_recipient).to.eq(samWallet.address);
     expect(fees2.platform_fee_basis_points).to.eq(500);
   });
@@ -374,6 +374,29 @@ describe("Edition Drop Contract", async () => {
       },
     ]);
     await bdContract.claim("0", 1);
+  });
+
+  it("should set multiple claim conditions at once", async () => {
+    await bdContract.createBatch([
+      {
+        name: "test1",
+        description: "test1",
+      },
+      {
+        name: "test2",
+        description: "test2",
+      },
+    ]);
+    await bdContract.claimConditions.setBatch(
+      [0, 1],
+      [
+        {
+          price: 1,
+        },
+      ],
+    );
+    await bdContract.claim("0", 1);
+    await bdContract.claim("1", 1);
   });
 
   describe("eligibility", () => {

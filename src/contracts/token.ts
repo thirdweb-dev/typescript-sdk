@@ -10,14 +10,12 @@ import {
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenMintInput } from "../schema/tokens/token";
-import {
-  GasCostEstimator,
-  ContractInterceptor,
-  ContractEncoder,
-  ContractEvents,
-  ContractPlatformFee,
-  Erc20,
-} from "../core/classes";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractEncoder } from "../core/classes/contract-encoder";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
+import { Erc20 } from "../core/classes/erc-20";
 import { Amount, CurrencyValue } from "../types";
 import { TokenERC20History } from "../core/classes/erc-20-history";
 import { Erc20SignatureMinting } from "../core/classes/erc-20-signature-minting";
@@ -35,9 +33,7 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * // You can switch out this provider with any wallet or provider setup you like.
- * const provider = ethers.Wallet.createRandom();
- * const sdk = new ThirdwebSDK(provider);
+ * const sdk = new ThirdwebSDK("rinkeby");
  * const contract = sdk.getToken("{{contract_address}}");
  * ```
  *
@@ -61,7 +57,7 @@ export class Token extends Erc20<TokenERC20> {
   public estimator: GasCostEstimator<TokenERC20>;
   public history: TokenERC20History;
   public events: ContractEvents<TokenERC20>;
-  public platformFee: ContractPlatformFee<TokenERC20>;
+  public platformFees: ContractPlatformFee<TokenERC20>;
   /**
    * @internal
    */
@@ -109,7 +105,7 @@ export class Token extends Erc20<TokenERC20> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
-    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.signature = new Erc20SignatureMinting(
       this.contractWrapper,

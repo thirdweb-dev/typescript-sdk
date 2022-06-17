@@ -1,31 +1,55 @@
 import { IStorage } from "../interfaces/IStorage";
 import { ContractMetadata } from "./contract-metadata";
-import { DropERC20, DropERC721, IERC20, IERC20Metadata } from "contracts";
-import { BigNumber, constants, ethers } from "ethers";
+import {
+  DropERC20,
+  DropERC721,
+  IERC20,
+  IERC20Metadata,
+  ContractMetadata as ContractMetadataContract,
+} from "contracts";
+import {
+  BigNumber,
+  BigNumberish,
+  BytesLike,
+  constants,
+  ethers,
+  utils,
+} from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
-import { Amount, ClaimCondition, ClaimConditionInput } from "../../types";
-import deepEqual from "deep-equal";
+import {
+  Amount,
+  ClaimCondition,
+  ClaimConditionInput,
+  ClaimVerification,
+} from "../../types";
 import { ClaimEligibility } from "../../enums";
 import { TransactionResult } from "../types";
 import {
   getClaimerProofs,
+  prepareClaim,
   processClaimConditionInputs,
   transformResultToClaimCondition,
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
-
-import { isBrowser } from "../../common/utils";
-import { detectContractFeature } from "../../common/feature-detection";
+import {
+  detectContractFeature,
+  hasFunction,
+} from "../../common/feature-detection";
 import { PriceSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
 import ERC20Abi from "../../../abis/IERC20.json";
+import { isNode } from "../../common/utils";
+import deepEqual from "fast-deep-equal";
+import { BaseClaimConditionERC721 } from "../../types/eips";
 
 /**
  * Manages claim conditions for NFT Drop contracts
  * @public
  */
-export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
+export class DropClaimConditions<
+  TContract extends DropERC721 | DropERC20 | BaseClaimConditionERC721,
+> {
   private contractWrapper;
   private metadata;
   private storage: IStorage;
@@ -112,9 +136,6 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     quantity: Amount,
     addressToCheck?: string,
   ): Promise<boolean> {
-    if (addressToCheck === undefined) {
-      addressToCheck = await this.contractWrapper.getSignerAddress();
-    }
     // TODO switch to use verifyClaim
     return (
       (await this.getClaimIneligibilityReasons(quantity, addressToCheck))
@@ -146,7 +167,16 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     );
 
     if (addressToCheck === undefined) {
-      addressToCheck = await this.contractWrapper.getSignerAddress();
+      try {
+        addressToCheck = await this.contractWrapper.getSignerAddress();
+      } catch (err) {
+        console.warn("failed to get signer address", err);
+      }
+    }
+
+    // if we have been unable to get a signer address, we can't check eligibility, so return a NoWallet error reason
+    if (!addressToCheck) {
+      return [ClaimEligibility.NoWallet];
     }
 
     try {
@@ -191,15 +221,37 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
         metadata.merkle,
         this.storage,
       );
+
       try {
-        const [validMerkleProof] =
-          await this.contractWrapper.readContract.verifyClaimMerkleProof(
+        let validMerkleProof;
+        if (
+          hasFunction<DropERC721 | DropERC20>(
+            "contractType",
+            this.contractWrapper,
+          )
+        ) {
+          [validMerkleProof] =
+            await this.contractWrapper.readContract.verifyClaimMerkleProof(
+              activeConditionIndex,
+              addressToCheck,
+              quantity,
+              proofs.proof,
+              proofs.maxClaimable,
+            );
+        } else {
+          const wrapper = this.contractWrapper
+            .readContract as BaseClaimConditionERC721;
+          [validMerkleProof] = await wrapper.verifyClaimMerkleProof(
             activeConditionIndex,
             addressToCheck,
             quantity,
-            proofs.proof,
-            proofs.maxClaimable,
+            {
+              proof: proofs.proof,
+              maxQuantityInAllowlist: proofs.maxClaimable,
+            },
           );
+        }
+
         if (!validMerkleProof) {
           reasons.push(ClaimEligibility.AddressNotAllowed);
           return reasons;
@@ -230,7 +282,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
 
     // if not within a browser conetext, check for wallet balance.
     // In browser context, let the wallet do that job
-    if (claimCondition.price.gt(0) && !isBrowser()) {
+    if (claimCondition.price.gt(0) && isNode()) {
       const totalPrice = claimCondition.price.mul(BigNumber.from(quantity));
       const provider = this.contractWrapper.getProvider();
       if (isNativeToken(claimCondition.currencyAddress)) {
@@ -317,12 +369,24 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
       const contractURI = await this.metadata._parseAndUploadMetadata(
         mergedMetadata,
       );
-      encoded.push(
-        this.contractWrapper.readContract.interface.encodeFunctionData(
+
+      if (
+        hasFunction<ContractMetadataContract>(
           "setContractURI",
-          [contractURI],
-        ),
-      );
+          this.contractWrapper,
+        )
+      ) {
+        encoded.push(
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "setContractURI",
+            [contractURI],
+          ),
+        );
+      } else {
+        throw new Error(
+          "Setting a merkle root requires implementing ContractMetadata in your contract to support storing a merkle root.",
+        );
+      }
     }
 
     encoded.push(
@@ -366,5 +430,26 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20> {
     } else {
       return Promise.resolve(0);
     }
+  }
+
+  /**
+   * Returns proofs and the overrides required for the transaction.
+   *
+   * @returns - `overrides` and `proofs` as an object.
+   * @internal
+   */
+  public async prepareClaim(
+    quantity: BigNumberish,
+    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+  ): Promise<ClaimVerification> {
+    return prepareClaim(
+      quantity,
+      await this.getActive(),
+      (await this.metadata.get()).merkle,
+      0,
+      this.contractWrapper,
+      this.storage,
+      proofs,
+    );
   }
 }

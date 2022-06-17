@@ -19,9 +19,7 @@ export declare class Edition extends Erc1155<TokenERC1155>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// You can switch out this provider with any wallet or provider setup you like.
-const provider = ethers.Wallet.createRandom();
-const sdk = new ThirdwebSDK(provider);
+const sdk = new ThirdwebSDK("rinkeby");
 const contract = sdk.getEdition("{{contract_address}}");
 ```
 
@@ -42,10 +40,10 @@ const contract = sdk.getEdition("{{contract_address}}");
 |  [estimator](./sdk.edition.estimator.md) |  | [GasCostEstimator](./sdk.gascostestimator.md)<!-- -->&lt;TokenERC1155&gt; |  |
 |  [events](./sdk.edition.events.md) |  | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;TokenERC1155&gt; |  |
 |  [metadata](./sdk.edition.metadata.md) |  | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TokenERC1155, typeof Edition.schema&gt; |  |
-|  [platformFee](./sdk.edition.platformfee.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;TokenERC1155&gt; |  |
-|  [primarySale](./sdk.edition.primarysale.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;TokenERC1155&gt; |  |
+|  [platformFees](./sdk.edition.platformfees.md) |  | [ContractPlatformFee](./sdk.contractplatformfee.md)<!-- -->&lt;TokenERC1155&gt; |  |
 |  [roles](./sdk.edition.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC1155, typeof [Edition.contractRoles](./sdk.edition.contractroles.md)<!-- -->\[number\]&gt; |  |
-|  [royalty](./sdk.edition.royalty.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;TokenERC1155, typeof Edition.schema&gt; | Configure royalties |
+|  [royalties](./sdk.edition.royalties.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;TokenERC1155, typeof Edition.schema&gt; | Configure royalties |
+|  [sales](./sdk.edition.sales.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;TokenERC1155&gt; |  |
 |  [signature](./sdk.edition.signature.md) |  | [Erc1155SignatureMinting](./sdk.erc1155signatureminting.md) | Signature Minting |
 
 ## Methods

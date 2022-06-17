@@ -1,10 +1,13 @@
-import { BaseContract, utils } from "ethers";
+import { BaseContract, ethers } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core";
 import {
   AbiFunction,
   AbiSchema,
-  CustomContractMetadataSchema,
+  AbiTypeSchema,
+  ContractSource,
+  PreDeployMetadata,
+  PreDeployMetadataFetched,
   PublishedMetadata,
 } from "../schema/contracts/custom";
 import { z } from "zod";
@@ -14,53 +17,30 @@ import {
   FeatureWithEnabled,
   SUPPORTED_FEATURES,
 } from "../constants/contract-features";
-
-/**
- * Type guards a contract to a known type if it matches the corresponding interface
- * @internal
- * @param contractWrapper
- * @param interfaceToMatch
- */
-export function implementsInterface<C extends BaseContract>(
-  contractWrapper: ContractWrapper<BaseContract>,
-  interfaceToMatch: utils.Interface,
-): contractWrapper is ContractWrapper<C> {
-  return matchesInterface(contractWrapper.readContract, interfaceToMatch);
-}
-
-/**
- * Checks the intersection of the 'functions' objects of a given contract and interface
- * @internal
- * @param contract
- * @param interfaceToMatch
- */
-function matchesInterface(
-  contract: BaseContract,
-  interfaceToMatch: utils.Interface,
-) {
-  // returns true if all the functions in `interfaceToMatch` are found in `contract`
-  const contractFn = contract.interface.functions;
-  const interfaceFn = interfaceToMatch.functions;
-  return (
-    Object.keys(contractFn).filter((k) => k in interfaceFn).length ===
-    Object.keys(interfaceFn).length
-  );
-}
+import { decodeFirstSync } from "cbor";
+import { toB58String } from "multihashes";
 
 /**
  * @internal
  * @param abi
- * @param interfaceAbis
+ * @param feature
  */
 function matchesAbiInterface(
   abi: z.input<typeof AbiSchema>,
-  interfaceAbis: readonly z.input<typeof AbiSchema>[],
+  feature: Feature,
 ): boolean {
-  // returns true if all the functions in `interfaceToMatch` are found in `contract`
-  const contractFn = extractFunctionsFromAbi(abi).map((f) => f.name);
-  const interfaceFn = interfaceAbis
-    .flatMap((i) => extractFunctionsFromAbi(i))
-    .map((f) => f.name);
+  // returns true if all the functions in `interfaceToMatch` are found in `contract` (removing any duplicates)
+  const contractFn = [
+    ...new Set(extractFunctionsFromAbi(abi).map((f) => f.name)),
+  ];
+  const interfaceFn = [
+    ...new Set(
+      feature.abis
+        .flatMap((i) => extractFunctionsFromAbi(i))
+        .map((f) => f.name),
+    ),
+  ];
+
   return (
     contractFn.filter((k) => interfaceFn.includes(k)).length ===
     interfaceFn.length
@@ -71,32 +51,24 @@ function matchesAbiInterface(
  * @internal
  */
 export async function extractConstructorParams(
-  metadataUri: string,
+  predeployMetadataUri: string,
   storage: IStorage,
 ) {
-  const metadata = CustomContractMetadataSchema.parse(
-    await storage.get(metadataUri),
-  );
-  const abiRaw = await storage.get(metadata.abiUri);
-  const abi = AbiSchema.parse(abiRaw);
-  return extractConstructorParamsFromAbi(abi);
+  const meta = await fetchPreDeployMetadata(predeployMetadataUri, storage);
+  return extractConstructorParamsFromAbi(meta.abi);
 }
 
 /**
  * @internal
- * @param metadataUri
+ * @param predeployUri
  * @param storage
  */
 export async function extractFunctions(
-  metadataUri: string,
+  predeployMetadataUri: string,
   storage: IStorage,
 ): Promise<AbiFunction[]> {
-  const metadata = CustomContractMetadataSchema.parse(
-    await storage.get(metadataUri),
-  );
-  const abiRaw = await storage.get(metadata.abiUri);
-  const abi = AbiSchema.parse(abiRaw);
-  return extractFunctionsFromAbi(abi);
+  const metadata = await fetchPreDeployMetadata(predeployMetadataUri, storage);
+  return extractFunctionsFromAbi(metadata.abi);
 }
 
 /**
@@ -127,61 +99,253 @@ export function extractFunctionsFromAbi(
   const parsed = [];
   for (const f of functions) {
     const args =
-      f.inputs
-        ?.map((i) => `${i.name || "key"}: ${toJSType(i.type)}`)
-        ?.join(", ") || "";
-    const out = f.outputs?.map((o) => toJSType(o.type, true))?.join(", ");
-    const promise = out ? `: Promise<${out}>` : "";
-    const signature = `${f.name}(${args})${promise}`;
+      f.inputs?.map((i) => `${i.name || "key"}: ${toJSType(i)}`)?.join(", ") ||
+      "";
+    const fargs = args ? `, ${args}` : "";
+    const out = f.outputs?.map((o) => toJSType(o, true))?.join(", ");
+    const promise = out ? `: Promise<${out}>` : `: Promise<TransactionResult>`;
+    const signature = `contract.call("${f.name}"${fargs})${promise}`;
     parsed.push({
       inputs: f.inputs ?? [],
       outputs: f.outputs ?? [],
       name: f.name ?? "unknown",
       signature,
+      stateMutability: f.stateMutability ?? "",
     });
   }
   return parsed;
 }
 
-function toJSType(contractType: string, isReturnType = false): string {
-  let jsType = contractType;
-  if (contractType.startsWith("bytes")) {
+function toJSType(
+  contractType: z.input<typeof AbiTypeSchema>,
+  isReturnType = false,
+  withName = false,
+): string {
+  let jsType = contractType.type;
+  let isArray = false;
+  if (jsType.endsWith("[]")) {
+    isArray = true;
+    jsType = jsType.slice(0, -2);
+  }
+  if (jsType.startsWith("bytes")) {
     jsType = "BytesLike";
   }
-  if (contractType.startsWith("uint") || contractType.startsWith("int")) {
+  if (jsType.startsWith("uint") || jsType.startsWith("int")) {
     jsType = isReturnType ? "BigNumber" : "BigNumberish";
   }
-  if (contractType === "bool") {
+  if (jsType.startsWith("bool")) {
     jsType = "boolean";
   }
-  if (contractType === "address") {
+  if (jsType === "address") {
     jsType = "string";
   }
-  if (contractType.endsWith("[]")) {
+  if (jsType === "tuple") {
+    if (contractType.components) {
+      jsType = `{ ${contractType.components
+        .map((a) => toJSType(a, false, true))
+        .join(", ")} }`;
+    }
+  }
+  if (isArray) {
     jsType += "[]";
+  }
+  if (withName) {
+    jsType = `${contractType.name}: ${jsType}`;
   }
   return jsType;
 }
 
 /**
  * @internal
- * @param metadataUri
+ * @param address
+ * @param provider
+ */
+export async function resolveContractUriFromAddress(
+  address: string,
+  provider: ethers.providers.Provider,
+): Promise<string | undefined> {
+  const bytecode = await provider.getCode(address);
+  if (bytecode === "0x") {
+    const chain = await provider.getNetwork();
+    throw new Error(
+      `Contract at ${address} does not exist on chain '${chain.name}' (chainId: ${chain.chainId})`,
+    );
+  }
+  return extractIPFSHashFromBytecode(bytecode);
+}
+
+/**
+ * @internal
+ * @param bytecode
+ */
+function extractIPFSHashFromBytecode(bytecode: string): string | undefined {
+  try {
+    const numericBytecode = hexToBytes(bytecode);
+
+    const cborLength: number =
+      numericBytecode[numericBytecode.length - 2] * 0x100 +
+      numericBytecode[numericBytecode.length - 1];
+    const bytecodeBuffer = Buffer.from(
+      numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
+    );
+
+    const cborData = decodeFirstSync(bytecodeBuffer);
+    if (cborData["ipfs"]) {
+      return `ipfs://${toB58String(cborData["ipfs"])}`;
+    }
+  } catch (e) {
+    console.error("failed to extract ipfs hash from bytecode", e);
+  }
+  return undefined;
+}
+
+/**
+ * @internal
+ * @param hex
+ */
+function hexToBytes(hex: string | number) {
+  hex = hex.toString(16);
+  if (!hex.startsWith("0x")) {
+    hex = `0x${hex}`;
+  }
+  if (!isHexStrict(hex)) {
+    throw new Error(`Given value "${hex}" is not a valid hex string.`);
+  }
+  hex = hex.replace(/^0x/i, "");
+  const bytes = [];
+  for (let c = 0; c < hex.length; c += 2) {
+    bytes.push(parseInt(hex.slice(c, c + 2), 16));
+  }
+  return bytes;
+}
+
+/**
+ * @internal
+ * @param hex
+ */
+function isHexStrict(hex: string | number) {
+  return (
+    (typeof hex === "string" || typeof hex === "number") &&
+    /^(-)?0x[0-9a-f]*$/i.test(hex.toString())
+  );
+}
+
+/**
+ * @internal
+ * @param address
+ * @param provider
  * @param storage
  */
-export async function fetchContractMetadata(
-  metadataUri: string,
+export async function fetchContractMetadataFromAddress(
+  address: string,
+  provider: ethers.providers.Provider,
+  storage: IStorage,
+) {
+  const compilerMetadataUri = await resolveContractUriFromAddress(
+    address,
+    provider,
+  );
+  if (!compilerMetadataUri) {
+    throw new Error(`Could not resolve metadata for contract at ${address}`);
+  }
+  return await fetchContractMetadata(compilerMetadataUri, storage);
+}
+
+/**
+ * @internal
+ * @param compilerMetadataUri
+ * @param storage
+ */
+async function fetchContractMetadata(
+  compilerMetadataUri: string,
   storage: IStorage,
 ): Promise<PublishedMetadata> {
-  const metadata = CustomContractMetadataSchema.parse(
-    await storage.get(metadataUri),
-  );
-  const abi = AbiSchema.parse(await storage.get(metadata.abiUri));
-  const bytecode = await storage.getRaw(metadata.bytecodeUri);
+  const metadata = await storage.get(compilerMetadataUri);
+  const abi = AbiSchema.parse(metadata.output.abi);
+  const compilationTarget = metadata.settings.compilationTarget;
+  const targets = Object.keys(compilationTarget);
+  const name = compilationTarget[targets[0]];
   return {
-    name: metadata.name,
+    name,
     abi,
-    bytecode,
+    metadata,
   };
+}
+
+/**
+ * @internal
+ * @param publishedMetadata
+ * @param storage
+ */
+export async function fetchSourceFilesFromMetadata(
+  publishedMetadata: PublishedMetadata,
+  storage: IStorage,
+): Promise<ContractSource[]> {
+  return await Promise.all(
+    Object.entries(publishedMetadata.metadata.sources).map(
+      async ([path, info]) => {
+        const urls = (info as any).urls as string[];
+        const ipfsLink = urls.find((url) => url.includes("ipfs"));
+        if (ipfsLink) {
+          const ipfsHash = ipfsLink.split("ipfs/")[1];
+          // 5 sec timeout for sources that haven't been uploaded to ipfs
+          const timeout = new Promise<string>((_r, rej) =>
+            setTimeout(() => rej("timeout"), 5000),
+          );
+          const source = await Promise.race([
+            storage.getRaw(`ipfs://${ipfsHash}`),
+            timeout,
+          ]);
+          return {
+            filename: path,
+            source,
+          };
+        } else {
+          return {
+            filename: path,
+            source: "Could not find source for this contract",
+          };
+        }
+      },
+    ),
+  );
+}
+
+/**
+ * @internal
+ * @param publishMetadataUri
+ * @param storage
+ */
+export async function fetchPreDeployMetadata(
+  publishMetadataUri: string,
+  storage: IStorage,
+): Promise<PreDeployMetadataFetched> {
+  const pubMeta = PreDeployMetadata.parse(
+    await storage.get(publishMetadataUri),
+  );
+  const deployBytecode = await storage.getRaw(pubMeta.bytecodeUri);
+  const parsedMeta = await fetchContractMetadata(pubMeta.metadataUri, storage);
+  return {
+    name: parsedMeta.name,
+    abi: parsedMeta.abi,
+    bytecode: deployBytecode,
+  };
+}
+
+/**
+ * @internal
+ * @param bytecode
+ * @param storage
+ */
+export async function fetchContractMetadataFromBytecode(
+  bytecode: string,
+  storage: IStorage,
+) {
+  const metadataUri = extractIPFSHashFromBytecode(bytecode);
+  if (!metadataUri) {
+    throw new Error("No metadata found in bytecode");
+  }
+  return await fetchContractMetadata(metadataUri, storage);
 }
 
 /**
@@ -198,7 +362,7 @@ export function detectFeatures(
   const results: Record<string, FeatureWithEnabled> = {};
   for (const featureKey in features) {
     const feature = features[featureKey];
-    const enabled = matchesAbiInterface(abi, feature.abis);
+    const enabled = matchesAbiInterface(abi, feature);
     const childResults = detectFeatures(abi, feature.features);
     results[featureKey] = {
       ...feature,
@@ -263,4 +427,16 @@ function _featureEnabled(
   }
   const feature = features[featureName];
   return feature.enabled;
+}
+
+/**
+ * @internal
+ * @param contractWrapper
+ * @param functionName
+ */
+export function hasFunction<TContract extends BaseContract>(
+  functionName: string,
+  contractWrapper: ContractWrapper<any>,
+): contractWrapper is ContractWrapper<TContract> {
+  return functionName in contractWrapper.readContract.functions;
 }

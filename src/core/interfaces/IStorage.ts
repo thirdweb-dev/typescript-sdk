@@ -1,28 +1,12 @@
+import { UploadProgressEvent } from "../../types/events";
 import { FileOrBuffer, JsonObject } from "../types";
+import { UploadResult } from "./IStorageUpload";
 
 /**
- * @internal
- */
-export interface UploadMetadataBatchResult {
-  // base cid of the directory
-  baseUri: string;
-
-  // path to each of the file within the directory, included full cid path
-  metadataUris: string[];
-}
-
-/**
+ * Interface for any storage provider
  * @public
  */
 export interface IStorage {
-  /**
-   * Fetches a one-time-use upload token that can used to upload
-   * a file to storage.
-   *
-   * @returns - The one time use token that can be passed to the Pinata API.
-   */
-  getUploadToken(contractAddress: string): Promise<string>;
-
   /**
    * Fetches data from storage. This method expects to fetch JSON formatted data
    *
@@ -45,13 +29,16 @@ export interface IStorage {
    * @param data - The data to be uploaded. Can be a file/buffer (which will be loaded), or a string.
    * @param contractAddress - Optional. The contract address the data belongs to.
    * @param signerAddress - Optional. The address of the signer.
-   *
+   * @param options - Optional. Upload progress callback.
    * @returns - The hash of the uploaded data.
    */
   upload(
     data: string | FileOrBuffer,
     contractAddress?: string,
     signerAddress?: string,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<string>;
 
   /**
@@ -61,7 +48,7 @@ export interface IStorage {
    * @param fileStartNumber - Optional. The first file file name begins with.
    * @param contractAddress - Optional. The contract address the data belongs to.
    * @param signerAddress - Optional. The address of the signer.
-   *
+   * @param options - Optional. Upload progress callback.
    * @returns - The CID of the uploaded folder.
    */
   uploadBatch(
@@ -69,7 +56,10 @@ export interface IStorage {
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
-  ): Promise<string>;
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
+  ): Promise<UploadResult>;
 
   /**
    *
@@ -78,27 +68,35 @@ export interface IStorage {
    * @param metadata - The metadata to be uploaded.
    * @param contractAddress - Optional. The contract address the data belongs to.
    * @param signerAddress - Optional. The address of the signer.
+   * @param options - Optional. Upload progress callback.
    */
 
   uploadMetadata(
     metadata: JsonObject,
     contractAddress?: string,
     signerAddress?: string,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<string>;
 
   /**
    *
    * Uploads JSON metadata to IPFS
    *
-   * @param metadata - The metadata to be uploaded.
+   * @param metadatas - The metadata to be uploaded.
    * @param fileStartNumber - Optional. The first file file name begins with.
    * @param contractAddress - Optional. The contract address the data belongs to.
    * @param signerAddress - Optional. The address of the signer.
+   * @param options - Optional. Upload progress callback.
    */
   uploadMetadataBatch(
     metadatas: JsonObject[],
     fileStartNumber?: number,
     contractAddress?: string,
     signerAddress?: string,
-  ): Promise<UploadMetadataBatchResult>;
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
+  ): Promise<UploadResult>;
 }

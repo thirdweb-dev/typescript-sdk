@@ -55,21 +55,34 @@ export const CustomContractSchema = {
 /**
  * @internal
  */
-export const CustomContractMetadataSchema = z.object({
+export const PreDeployMetadata = z.object({
   name: z.string(),
-  abiUri: z.string(),
+  metadataUri: z.string(),
   bytecodeUri: z.string(),
 });
+export type PreDeployMetadataFetched = {
+  name: string;
+  abi: z.infer<typeof AbiSchema>;
+  bytecode: string;
+};
 
 /**
  * @internal
  */
-export const AbiTypeSchema = z
+const AbiTypeBaseSchema = z
   .object({
     type: z.string(),
     name: z.string(),
   })
   .catchall(z.any());
+
+/**
+ * @internal
+ */
+export const AbiTypeSchema = AbiTypeBaseSchema.extend({
+  stateMutability: z.string().optional(),
+  components: z.array(AbiTypeBaseSchema).optional(),
+}).catchall(z.any());
 
 /**
  * @internal
@@ -104,9 +117,14 @@ export type AbiFunction = {
   inputs: z.infer<typeof AbiTypeSchema>[];
   outputs: z.infer<typeof AbiTypeSchema>[];
   signature: string;
+  stateMutability: string;
+};
+export type ContractSource = {
+  filename: string;
+  source: string;
 };
 export type PublishedMetadata = {
   name: string;
   abi: z.infer<typeof AbiSchema>;
-  bytecode: string;
+  metadata: Record<string, any>;
 };

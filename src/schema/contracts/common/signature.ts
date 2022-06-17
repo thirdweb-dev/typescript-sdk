@@ -9,7 +9,7 @@ import {
 import { z } from "zod";
 import { NFTInputOrUriSchema } from "../../tokens/common";
 import { NATIVE_TOKEN_ADDRESS } from "../../../constants/currency";
-import { ethers, constants } from "ethers";
+import { constants } from "ethers";
 import { resolveOrGenerateId } from "../../../common/signature-minting";
 
 /**
@@ -67,15 +67,37 @@ export const Signature721PayloadOutput = Signature721PayloadInput.extend({
  */
 export const Signature1155PayloadInput = Signature721PayloadInput.extend({
   metadata: NFTInputOrUriSchema.default(""),
-  tokenId: BigNumberishSchema.default(ethers.constants.MaxUint256),
   quantity: BigNumberishSchema,
 });
 
 /**
  * @internal
  */
+export const Signature1155PayloadInputWithTokenId =
+  Signature1155PayloadInput.extend({
+    tokenId: BigNumberishSchema,
+  });
+
+/**
+ * @internal
+ */
 export const Signature1155PayloadOutput = Signature721PayloadOutput.extend({
   tokenId: BigNumberSchema,
+  quantity: BigNumberSchema,
+});
+
+/**
+ * @internal
+ */
+export const Signature721WithQuantityInput = Signature721PayloadInput.extend({
+  metadata: NFTInputOrUriSchema.default(""),
+  quantity: BigNumberishSchema,
+});
+
+/**
+ * @internal
+ */
+export const Signature721WithQuantityOutput = Signature721PayloadOutput.extend({
   quantity: BigNumberSchema,
 });
 
@@ -130,7 +152,25 @@ export type FilledSignaturePayload1155 = z.output<
 /**
  * @public
  */
+export type FilledSignaturePayload1155WithTokenId = z.output<
+  typeof Signature1155PayloadInputWithTokenId
+>;
+/**
+ * @public
+ */
+export type FilledSignature721WithQuantity = z.output<
+  typeof Signature721WithQuantityInput
+>;
+/**
+ * @public
+ */
 export type PayloadWithUri1155 = z.output<typeof Signature1155PayloadOutput>;
+/**
+ * @public
+ */
+export type PayloadWithUri721withQuantity = z.output<
+  typeof Signature721WithQuantityOutput
+>;
 /**
  * @public
  */
@@ -138,8 +178,28 @@ export type PayloadToSign1155 = z.input<typeof Signature1155PayloadInput>;
 /**
  * @public
  */
+export type PayloadToSign1155WithTokenId = z.input<
+  typeof Signature1155PayloadInputWithTokenId
+>;
+/**
+ * @public
+ */
+export type PayloadToSign721withQuantity = z.input<
+  typeof Signature721WithQuantityInput
+>;
+/**
+ * @public
+ */
 export type SignedPayload1155 = {
   payload: PayloadWithUri1155;
+  signature: string;
+};
+
+/**
+ * @public
+ */
+export type SignedPayload721WithQuantitySignature = {
+  payload: PayloadWithUri721withQuantity;
   signature: string;
 };
 
@@ -173,6 +233,20 @@ export const MintRequest1155 = [
   { name: "royaltyBps", type: "uint256" },
   { name: "primarySaleRecipient", type: "address" },
   { name: "tokenId", type: "uint256" },
+  { name: "uri", type: "string" },
+  { name: "quantity", type: "uint256" },
+  { name: "pricePerToken", type: "uint256" },
+  { name: "currency", type: "address" },
+  { name: "validityStartTimestamp", type: "uint128" },
+  { name: "validityEndTimestamp", type: "uint128" },
+  { name: "uid", type: "bytes32" },
+];
+
+export const MintRequest721withQuantity = [
+  { name: "to", type: "address" },
+  { name: "royaltyRecipient", type: "address" },
+  { name: "royaltyBps", type: "uint256" },
+  { name: "primarySaleRecipient", type: "address" },
   { name: "uri", type: "string" },
   { name: "quantity", type: "uint256" },
   { name: "pricePerToken", type: "uint256" },

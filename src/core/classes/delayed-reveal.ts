@@ -1,25 +1,44 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721 } from "contracts";
+import { DropERC721, SignatureDrop } from "contracts";
 import {
   CommonNFTInput,
   NFTMetadata,
   NFTMetadataInput,
 } from "../../schema/tokens/common";
-import { IStorage, TransactionResult, TransactionResultWithId } from "../index";
+import {
+  Erc721,
+  IStorage,
+  TransactionResult,
+  TransactionResultWithId,
+} from "../index";
 import { fetchTokenMetadata } from "../../common/nft";
 import { BatchToReveal } from "../../types/delayed-reveal";
 import { TokensLazyMintedEvent } from "contracts/DropERC721";
+import { UploadProgressEvent } from "../../types/events";
+import { BaseDelayedRevealERC721 } from "../../types/eips";
+import { hasFunction } from "../../common";
+import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
 
 /**
  * Handles delayed reveal logic
  * @public
  */
-export class DelayedReveal<T extends DropERC721> {
+export class DelayedReveal<
+  T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop,
+> {
+  featureName = FEATURE_NFT_REVEALABLE.name;
+
   private contractWrapper: ContractWrapper<T>;
   private storage: IStorage;
+  private erc721: Erc721;
 
-  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
+  constructor(
+    erc721: Erc721,
+    contractWrapper: ContractWrapper<T>,
+    storage: IStorage,
+  ) {
+    this.erc721 = erc721;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
   }
@@ -61,6 +80,9 @@ export class DelayedReveal<T extends DropERC721> {
     placeholder: NFTMetadataInput,
     metadatas: NFTMetadataInput[],
     password: string,
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<TransactionResultWithId[]> {
     if (!password) {
       throw new Error("Password is required");
@@ -73,14 +95,14 @@ export class DelayedReveal<T extends DropERC721> {
       await this.contractWrapper.getSigner()?.getAddress(),
     );
 
-    const startFileNumber =
-      await this.contractWrapper.readContract.nextTokenIdToMint();
+    const startFileNumber = await this.erc721.nextTokenIdToMint();
 
     const batch = await this.storage.uploadMetadataBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
+      options,
     );
 
     const baseUri = batch.baseUri;
@@ -94,7 +116,7 @@ export class DelayedReveal<T extends DropERC721> {
       );
 
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.metadataUris.length,
+      batch.uris.length,
       placeholderUri.endsWith("/") ? placeholderUri : `${placeholderUri}/`,
       encryptedBaseUri,
     ]);
@@ -164,9 +186,24 @@ export class DelayedReveal<T extends DropERC721> {
 
     // map over to get the base uri indices, which should be the end token id of every batch
     const uriIndices = await Promise.all(
-      countRangeArray.map((i) =>
-        this.contractWrapper.readContract.baseURIIndices(i),
-      ),
+      countRangeArray.map((i) => {
+        if (
+          hasFunction<BaseDelayedRevealERC721>(
+            "getBatchIdAtIndex",
+            this.contractWrapper,
+          )
+        ) {
+          return this.contractWrapper.readContract.getBatchIdAtIndex(i);
+        }
+
+        if (hasFunction<DropERC721>("baseURIIndices", this.contractWrapper)) {
+          return this.contractWrapper.readContract.baseURIIndices(i);
+        }
+
+        throw new Error(
+          "Contract does not have getBatchIdAtIndex or baseURIIndices.",
+        );
+      }),
     );
 
     // first batch always start from 0. don't need to fetch the last batch so pop it from the range array

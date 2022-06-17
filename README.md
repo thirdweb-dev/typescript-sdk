@@ -3,7 +3,7 @@
 <a href="https://thirdweb.com"><img src="https://github.com/thirdweb-dev/typescript-sdk/blob/main/logo.svg?raw=true" width="200" alt=""/></a>
 <br />
 </p>
-<h1 align="center">Thirdweb Typescript SDK</h1>
+<h1 align="center">thirdweb TypeScript SDK</h1>
 <p align="center">
 <a href="https://www.npmjs.com/package/@thirdweb-dev/sdk"><img src="https://img.shields.io/github/package-json/v/thirdweb-dev/typescript-sdk?color=red&label=npm&logo=npm" alt="npm version"/></a>
 <a href="https://github.com/thirdweb-dev/typescript-sdk/actions"><img alt="Build Status" src="https://github.com/thirdweb-dev/typescript-sdk/actions/workflows/tests.yml/badge.svg"/></a>
@@ -20,7 +20,9 @@ Install the latest version of the SDK with `npm`:
 ```shell
 npm install @thirdweb-dev/sdk ethers
 ```
+
 or with `yarn`:
+
 ```shell
 yarn add @thirdweb-dev/sdk ethers
 ```
@@ -34,17 +36,16 @@ yarn add @thirdweb-dev/sdk ethers
 
 ### 2. Reading data from your contracts
 
-Quickest way to get started is to use the SDK as read only (no transactions).
+The quickest way to get started is to use the SDK as read only (no transactions).
 This will allow you to query data from any contract with no additional setup.
 
-```typescript
-// my_script.ts
+```javascript title="my_script.js"
+// my_script.js
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// The RPC url determines which blockchain you want to connect to
-const rpcUrl = "https://polygon-rpc.com/";
-// instantiate the SDK as read only on a given blockchain
-const sdk = new ThirdwebSDK(rpcUrl);
+// instantiate the SDK in read-only mode (our example is running on `polygon` here)
+// all major chains and testnets are supported (e.g. `mainnet`, `rinkeby`, `goerli`, 'polygon', 'mumbai', etc.)
+const sdk = new ThirdwebSDK("polygon");
 
 // access your deployed contracts
 const nftDrop = sdk.getNFTDrop("0x...");
@@ -56,8 +57,9 @@ const listings = await marketplace.getActiveListings();
 ```
 
 You can execute this code as a node script by executing:
+
 ```shell
-npx ts-node my_script.ts
+node my_script.js
 ```
 
 ### 3. Executing transactions on your contracts
@@ -68,30 +70,24 @@ This can be done two ways:
 - Using your own private key (typically used in the backend or scripts)
 - By connecting to a user wallet (typically used in the frontend)
 
-### Backend / Scripting usage
+#### 3.1 Backend / Scripting usage
 
 Here's how to provide your own private key to the SDK to perform transactions with your account from scripts or from a node.js backend:
 
-```typescript
-// my_script.ts
+```javascript title="my_script.js"
+// my_script.js
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// still need an RPC url to determine which blochain to connect to
-const rpcUrl = "https://polygon-rpc.com/";
 // load your private key in a secure way (env variable, never commited to git)
-const privateKey = process.env.PRIVATE_KEY as string;
-// instantiate the SDK with your own wallet (or any valid Signer)
-const sdk = new ThirdwebSDK(
-    new Wallet(
-        privateKey,
-        ethers.getDefaultProvider(rpcUrl)
-    )
-);
+const privateKey = process.env.PRIVATE_KEY;
+// instantiate the SDK based on your private key, with the desired chain to connect to
+const sdk = ThirdwebSDK.fromPrivateKey(privateKey, "polygon");
 
 // deploy contracts
 const deployedAddress = sdk.deployer.deployNFTCollection({
-    name: "My NFT Collection",
-})
+  name: "My NFT Collection",
+  primary_sale_recipient: "0x...",
+});
 
 // access your deployed contracts
 const nftCollection = sdk.getNFTCollection(deployedAddress);
@@ -99,39 +95,53 @@ const nftCollection = sdk.getNFTCollection(deployedAddress);
 // Execute transactions on your contracts from the connected wallet
 const walletAddress = "0x...";
 await nftCollection.mintTo(walletAddress, {
-    name: "Cool NFT",
-    description: "Minted NFT from code!",
-    image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
+  name: "Cool NFT",
+  description: "Minted NFT from code!",
+  image: fs.readFileSync("path/to/image.png"), // This can be an image url or file
 });
 ```
 
-### Frontend usage
+You can execute this code as a node script by executing:
+
+```shell
+node my_script.js
+```
+
+#### 3.2 Frontend usage
 
 For frontend applications, head over to our [React Github repo](https://github.com/thirdweb-dev/react) which shows you how to connect to a user's wallet like Metamask, and automatically instantiate the thirdweb SDK for you.
 
 Easiest way to get started on the frontend is using one of our templates in the [thirdweb examples repo](https://github.com/thirdweb-example).
 
-### API Reference & code examples
+## API Reference & code examples
 
 - [Step by step guides and recipes](https://portal.thirdweb.com)
 - [Full Api Reference and code examples](https://docs.thirdweb.com/typescript)
-- 
-### Build from source
+
+## Build from source
 
 To build the project:
 
-```bash
+```shell
 yarn install
 yarn build
 ```
 
 After building, to run the tests (requires a local hardhat node running):
 
-```bash
+```shell
 yarn test:all
-``````
+```
 
-### Get in touch
+OR
+
+If you have make and docker installed you can simply run
+
+```shell
+make test
+```
+
+## Get in touch
 
 - [Discord](https://discord.gg/thirdweb)
 - [Twitter](https://twitter.com/thirdweb_/)

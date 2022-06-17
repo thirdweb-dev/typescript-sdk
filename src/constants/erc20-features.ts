@@ -31,7 +31,7 @@ export const FEATURE_TOKEN = {
   namespace: "token",
   docLinks: {
     sdk: "sdk.erc20",
-    contracts: "ERC20",
+    contracts: "IERC20",
   },
   abis: [ERC20Abi],
   features: {

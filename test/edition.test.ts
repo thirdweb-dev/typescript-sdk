@@ -8,7 +8,7 @@ import { ethers } from "ethers";
 
 global.fetch = require("cross-fetch");
 
-describe("Bundle Contract (aka Collection Contract)", async () => {
+describe("Edition Contract", async () => {
   let bundleContract: Edition;
   // let nftContract: NFTContract;
   // let currencyContract: CurrencyContract;
@@ -92,11 +92,11 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
     const uri = await storage.uploadMetadata({
       name: "Test1",
     });
-    await bundleContract.mintToSelf({
+    const tx = await bundleContract.mintToSelf({
       metadata: uri,
       supply: 10,
     });
-    const nft = await bundleContract.get("0");
+    const nft = await bundleContract.get(tx.id);
     assert.isNotNull(nft);
     assert.equal(nft.metadata.name, "Test1");
   });
@@ -203,14 +203,14 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
 
   // TODO: This test should move to the royalty suite
   it("updates the bps in both the metadata and on-chain", async () => {
-    const currentBps = (await bundleContract.royalty.getDefaultRoyaltyInfo())
+    const currentBps = (await bundleContract.royalties.getDefaultRoyaltyInfo())
       .seller_fee_basis_points;
     assert.equal(currentBps, 1000);
     const cMetadata = await bundleContract.metadata.get();
     assert.equal(cMetadata.seller_fee_basis_points, 1000);
 
     const testBPS = 100;
-    await bundleContract.royalty.setDefaultRoyaltyInfo({
+    await bundleContract.royalties.setDefaultRoyaltyInfo({
       seller_fee_basis_points: testBPS,
     });
     const newMetadata = await bundleContract.metadata.get();
@@ -221,7 +221,7 @@ describe("Bundle Contract (aka Collection Contract)", async () => {
       "Fetching the BPS from the metadata should return 100",
     );
     assert.equal(
-      (await bundleContract.royalty.getDefaultRoyaltyInfo())
+      (await bundleContract.royalties.getDefaultRoyaltyInfo())
         .seller_fee_basis_points,
       testBPS,
       "Fetching the BPS with the tx should return 100",

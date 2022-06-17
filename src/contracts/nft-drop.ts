@@ -1,12 +1,11 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import { DropERC721 } from "contracts";
 import {
   BigNumber,
   BigNumberish,
   BytesLike,
+  constants,
   ethers,
   utils,
-  constants,
 } from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
@@ -32,21 +31,21 @@ import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { DelayedReveal } from "../core/classes/delayed-reveal";
-import {
-  Erc721Enumerable,
-  Erc721Supply,
-  GasCostEstimator,
-} from "../core/classes";
+import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
+import { Erc721Supply } from "../core/classes/erc-721-supply";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ClaimVerification } from "../types";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { getRoleHash } from "../common";
 import {
+  DropERC721,
   TokensClaimedEvent,
   TokensLazyMintedEvent,
 } from "contracts/DropERC721";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { UploadProgressEvent } from "../types/events";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -56,9 +55,7 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * // You can switch out this provider with any wallet or provider setup you like.
- * const provider = ethers.Wallet.createRandom();
- * const sdk = new ThirdwebSDK(provider);
+ * const sdk = new ThirdwebSDK("rinkeby");
  * const contract = sdk.getNFTDrop("{{contract_address}}");
  * ```
  *
@@ -76,8 +73,8 @@ export class NFTDrop extends Erc721<DropERC721> {
   public encoder: ContractEncoder<DropERC721>;
   public estimator: GasCostEstimator<DropERC721>;
   public metadata: ContractMetadata<DropERC721, typeof NFTDrop.schema>;
-  public primarySale: ContractPrimarySale<DropERC721>;
-  public platformFee: ContractPlatformFee<DropERC721>;
+  public sales: ContractPrimarySale<DropERC721>;
+  public platformFees: ContractPlatformFee<DropERC721>;
   public events: ContractEvents<DropERC721>;
   public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
   /**
@@ -94,18 +91,18 @@ export class NFTDrop extends Erc721<DropERC721> {
    * @example
    * ```javascript
    * // royalties on the whole contract
-   * contract.royalty.setDefaultRoyaltyInfo({
+   * contract.royalties.setDefaultRoyaltyInfo({
    *   seller_fee_basis_points: 100, // 1%
    *   fee_recipient: "0x..."
    * });
    * // override royalty for a particular token
-   * contract.royalty.setTokenRoyaltyInfo(tokenId, {
+   * contract.royalties.setTokenRoyaltyInfo(tokenId, {
    *   seller_fee_basis_points: 500, // 5%
    *   fee_recipient: "0x..."
    * });
    * ```
    */
-  public royalty: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
+  public royalties: ContractRoyalty<DropERC721, typeof NFTDrop.schema>;
   /**
    * Configure claim conditions
    * @remarks Define who can claim NFTs in the collection, when and how many.
@@ -184,8 +181,8 @@ export class NFTDrop extends Erc721<DropERC721> {
       this.storage,
     );
     this.roles = new ContractRoles(this.contractWrapper, NFTDrop.contractRoles);
-    this.royalty = new ContractRoyalty(this.contractWrapper, this.metadata);
-    this.primarySale = new ContractPrimarySale(this.contractWrapper);
+    this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
+    this.sales = new ContractPrimarySale(this.contractWrapper);
     this.claimConditions = new DropClaimConditions(
       this.contractWrapper,
       this.metadata,
@@ -195,8 +192,9 @@ export class NFTDrop extends Erc721<DropERC721> {
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
-    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.revealer = new DelayedReveal<DropERC721>(
+      this,
       this.contractWrapper,
       this.storage,
     );
@@ -412,9 +410,13 @@ export class NFTDrop extends Erc721<DropERC721> {
    * ```
    *
    * @param metadatas - The metadata to include in the batch.
+   * @param options - optional upload progress callback
    */
   public async createBatch(
     metadatas: NFTMetadataInput[],
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
     const startFileNumber =
       await this.contractWrapper.readContract.nextTokenIdToMint();
@@ -423,10 +425,11 @@ export class NFTDrop extends Erc721<DropERC721> {
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
+      options,
     );
     const baseUri = batch.baseUri;
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.metadataUris.length,
+      batch.uris.length,
       baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
       ethers.utils.toUtf8Bytes(""),
     ]);

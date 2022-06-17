@@ -2,11 +2,11 @@ import { IStorage } from "../interfaces/IStorage";
 import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
 import { ContractMetadata } from "./contract-metadata";
 import { DropERC1155, IERC20, IERC20__factory } from "contracts";
-import { BigNumber, BigNumberish, ethers, constants } from "ethers";
+import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import { ClaimCondition, ClaimConditionInput } from "../../types";
-import deepEqual from "deep-equal";
+import deepEqual from "fast-deep-equal";
 import { ClaimEligibility } from "../../enums";
 import { TransactionResult } from "../index";
 import {
@@ -15,8 +15,8 @@ import {
   transformResultToClaimCondition,
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
-import { isBrowser } from "../../common/utils";
 import { includesErrorMessage } from "../../common";
+import { isNode } from "../../common/utils";
 
 /**
  * Manages claim conditions for Edition Drop contracts
@@ -115,9 +115,6 @@ export class DropErc1155ClaimConditions {
     quantity: BigNumberish,
     addressToCheck?: string,
   ): Promise<boolean> {
-    if (addressToCheck === undefined) {
-      addressToCheck = await this.contractWrapper.getSignerAddress();
-    }
     // TODO switch to use verifyClaim
     return (
       (
@@ -150,7 +147,16 @@ export class DropErc1155ClaimConditions {
     let claimCondition: ClaimCondition;
 
     if (addressToCheck === undefined) {
-      addressToCheck = await this.contractWrapper.getSignerAddress();
+      try {
+        addressToCheck = await this.contractWrapper.getSignerAddress();
+      } catch (err) {
+        console.warn("failed to get signer address", err);
+      }
+    }
+
+    // if we have been unable to get a signer address, we can't check eligibility, so return a NoWallet error reason
+    if (!addressToCheck) {
+      return [ClaimEligibility.NoWallet];
     }
 
     try {
@@ -231,7 +237,7 @@ export class DropErc1155ClaimConditions {
 
     // if not within a browser conetext, check for wallet balance.
     // In browser context, let the wallet do that job
-    if (claimCondition.price.gt(0) && !isBrowser()) {
+    if (claimCondition.price.gt(0) && isNode()) {
       const totalPrice = claimCondition.price.mul(quantity);
       const provider = this.contractWrapper.getProvider();
       if (isNativeToken(claimCondition.currencyAddress)) {
@@ -261,9 +267,9 @@ export class DropErc1155ClaimConditions {
    *****************************************/
 
   /**
-   * Set public mint conditions on a NFT
+   * Set claim conditions on a single NFT
    *
-   * @remarks Sets the public mint conditions that need to be fulfilled by users to claim a particular NFT in this bundle.
+   * @remarks Sets the public mint conditions that need to be fulfilled by users to claim a particular NFT in this contract.
    *
    * @example
    * ```javascript
@@ -295,6 +301,48 @@ export class DropErc1155ClaimConditions {
     claimConditionInputs: ClaimConditionInput[],
     resetClaimEligibilityForAll = false,
   ): Promise<TransactionResult> {
+    return this.setBatch(
+      [tokenId],
+      claimConditionInputs,
+      resetClaimEligibilityForAll,
+    );
+  }
+
+  /**
+   * Set claim conditions on multiple NFTs at once
+   *
+   * @remarks Sets the claim conditions that need to be fulfilled by users to claim the given NFTs in this contract.
+   *
+   * @example
+   * ```javascript
+   * const presaleStartTime = new Date();
+   * const publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
+   * const claimConditions = [
+   *   {
+   *     startTime: presaleStartTime, // start the presale now
+   *     maxQuantity: 2, // limit how many mints for this presale
+   *     price: 0.01, // presale price
+   *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+   *   },
+   *   {
+   *     startTime: publicSaleStartTime, // 24h after presale, start public sale
+   *     price: 0.08, // public sale price
+   *   }
+   * ]);
+   *
+   * const tokenIds = [0,1,2]; // the ids of the NFTs to set claim conditions on
+   * await dropContract.claimConditions.setBatch(tokenIds, claimConditions);
+   * ```
+   *
+   * @param tokenIds - the token ids to set the claim conditions on
+   * @param claimConditionInputs - The claim conditions
+   * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
+   */
+  public async setBatch(
+    tokenIds: BigNumberish[],
+    claimConditionInputs: ClaimConditionInput[],
+    resetClaimEligibilityForAll = false,
+  ) {
     // process inputs
     const { snapshotInfos, sortedConditions } =
       await processClaimConditionInputs(
@@ -334,13 +382,14 @@ export class DropErc1155ClaimConditions {
       );
     }
 
-    encoded.push(
-      this.contractWrapper.readContract.interface.encodeFunctionData(
-        "setClaimConditions",
-        [tokenId, sortedConditions, resetClaimEligibilityForAll],
-      ),
-    );
-
+    tokenIds.forEach((tokenId) => {
+      encoded.push(
+        this.contractWrapper.readContract.interface.encodeFunctionData(
+          "setClaimConditions",
+          [tokenId, sortedConditions, resetClaimEligibilityForAll],
+        ),
+      );
+    });
     return {
       receipt: await this.contractWrapper.multiCall(encoded),
     };

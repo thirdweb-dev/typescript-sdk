@@ -1,12 +1,12 @@
 import { IERC20, VoteERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { IStorage } from "../core/interfaces/IStorage";
 import {
-  ContractInterceptor,
-  IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
   TransactionResultWithId,
-} from "../core";
+} from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { VoteContractSchema } from "../schema/contracts/vote";
@@ -19,11 +19,10 @@ import {
 import { fetchCurrencyMetadata, fetchCurrencyValue } from "../common/currency";
 import { BigNumber, BigNumberish, Contract, ethers, Signer } from "ethers";
 import { VoteType } from "../enums";
-import deepEqual from "deep-equal";
 import { CurrencyValue } from "../types/currency";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import { GasCostEstimator } from "../core/classes";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ProposalCreatedEvent } from "contracts/VoteERC20";
 import ERC20Abi from "../../abis/IERC20.json";
@@ -37,9 +36,7 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * // You can switch out this provider with any wallet or provider setup you like.
- * const provider = ethers.Wallet.createRandom();
- * const sdk = new ThirdwebSDK(provider);
+ * const sdk = new ThirdwebSDK("rinkeby");
  * const contract = sdk.getVote("{{contract_address}}");
  * ```
  *
@@ -116,7 +113,7 @@ export class Vote implements UpdateableNetwork {
   public async get(proposalId: BigNumberish): Promise<Proposal> {
     const all = await this.getAll();
     const proposals = all.filter((p) =>
-      deepEqual(BigNumber.from(p.proposalId), BigNumber.from(proposalId)),
+      p.proposalId.eq(BigNumber.from(proposalId)),
     );
     if (proposals.length === 0) {
       throw new Error("proposal not found");

@@ -7,20 +7,20 @@ import {
   CommonTrustedForwarderSchema,
 } from "./common";
 
-export const PacksContractInput =
+export const PackContractInput =
   CommonContractSchema.merge(CommonRoyaltySchema).merge(CommonSymbolSchema);
 
-export const PacksContractOutput =
+export const PackContractOutput =
   CommonContractOutputSchema.merge(CommonRoyaltySchema).merge(
     CommonSymbolSchema,
   );
 
-export const PacksContractDeploy = PacksContractInput.merge(
+export const PackContractDeploy = PackContractInput.merge(
   CommonPlatformFeeSchema,
 ).merge(CommonTrustedForwarderSchema);
 
-export const PacksContractSchema = {
-  deploy: PacksContractDeploy,
-  output: PacksContractOutput,
-  input: PacksContractInput,
+export const PackContractSchema = {
+  deploy: PackContractDeploy,
+  output: PackContractOutput,
+  input: PackContractInput,
 };

@@ -2,11 +2,8 @@ import { Marketplace as MarketplaceContract } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import {
-  IStorage,
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-} from "../core";
+import { IStorage } from "../core/interfaces/IStorage";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { UpdateableNetwork } from "../core/interfaces/contract";
@@ -21,12 +18,10 @@ import { getRoleHash } from "../common/role";
 import { MarketplaceDirect } from "../core/classes/marketplace-direct";
 import { MarketplaceAuction } from "../core/classes/marketplace-auction";
 import { DEFAULT_QUERY_ALL_COUNT } from "../types/QueryParams";
-import {
-  GasCostEstimator,
-  ContractInterceptor,
-  ContractEvents,
-  ContractPlatformFee,
-} from "../core/classes";
+import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { ContractInterceptor } from "../core/classes/contract-interceptor";
+import { ContractEvents } from "../core/classes/contract-events";
+import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
@@ -37,9 +32,7 @@ import { ContractAnalytics } from "../core/classes/contract-analytics";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * // You can switch out this provider with any wallet or provider setup you like.
- * const provider = ethers.Wallet.createRandom();
- * const sdk = new ThirdwebSDK(provider);
+ * const sdk = new ThirdwebSDK("rinkeby");
  * const contract = sdk.getMarketplace("{{contract_address}}");
  * ```
  *
@@ -60,7 +53,7 @@ export class Marketplace implements UpdateableNetwork {
   public encoder: ContractEncoder<MarketplaceContract>;
   public events: ContractEvents<MarketplaceContract>;
   public estimator: GasCostEstimator<MarketplaceContract>;
-  public platformFee: ContractPlatformFee<MarketplaceContract>;
+  public platformFees: ContractPlatformFee<MarketplaceContract>;
   /**
    * @internal
    */
@@ -177,7 +170,7 @@ export class Marketplace implements UpdateableNetwork {
     this.direct = new MarketplaceDirect(this.contractWrapper, this.storage);
     this.auction = new MarketplaceAuction(this.contractWrapper, this.storage);
     this.events = new ContractEvents(this.contractWrapper);
-    this.platformFee = new ContractPlatformFee(this.contractWrapper);
+    this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
@@ -198,6 +191,13 @@ export class Marketplace implements UpdateableNetwork {
    *
    * @param listingId - the listing id
    * @returns either a direct or auction listing
+   *
+   * @remarks Get a listing by its listing id
+   * @example
+   * ```javascript
+   * const listingId = 0;
+   * const listing = await contract.getListing(listingId);
+   * ```
    */
   public async getListing(
     listingId: BigNumberish,
@@ -359,7 +359,7 @@ export class Marketplace implements UpdateableNetwork {
    * @example
    * ```javascript
    * // the bid buffer in basis points
-   * const bufferBps = 500;
+   * const bufferBps = 5_00; // 5%
    * await contract.setBidBufferBps(bufferBps);
    * ```
    * @param bufferBps - the bps value
@@ -464,7 +464,7 @@ export class Marketplace implements UpdateableNetwork {
         try {
           listing = await this.getListing(i);
         } catch (err) {
-          console.log(`Error fetching listing with id: ${i}`, err);
+          console.warn(`Error fetching listing with id: ${i}`, err);
           return undefined;
         }
 
@@ -511,7 +511,7 @@ export class Marketplace implements UpdateableNetwork {
         );
       }
 
-      if (filter.tokenId) {
+      if (filter.tokenId !== undefined) {
         rawListings = rawListings.filter(
           (tokenContract) =>
             tokenContract.tokenId.toString() === filter?.tokenId?.toString(),

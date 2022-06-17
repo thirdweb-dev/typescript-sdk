@@ -1,13 +1,17 @@
 import {
-  ByocFactory,
-  ByocFactory__factory,
-  ByocRegistry,
-  ByocRegistry__factory,
+  ContractDeployer,
+  ContractDeployer__factory,
+  ContractMetadataRegistry,
+  ContractMetadataRegistry__factory,
+  ContractPublisher,
+  ContractPublisher__factory,
   DropERC1155__factory,
   DropERC20__factory,
   DropERC721__factory,
   Marketplace__factory,
+  Multiwrap__factory,
   Pack__factory,
+  SignatureDrop__factory,
   Split__factory,
   TokenERC1155__factory,
   TokenERC20__factory,
@@ -25,14 +29,17 @@ import { ethers as hardhatEthers } from "hardhat";
 import {
   CONTRACTS_MAP,
   ContractType,
+  DEFAULT_IPFS_GATEWAY,
   Edition,
   EditionDrop,
   getNativeTokenByChainId,
   IStorage,
   Marketplace,
+  Multiwrap,
   NFTCollection,
   NFTDrop,
   Pack,
+  SignatureDrop,
   Split,
   ThirdwebSDK,
   Token,
@@ -41,7 +48,6 @@ import {
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";
 import { ChainId } from "../src/constants/chains";
-import { ChainlinkVrf } from "../src/constants/chainlink";
 
 const RPC_URL = "http://localhost:8545";
 
@@ -50,7 +56,7 @@ const defaultProvider = hardhatEthers.provider;
 
 let registryAddress: string;
 let sdk: ThirdwebSDK;
-const ipfsGatewayUrl = "https://gateway.ipfscdn.io/ipfs/";
+const ipfsGatewayUrl = DEFAULT_IPFS_GATEWAY;
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: IStorage;
@@ -111,25 +117,42 @@ before(async () => {
     .deploy(trustedForwarderAddress, thirdwebFactoryDeployer.address);
   await thirdwebFactoryDeployer.deployed();
 
-  const customFactoryDeployer = (await new ethers.ContractFactory(
-    ByocFactory__factory.abi,
-    ByocFactory__factory.bytecode,
+  const metadataRegistry = (await new ethers.ContractFactory(
+    ContractMetadataRegistry__factory.abi,
+    ContractMetadataRegistry__factory.bytecode,
   )
     .connect(signer)
-    .deploy(registry.address, trustedForwarderAddress)) as ByocFactory;
-  await customFactoryDeployer.deployed();
+    .deploy(trustedForwarderAddress)) as ContractMetadataRegistry;
+  await metadataRegistry.deployed();
 
-  const customRegistryDeployer = (await new ethers.ContractFactory(
-    ByocRegistry__factory.abi,
-    ByocRegistry__factory.bytecode,
+  const contactDeployer = (await new ethers.ContractFactory(
+    ContractDeployer__factory.abi,
+    ContractDeployer__factory.bytecode,
   )
     .connect(signer)
-    .deploy(trustedForwarderAddress)) as ByocRegistry;
-  await customRegistryDeployer.deployed();
+    .deploy(
+      registry.address,
+      metadataRegistry.address,
+      trustedForwarderAddress,
+    )) as ContractDeployer;
+  await contactDeployer.deployed();
+
+  const contractPublisher = (await new ethers.ContractFactory(
+    ContractPublisher__factory.abi,
+    ContractPublisher__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy(trustedForwarderAddress)) as ContractPublisher;
+  await contractPublisher.deployed();
 
   await registryContract.grantRole(
     await registryContract.OPERATOR_ROLE(),
-    customFactoryDeployer.address,
+    contactDeployer.address,
+  );
+
+  await metadataRegistry.grantRole(
+    await registryContract.OPERATOR_ROLE(),
+    contactDeployer.address,
   );
 
   async function deployContract(
@@ -138,6 +161,7 @@ before(async () => {
   ): Promise<ethers.Contract> {
     switch (contractType) {
       case Vote.contractType:
+      case SignatureDrop.contractType:
         return await contractFactory.deploy();
       case Marketplace.contractType:
         const nativeTokenWrapperAddress = getNativeTokenByChainId(
@@ -145,13 +169,6 @@ before(async () => {
         ).wrapped.address;
         return await contractFactory.deploy(
           nativeTokenWrapperAddress,
-          thirdwebFeeDeployer.address,
-        );
-      case Pack.contractType:
-        const vrf = ChainlinkVrf[ChainId.Hardhat];
-        return await contractFactory.deploy(
-          vrf.vrfCoordinator,
-          vrf.linkTokenAddress,
           thirdwebFeeDeployer.address,
         );
       default:
@@ -177,6 +194,9 @@ before(async () => {
       case NFTDrop.contractType:
         factory = DropERC721__factory;
         break;
+      case SignatureDrop.contractType:
+        factory = SignatureDrop__factory;
+        break;
       case Edition.contractType:
         factory = TokenERC1155__factory;
         break;
@@ -194,6 +214,9 @@ before(async () => {
         break;
       case Pack.contractType:
         factory = Pack__factory;
+        break;
+      case Multiwrap.contractType:
+        factory = Multiwrap__factory;
         break;
       default:
         throw new Error(`No factory for contract: ${contractType}`);
@@ -218,8 +241,8 @@ before(async () => {
 
   process.env.registryAddress = thirdwebRegistryAddress;
   process.env.factoryAddress = thirdwebFactoryDeployer.address;
-  process.env.byocRegistryAddress = customRegistryDeployer.address;
-  process.env.byocFactoryAddress = customFactoryDeployer.address;
+  process.env.contractPublisherAddress = contractPublisher.address;
+  process.env.contractMetadataRegistryAddress = metadataRegistry.address;
 
   storage = new MockStorage();
   sdk = new ThirdwebSDK(

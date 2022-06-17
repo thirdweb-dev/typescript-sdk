@@ -11,9 +11,6 @@ import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import invariant from "tiny-invariant";
 import { TokenDrop } from "../src/contracts/token-drop";
 
-// eslint-disable-next-line @typescript-eslint/no-var-requires
-const keccak256 = require("keccak256");
-
 global.fetch = require("cross-fetch");
 
 describe("Token Drop Contract", async () => {
@@ -253,7 +250,7 @@ describe("Token Drop Contract", async () => {
     const hashedLeafs = members.map((l) =>
       ethers.utils.solidityKeccak256(["address", "uint256"], [l, 0]),
     );
-    const tree = new MerkleTree(hashedLeafs, keccak256, {
+    const tree = new MerkleTree(hashedLeafs, ethers.utils.keccak256, {
       sort: true,
       sortLeaves: true,
       sortPairs: true,
