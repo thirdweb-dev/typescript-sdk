@@ -135,7 +135,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       EditionDrop.schema,

@@ -67,7 +67,6 @@ export class SmartContract<
 
   private contractWrapper;
   private storage;
-  private options;
 
   // utilities
   public events: ContractEvents<TContract>;
@@ -113,7 +112,6 @@ export class SmartContract<
       options,
     ),
   ) {
-    this.options = options;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
 
@@ -275,21 +273,21 @@ export class SmartContract<
 
   private detectErc20() {
     if (detectContractFeature<BaseERC20>(this.contractWrapper, "ERC20")) {
-      return new Erc20(this.contractWrapper, this.storage, this.options);
+      return new Erc20(this.contractWrapper, this.storage);
     }
     return undefined;
   }
 
   private detectErc721() {
     if (detectContractFeature<BaseERC721>(this.contractWrapper, "ERC721")) {
-      return new Erc721(this.contractWrapper, this.storage, this.options);
+      return new Erc721(this.contractWrapper, this.storage);
     }
     return undefined;
   }
 
   private detectErc1155() {
     if (detectContractFeature<BaseERC1155>(this.contractWrapper, "ERC1155")) {
-      return new Erc1155(this.contractWrapper, this.storage, this.options);
+      return new Erc1155(this.contractWrapper, this.storage);
     }
     return undefined;
   }

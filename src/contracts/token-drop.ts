@@ -95,7 +95,7 @@ export class TokenDrop extends Erc20<DropERC20> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenDrop.schema,

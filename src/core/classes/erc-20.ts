@@ -4,7 +4,6 @@ import { BigNumber, BigNumberish, ethers, Signer } from "ethers";
 import { IStorage } from "../interfaces";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { TransactionResult } from "../types";
-import { SDKOptions } from "../../schema/sdk-options";
 import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import {
   fetchCurrencyMetadata,
@@ -34,21 +33,15 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
   featureName = FEATURE_TOKEN.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
-  protected options: SDKOptions;
 
   /**
    * Mint tokens
    */
   public mint: Erc20Mintable | undefined;
 
-  constructor(
-    contractWrapper: ContractWrapper<T>,
-    storage: IStorage,
-    options: SDKOptions = {},
-  ) {
+  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
-    this.options = options;
     this.mint = this.detectErc20Mintable();
   }
 

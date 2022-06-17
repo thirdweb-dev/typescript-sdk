@@ -3,22 +3,40 @@ import { getProviderForChain } from "../../constants/urls";
 import { ConnectionInfo } from "../types";
 import { ChainOrRpc } from "../../constants";
 import { EventEmitter2 } from "eventemitter2";
+import {
+  SDKOptions,
+  SDKOptionsOutput,
+  SDKOptionsSchema,
+} from "../../schema/index";
 
 /**
  * @internal
  */
 export class RPCConnectionHandler extends EventEmitter2 {
+  protected options: SDKOptionsOutput;
   private chainId: ChainOrRpc;
   private provider: providers.Provider;
   private signer: Signer | undefined;
 
   // TODO (rpc) needs the options to be passed in to override RPC urls
-  constructor(connection: ConnectionInfo) {
+  constructor(connection: ConnectionInfo, options: SDKOptions = {}) {
     super();
+    try {
+      this.options = SDKOptionsSchema.parse(options);
+    } catch (optionParseError) {
+      console.error(
+        "invalid contract options object passed, falling back to default options",
+        optionParseError,
+      );
+      this.options = SDKOptionsSchema.parse({});
+    }
     this.chainId = connection.chainId;
     this.provider = connection.provider
       ? connection.provider
-      : getProviderForChain(connection.chainId);
+      : getProviderForChain(
+          connection.chainId,
+          this.options.chainIdToRPCUrlMap,
+        );
     this.signer = connection.signer;
   }
 

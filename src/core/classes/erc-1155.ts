@@ -10,7 +10,6 @@ import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";
 import { TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import {
   EditionMetadata,
   EditionMetadataOutputSchema,
@@ -42,27 +41,13 @@ export class Erc1155<
   featureName = FEATURE_EDITION.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
-  protected options: SDKOptions;
 
   public query: Erc1155Enumerable | undefined;
   public mint: Erc1155Mintable | undefined;
 
-  constructor(
-    contractWrapper: ContractWrapper<T>,
-    storage: IStorage,
-    options: SDKOptions = {},
-  ) {
+  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
-    try {
-      this.options = SDKOptionsSchema.parse(options);
-    } catch (optionParseError) {
-      console.error(
-        "invalid contract options object passed, falling back to default options",
-        optionParseError,
-      );
-      this.options = SDKOptionsSchema.parse({});
-    }
     this.query = this.detectErc1155Enumerable();
     this.mint = this.detectErc1155Mintable();
   }

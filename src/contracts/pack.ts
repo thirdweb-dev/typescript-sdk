@@ -107,7 +107,7 @@ export class Pack extends Erc1155<PackContract> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Pack.schema,

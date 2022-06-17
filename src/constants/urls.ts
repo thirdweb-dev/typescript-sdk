@@ -111,10 +111,14 @@ export function getRpcUrl(
 /**
  * @internal
  * @param network - the chain name or rpc url
+ * @param customRpcMap
  * @returns the rpc url for that chain
  */
-export function getProviderForChain(network: ChainOrRpc): Provider {
-  const rpcUrl = getRpcUrl(network);
+export function getProviderForChain(
+  network: ChainOrRpc,
+  customRpcMap?: Record<number, string>,
+): Provider {
+  const rpcUrl = getRpcUrl(network, customRpcMap);
   return getReadOnlyProvider(rpcUrl);
 }
 

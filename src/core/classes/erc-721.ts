@@ -4,7 +4,6 @@ import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import { fetchTokenMetadata } from "../../common/nft";
 import {
   detectContractFeature,
@@ -51,24 +50,10 @@ export class Erc721<
   public drop: Erc721Dropable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
-  protected options: SDKOptions;
 
-  constructor(
-    contractWrapper: ContractWrapper<T>,
-    storage: IStorage,
-    options: SDKOptions = {},
-  ) {
+  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
-    try {
-      this.options = SDKOptionsSchema.parse(options);
-    } catch (optionParseError) {
-      console.error(
-        "invalid contract options object passed, falling back to default options",
-        optionParseError,
-      );
-      this.options = SDKOptionsSchema.parse({});
-    }
     this.query = this.detectErc721Enumerable();
     this.mint = this.detectErc721Mintable();
     this.drop = this.detectErc721Dropable();

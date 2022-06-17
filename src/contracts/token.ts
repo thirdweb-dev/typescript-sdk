@@ -89,7 +89,7 @@ export class Token extends Erc20<TokenERC20> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Token.schema,

@@ -29,7 +29,7 @@ await contract.token.transfer(walletAddress, amount);
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(contractWrapper, storage, options)](./sdk.erc20._constructor_.md) |  | Constructs a new instance of the <code>Erc20</code> class |
+|  [(constructor)(contractWrapper, storage)](./sdk.erc20._constructor_.md) |  | Constructs a new instance of the <code>Erc20</code> class |
 
 ## Properties
 
@@ -38,7 +38,6 @@ await contract.token.transfer(walletAddress, amount);
 |  [contractWrapper](./sdk.erc20.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
 |  [featureName](./sdk.erc20.featurename.md) |  | "ERC20" |  |
 |  [mint](./sdk.erc20.mint.md) |  | [Erc20Mintable](./sdk.erc20mintable.md) \| undefined | Mint tokens |
-|  [options](./sdk.erc20.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [storage](./sdk.erc20.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
 
 ## Methods

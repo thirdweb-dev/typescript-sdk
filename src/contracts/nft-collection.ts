@@ -118,7 +118,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       NFTCollection.schema,

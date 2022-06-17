@@ -123,7 +123,7 @@ export class Edition extends Erc1155<TokenERC1155> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Edition.schema,

@@ -15,11 +15,7 @@ import {
   Token,
   Vote,
 } from "../contracts";
-import {
-  SDKOptions,
-  SDKOptionsOutput,
-  SDKOptionsSchema,
-} from "../schema/sdk-options";
+import { SDKOptions } from "../schema/sdk-options";
 import { IpfsStorage } from "./classes/ipfs-storage";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
@@ -44,7 +40,6 @@ import { Multiwrap } from "../contracts/multiwrap";
  * @public
  */
 export class ThirdwebSDK extends RPCConnectionHandler {
-  private options: SDKOptionsOutput;
   /**
    * Get an instance of the thirdweb SDK based on an existing ethers signer
    *
@@ -157,16 +152,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       signer,
       provider: signer?.provider,
     };
-    super(connection);
-    try {
-      this.options = SDKOptionsSchema.parse(options);
-    } catch (optionParseError) {
-      console.error(
-        "invalid contract options object passed, falling back to default options",
-        optionParseError,
-      );
-      this.options = SDKOptionsSchema.parse({});
-    }
+    super(connection, options);
     this.storageHandler = storage;
     this.storage = new RemoteStorage(storage);
     this.deployer = new ContractDeployer(connection, options, storage);

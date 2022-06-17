@@ -46,15 +46,13 @@ export class ContractDeployer extends RPCConnectionHandler {
    */
   private _registry: Promise<ContractRegistry> | undefined;
   private storage: IStorage;
-  private options: SDKOptions;
 
   constructor(
     connection: ConnectionInfo,
     options: SDKOptions,
     storage: IStorage,
   ) {
-    super(connection);
-    this.options = options;
+    super(connection, options);
     this.storage = storage;
   }
 

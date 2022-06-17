@@ -9,6 +9,7 @@
 
 ```typescript
 SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
+    chainIdToRPCUrlMap: z.ZodOptional<z.ZodRecord<z.ZodNumber, z.ZodString>>;
     readonlySettings: z.ZodOptional<z.ZodObject<{
         rpcUrl: z.ZodString;
         chainId: z.ZodOptional<z.ZodNumber>;
@@ -78,6 +79,7 @@ SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
         };
     }>]>>;
 }, "strip", z.ZodTypeAny, {
+    chainIdToRPCUrlMap?: Record<number, string> | undefined;
     readonlySettings?: {
         chainId?: number | undefined;
         rpcUrl: string;
@@ -99,6 +101,7 @@ SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
         speed: "standard" | "fast" | "fastest";
     };
 }, {
+    chainIdToRPCUrlMap?: Record<number, string> | undefined;
     readonlySettings?: {
         chainId?: number | undefined;
         rpcUrl: string;

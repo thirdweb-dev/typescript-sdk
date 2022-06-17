@@ -11,11 +11,7 @@ import {
   Signer,
 } from "ethers";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import {
-  SDKOptions,
-  SDKOptionsOutput,
-  SDKOptionsSchema,
-} from "../../schema/sdk-options";
+import { SDKOptions } from "../../schema/sdk-options";
 import {
   ConnectionInfo,
   ForwardRequestMessage,
@@ -46,7 +42,6 @@ export class ContractWrapper<
 > extends RPCConnectionHandler {
   private isValidContract = false;
   private customOverrides: () => CallOverrides = () => ({});
-  protected options: SDKOptionsOutput;
   /**
    * @internal
    */
@@ -60,7 +55,7 @@ export class ContractWrapper<
     contractAbi: ContractInterface,
     options: SDKOptions,
   ) {
-    super(network);
+    super(network, options);
     this.abi = contractAbi;
     // set up the contract
     this.writeContract = new Contract(
@@ -72,16 +67,6 @@ export class ContractWrapper<
     this.readContract = this.writeContract.connect(
       this.getProvider(),
     ) as TContract;
-
-    try {
-      this.options = SDKOptionsSchema.parse(options) || {};
-    } catch (optionParseError) {
-      console.error(
-        "invalid sdk options object passed, falling back to default options",
-        optionParseError,
-      );
-      this.options = SDKOptionsSchema.parse({});
-    }
   }
 
   public override updateSigner(signer: Signer | undefined): void {

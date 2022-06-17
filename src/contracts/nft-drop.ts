@@ -174,7 +174,7 @@ export class NFTDrop extends Erc721<DropERC721> {
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       NFTDrop.schema,
