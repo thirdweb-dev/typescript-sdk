@@ -77,7 +77,7 @@ export class Erc721Mintable implements DetectableFeature {
       receipt?.logs,
     );
     if (event.length === 0) {
-      throw new Error("TokenMinted event not found");
+      throw new Error("TransferEvent event not found");
     }
     const id = event[0].args.tokenId;
     return {
