@@ -32,6 +32,8 @@ Airdrop one or multiple NFTs to the provided wallet addresses.
 
 
 ```javascript
+// The token ID of the NFT you want to airdrop
+const tokenId = "0";
 // Array of objects of addresses and quantities to airdrop NFTs to
 const addresses = [
  {
@@ -43,14 +45,14 @@ const addresses = [
    quantity: 3,
  },
 ];
-const tokenId = "0";
-await contract.airdrop(addresses, tokenId);
+await contract.airdrop(tokenId, addresses);
 
 // You can also pass an array of addresses, it will airdrop 1 NFT per address
+const tokenId = "0";
 const addresses = [
  "0x...", "0x...", "0x...",
 ]
-const tokenId = "0";
-await contract.airdrop(addresses, tokenId);
+
+await contract.airdrop(tokenId, addresses);
 ```
 

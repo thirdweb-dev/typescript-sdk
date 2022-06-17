@@ -25,3 +25,14 @@ Promise&lt;string&gt;
 
 the estimated price in native currency (ETH, MATIC, etc) of calling this function
 
+## Remarks
+
+Estimate the cost of gas in native token of the current chain
+
+## Example
+
+
+```javascript
+const costOfBurn = await contract?.estimator.gasCostOf("burn", [0]);
+```
+

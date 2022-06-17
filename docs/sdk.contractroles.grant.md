@@ -33,3 +33,10 @@ If you are trying to grant does not exist on the contract this will throw an err
 
 Make sure you are sure you want to grant the role to the address.
 
+## Example
+
+
+```javascript
+await contract.roles.grant("minter", "0x1234567890123456789012345678901234567890");
+```
+

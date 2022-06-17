@@ -67,7 +67,13 @@ export class ContractMetadata<
     return this.schema.input.parse(metadata);
   }
   /**
-   *
+   * Get the metadata of a contract
+   * @remarks Get the metadata of a contract
+   * @example
+   * ```javascript
+   * const metadata = await contract.metadata.get();
+   * ```
+   * @public
    * @returns the metadata of the given contract
    */
   public async get() {
@@ -102,7 +108,16 @@ export class ContractMetadata<
     return this.parseOutputMetadata(data);
   }
   /**
-   *
+   * Set the metadata of a contract
+   * @remarks OVERWRITE the metadata of a contract
+   * @example
+   * ```javascript
+   * await contract.metadata.set({
+   *  name: "My Contract",
+   *  description: "My contract description"
+   * })
+   * ```
+   * @public
    * @param metadata - the metadata to set
    * @returns
    */
@@ -120,6 +135,19 @@ export class ContractMetadata<
     }
   }
 
+  /**
+   * Update the metadata of a contract
+   * @remarks Update the metadata of a contract
+   * @example
+   * ```javascript
+   * await contract.metadata.update({
+   *   name: "My Contract",
+   *   description: "My contract description"
+   * })
+   * ```
+   * @public
+   * @param metadata - the metadata to update
+   * */
   public async update(metadata: Partial<z.input<TSchema["input"]>>) {
     return await this.set({
       ...(await this.get()),

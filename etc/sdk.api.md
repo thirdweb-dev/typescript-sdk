@@ -606,7 +606,6 @@ export class ContractEvents<TContract extends BaseContract> {
     addTransactionListener(listener: ListenerFn): void;
     listenToAllEvents(listener: (event: ContractEvent) => void): void;
     removeAllListeners(): void;
-    // (undocumented)
     removeEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: providers.Listener): void;
     removeTransactionListener(listener: ListenerFn): void;
 }
@@ -617,9 +616,7 @@ export class ContractEvents<TContract extends BaseContract> {
 // @public (undocumented)
 export type ContractForContractType<TContractType extends ContractType> = Instance<typeof CONTRACTS_MAP[TContractType]>;
 
-// Warning: (ae-internal-missing-underscore) The name "ContractInterceptor" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @public
 export class ContractInterceptor<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     overrideNextTransaction(hook: () => CallOverrides): void;
@@ -633,7 +630,6 @@ export class ContractMetadata<TContract extends BaseContract, TSchema extends IG
     constructor(contractWrapper: ContractWrapper<TContract>, schema: TSchema, storage: IStorage);
     // (undocumented)
     featureName: "ContractMetadata";
-    // (undocumented)
     get(): Promise<z.output<TSchema["output"]>>;
     // @internal (undocumented)
     _parseAndUploadMetadata(metadata: z.input<TSchema["input"]>): Promise<string>;
@@ -641,7 +637,6 @@ export class ContractMetadata<TContract extends BaseContract, TSchema extends IG
     parseInputMetadata(metadata: any): z.input<TSchema["input"]>;
     // @internal (undocumented)
     parseOutputMetadata(metadata: any): z.output<TSchema["output"]>;
-    // (undocumented)
     set(metadata: z.input<TSchema["input"]>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
@@ -649,7 +644,6 @@ export class ContractMetadata<TContract extends BaseContract, TSchema extends IG
         receipt: TransactionReceipt;
         data: () => Promise<z.output<TSchema["output"]>>;
     } : never : never>;
-    // (undocumented)
     update(metadata: Partial<z.input<TSchema["input"]>>): Promise<((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) extends infer T ? T extends ((<A>() => A extends never ? 1 : 0) extends <A_1>() => A_1 extends z.output<TSchema["output"]> ? 1 : 0 ? 1 : 0) ? T extends 1 ? Omit<{
         receipt: TransactionReceipt;
         data: () => Promise<unknown>;
@@ -4470,8 +4464,6 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     events: ContractEvents<TContract>;
     // (undocumented)
     getAddress(): string;
-    // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @beta, but its signature references "ContractInterceptor" which is marked as @internal
-    //
     // (undocumented)
     interceptor: ContractInterceptor<TContract>;
     // (undocumented)
@@ -4985,11 +4977,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-incompatible-release-tags) The symbol "fromPrivateKey" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
     //
     // @beta
-    static fromPrivateKey(privateKey: string, network: ChainOrRpc, options?: SDKOptions): ThirdwebSDK;
+    static fromPrivateKey(privateKey: string, network: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
     // Warning: (ae-incompatible-release-tags) The symbol "fromSigner" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
     //
     // @beta
-    static fromSigner(signer: Signer, network?: ChainOrRpc, options?: SDKOptions): ThirdwebSDK;
+    static fromSigner(signer: Signer, network?: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
     // @internal (undocumented)
     getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     // @beta

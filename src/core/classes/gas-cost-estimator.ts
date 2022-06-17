@@ -14,7 +14,13 @@ export class GasCostEstimator<TContract extends BaseContract> {
 
   /**
    * Estimates the cost of gas in native token of the current chain
+   * @remarks Estimate the cost of gas in native token of the current chain
+   * @example
+   * ```javascript
+   * const costOfBurn = await contract?.estimator.gasCostOf("burn", [0]);
+   * ```
    * @returns the estimated price in native currency (ETH, MATIC, etc) of calling this function
+   * @public
    */
   public async gasCostOf(
     fn: keyof TContract["functions"] | (string & {}),
@@ -27,6 +33,13 @@ export class GasCostEstimator<TContract extends BaseContract> {
 
   /**
    * Returns the current gas price in gwei
+   * @remarks Get the current gas price in gwei
+   * @example
+   * ```javascript
+   * const gasCostInGwei = await contract.estimator.currentGasPriceInGwei();
+   * ```
+   * @returns the current gas price in gwei
+   * @public
    */
   public async currentGasPriceInGwei(): Promise<string> {
     const price = await this.contractWrapper.getProvider().getGasPrice();

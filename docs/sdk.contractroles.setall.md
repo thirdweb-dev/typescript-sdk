@@ -35,10 +35,10 @@ If you are requestiong a role that does not exist on the contract this will thro
 Say you want to overwrite the list of addresses that are members of the minter role.
 
 ```javascript
-const minterAddresses: string[] = await contract.getRoleMemberList("minter");
-await contract.setAll({
+const minterAddresses = await contract.roles.get("minter");
+await contract.roles.setAll({
  minter: []
 });
-console.log(await contract.getRoleMemberList("minter")); // No matter what members had the role before, the new list will be set to []
+console.log(await contract.roles.get("minter")); // No matter what members had the role before, the new list will be set to []
 ```
 
