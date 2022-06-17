@@ -16,7 +16,7 @@ describe("ContractAnalytics", () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const address = await sdk.deployer.deployBuiltInContract(
       NFTCollection.contractType,
       {

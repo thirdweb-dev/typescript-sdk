@@ -22,7 +22,7 @@ describe("Edition Contract", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSigner(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const address = await sdk.deployer.deployEdition({
       name: `Testing bundle from SDK`,
       description: "Test contract from tests",

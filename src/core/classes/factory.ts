@@ -1,7 +1,6 @@
 import { TWFactory, TWFactory__factory } from "contracts";
 import { BigNumber, Contract, ethers, constants } from "ethers";
 import { z } from "zod";
-import { CONTRACTS_MAP, REMOTE_CONTRACT_NAME } from "../../contracts/maps";
 import { Edition } from "../../contracts/edition";
 import { EditionDrop } from "../../contracts/edition-drop";
 import { NFTCollection } from "../../contracts/nft-collection";
@@ -16,17 +15,16 @@ import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
 import { ConnectionInfo, ValidContractClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { CONTRACTS_MAP, REMOTE_CONTRACT_NAME } from "../../contracts/maps";
 
 import {
   CONTRACT_ADDRESSES,
-  getContractAddressByChainId,
   OZ_DEFENDER_FORWARDER_ADDRESS,
   SUPPORTED_CHAIN_IDS,
 } from "../../constants";
 import { TokenDrop } from "../../contracts/token-drop";
 import { ProxyDeployedEvent } from "contracts/TWFactory";
 import { Multiwrap } from "../../contracts/multiwrap";
-import { AddressZero } from "@ethersproject/constants";
 
 /**
  * @internal

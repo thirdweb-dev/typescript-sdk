@@ -25,7 +25,7 @@ describe("NFT sig minting", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
 
     nftContract = sdk.getNFTCollection(
       await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
@@ -158,7 +158,7 @@ describe("NFT sig minting", async () => {
       const batch = await Promise.all(
         payloads.map(async (p) => await nftContract.signature.generate(p)),
       );
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       const tx = await nftContract.signature.mintBatch(batch);
       expect(tx.length).to.eq(10);
       expect(tx[0].id.toNumber()).to.eq(0);
@@ -166,12 +166,12 @@ describe("NFT sig minting", async () => {
     });
 
     it("should allow a valid voucher to mint", async () => {
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       const tx = await nftContract.signature.mint(v1);
       const newId = (await nftContract.get(tx.id)).metadata.id;
       assert.equal(newId.toString(), "0");
 
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       const tx2 = await nftContract.signature.mint(v2);
       const newId2 = (await nftContract.get(tx2.id)).metadata.id;
       assert.equal(newId2.toString(), "1");
@@ -231,7 +231,7 @@ describe("NFT sig minting", async () => {
         mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
         mintStartTime: new Date(),
       });
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await nftContract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
@@ -250,7 +250,7 @@ describe("NFT sig minting", async () => {
         mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
         mintStartTime: new Date(),
       });
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await nftContract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(

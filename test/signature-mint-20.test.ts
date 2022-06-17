@@ -21,7 +21,7 @@ describe("Token sig minting", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
 
     contract = sdk.getToken(
       await sdk.deployer.deployToken({
@@ -131,7 +131,7 @@ describe("Token sig minting", async () => {
       const batch = await Promise.all(
         payloads.map(async (p) => await contract.signature.generate(p)),
       );
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await contract.signature.mintBatch(batch);
       const balance = await contract.balanceOf(samWallet.address);
       expect(balance.displayValue).to.eq("10.0");
@@ -144,7 +144,7 @@ describe("Token sig minting", async () => {
         quantity: 10,
         currencyAddress: tokenAddress,
       });
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await contract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
@@ -159,7 +159,7 @@ describe("Token sig minting", async () => {
         price: 1,
         quantity: 0.23,
       });
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await contract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(

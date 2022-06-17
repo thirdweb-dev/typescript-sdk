@@ -386,7 +386,6 @@ export class ContractDeployer extends RPCConnectionHandler {
     return (this._factory = this.getProvider()
       .getNetwork()
       .then(async ({ chainId }) => {
-        console.log("chainId", chainId);
         const factoryAddress = getContractAddressByChainId(
           chainId,
           "twFactory",

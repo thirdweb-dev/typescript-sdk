@@ -2,7 +2,7 @@ import { ethers, Wallet } from "ethers";
 import { sdk } from "./before-setup";
 import { EventType } from "../src/constants/events";
 import { expect } from "chai";
-import { ContractEvent, NFTDrop, ThirdwebSDK } from "../src";
+import { ChainId, ContractEvent, NFTDrop, ThirdwebSDK } from "../src";
 import { AddressZero } from "@ethersproject/constants";
 
 global.fetch = require("cross-fetch");
@@ -64,7 +64,7 @@ describe("Events", async () => {
     const RPC_URL = "https://rpc-mumbai.maticvigil.com/";
     const provider = ethers.getDefaultProvider(RPC_URL);
     const wallet = Wallet.createRandom().connect(provider);
-    const esdk = new ThirdwebSDK(wallet, {
+    const esdk = ThirdwebSDK.fromSigner(wallet, ChainId.Hardhat, {
       gasless: {
         openzeppelin: {
           relayerUrl: "https://google.com", // TODO test relayer url?

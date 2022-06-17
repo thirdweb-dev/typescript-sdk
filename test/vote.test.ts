@@ -23,7 +23,7 @@ describe("Vote Contract", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
 
     const tokenContractAddress = await sdk.deployer.deployBuiltInContract(
       Token.contractType,
@@ -52,14 +52,14 @@ describe("Vote Contract", async () => {
     // should be separate function since you need gov token to deploy vote contract
     await currencyContract.roles.grant("minter", voteContract.getAddress());
 
-    await sdk.updateSignerOrProvider(samWallet);
+    await sdk.wallet.connect(samWallet);
 
     // step 2: delegate the governance token to someone for voting. in this case, myself.
     await currencyContract.delegateTo(samWallet.address);
   });
 
   it("should permit a proposal to be passed if it receives the right votes", async () => {
-    await sdk.updateSignerOrProvider(samWallet);
+    await sdk.wallet.connect(samWallet);
     await currencyContract.delegateTo(samWallet.address);
 
     const proposalId = (
@@ -100,7 +100,7 @@ describe("Vote Contract", async () => {
     assert.equal(balanceOfBobsWallet.displayValue, "1.0");
   });
   it("should be able to execute proposal even when `executions` is not passed", async () => {
-    await sdk.updateSignerOrProvider(samWallet);
+    await sdk.wallet.connect(samWallet);
     await currencyContract.delegateTo(samWallet.address);
     const proposalId = (await voteContract.propose("Mint Tokens")).id;
     await voteContract.vote(proposalId.toString(), 1);
@@ -127,7 +127,7 @@ describe("Vote Contract", async () => {
   });
 
   it("should permit a proposal to be passed if it receives the right votes", async () => {
-    await sdk.updateSignerOrProvider(samWallet);
+    await sdk.wallet.connect(samWallet);
     const description = "Mint Tokens";
     const proposalId = (
       await voteContract.propose(description, [
@@ -146,7 +146,7 @@ describe("Vote Contract", async () => {
   });
 
   it("should permit a proposal with native token values to be passed if it receives the right votes", async () => {
-    await sdk.updateSignerOrProvider(samWallet);
+    await sdk.wallet.connect(samWallet);
     await currencyContract.delegateTo(samWallet.address);
 
     await samWallet.sendTransaction({

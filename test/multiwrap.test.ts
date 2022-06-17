@@ -19,7 +19,7 @@ describe("Multiwrap Contract", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const address = await sdk.deployer.deployMultiwrap({
       name: `Testing multiwrap from SDK`,
       symbol: `TEST`,

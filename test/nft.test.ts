@@ -18,7 +18,7 @@ describe("NFT Contract", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const address = await sdk.deployer.deployBuiltInContract(
       NFTCollection.contractType,
       {
@@ -50,7 +50,7 @@ describe("NFT Contract", async () => {
 
   it("should let authorized minters mint with detected features", async () => {
     await nftContract.roles.grant("minter", samWallet.address);
-    sdk.updateSignerOrProvider(samWallet);
+    sdk.wallet.connect(samWallet);
     await nftContract.mint?.to(samWallet.address, {
       name: "Test1",
     });
@@ -152,7 +152,7 @@ describe("NFT Contract", async () => {
   });
 
   it("should not be able to mint without permission", async () => {
-    sdk.updateSignerOrProvider(samWallet);
+    sdk.wallet.connect(samWallet);
     await expect(
       nftContract.mintToSelf({
         name: "Test2",

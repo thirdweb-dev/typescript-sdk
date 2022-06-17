@@ -2,7 +2,6 @@ import { expectError, signers } from "./before-setup";
 import { expect } from "chai";
 import invariant from "tiny-invariant";
 import {
-  DropERC721__factory,
   SignatureDrop__factory,
   TokenERC1155__factory,
   TokenERC20__factory,
@@ -11,7 +10,7 @@ import {
 } from "contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { uploadContractMetadata } from "./publisher.test";
-import { IpfsStorage, ThirdwebSDK } from "../src";
+import { ChainId, IpfsStorage, ThirdwebSDK } from "../src";
 import { ethers } from "ethers";
 
 require("./before-setup");
@@ -33,13 +32,13 @@ describe("Custom Contracts", async () => {
 
   before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    sdk = new ThirdwebSDK(adminWallet);
+    sdk = ThirdwebSDK.fromSigner(adminWallet, ChainId.Hardhat);
     storage = new IpfsStorage();
     simpleContractUri = await uploadContractMetadata("Greeter", storage);
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const publisher = sdk.getPublisher();
     customContractAddress = await publisher.deployContract(
       simpleContractUri,

@@ -31,6 +31,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
    * The function to call whenever the network changes, such as when the users connects their wallet, disconnects their wallet, the connected chain changes, etc.
    *
    * @param signer
+   * @internal
    */
   public updateSigner(signer: Signer | undefined) {
     this.signer = signer;
@@ -46,6 +47,7 @@ export class RPCConnectionHandler extends EventEmitter2 {
   /**
    * Explicitly get the active signer.
    * @returns the active signer, if there is one
+   * @internal
    */
   public getSigner(): Signer | undefined {
     return this.signer;
@@ -54,19 +56,23 @@ export class RPCConnectionHandler extends EventEmitter2 {
   /**
    * Explicitly get the active signer.
    * @returns the active provider
+   * @internal
    */
   public getProvider(): providers.Provider {
     return this.provider;
   }
 
   /**
-   *
    * @returns the current signer if there is one, otherwise the active provider
+   * @internal
    */
   public getSignerOrProvider(): Signer | providers.Provider {
     return this.getSigner() || this.getProvider();
   }
 
+  /**
+   * @internal
+   */
   public getConnectionInfo(): ConnectionInfo {
     return {
       chainId: this.chainId,
@@ -74,56 +80,4 @@ export class RPCConnectionHandler extends EventEmitter2 {
       provider: this.getProvider(),
     };
   }
-  //
-  // /** ********************
-  //  * PRIVATE FUNCTIONS
-  //  *********************/
-  //
-  // private getSignerAndProvider(
-  //   network: NetworkOrSignerOrProvider,
-  //   options: SDKOptions,
-  // ): [Signer | undefined, providers.Provider] {
-  //   let signer: Signer | undefined;
-  //   let provider: providers.Provider | undefined;
-  //
-  //   if (Signer.isSigner(network)) {
-  //     signer = network;
-  //     if (network.provider) {
-  //       provider = network.provider;
-  //     }
-  //   }
-  //
-  //   if (options?.readonlySettings) {
-  //     provider = getReadOnlyProvider(
-  //       options.readonlySettings.rpcUrl,
-  //       options.readonlySettings.chainId,
-  //     );
-  //   }
-  //
-  //   if (!provider) {
-  //     if (providers.Provider.isProvider(network)) {
-  //       provider = network;
-  //     } else if (!Signer.isSigner(network)) {
-  //       if (typeof network === "string") {
-  //         provider = getReadOnlyProvider(
-  //           network,
-  //           options?.readonlySettings?.chainId,
-  //         );
-  //       } else {
-  //         // no a signer, not a provider, not a string? try with default provider
-  //         provider = ethers.getDefaultProvider(network);
-  //       }
-  //     }
-  //   }
-  //
-  //   if (!provider) {
-  //     // we should really never hit this case!
-  //     provider = ethers.getDefaultProvider();
-  //     console.error(
-  //       "No provider found, using default provider on default chain!",
-  //     );
-  //   }
-  //
-  //   return [signer, provider];
-  // }
 }

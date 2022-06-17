@@ -18,7 +18,7 @@ describe("Royalties", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
 
     bundleContract = sdk.getEdition(
       await sdk.deployer.deployBuiltInContract(Edition.contractType, {

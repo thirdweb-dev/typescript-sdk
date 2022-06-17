@@ -105,7 +105,7 @@ export function getRpcUrl(
   if (chainId in fullRpcMap) {
     return fullRpcMap[chainId];
   }
-  throw new Error(`Unrecognized chain name or RPC url: ${network}`);
+  throw new Error(`Unrecognized chain name or RPC url: ${network}.`);
 }
 
 /**

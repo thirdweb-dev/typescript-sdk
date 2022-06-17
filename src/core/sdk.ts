@@ -1,4 +1,4 @@
-import { ContractInterface, ethers, Signer } from "ethers";
+import { ContractInterface, ethers, providers, Signer } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import { RemoteStorage } from "./classes/remote-storage";
 import {
@@ -35,7 +35,7 @@ import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
-import { ChainOrRpc, getProviderForChain } from "../constants";
+import { ChainOrRpc } from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
 import { Multiwrap } from "../contracts/multiwrap";
 
@@ -71,9 +71,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
-    const sdk = new ThirdwebSDK(network, signer, options, storage);
-    sdk.updateSigner(signer);
-    return sdk;
+    return new ThirdwebSDK(network, signer, options, storage);
   }
 
   /**
@@ -102,8 +100,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
-    const provider = undefined; // getProviderForChain(network);
-    const signer = new ethers.Wallet(privateKey, provider);
+    const signer = new ethers.Wallet(privateKey);
     return ThirdwebSDK.fromSigner(signer, network, options, storage);
   }
 
@@ -144,7 +141,22 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ) {
-    const connection: ConnectionInfo = { chainId, signer };
+    // Throw helpful error for old usages of this constructor
+    if (Signer.isSigner(chainId)) {
+      throw new Error(
+        "Please use 'ThirdwebSDK.fromSigner(signer, chainId)' to create a new ThirdwebSDK with a signer. Example: 'const sdk = ThirdwebSDK.fromSigner(signer, ChainId.Polygon)'",
+      );
+    }
+    if (providers.Provider.isProvider(chainId)) {
+      throw new Error(
+        "Please pass in a ChainId instead of a Provider to create a new read-only ThirdwebSDK. Example: 'const sdk = new ThirdwebSDK(ChainId.Polygon)'. To initialize the SDK with a signer, use: 'ThirdwebSDK.fromSigner(signer, ChainId.Polygon)'",
+      );
+    }
+    const connection: ConnectionInfo = {
+      chainId,
+      signer,
+      provider: signer?.provider,
+    };
     super(connection);
     try {
       this.options = SDKOptionsSchema.parse(options);

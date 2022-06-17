@@ -1975,7 +1975,7 @@ export interface GaslessTransaction {
 // Warning: (ae-internal-missing-underscore) The name "getContractAddressByChainId" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function getContractAddressByChainId(chainId: SUPPORTED_CHAIN_ID | ChainId.Hardhat, contractName: keyof typeof CONTRACT_ADDRESSES[SUPPORTED_CHAIN_ID]): string;
+export function getContractAddressByChainId(chainId: SUPPORTED_CHAIN_ID | ChainId.Hardhat | ChainId.Localhost, contractName: keyof typeof CONTRACT_ADDRESSES[SUPPORTED_CHAIN_ID]): string;
 
 // Warning: (ae-internal-missing-underscore) The name "getContractPublisherAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //

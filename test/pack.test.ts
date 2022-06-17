@@ -34,7 +34,7 @@ describe("Pack Contract", async () => {
   };
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     packContract = sdk.getPack(
       await sdk.deployer.deployBuiltInContract(Pack.contractType, {
         name: "Pack Contract",

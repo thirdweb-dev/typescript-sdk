@@ -247,7 +247,7 @@ before(async () => {
   storage = new MockStorage();
   sdk = ThirdwebSDK.fromSigner(
     signer,
-    RPC_URL,
+    ChainId.Hardhat,
     {
       gasSettings: {
         maxPriceInGwei: 10000,

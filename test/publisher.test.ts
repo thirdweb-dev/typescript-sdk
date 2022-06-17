@@ -1,7 +1,7 @@
 import { signers } from "./before-setup";
 import { readFileSync } from "fs";
 import { expect } from "chai";
-import { IpfsStorage, isFeatureEnabled, ThirdwebSDK } from "../src";
+import { ChainId, IpfsStorage, isFeatureEnabled, ThirdwebSDK } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../typechain";
@@ -40,7 +40,7 @@ describe("Publishing", async () => {
 
   before("Upload abis", async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    sdk = new ThirdwebSDK(adminWallet);
+    sdk = ThirdwebSDK.fromSigner(adminWallet, ChainId.Hardhat);
     storage = new IpfsStorage();
     simpleContractUri = await uploadContractMetadata("Greeter", storage);
     contructorParamsContractUri = await uploadContractMetadata(
@@ -50,7 +50,7 @@ describe("Publishing", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
   });
 
   it("should extract functions", async () => {
@@ -101,7 +101,7 @@ describe("Publishing", async () => {
   });
 
   it("should publish multiple versions", async () => {
-    sdk.updateSignerOrProvider(samWallet);
+    sdk.wallet.connect(samWallet);
     const publisher = sdk.getPublisher();
     let id = "";
     for (let i = 0; i < 5; i++) {
@@ -116,7 +116,7 @@ describe("Publishing", async () => {
   });
 
   it("should publish constructor params contract", async () => {
-    sdk.updateSignerOrProvider(bobWallet);
+    sdk.wallet.connect(bobWallet);
     const publisher = sdk.getPublisher();
     const tx = await publisher.publish(contructorParamsContractUri);
     const contract = await tx.data();
@@ -147,7 +147,7 @@ describe("Publishing", async () => {
   });
 
   it("SimpleAzuki enumerable", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
+    const realSDK = ThirdwebSDK.fromSigner(adminWallet, ChainId.Hardhat);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmTKKUUEU6GnG7VEEAAXpveeirREC1JNYntVJGhHKhqcYZ/0";
     const tx = await pub.publish(ipfsUri);
@@ -165,7 +165,7 @@ describe("Publishing", async () => {
   });
 
   it("AzukiWithMinting mintable", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
+    const realSDK = ThirdwebSDK.fromSigner(adminWallet, ChainId.Hardhat);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmPPPoKk2mwoxBVTW5qMMNwaV4Ja5qDoq7fFZNFFvr3YsW/1";
     const tx = await pub.publish(ipfsUri);
@@ -196,7 +196,7 @@ describe("Publishing", async () => {
   });
 
   it("ERC721Dropable feature detection", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
+    const realSDK = ThirdwebSDK.fromSigner(adminWallet, ChainId.Hardhat);
     const pub = realSDK.getPublisher();
     const ipfsUri = "ipfs://QmWaidQMSYHPzYYZCxMc2nSk2vrD28mS43Xc9k7QFyAGja/0";
     const addr = await pub.deployContract(ipfsUri, []);
@@ -225,7 +225,7 @@ describe("Publishing", async () => {
   });
 
   it("Constructor params with tuples", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
+    const realSDK = ThirdwebSDK.fromSigner(adminWallet, ChainId.Hardhat);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmZQa56Cj1gFnZgKSkvGE5uzhaQrQV3nU6upDWDusCaCwY/0";
     const addr = await pub.deployContract(ipfsUri, [

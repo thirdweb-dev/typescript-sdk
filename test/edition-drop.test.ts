@@ -31,7 +31,7 @@ describe("Edition Drop Contract", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const address = await sdk.deployer.deployEditionDrop({
       name: `Testing bundle drop from SDK`,
       description: "Test contract from tests",
@@ -100,7 +100,7 @@ describe("Edition Drop Contract", async () => {
     ]);
 
     for (const member of testWallets) {
-      await sdk.updateSignerOrProvider(member);
+      await sdk.wallet.connect(member);
       await bdContract.claim("0", 1);
     }
     const bundle = await bdContract.get("0");
@@ -138,7 +138,7 @@ describe("Edition Drop Contract", async () => {
 
     for (const member of testWallets) {
       try {
-        sdk.updateSignerOrProvider(member);
+        sdk.wallet.connect(member);
         await bdContract.claim("0", 1);
       } catch (e) {
         if (member !== w4) {
@@ -207,10 +207,10 @@ describe("Edition Drop Contract", async () => {
         ],
       },
     ]);
-    await sdk.updateSignerOrProvider(w1);
+    await sdk.wallet.connect(w1);
     await bdContract.claim(0, 2);
     try {
-      await sdk.updateSignerOrProvider(w2);
+      await sdk.wallet.connect(w2);
       await bdContract.claim(0, 2);
     } catch (e) {
       expectError(e, "invalid quantity proof");
@@ -248,7 +248,7 @@ describe("Edition Drop Contract", async () => {
     await bdContract.claimConditions.set("1", [{}]);
     await bdContract.claim("0", 1);
 
-    await sdk.updateSignerOrProvider(samWallet);
+    await sdk.wallet.connect(samWallet);
     await bdContract.claim("0", 1);
 
     // TODO some asserts
@@ -258,9 +258,9 @@ describe("Edition Drop Contract", async () => {
     //   adminWallet.address,
     // ]);
 
-    await sdk.updateSignerOrProvider(w1);
+    await sdk.wallet.connect(w1);
     await bdContract.claim("1", 1);
-    await sdk.updateSignerOrProvider(w2);
+    await sdk.wallet.connect(w2);
     await bdContract.claim("1", 1);
 
     const ownedW1 = await bdContract.getOwned(w1.address);
@@ -276,11 +276,11 @@ describe("Edition Drop Contract", async () => {
       },
     ]);
 
-    await sdk.updateSignerOrProvider(w1);
+    await sdk.wallet.connect(w1);
     const canClaimW1 = await bdContract.claimConditions.canClaim("0", 1);
     assert.isTrue(canClaimW1, "w1 should be able to claim");
 
-    await sdk.updateSignerOrProvider(w2);
+    await sdk.wallet.connect(w2);
     const canClaimW2 = await bdContract.claimConditions.canClaim("0", 1);
     assert.isFalse(canClaimW2, "w2 should not be able to claim");
   });
@@ -489,7 +489,7 @@ describe("Edition Drop Contract", async () => {
           waitInSeconds: 24 * 60 * 60,
         },
       ]);
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
       await bdContract.claim("0", 1);
 
       const reasons =
@@ -518,7 +518,7 @@ describe("Edition Drop Contract", async () => {
           currencyAddress: NATIVE_TOKEN_ADDRESS,
         },
       ]);
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
 
       const reasons =
         await bdContract.claimConditions.getClaimIneligibilityReasons(
@@ -552,7 +552,7 @@ describe("Edition Drop Contract", async () => {
           currencyAddress: currency.getAddress(),
         },
       ]);
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
 
       const reasons =
         await bdContract.claimConditions.getClaimIneligibilityReasons(

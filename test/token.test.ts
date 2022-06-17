@@ -19,7 +19,7 @@ describe("Token Contract", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const address = await sdk.deployer.deployBuiltInContract(
       Token.contractType,
       {
@@ -67,7 +67,7 @@ describe("Token Contract", async () => {
     await currencyContract.mintToSelf(20);
     await currencyContract.transfer(samWallet.address, "10");
     await currencyContract.transfer(bobWallet.address, "5");
-    sdk.updateSignerOrProvider(samWallet);
+    sdk.wallet.connect(samWallet);
     await currencyContract.transfer(bobWallet.address, "3");
 
     const holders = await currencyContract.history.getAllHolderBalances();
