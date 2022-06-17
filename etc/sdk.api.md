@@ -189,6 +189,12 @@ export enum ChainId {
     Rinkeby = 4
 }
 
+// @public
+export class ChainMismatchError extends Error {
+    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "ChainOrRpc" which is marked as @internal
+    constructor(expectedChainId: ChainOrRpc, actualChainId: number);
+}
+
 // @public (undocumented)
 export const chainNameToId: Record<string, number>;
 
@@ -4999,11 +5005,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-incompatible-release-tags) The symbol "fromPrivateKey" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
     //
     // @beta
-    static fromPrivateKey(privateKey: string, network: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
+    static fromPrivateKey(privateKey: string, chainId: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
     // Warning: (ae-incompatible-release-tags) The symbol "fromSigner" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
     //
     // @beta
-    static fromSigner(signer: Signer, network: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
+    static fromSigner(signer: Signer, chainId: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
     // @internal (undocumented)
     getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     // @beta

@@ -1,7 +1,6 @@
 import { providers, Signer } from "ethers";
-import { chainNameToId, getProviderForChain } from "../../constants/urls";
 import { ConnectionInfo } from "../types";
-import { ChainOrRpc } from "../../constants";
+import { ChainOrRpc, getProviderForChain } from "../../constants";
 import { EventEmitter2 } from "eventemitter2";
 import {
   SDKOptions,

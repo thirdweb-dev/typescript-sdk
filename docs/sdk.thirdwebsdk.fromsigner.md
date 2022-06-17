@@ -12,7 +12,7 @@ Get an instance of the thirdweb SDK based on an existing ethers signer
 <b>Signature:</b>
 
 ```typescript
-static fromSigner(signer: Signer, network: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
+static fromSigner(signer: Signer, chainId: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ static fromSigner(signer: Signer, network: ChainOrRpc, options?: SDKOptions, sto
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  signer | Signer | a ethers Signer to be used for transactions |
-|  network | ChainOrRpc | the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url |
+|  chainId | ChainOrRpc | the chainId to connect to (e.g. ChainId.Mainnet, ChainId.Rinkeby, ChainId.Polygon, ChainId.Mumbai...) |
 |  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> the SDK options to use |
 |  storage | [IStorage](./sdk.istorage.md) | <i>(Optional)</i> the storage handler to use |
 

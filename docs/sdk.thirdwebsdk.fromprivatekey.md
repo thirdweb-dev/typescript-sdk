@@ -12,7 +12,7 @@ Get an instance of the thirdweb SDK based on a private key.
 <b>Signature:</b>
 
 ```typescript
-static fromPrivateKey(privateKey: string, network: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
+static fromPrivateKey(privateKey: string, chainId: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ static fromPrivateKey(privateKey: string, network: ChainOrRpc, options?: SDKOpti
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  privateKey | string | the private key - \*\*DO NOT EXPOSE THIS TO THE PUBLIC\*\* |
-|  network | ChainOrRpc | the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url |
+|  chainId | ChainOrRpc | the chainId to connect to (e.g. ChainId.Mainnet, ChainId.Rinkeby, ChainId.Polygon, ChainId.Mumbai...) |
 |  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> the SDK options to use |
 |  storage | [IStorage](./sdk.istorage.md) | <i>(Optional)</i> the storage handler to use |
 

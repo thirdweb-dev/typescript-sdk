@@ -31,7 +31,7 @@ import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { ChainId, chainNameToId } from "../../constants";
-import { convertToTWError } from "../../common";
+import { ChainMismatchError, convertToTWError } from "../../common";
 import { isBrowser } from "../../common/utils";
 
 /**
@@ -281,11 +281,8 @@ export class ContractWrapper<
         : passedInNetwork;
     // expectedChainId might not be found if we got passed a rpc url directly, in that case let the tx go through
     // TODO create a provider from the url
-    if (expectedChainId) {
-      invariant(
-        chainId === expectedChainId,
-        `Chain mismatch Error: Trying to call a contract on chain '${expectedChainId}', but the connected signer is on chain '${chainId}'.`,
-      );
+    if (expectedChainId && chainId !== expectedChainId) {
+      throw new ChainMismatchError(expectedChainId, chainId);
     }
 
     if (!callOverrides) {

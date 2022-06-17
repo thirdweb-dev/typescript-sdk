@@ -8,6 +8,7 @@
 
 |  Class | Description |
 |  --- | --- |
+|  [ChainMismatchError](./sdk.chainmismatcherror.md) | Thrown when trying to do a transaction on a non-expected chain |
 |  [ContractDeployer](./sdk.contractdeployer.md) | Handles deploying new contracts |
 |  [ContractEncoder](./sdk.contractencoder.md) | Encodes and decodes Contract functions |
 |  [ContractEvents](./sdk.contractevents.md) | Listen to Contract events in real time |
