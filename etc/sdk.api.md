@@ -606,7 +606,6 @@ export class ContractEvents<TContract extends BaseContract> {
     addTransactionListener(listener: ListenerFn): void;
     listenToAllEvents(listener: (event: ContractEvent) => void): void;
     removeAllListeners(): void;
-    // (undocumented)
     removeEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: providers.Listener): void;
     removeTransactionListener(listener: ListenerFn): void;
 }
