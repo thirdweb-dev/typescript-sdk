@@ -301,7 +301,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     );
     if (connectedAddress.toLowerCase() !== adminAddress.toLowerCase()) {
       throw new Error(
-        `Expected token signer address ${adminAddress} to match the connected wallet address ${connectedAddress}`,
+        `The connected wallet address ${connectedAddress} did not sign the token`,
       );
     }
 
@@ -320,7 +320,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     // Prompt user to make sure domain is correct to prevent phishing attacks
     message += `Make sure that the requesting domain above matches the URL of the current website.\n\n`;
 
-    // Add data fields in copliance with the AIP-4361 standard
+    // Add data fields in compliance with the EIP-4361 standard
     if (payload.chainId) {
       message += `Chain ID: ${payload.chainId}\n`;
     }
