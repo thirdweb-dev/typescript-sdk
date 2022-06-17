@@ -5609,7 +5609,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, wallet: UserWallet, options: SDKOptions);
     authenticate(domain: string, token: string): Promise<string>;
     // Warning: (ae-forgotten-export) The symbol "AuthenticationOptions" needs to be exported by the entry point index.d.ts
-    generate(domain: string, payload: LoginPayload, options?: AuthenticationOptions): Promise<string>;
+    generateAuthToken(domain: string, payload: LoginPayload, options?: AuthenticationOptions): Promise<string>;
     // Warning: (ae-forgotten-export) The symbol "LoginOptions" needs to be exported by the entry point index.d.ts
     // Warning: (ae-forgotten-export) The symbol "LoginPayload" needs to be exported by the entry point index.d.ts
     login(domain: string, options?: LoginOptions): Promise<LoginPayload>;

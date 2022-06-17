@@ -38,7 +38,7 @@ Server-side function that authenticates the provided JWT token. This function ve
 ```javascript
 const domain = "thirdweb.com";
 const loginPayload = await sdk.auth.login(domain);
-const token = await sdk.auth.generate(domain, loginPayload);
+const token = await sdk.auth.generateAuthToken(domain, loginPayload);
 
 // Authenticate the token and get the address of authenticating users wallet
 const address = sdk.auth.authenticate(domain, token);

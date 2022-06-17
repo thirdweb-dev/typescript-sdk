@@ -52,7 +52,7 @@ const address = sdk.auth.authenticate(domain, token);
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [authenticate(domain, token)](./sdk.walletauthenticator.authenticate.md) |  | <b><i>(BETA)</i></b> Authenticate With Token |
-|  [generate(domain, payload, options)](./sdk.walletauthenticator.generate.md) |  | <b><i>(BETA)</i></b> Generate Authentication Token |
+|  [generateAuthToken(domain, payload, options)](./sdk.walletauthenticator.generateauthtoken.md) |  | <b><i>(BETA)</i></b> Generate Authentication Token |
 |  [login(domain, options)](./sdk.walletauthenticator.login.md) |  | <b><i>(BETA)</i></b> Login With Connected Wallet |
 |  [verify(domain, payload, options)](./sdk.walletauthenticator.verify.md) |  | <b><i>(BETA)</i></b> Verify Logged In Address |
 

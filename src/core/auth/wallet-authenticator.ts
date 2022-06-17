@@ -123,16 +123,12 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     payload: LoginPayload,
     options?: VerifyOptions,
   ): string {
-    if (isBrowser()) {
-      throw new Error("Should not verify login on the browser.");
-    }
-
     const parsedOptions = VerifyOptionsSchema.parse(options);
 
     // Check that the intended domain matches the domain of the payload
     if (payload.payload.domain !== domain) {
       throw new Error(
-        `Expected domain ${domain} does not match domain on payload ${payload.payload.domain}`,
+        `Expected domain '${domain}' does not match domain on payload '${payload.payload.domain}'`,
       );
     }
 
@@ -148,7 +144,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
       parsedOptions.chainId !== payload.payload.chainId
     ) {
       throw new Error(
-        `Chain ID ${parsedOptions.chainId} does not match payload chain ID ${payload.payload.chainId}`,
+        `Chain ID '${parsedOptions.chainId}' does not match payload chain ID '${payload.payload.chainId}'`,
       );
     }
 
@@ -157,7 +153,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     const userAddress = this.recoverAddress(message, payload.signature);
     if (userAddress.toLowerCase() !== payload.payload.address.toLowerCase()) {
       throw new Error(
-        `Signer address ${userAddress.toLowerCase()} does not match payload address ${payload.payload.address.toLowerCase()}`,
+        `Signer address '${userAddress.toLowerCase()}' does not match payload address '${payload.payload.address.toLowerCase()}'`,
       );
     }
 
@@ -180,17 +176,17 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    * const loginPayload = await sdk.auth.login(domain);
    *
    * // Generate a JWT token that can be sent to the client-side wallet and used for authentication
-   * const token = await sdk.auth.generate(domain, loginPayload);
+   * const token = await sdk.auth.generateAuthToken(domain, loginPayload);
    * ```
    */
-  public async generate(
+  public async generateAuthToken(
     domain: string,
     payload: LoginPayload,
     options?: AuthenticationOptions,
   ): Promise<string> {
     if (isBrowser()) {
       throw new Error(
-        "Authentication tokens should not be generated in the browser.",
+        "Authentication tokens should not be generated in the browser, as they must be signed by a server-side admin wallet.",
       );
     }
 
@@ -246,7 +242,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    * ```javascript
    * const domain = "thirdweb.com";
    * const loginPayload = await sdk.auth.login(domain);
-   * const token = await sdk.auth.generate(domain, loginPayload);
+   * const token = await sdk.auth.generateAuthToken(domain, loginPayload);
    *
    * // Authenticate the token and get the address of authenticating users wallet
    * const address = sdk.auth.authenticate(domain, token);
@@ -254,7 +250,9 @@ export class WalletAuthenticator extends RPCConnectionHandler {
    */
   public async authenticate(domain: string, token: string): Promise<string> {
     if (isBrowser()) {
-      throw new Error("Should not authenticate tokens in the browser.");
+      throw new Error(
+        "Should not authenticate tokens in the browser, as they must be verified by the server-side admin wallet.",
+      );
     }
 
     const encodedPayload = token.split(".")[1];
@@ -267,7 +265,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     // Check that the token audience matches the domain
     if (payload.aud !== domain) {
       throw new Error(
-        `Expected token to be for the domain ${domain}, but found token with domain ${payload.aud}`,
+        `Expected token to be for the domain '${domain}', but found token with domain '${payload.aud}'`,
       );
     }
 
@@ -275,14 +273,14 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     const currentTime = Math.floor(new Date().getTime() / 1000);
     if (currentTime < payload.nbf) {
       throw new Error(
-        `This token is invalid before epoch time ${payload.nbf}, current epoch time is ${currentTime}`,
+        `This token is invalid before epoch time '${payload.nbf}', current epoch time is '${currentTime}'`,
       );
     }
 
     // Check that the token hasn't expired
     if (currentTime > payload.exp) {
       throw new Error(
-        `This token expired at epoch time ${payload.exp}, current epoch time is ${currentTime}`,
+        `This token expired at epoch time '${payload.exp}', current epoch time is '${currentTime}'`,
       );
     }
 
@@ -290,7 +288,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     const connectedAddress = await this.wallet.getAddress();
     if (connectedAddress.toLowerCase() !== payload.iss.toLowerCase()) {
       throw new Error(
-        `Expected the connected wallet address ${connectedAddress} to match the token issuer address ${payload.iss}`,
+        `Expected the connected wallet address '${connectedAddress}' to match the token issuer address '${payload.iss}'`,
       );
     }
 
@@ -301,7 +299,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     );
     if (connectedAddress.toLowerCase() !== adminAddress.toLowerCase()) {
       throw new Error(
-        `The connected wallet address ${connectedAddress} did not sign the token`,
+        `The connected wallet address '${connectedAddress}' did not sign the token`,
       );
     }
 
