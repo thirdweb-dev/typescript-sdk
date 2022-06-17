@@ -616,12 +616,9 @@ export class ContractEvents<TContract extends BaseContract> {
 // @public (undocumented)
 export type ContractForContractType<TContractType extends ContractType> = Instance<typeof CONTRACTS_MAP[TContractType]>;
 
-// Warning: (ae-internal-missing-underscore) The name "ContractInterceptor" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @public
 export class ContractInterceptor<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
-    // @public
     overrideNextTransaction(hook: () => CallOverrides): void;
 }
 
@@ -4467,8 +4464,6 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     events: ContractEvents<TContract>;
     // (undocumented)
     getAddress(): string;
-    // Warning: (ae-incompatible-release-tags) The symbol "interceptor" is marked as @beta, but its signature references "ContractInterceptor" which is marked as @internal
-    //
     // (undocumented)
     interceptor: ContractInterceptor<TContract>;
     // (undocumented)

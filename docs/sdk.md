@@ -11,6 +11,7 @@
 |  [ContractDeployer](./sdk.contractdeployer.md) | Handles deploying new contracts |
 |  [ContractEncoder](./sdk.contractencoder.md) | Encodes and decodes Contract functions |
 |  [ContractEvents](./sdk.contractevents.md) | Listen to Contract events in real time |
+|  [ContractInterceptor](./sdk.contractinterceptor.md) | Allows overriding transaction behavior for this contract |
 |  [ContractMetadata](./sdk.contractmetadata.md) | Handles metadata for a Contract |
 |  [ContractPlatformFee](./sdk.contractplatformfee.md) | Handle platform fees and recipients |
 |  [ContractPrimarySale](./sdk.contractprimarysale.md) | Handle primary sales recipients |
