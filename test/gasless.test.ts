@@ -12,7 +12,7 @@ describe("Gasless Forwarder", async () => {
     const BUNDLE_DROP_ADDRESS = "0xEBed8e37a32660dbCeeeC19cCBb952b7d214f008";
     const provider = ethers.getDefaultProvider(RPC_URL);
     const wallet = Wallet.createRandom().connect(provider);
-    const sdk = new ThirdwebSDK(wallet, {
+    const sdk = ThirdwebSDK.fromSigner(wallet, RPC_URL, {
       gasless: {
         biconomy: {
           apiKey: process.env.BICONOMY_API_KEY as string,

@@ -28,7 +28,7 @@ import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
 import { QueryAllParams } from "../types";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
-import { ChainOrRpc } from "../constants/index";
+import { ChainOrRpc } from "../types/chains";
 
 /**
  * Create a collection of one-of-one NFTs.

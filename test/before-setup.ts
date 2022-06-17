@@ -245,8 +245,9 @@ before(async () => {
   process.env.contractMetadataRegistryAddress = metadataRegistry.address;
 
   storage = new MockStorage();
-  sdk = new ThirdwebSDK(
+  sdk = ThirdwebSDK.fromSigner(
     signer,
+    RPC_URL,
     {
       gasSettings: {
         maxPriceInGwei: 10000,
@@ -264,4 +265,5 @@ export {
   registryAddress,
   fastForwardTime,
   storage,
+  RPC_URL,
 };

@@ -34,7 +34,7 @@ import { QueryAllParams } from "../types";
 import { isTokenApprovedForTransfer } from "../common/marketplace";
 import { Erc721Supply } from "../core/classes/erc-721-supply";
 import { IStorage } from "../core/interfaces/IStorage";
-import { ChainOrRpc } from "../constants/index";
+import { ChainOrRpc } from "../types/chains";
 
 /**
  * Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.

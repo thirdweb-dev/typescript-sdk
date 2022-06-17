@@ -31,7 +31,7 @@ import { QueryAllParams } from "../types";
 import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
 import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
-import { ChainOrRpc } from "../constants/index";
+import { ChainOrRpc } from "../types/chains";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.

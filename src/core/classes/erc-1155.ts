@@ -24,7 +24,7 @@ import { Erc1155Enumerable } from "./erc-1155-enumerable";
 import { Erc1155Mintable } from "./erc-1155-mintable";
 import { FEATURE_EDITION } from "../../constants/erc1155-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ChainOrRpc } from "../../constants/index";
+import { ChainOrRpc } from "../../types/chains";
 
 /**
  * Standard ERC1155 NFT functions

@@ -1,6 +1,7 @@
 import { ethers, providers } from "ethers";
 import { SignerOrProvider } from "../core/types";
 import { ChainId, SUPPORTED_CHAIN_ID } from "./chains";
+import { ChainOrRpc } from "../types/index";
 /**
  * @internal
  */
@@ -57,28 +58,6 @@ export const defaultRPCMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.Avalanche]: "https://rpc.ankr.com/avalanche",
   [ChainId.AvalancheFujiTestnet]: "https://api.avax-test.network/ext/bc/C/rpc",
 };
-
-/**
- * @internal
- */
-export type ChainOrRpc =
-  | "mumbai"
-  | "polygon"
-  // common alias for `polygon`
-  | "matic"
-  | "rinkeby"
-  | "goerli"
-  | "mainnet"
-  // common alias for `mainnet`
-  | "ethereum"
-  | "fantom"
-  | "avalanche"
-  | "optimism"
-  | "optimism-testnet"
-  | "arbitrum"
-  | "arbitrum-testnet"
-  | (string & {})
-  | (number & {});
 
 /**
  * @internal

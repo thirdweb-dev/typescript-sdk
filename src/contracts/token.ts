@@ -24,7 +24,7 @@ import { Erc20Mintable } from "../core/classes/erc-20-mintable";
 import { Erc20BatchMintable } from "../core/classes/erc-20-batch-mintable";
 import { constants } from "ethers";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
-import { ChainOrRpc } from "../constants/index";
+import { ChainOrRpc } from "../types/chains";
 
 /**
  * Create a standard crypto token or cryptocurrency.

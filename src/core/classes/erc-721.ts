@@ -25,7 +25,7 @@ import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { Erc721Dropable } from "./erc-721-dropable";
-import { ChainOrRpc } from "../../constants/index";
+import { ChainOrRpc } from "../../types/chains";
 
 /**
  * Standard ERC721 NFT functions

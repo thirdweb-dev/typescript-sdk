@@ -46,7 +46,7 @@ import {
 } from "contracts/DropERC721";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { UploadProgressEvent } from "../types/events";
-import { ChainOrRpc } from "../constants/index";
+import { ChainOrRpc } from "../types/chains";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.

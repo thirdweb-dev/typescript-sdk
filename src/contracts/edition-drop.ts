@@ -34,7 +34,7 @@ import { getRoleHash } from "../common";
 
 import { EditionMetadata, EditionMetadataOwner } from "../schema";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
-import { ChainOrRpc } from "../constants/index";
+import { ChainOrRpc } from "../types/chains";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.

@@ -40,7 +40,7 @@ import { EditionMetadata, EditionMetadataOwner } from "../schema";
 import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
 import { QueryAllParams } from "../types";
 import { getRoleHash } from "../common/role";
-import { ChainOrRpc } from "../constants/index";
+import { ChainOrRpc } from "../types/chains";
 
 /**
  * Create lootboxes of NFTs with rarity based open mechanics.

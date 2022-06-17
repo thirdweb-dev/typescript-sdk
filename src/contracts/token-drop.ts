@@ -19,7 +19,7 @@ import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { prepareClaim } from "../common/claim-conditions";
 import { getRoleHash } from "../common";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
-import { ChainOrRpc } from "../constants/index";
+import { ChainOrRpc } from "../types/chains";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.

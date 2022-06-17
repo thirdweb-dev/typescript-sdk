@@ -17,7 +17,7 @@ import { detectContractFeature } from "../../common";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { FEATURE_TOKEN } from "../../constants/erc20-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { ChainOrRpc } from "../../constants/index";
+import { ChainOrRpc } from "../../types/chains";
 
 /**
  * Standard ERC20 Token functions

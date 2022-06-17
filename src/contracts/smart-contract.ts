@@ -28,7 +28,7 @@ import { ContractPublishedMetadata } from "../core/classes/contract-published-me
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { CallOverrideSchema } from "../schema/index";
-import { ChainOrRpc } from "../constants/index";
+import { ChainOrRpc } from "../types/chains";
 
 /**
  * Custom contract dynamic class with feature detection

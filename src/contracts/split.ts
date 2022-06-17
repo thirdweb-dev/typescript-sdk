@@ -16,7 +16,7 @@ import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractEvents } from "../core/classes/contract-events";
 import ERC20Abi from "../../abis/IERC20.json";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
-import { ChainOrRpc } from "../constants/index";
+import { ChainOrRpc } from "../types/chains";
 
 /**
  * Create custom royalty splits to distribute funds.

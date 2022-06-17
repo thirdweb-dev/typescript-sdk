@@ -1,5 +1,5 @@
 import { NetworkOrSignerOrProvider } from "../types";
-import { ChainOrRpc } from "../../constants/index";
+import { ChainOrRpc } from "../../types/chains";
 
 /**
  * @public

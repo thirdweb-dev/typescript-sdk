@@ -1,8 +1,7 @@
-import { expectError, signers } from "./before-setup";
+import { expectError, RPC_URL, signers } from "./before-setup";
 import { expect } from "chai";
 import invariant from "tiny-invariant";
 import {
-  DropERC721__factory,
   SignatureDrop__factory,
   TokenERC1155__factory,
   TokenERC20__factory,
@@ -33,7 +32,7 @@ describe("Custom Contracts", async () => {
 
   before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    sdk = new ThirdwebSDK(adminWallet);
+    sdk = ThirdwebSDK.fromSigner(adminWallet, RPC_URL);
     storage = new IpfsStorage();
     simpleContractUri = await uploadContractMetadata("Greeter", storage);
   });

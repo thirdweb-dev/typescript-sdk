@@ -23,7 +23,7 @@ import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
-import { ChainOrRpc } from "../constants/index";
+import { ChainOrRpc } from "../types/chains";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.

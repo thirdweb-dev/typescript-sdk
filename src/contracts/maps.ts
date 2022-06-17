@@ -17,7 +17,6 @@ import { Multiwrap } from "./multiwrap";
  */
 export const KNOWN_CONTRACTS_MAP = {
   [NFTDrop.contractType]: NFTDrop,
-  [SignatureDrop.contractType]: SignatureDrop,
   [NFTCollection.contractType]: NFTCollection,
   [EditionDrop.contractType]: EditionDrop,
   [Edition.contractType]: Edition,
@@ -28,6 +27,7 @@ export const KNOWN_CONTRACTS_MAP = {
   [Marketplace.contractType]: Marketplace,
   [Pack.contractType]: Pack,
   [Multiwrap.contractType]: Multiwrap,
+  [SignatureDrop.contractType]: SignatureDrop,
 } as const;
 
 /**

@@ -31,13 +31,10 @@ import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
-import {
-  ChainOrRpc,
-  getRpcUrlOrSigner,
-  getReadOnlyProvider,
-} from "../constants";
+import { getRpcUrlOrSigner, getReadOnlyProvider } from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
 import { Multiwrap } from "../contracts/multiwrap";
+import { ChainOrRpc } from "../types/chains";
 
 /**
  * The main entry point for the thirdweb SDK
