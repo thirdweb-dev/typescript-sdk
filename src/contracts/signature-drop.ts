@@ -158,9 +158,24 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * await contract.revealer.reveal(batchId, "my secret password");
    * ```
    */
-
   public revealer: DelayedReveal<SignatureDropContract>;
+
+  /**
+   * Signature Minting
+   * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
+   * @example
+   * ```javascript
+   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
+   * const signedPayload = contract.signature.generate(payload);
+   *
+   * // now anyone can mint the NFT
+   * const tx = contract.signature.mint(signedPayload);
+   * const receipt = tx.receipt; // the mint transaction receipt
+   * const mintedId = tx.id; // the id of the NFT minted
+   * ```
+   */
   public signature: Erc721WithQuantitySignatureMintable;
+
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
 

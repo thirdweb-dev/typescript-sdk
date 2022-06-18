@@ -89,7 +89,22 @@ export class NFTCollection extends Erc721<TokenERC721> {
    */
   public interceptor: ContractInterceptor<TokenERC721>;
 
+  /**
+   * Signature Minting
+   * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
+   * @example
+   * ```javascript
+   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
+   * const signedPayload = contract.signature.generate(payload);
+   *
+   * // now anyone can mint the NFT
+   * const tx = contract.signature.mint(signedPayload);
+   * const receipt = tx.receipt; // the mint transaction receipt
+   * const mintedId = tx.id; // the id of the NFT minted
+   * ```
+   */
   public signature = this.signatureMint;
+
   private _mint = this.mint as Erc721Mintable;
   private _batchMint = this._mint.batch as Erc721BatchMintable;
   private _query = this.query as Erc721Supply;
