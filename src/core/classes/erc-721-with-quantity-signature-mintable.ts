@@ -78,7 +78,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     const overrides = await this.contractWrapper.getCallOverrides();
     await setErc20Allowance(
       this.contractWrapper,
-      BigNumber.from(message.pricePerToken),
+      message.pricePerToken,
       mintRequest.currencyAddress,
       overrides,
     );
@@ -241,7 +241,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
             name: "SignatureMintERC721",
             version: "1",
             chainId,
-            verifyingContract: this.contractWrapper.readContract.address,
+            verifyingContract: await this.contractWrapper.readContract.address,
           },
           { MintRequest: MintRequest721withQuantity },
           await this.mapPayloadToContractStruct(finalPayload),

@@ -291,7 +291,6 @@ describe("Signature drop tests", async () => {
         mintStartTime: new Date(),
       });
       await sdk.updateSignerOrProvider(samWallet);
-      console.log(payload);
       await signatureDropContract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
