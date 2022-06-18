@@ -13,7 +13,9 @@ import { uploadContractMetadata } from "./publisher.test";
 import {
   IpfsStorage,
   NATIVE_TOKEN_ADDRESS,
-  SignedPayload721WithQuantitySignature,
+  PayloadToSign20,
+  SignedPayload1155,
+  SignedPayload721,
   ThirdwebSDK,
 } from "../src";
 import { ethers } from "ethers";
@@ -330,15 +332,15 @@ describe("Custom Contracts", async () => {
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
 
-  it("should detect feature: erc721 signature mintable", async () => {
+  it("should detect feature: erc1155 signature mintable", async () => {
     const c = await sdk.getContractFromAbi(
-      sigDropContractAddress,
-      SignatureDrop__factory.abi,
+      editionContractAddress,
+      TokenERC1155__factory.abi,
     );
 
     invariant(c, "Contract undefined");
-    invariant(c.nft, "ERC721 undefined");
-    invariant(c.nft.signature, "ERC721 drop");
+    invariant(c.edition, "ERC1155 undefined");
+    invariant(c.edition.signature, "ERC1155 Signature Undefined");
 
     const payload = {
       metadata: {
@@ -351,15 +353,92 @@ describe("Custom Contracts", async () => {
       quantity: "1",
     };
 
-    let goodPayload: SignedPayload721WithQuantitySignature;
+    let goodPayload: SignedPayload1155;
 
-    goodPayload = await c.nft.signature.generate(payload);
+    goodPayload = await c.edition.signature.generate(payload);
 
-    const valid = await c.nft.signature.verify(goodPayload);
+    const valid = await c.edition.signature.verify(goodPayload);
     assert.isTrue(valid, "This voucher should be valid");
-    //
-    // const nft = await c.nft.signature.mint(goodPayload);
-    //
-    // console.log("NFT", nft);
+
+    const tx = await c.edition.signature.mint(goodPayload);
+    // Better way to do this?
+    expect(tx.id.toNumber()).to.eq(0);
+  });
+
+  it("should detect feature: erc20 signature mintable", async () => {
+    const c = await sdk.getContractFromAbi(
+      tokenContractAddress,
+      TokenERC20__factory.abi,
+    );
+
+    let meta: PayloadToSign20;
+
+    meta = {
+      currencyAddress: NATIVE_TOKEN_ADDRESS,
+      quantity: 50,
+      price: "0.2",
+      to: samWallet.address,
+      primarySaleRecipient: adminWallet.address,
+    };
+
+    invariant(c, "Contract undefined");
+    invariant(c.token, "ERC20 undefined");
+    invariant(c.token.signature, "ERC20 Signature Undefined");
+
+    const input = [
+      {
+        ...meta,
+        quantity: 1,
+      },
+      {
+        ...meta,
+        quantity: 2,
+      },
+      {
+        ...meta,
+        quantity: 3,
+      },
+    ];
+
+    const batch = await c.token.signature.generateBatch(input);
+
+    for (const [_, v] of batch.entries()) {
+      await c.token.signature.mint(v);
+    }
+    const balance = await c.token.balanceOf(samWallet.address);
+    expect(balance.displayValue).to.eq("6.0");
+  });
+
+  it("should detect feature: erc721 signature mintable", async () => {
+    const c = await sdk.getContractFromAbi(
+      nftContractAddress,
+      TokenERC721__factory.abi,
+    );
+
+    invariant(c, "Contract undefined");
+    invariant(c.nft, "ERC721 undefined");
+    invariant(c.nft.signatureMint, "ERC721 drop");
+
+    const payload = {
+      metadata: {
+        name: "OUCH VOUCH",
+      },
+      to: samWallet.address, // Who will receive the NFT (or AddressZero for anyone)
+      price: 0.5, // the price to pay for minting
+      currencyAddress: NATIVE_TOKEN_ADDRESS, // the currency to pay with
+      royaltyBps: 100, // custom royalty fees for this NFT (in bps)
+      quantity: "1",
+    };
+
+    let goodPayload: SignedPayload721;
+
+    goodPayload = await c.nft.signatureMint.generate(payload);
+
+    const valid = await c.nft.signatureMint.verify(goodPayload);
+    assert.isTrue(valid, "This voucher should be valid");
+
+    const tx = await c.nft.signatureMint.mint(goodPayload);
+    // Better way to do this?
+    expect(tx.id.toNumber()).to.eq(0);
   });
 });

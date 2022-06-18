@@ -1720,7 +1720,7 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     // @internal
     setApprovalForToken(operator: string, tokenId: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
-    sig: Erc721SignatureMintable | undefined;
+    signatureMint: Erc721SignatureMintable | undefined;
     // (undocumented)
     protected storage: IStorage;
     transfer(to: string, tokenId: BigNumberish): Promise<TransactionResult>;

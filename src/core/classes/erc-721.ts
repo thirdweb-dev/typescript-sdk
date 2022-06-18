@@ -51,7 +51,7 @@ export class Erc721<
   public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
   public drop: Erc721Dropable | undefined;
-  public sig: Erc721SignatureMintable | undefined;
+  public signatureMint: Erc721SignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
@@ -75,7 +75,7 @@ export class Erc721<
     this.query = this.detectErc721Enumerable();
     this.mint = this.detectErc721Mintable();
     this.drop = this.detectErc721Dropable();
-    this.sig = this.detectErc721SignatureMintable();
+    this.signatureMint = this.detectErc721SignatureMintable();
   }
 
   /**
