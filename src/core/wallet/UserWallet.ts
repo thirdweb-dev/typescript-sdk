@@ -16,6 +16,23 @@ import { BigNumber, providers, Signer } from "ethers";
 import { EventEmitter } from "eventemitter3";
 
 /**
+ *
+ * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.
+ *
+ * @public
+ */
+export interface UserWalletEvents {
+  /**
+   * Emitted when `sdk.wallet.connect()` is called.
+   */
+  connected: [Signer];
+  /**
+   * Emitted when `sdk.wallet.disconnect()` is called.
+   */
+  disconnected: void;
+}
+
+/**
  * Connect and Interact with a user wallet
  * @example
  * ```javascript
@@ -28,7 +45,7 @@ export class UserWallet {
   private signer: Signer | undefined;
   private options: SDKOptions;
 
-  public events = new EventEmitter();
+  public events = new EventEmitter<UserWalletEvents>();
 
   constructor(connection: ConnectionInfo, options: SDKOptions) {
     this.readOnlyProvider = new RPCConnectionHandler(connection);

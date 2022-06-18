@@ -105,6 +105,7 @@
 |  [SplitRecipientInput](./sdk.splitrecipientinput.md) |  |
 |  [TokenContractDeployMetadata](./sdk.tokencontractdeploymetadata.md) | Options for deploying a Token contract |
 |  [UploadProgressEvent](./sdk.uploadprogressevent.md) |  |
+|  [UserWalletEvents](./sdk.userwalletevents.md) | [UserWallet](./sdk.userwallet.md) events that you can subscribe to using <code>sdk.wallet.events</code>. |
 |  [VoteContractDeployMetadata](./sdk.votecontractdeploymetadata.md) | Options for deploying a Vote contract |
 |  [VoteSettings](./sdk.votesettings.md) |  |
 

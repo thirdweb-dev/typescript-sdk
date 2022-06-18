@@ -29,7 +29,7 @@ const balance = await sdk.wallet.balance();
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [events](./sdk.userwallet.events.md) |  | StrictEventEmitter&lt;EventEmitter2, WalletEvent&gt; |  |
+|  [events](./sdk.userwallet.events.md) |  | import("eventemitter3")&lt;[UserWalletEvents](./sdk.userwalletevents.md)<!-- -->, any&gt; |  |
 
 ## Methods
 

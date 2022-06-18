@@ -167,8 +167,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       this.options,
       this.storageHandler,
     );
-    this.wallet.events.on("connected", (s: Signer) => {
+    // when there is a new signer connected in the wallet sdk, update that signer
+    this.wallet.events.on("connected", (s) => {
       this.propagateSignerUpdated(s);
+    });
+    // when the wallet disconnects, update the signer to undefined
+    this.wallet.events.on("disconnected", () => {
+      this.propagateSignerUpdated(undefined);
     });
   }
 

@@ -12,14 +12,14 @@ Constructs a new instance of the `WalletAuthenticator` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, wallet: UserWallet, options: SDKOptions);
+constructor(connection: ConnectionInfo, wallet: UserWallet, options: SDKOptions);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  connection | [ConnectionInfo](./sdk.connectioninfo.md) |  |
 |  wallet | [UserWallet](./sdk.userwallet.md) |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) |  |
 
