@@ -13,7 +13,7 @@ import ERC20Abi from "../../../abis/IERC20.json";
 import { ContractWrapper } from "../classes/contract-wrapper";
 import { IERC20 } from "contracts";
 import { BigNumber, providers, Signer } from "ethers";
-import { EventEmitter } from "eventemitter3";
+import EventEmitter from "eventemitter3";
 
 /**
  *

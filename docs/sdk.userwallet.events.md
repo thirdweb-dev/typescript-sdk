@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-events: import("eventemitter3")<UserWalletEvents, any>;
+events: EventEmitter<UserWalletEvents, any>;
 ```

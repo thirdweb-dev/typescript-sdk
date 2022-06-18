@@ -15,8 +15,7 @@ import { ContractInterface } from 'ethers';
 import type { ContractTransaction } from 'ethers';
 import { ethers } from 'ethers';
 import { Event as Event_2 } from 'ethers';
-import { EventEmitter } from 'eventemitter3';
-import { eventemitter3 } from 'eventemitter3';
+import EventEmitter from 'eventemitter3';
 import type { EventFilter } from 'ethers';
 import type { EventFragment } from '@ethersproject/abi';
 import { extendShape } from 'zod';
@@ -5416,7 +5415,7 @@ export class UserWallet {
     // (undocumented)
     disconnect(): void;
     // (undocumented)
-    events: eventemitter3<UserWalletEvents, any>;
+    events: EventEmitter<UserWalletEvents, any>;
     getAddress(): Promise<string>;
     sendRawTransaction(transactionRequest: providers.TransactionRequest): Promise<TransactionResult>;
     sign(message: string): Promise<string>;
