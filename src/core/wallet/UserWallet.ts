@@ -36,8 +36,6 @@ export class UserWallet {
     this.options = options;
   }
 
-  // TODO connect()
-  // TODO disconnect()
   // TODO switchChain()
   // TODO event listener
   // TODO tokens()
