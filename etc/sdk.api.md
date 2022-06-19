@@ -5002,7 +5002,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-incompatible-release-tags) The symbol "fromPrivateKey" is marked as @beta, but its signature references "ChainIdOrName" which is marked as @internal
     //
     // @beta
-    static fromPrivateKey(privateKey: string, chainId: ChainIdOrName, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
+    static fromPrivateKey(privateKey: string, chain: ChainIdOrName, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
     // Warning: (ae-incompatible-release-tags) The symbol "fromSigner" is marked as @beta, but its signature references "ChainIdOrName" which is marked as @internal
     //
     // @beta

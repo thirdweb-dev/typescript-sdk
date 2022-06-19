@@ -31,7 +31,11 @@ import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
-import { chainNameToId, ChainIdOrName } from "../constants";
+import {
+  chainNameToId,
+  ChainIdOrName,
+  getProviderForChain,
+} from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
 import { Multiwrap } from "../contracts/multiwrap";
 import { WalletAuthenticator } from "./auth/wallet-authenticator";
@@ -54,7 +58,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    *
    * @param signer - a ethers Signer to be used for transactions
-   * @param chainId - the chainId to connect to (e.g. ChainId.Mainnet, ChainId.Rinkeby, ChainId.Polygon, ChainId.Mumbai...)
+   * @param chain - the chainId to connect to (e.g. ChainId.Mainnet, ChainId.Rinkeby, ChainId.Polygon, ChainId.Mumbai...)
    * @param options - the SDK options to use
    * @param storage - the storage handler to use
    * @returns an instance of the SDK
@@ -63,11 +67,11 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromSigner(
     signer: Signer,
-    chainId: ChainIdOrName,
+    chain: ChainIdOrName,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
-    const sdk = new ThirdwebSDK(chainId, options, storage);
+    const sdk = new ThirdwebSDK(chain, options, storage);
     sdk.wallet.connect(signer);
     return sdk;
   }
@@ -85,7 +89,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    *
    * @param privateKey - the private key - **DO NOT EXPOSE THIS TO THE PUBLIC**
-   * @param chainId - the chainId to connect to (e.g. ChainId.Mainnet, ChainId.Rinkeby, ChainId.Polygon, ChainId.Mumbai...)
+   * @param chain - the chainId to connect to (e.g. ChainId.Mainnet, ChainId.Rinkeby, ChainId.Polygon, ChainId.Mumbai...)
    * @param options - the SDK options to use
    * @param storage - the storage handler to use
    * @returns an instance of the SDK
@@ -94,11 +98,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromPrivateKey(
     privateKey: string,
-    chainId: ChainIdOrName,
+    chain: ChainIdOrName,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
-    const signer = new ethers.Wallet(privateKey);
+    const chainId = typeof chain === "string" ? chainNameToId[chain] : chain;
+    const provider = getProviderForChain(chainId, options.chainIdToRPCUrlMap);
+    const signer = new ethers.Wallet(privateKey, provider);
     return ThirdwebSDK.fromSigner(signer, chainId, options, storage);
   }
 
@@ -483,7 +489,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 function verifyInputs(chain: ChainIdOrName) {
   if (Signer.isSigner(chain)) {
     throw new Error(
-      "Please use 'ThirdwebSDK.fromSigner(signer, chainId)' to create a new ThirdwebSDK with a signer. Example: 'const sdk = ThirdwebSDK.fromSigner(signer, ChainId.Polygon)'",
+      "Please use 'ThirdwebSDK.fromSigner(signer, chainId)' or 'ThirdwebSDK.fromPrivateKey(privateKey, chainId)' to create a new ThirdwebSDK that can perform transactions. Example: 'const sdk = ThirdwebSDK.fromSigner(signer, ChainId.Polygon)'",
     );
   }
   if (providers.Provider.isProvider(chain)) {

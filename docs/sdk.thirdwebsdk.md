@@ -32,7 +32,7 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [fromPrivateKey(privateKey, chainId, options, storage)](./sdk.thirdwebsdk.fromprivatekey.md) | <code>static</code> | <b><i>(BETA)</i></b> Get an instance of the thirdweb SDK based on a private key. |
+|  [fromPrivateKey(privateKey, chain, options, storage)](./sdk.thirdwebsdk.fromprivatekey.md) | <code>static</code> | <b><i>(BETA)</i></b> Get an instance of the thirdweb SDK based on a private key. |
 |  [fromSigner(signer, chainId, options, storage)](./sdk.thirdwebsdk.fromsigner.md) | <code>static</code> | <b><i>(BETA)</i></b> Get an instance of the thirdweb SDK based on an existing ethers signer |
 |  [getContract(address)](./sdk.thirdwebsdk.getcontract.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom ThirdwebContract |
 |  [getContractFromAbi(address, abi)](./sdk.thirdwebsdk.getcontractfromabi.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom contract from a json ABI |
