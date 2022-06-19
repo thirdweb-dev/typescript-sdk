@@ -188,19 +188,21 @@ export enum ChainId {
     Rinkeby = 4
 }
 
-// @public
-export class ChainMismatchError extends Error {
-    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "ChainOrRpc" which is marked as @internal
-    constructor(expectedChainId: ChainOrRpc, actualChainId: number);
-}
-
-// @public (undocumented)
-export const chainNameToId: Record<string, number>;
-
-// Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-internal-missing-underscore) The name "ChainIdOrName" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "avalanche" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | (string & {}) | (number & {});
+export type ChainIdOrName = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "avalanche" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | ChainId | (number & {});
+
+// @public
+export class ChainMismatchError extends Error {
+    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    constructor(expectedChainId: ChainIdOrName, actualChainId: number);
+}
+
+// Warning: (ae-internal-missing-underscore) The name "chainNameToId" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const chainNameToId: Record<string, number>;
 
 // Warning: (ae-internal-missing-underscore) The name "CidWithFileName" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -554,7 +556,7 @@ export const CommonTrustedForwarderSchema: z.ZodObject<{
 
 // @public (undocumented)
 export type ConnectionInfo = {
-    chainId: ChainOrRpc;
+    chainId: number;
     signer: Signer | undefined;
     provider?: providers.Provider;
 };
@@ -855,8 +857,10 @@ export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
 // @internal (undocumented)
 export const DEFAULT_QUERY_ALL_COUNT = 100;
 
-// @public (undocumented)
-export const defaultRPCMap: Record<SUPPORTED_CHAIN_ID, string>;
+// Warning: (ae-internal-missing-underscore) The name "defaultRPCMap" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const defaultRPCMap: Record<SUPPORTED_CHAIN_ID | ChainId.Hardhat | ChainId.Localhost, string>;
 
 // Warning: (ae-forgotten-export) The symbol "DropERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseDelayedRevealERC721" needs to be exported by the entry point index.d.ts
@@ -1981,10 +1985,10 @@ export function getNativeTokenByChainId(chainId: ChainId): NativeToken;
 // Warning: (ae-internal-missing-underscore) The name "getProviderForChain" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function getProviderForChain(network: ChainOrRpc, customRpcMap?: Record<number, string>): Provider;
+export function getProviderForChain(chainId: number, customRpcMap?: Record<number, string>): Provider;
 
 // @public (undocumented)
-export function getReadOnlyProvider(network: string, chainId?: number): ethers.providers.BaseProvider;
+export function getReadOnlyProvider(network: string, chainId: number): ethers.providers.BaseProvider;
 
 // Warning: (ae-internal-missing-underscore) The name "getRoleHash" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -1994,7 +1998,7 @@ export function getRoleHash(role: Role): BytesLike;
 // Warning: (ae-internal-missing-underscore) The name "getRpcUrl" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function getRpcUrl(network: ChainOrRpc, customRpcMap?: Record<number, string>): string;
+export function getRpcUrl(chainId: number, customRpcMap?: Record<number, string>): string;
 
 // Warning: (ae-internal-missing-underscore) The name "hasFunction" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -4990,19 +4994,19 @@ export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];
 
 // @public
 export class ThirdwebSDK extends RPCConnectionHandler {
-    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "ChainOrRpc" which is marked as @internal
-    constructor(chainId: ChainOrRpc, signer?: Signer | undefined, options?: SDKOptions, storage?: IStorage);
+    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    constructor(chain: ChainIdOrName, options?: SDKOptions, storage?: IStorage);
     // Warning: (ae-incompatible-release-tags) The symbol "auth" is marked as @public, but its signature references "WalletAuthenticator" which is marked as @beta
     auth: WalletAuthenticator;
     deployer: ContractDeployer;
-    // Warning: (ae-incompatible-release-tags) The symbol "fromPrivateKey" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
+    // Warning: (ae-incompatible-release-tags) The symbol "fromPrivateKey" is marked as @beta, but its signature references "ChainIdOrName" which is marked as @internal
     //
     // @beta
-    static fromPrivateKey(privateKey: string, chainId: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
-    // Warning: (ae-incompatible-release-tags) The symbol "fromSigner" is marked as @beta, but its signature references "ChainOrRpc" which is marked as @internal
+    static fromPrivateKey(privateKey: string, chainId: ChainIdOrName, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
+    // Warning: (ae-incompatible-release-tags) The symbol "fromSigner" is marked as @beta, but its signature references "ChainIdOrName" which is marked as @internal
     //
     // @beta
-    static fromSigner(signer: Signer, chainId: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
+    static fromSigner(signer: Signer, chainId: ChainIdOrName, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
     // @internal (undocumented)
     getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     // @beta
@@ -5652,10 +5656,6 @@ export type WrappedTokens = {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
-
-// Warnings were encountered during analysis:
-//
-// dist/src/core/types.d.ts:21:5 - (ae-incompatible-release-tags) The symbol "chainId" is marked as @public, but its signature references "ChainOrRpc" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 

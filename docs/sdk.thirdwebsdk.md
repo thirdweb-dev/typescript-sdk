@@ -17,7 +17,7 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(chainId, signer, options, storage)](./sdk.thirdwebsdk._constructor_.md) |  | Constructs a new instance of the <code>ThirdwebSDK</code> class |
+|  [(constructor)(chain, options, storage)](./sdk.thirdwebsdk._constructor_.md) |  | Constructs a new instance of the <code>ThirdwebSDK</code> class |
 
 ## Properties
 

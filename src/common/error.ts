@@ -1,5 +1,5 @@
 import { BigNumberish, providers } from "ethers";
-import { ChainOrRpc } from "../constants/index";
+import { ChainIdOrName } from "../constants/index";
 
 /**
  * Error that may get thrown if IPFS returns nothing for a given uri.
@@ -16,7 +16,7 @@ export class NotFoundError extends Error {
  * Thrown when trying to do a transaction on a non-expected chain
  */
 export class ChainMismatchError extends Error {
-  constructor(expectedChainId: ChainOrRpc, actualChainId: number) {
+  constructor(expectedChainId: ChainIdOrName, actualChainId: number) {
     super(
       `Chain Mismatch Error: Trying to call a contract on chain '${expectedChainId}', but the connected signer is on chain '${actualChainId}'`,
     );

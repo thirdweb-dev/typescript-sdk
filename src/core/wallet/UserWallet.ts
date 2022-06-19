@@ -41,15 +41,13 @@ export interface UserWalletEvents {
  * @public
  */
 export class UserWallet {
-  private readOnlyProvider: RPCConnectionHandler;
-  private signer: Signer | undefined;
+  private rpc: RPCConnectionHandler;
   private options: SDKOptions;
 
   public events = new EventEmitter<UserWalletEvents>();
 
   constructor(connection: ConnectionInfo, options: SDKOptions) {
-    this.readOnlyProvider = new RPCConnectionHandler(connection);
-    this.signer = connection.signer;
+    this.rpc = new RPCConnectionHandler(connection);
     this.options = options;
   }
 
@@ -59,12 +57,12 @@ export class UserWallet {
   // TODO NFTs()
 
   connect(signer: Signer) {
-    this.signer = signer;
+    this.rpc.updateSigner(signer);
     this.events.emit("connected", signer);
   }
 
   disconnect() {
-    this.signer = undefined;
+    this.rpc.updateSigner(undefined);
     this.events.emit("disconnected");
   }
 
@@ -88,7 +86,7 @@ export class UserWallet {
   ): Promise<TransactionResult> {
     const signer = this.requireWallet();
     const amountInWei = await normalizePriceValue(
-      this.readOnlyProvider.getProvider(),
+      this.rpc.getProvider(),
       amount,
       currencyAddress,
     );
@@ -129,7 +127,7 @@ export class UserWallet {
     currencyAddress = NATIVE_TOKEN_ADDRESS,
   ): Promise<CurrencyValue> {
     this.requireWallet();
-    const provider = this.readOnlyProvider.getProvider();
+    const provider = this.rpc.getProvider();
     let balance: BigNumber;
     if (isNativeToken(currencyAddress)) {
       balance = await provider.getBalance(await this.getAddress());
@@ -180,7 +178,7 @@ export class UserWallet {
    * ***********************/
 
   private requireWallet() {
-    const signer = this.signer;
+    const signer = this.rpc.getSigner();
     invariant(
       signer,
       "This action requires a connected wallet. Please pass a valid signer to the SDK.",
@@ -190,7 +188,7 @@ export class UserWallet {
 
   private createErc20(currencyAddress: string) {
     return new ContractWrapper<IERC20>(
-      this.readOnlyProvider.getConnectionInfo(),
+      this.rpc.getConnectionInfo(),
       currencyAddress,
       ERC20Abi,
       this.options,

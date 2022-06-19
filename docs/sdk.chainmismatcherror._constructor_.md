@@ -9,13 +9,13 @@ Constructs a new instance of the `ChainMismatchError` class
 <b>Signature:</b>
 
 ```typescript
-constructor(expectedChainId: ChainOrRpc, actualChainId: number);
+constructor(expectedChainId: ChainIdOrName, actualChainId: number);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  expectedChainId | ChainOrRpc |  |
+|  expectedChainId | ChainIdOrName |  |
 |  actualChainId | number |  |
 

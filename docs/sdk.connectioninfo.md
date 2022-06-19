@@ -8,7 +8,7 @@
 
 ```typescript
 export declare type ConnectionInfo = {
-    chainId: ChainOrRpc;
+    chainId: number;
     signer: Signer | undefined;
     provider?: providers.Provider;
 };

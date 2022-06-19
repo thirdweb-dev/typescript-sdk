@@ -30,7 +30,7 @@ import { getContractAddressByChainId } from "../../constants/addresses";
 import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { getPolygonGasPriorityFee } from "../../common/gas-price";
-import { ChainId, chainNameToId } from "../../constants";
+import { ChainId } from "../../constants";
 import { ChainMismatchError, convertToTWError } from "../../common";
 import { isBrowser } from "../../common/utils";
 
@@ -75,6 +75,10 @@ export class ContractWrapper<
     // re-connect the contract with the new signer / provider
     this.writeContract = this.writeContract.connect(
       this.getSignerOrProvider(),
+    ) as TContract;
+
+    this.readContract = this.writeContract.connect(
+      this.getProvider(),
     ) as TContract;
   }
 
@@ -258,6 +262,16 @@ export class ContractWrapper<
     args: any[],
     callOverrides?: CallOverrides,
   ): Promise<providers.TransactionReceipt> {
+    // check if the signer is present and on the expected chain
+    const signer = this.getSigner();
+    invariant(signer, "Cannot execute a transaction without valid signer");
+    const chainId = await signer.getChainId();
+    // get the expected chainId from the passed in network (network name or chainId or rpc url)
+    const expectedChainId = this.getConnectionInfo().chainId;
+    if (expectedChainId && chainId !== expectedChainId) {
+      throw new ChainMismatchError(expectedChainId, chainId);
+    }
+
     // one time verification that this is a valid contract (to avoid sending funds to wrong addresses)
     if (!this.isValidContract) {
       const code = await this.getProvider().getCode(this.readContract.address);
@@ -267,22 +281,6 @@ export class ContractWrapper<
           "The address you're trying to send a transaction to is not a smart contract. Make sure you are on the correct network and the contract address is correct",
         );
       }
-    }
-
-    // check if the signer is present and on the expected chain
-    const signer = this.getSigner();
-    invariant(signer, "Cannot execute a transaction without valid signer");
-    const chainId = await signer.getChainId();
-    // get the expected chainId from the passed in network (network name or chainId or rpc url)
-    const passedInNetwork = this.getConnectionInfo().chainId;
-    const expectedChainId: number =
-      typeof passedInNetwork === "string"
-        ? chainNameToId[passedInNetwork]
-        : passedInNetwork;
-    // expectedChainId might not be found if we got passed a rpc url directly, in that case let the tx go through
-    // TODO create a provider from the url
-    if (expectedChainId && chainId !== expectedChainId) {
-      throw new ChainMismatchError(expectedChainId, chainId);
     }
 
     if (!callOverrides) {

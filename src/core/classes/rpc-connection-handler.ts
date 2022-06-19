@@ -1,6 +1,6 @@
 import { providers, Signer } from "ethers";
 import { ConnectionInfo } from "../types";
-import { ChainOrRpc, getProviderForChain } from "../../constants";
+import { ChainId, getProviderForChain } from "../../constants";
 import EventEmitter from "eventemitter3";
 import {
   SDKOptions,
@@ -13,11 +13,10 @@ import {
  */
 export class RPCConnectionHandler extends EventEmitter {
   protected options: SDKOptionsOutput;
-  private chainId: ChainOrRpc; // TODO (rpc) enforce this to be a pure ChainId
+  private chainId: number;
   private provider: providers.Provider;
   private signer: Signer | undefined;
 
-  // TODO (rpc) needs the options to be passed in to override RPC urls
   constructor(connection: ConnectionInfo, options: SDKOptions = {}) {
     super();
     try {
@@ -39,11 +38,6 @@ export class RPCConnectionHandler extends EventEmitter {
     this.signer = connection.signer;
   }
 
-  // TODO (rpc) see if we need to expose this
-  // public updateProvider(provider: Provider) {
-  //   this.provider = provider;
-  // }
-
   /**
    * The function to call whenever the network changes, such as when the users connects their wallet, disconnects their wallet, the connected chain changes, etc.
    *
@@ -52,6 +46,11 @@ export class RPCConnectionHandler extends EventEmitter {
    */
   public updateSigner(signer: Signer | undefined) {
     this.signer = signer;
+    // TODO (rpc) - make sure we don't need to do this for type of signers
+    if (this.chainId === ChainId.Hardhat) {
+      // For hardhat tests - the provider inside the signer is enhanced for tests, need to use it as the provider
+      this.provider = signer?.provider || this.provider;
+    }
   }
   /**
    *

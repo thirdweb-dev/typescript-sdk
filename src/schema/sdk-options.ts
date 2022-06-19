@@ -55,6 +55,10 @@ export const SDKOptionsSchema = z
  * @example
  * ```javascript
  * {
+ *   chainIdToRPCUrlMap: {
+ *     ChainId.Mainnet: "https://mainnet.infura.io/v3/YOUR_INFURA_KEY",
+ *     1337: "http://localhost:8545",
+ *   }
  *   readonlySettings: {
  *     rpcUrl, // force read calls to go through your own RPC url
  *     chainId, // reduce RPC calls by sepcifying your chain ID

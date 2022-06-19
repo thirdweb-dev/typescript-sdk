@@ -31,7 +31,7 @@ import invariant from "tiny-invariant";
 import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
-import { ChainOrRpc } from "../constants";
+import { chainNameToId, ChainIdOrName } from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
 import { Multiwrap } from "../contracts/multiwrap";
 import { WalletAuthenticator } from "./auth/wallet-authenticator";
@@ -63,11 +63,13 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromSigner(
     signer: Signer,
-    chainId: ChainOrRpc,
+    chainId: ChainIdOrName,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
-    return new ThirdwebSDK(chainId, signer, options, storage);
+    const sdk = new ThirdwebSDK(chainId, options, storage);
+    sdk.wallet.connect(signer);
+    return sdk;
   }
 
   /**
@@ -92,7 +94,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   static fromPrivateKey(
     privateKey: string,
-    chainId: ChainOrRpc,
+    chainId: ChainIdOrName,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
@@ -135,26 +137,17 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public auth: WalletAuthenticator;
 
   constructor(
-    chainId: ChainOrRpc,
-    signer: Signer | undefined = undefined,
+    chain: ChainIdOrName,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ) {
     // Throw helpful error for old usages of this constructor
-    if (Signer.isSigner(chainId)) {
-      throw new Error(
-        "Please use 'ThirdwebSDK.fromSigner(signer, chainId)' to create a new ThirdwebSDK with a signer. Example: 'const sdk = ThirdwebSDK.fromSigner(signer, ChainId.Polygon)'",
-      );
-    }
-    if (providers.Provider.isProvider(chainId)) {
-      throw new Error(
-        "Please pass in a ChainId instead of a Provider to create a new read-only ThirdwebSDK. Example: 'const sdk = new ThirdwebSDK(ChainId.Polygon)'. To initialize the SDK with a signer, use: 'ThirdwebSDK.fromSigner(signer, ChainId.Polygon)'",
-      );
-    }
+    verifyInputs(chain);
+    const chainId = typeof chain === "string" ? chainNameToId[chain] : chain;
     const connection: ConnectionInfo = {
       chainId,
-      signer,
-      provider: signer?.provider,
+      signer: undefined,
+      provider: undefined,
     };
     super(connection, options);
     this.storageHandler = storage;
@@ -480,5 +473,32 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     for (const [, contract] of this.contractCache) {
       contract.onSignerUpdated(this.getSigner());
     }
+  }
+}
+
+/**
+ * @internal
+ * @param chain
+ */
+function verifyInputs(chain: ChainIdOrName) {
+  if (Signer.isSigner(chain)) {
+    throw new Error(
+      "Please use 'ThirdwebSDK.fromSigner(signer, chainId)' to create a new ThirdwebSDK with a signer. Example: 'const sdk = ThirdwebSDK.fromSigner(signer, ChainId.Polygon)'",
+    );
+  }
+  if (providers.Provider.isProvider(chain)) {
+    throw new Error(
+      "Please pass in a ChainId instead of a Provider to create a new read-only ThirdwebSDK. Example: 'const sdk = new ThirdwebSDK(ChainId.Polygon)'. To initialize the SDK with a signer, use: 'ThirdwebSDK.fromSigner(signer, ChainId.Polygon)'",
+    );
+  }
+  if (typeof chain === "string" && chainNameToId[chain] === undefined) {
+    if (chain.startsWith("http") || chain.startsWith("ws")) {
+      throw new Error(
+        `Please pass in a ChainId instead of an RPC url. RPC urls for each ChainId can be configured via SDKOptions. Ex: 'const sdk = new ThirdwebSDK(ChainId.Mainnet, { chainIdToRPCUrlMap: { ChainId.Mainnet: "https://mainnet.infura.io/v3/YOUR_INFURA_KEY" });'`,
+      );
+    }
+    throw new Error(
+      `Unknown chain name: ${chain}. Please pass a valid ChainId instead. eg. 'ChainId.Rinkeby' or '80001'`,
+    );
   }
 }

@@ -1,6 +1,5 @@
 import { BigNumber, BytesLike, CallOverrides, Signer, providers } from "ethers";
 import type { CONTRACTS_MAP, KNOWN_CONTRACTS_MAP } from "../contracts/maps";
-import { ChainOrRpc } from "../constants/index";
 
 // --- utility types extracted from from ts-toolbelt --- //
 
@@ -42,7 +41,7 @@ export type ValueOf<T> = T[keyof T];
 export type SignerOrProvider = Signer | providers.Provider;
 
 export type ConnectionInfo = {
-  chainId: ChainOrRpc;
+  chainId: number;
   signer: Signer | undefined;
   provider?: providers.Provider;
 };

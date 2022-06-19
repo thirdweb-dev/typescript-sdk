@@ -25,7 +25,7 @@ export const PINATA_IPFS_URL = `https://api.pinata.cloud/pinning/pinFileToIPFS`;
 /**
  * @internal
  */
-export type ChainOrRpc =
+export type ChainIdOrName =
   | "mumbai"
   | "polygon"
   // common alias for `polygon`
@@ -41,10 +41,12 @@ export type ChainOrRpc =
   | "optimism-testnet"
   | "arbitrum"
   | "arbitrum-testnet"
-  // ideally we could use `https://${string}` notation here, but doing that causes anything that is a generic string to throw a type error => not worth the hassle for now
-  | (string & {})
+  | ChainId
   | (number & {});
 
+/**
+ * @internal
+ */
 export const chainNameToId: Record<string, number> = {
   mumbai: ChainId.Mumbai,
   rinkeby: ChainId.Rinkeby,
@@ -65,7 +67,13 @@ export const chainNameToId: Record<string, number> = {
  */
 const DEFAULT_API_KEY = "_gg7wSSi0KMBsdKnGVfHDueq6xMB9EkC";
 
-export const defaultRPCMap: Record<SUPPORTED_CHAIN_ID, string> = {
+/**
+ * @internal
+ */
+export const defaultRPCMap: Record<
+  SUPPORTED_CHAIN_ID | ChainId.Hardhat | ChainId.Localhost,
+  string
+> = {
   [ChainId.Polygon]: `https://polygon-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`,
   [ChainId.Mumbai]: `https://polygon-mumbai.g.alchemy.com/v2/${DEFAULT_API_KEY}`,
   [ChainId.Mainnet]: `https://eth-mainnet.g.alchemy.com/v2/${DEFAULT_API_KEY}`,
@@ -79,25 +87,19 @@ export const defaultRPCMap: Record<SUPPORTED_CHAIN_ID, string> = {
   [ChainId.FantomTestnet]: "https://rpc.testnet.fantom.network",
   [ChainId.Avalanche]: "https://rpc.ankr.com/avalanche",
   [ChainId.AvalancheFujiTestnet]: "https://api.avax-test.network/ext/bc/C/rpc",
+  [ChainId.Hardhat]: "http://localhost:8545",
+  [ChainId.Localhost]: "http://localhost:8545",
 };
 
 /**
  * @internal
- * @param network
+ * @param chainId
  * @param customRpcMap
  */
 export function getRpcUrl(
-  network: ChainOrRpc,
+  chainId: number,
   customRpcMap?: Record<number, string>,
 ): string {
-  if (
-    typeof network === "string" &&
-    (network.startsWith("http") || network.startsWith("ws"))
-  ) {
-    return network;
-  }
-  const chainId: number =
-    typeof network === "string" ? chainNameToId[network] : network;
   const fullRpcMap: Record<number, string> = {
     ...defaultRPCMap,
     ...customRpcMap,
@@ -105,21 +107,21 @@ export function getRpcUrl(
   if (chainId in fullRpcMap) {
     return fullRpcMap[chainId];
   }
-  throw new Error(`Unrecognized chain name or RPC url: ${network}.`);
+  throw new Error(`Unrecognized chain name or RPC url: ${chainId}.`);
 }
 
 /**
  * @internal
- * @param network - the chain name or rpc url
+ * @param chainId
  * @param customRpcMap
  * @returns the rpc url for that chain
  */
 export function getProviderForChain(
-  network: ChainOrRpc,
+  chainId: number,
   customRpcMap?: Record<number, string>,
 ): Provider {
-  const rpcUrl = getRpcUrl(network, customRpcMap);
-  return getReadOnlyProvider(rpcUrl);
+  const rpcUrl = getRpcUrl(chainId, customRpcMap);
+  return getReadOnlyProvider(rpcUrl, chainId);
 }
 
 /**
@@ -128,7 +130,7 @@ export function getProviderForChain(
  * @param chainId - the optional chain id
  * @returns the provider
  */
-export function getReadOnlyProvider(network: string, chainId?: number) {
+export function getReadOnlyProvider(network: string, chainId: number) {
   try {
     const match = network.match(/^(ws|http)s?:/i);
     // try the JSON batch provider if available
