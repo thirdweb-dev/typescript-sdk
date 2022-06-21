@@ -86,7 +86,7 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
     case "fantom":
       return "https://rpc.ftm.tools";
     case "avalanche":
-      return "https://rpc.ankr.com/avalanche";
+      return "https://api.avax.network/ext/bc/C/rpc";
     default:
       if (network.startsWith("http") || network.startsWith("ws")) {
         return network;
