@@ -340,7 +340,7 @@ describe("Custom Contracts", async () => {
 
     invariant(c, "Contract undefined");
     invariant(c.edition, "ERC1155 undefined");
-    invariant(c.edition.signature, "ERC1155 Signature Undefined");
+    invariant(c.edition.sig, "ERC1155 Signature Undefined");
 
     const payload = {
       metadata: {
@@ -355,12 +355,12 @@ describe("Custom Contracts", async () => {
 
     let goodPayload: SignedPayload1155;
 
-    goodPayload = await c.edition.signature.generate(payload);
+    goodPayload = await c.edition.sig.generate(payload);
 
-    const valid = await c.edition.signature.verify(goodPayload);
+    const valid = await c.edition.sig.verify(goodPayload);
     assert.isTrue(valid, "This voucher should be valid");
 
-    const tx = await c.edition.signature.mint(goodPayload);
+    const tx = await c.edition.sig.mint(goodPayload);
     // Better way to do this?
     expect(tx.id.toNumber()).to.eq(0);
   });
@@ -383,7 +383,7 @@ describe("Custom Contracts", async () => {
 
     invariant(c, "Contract undefined");
     invariant(c.token, "ERC20 undefined");
-    invariant(c.token.signature, "ERC20 Signature Undefined");
+    invariant(c.token.sig, "ERC20 Signature Undefined");
 
     const input = [
       {
@@ -400,10 +400,10 @@ describe("Custom Contracts", async () => {
       },
     ];
 
-    const batch = await c.token.signature.generateBatch(input);
+    const batch = await c.token.sig.generateBatch(input);
 
     for (const [_, v] of batch.entries()) {
-      await c.token.signature.mint(v);
+      await c.token.sig.mint(v);
     }
     const balance = await c.token.balanceOf(samWallet.address);
     expect(balance.displayValue).to.eq("6.0");
