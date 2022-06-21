@@ -73,18 +73,18 @@ describe("Edition sig minting", async () => {
     let badPayload: SignedPayload1155;
 
     beforeEach(async () => {
-      goodPayload = await editionContract.signature.generate(meta);
-      badPayload = await editionContract.signature.generate(meta);
+      goodPayload = await editionContract.sig.generate(meta);
+      badPayload = await editionContract.sig.generate(meta);
       badPayload.payload.price = "0";
     });
 
     it("should generate a valid signature", async () => {
-      const valid = await editionContract.signature.verify(goodPayload);
+      const valid = await editionContract.sig.verify(goodPayload);
       assert.isTrue(valid, "This voucher should be valid");
     });
 
     it("should reject invalid signatures", async () => {
-      const invalid = await editionContract.signature.verify(badPayload);
+      const invalid = await editionContract.sig.verify(badPayload);
       assert.isFalse(
         invalid,
         "This voucher should be invalid because the signature is invalid",
@@ -93,9 +93,7 @@ describe("Edition sig minting", async () => {
 
     it("should reject invalid vouchers", async () => {
       goodPayload.payload.price = "0";
-      const invalidModified = await editionContract.signature.verify(
-        goodPayload,
-      );
+      const invalidModified = await editionContract.sig.verify(goodPayload);
       assert.isFalse(
         invalidModified,
         "This voucher should be invalid because the price was changed",
@@ -123,11 +121,11 @@ describe("Edition sig minting", async () => {
           },
         },
       ];
-      const batch = await editionContract.signature.generateBatch(input);
+      const batch = await editionContract.sig.generateBatch(input);
 
       for (let i = 0; i < batch.length; i++) {
         const entry = batch[i];
-        const tx = await editionContract.signature.mint(entry);
+        const tx = await editionContract.sig.mint(entry);
         const mintedId = (await editionContract.get(tx.id)).metadata.id;
         const nft = await editionContract.get(mintedId);
         assert.equal(input[i].metadata.name, nft.metadata.name);
@@ -139,8 +137,8 @@ describe("Edition sig minting", async () => {
     let v1: SignedPayload1155, v2: SignedPayload1155;
 
     beforeEach(async () => {
-      v1 = await editionContract.signature.generate(meta);
-      v2 = await editionContract.signature.generate(meta);
+      v1 = await editionContract.sig.generate(meta);
+      v2 = await editionContract.sig.generate(meta);
     });
 
     it("should allow batch minting", async () => {
@@ -157,10 +155,10 @@ describe("Edition sig minting", async () => {
       for (let i = 0; i < 10; i++) {
         payloads.push(freeMint);
       }
-      const batch = await editionContract.signature.generateBatch(payloads);
+      const batch = await editionContract.sig.generateBatch(payloads);
 
       await sdk.updateSignerOrProvider(samWallet);
-      const tx = await editionContract.signature.mintBatch(batch);
+      const tx = await editionContract.sig.mintBatch(batch);
       expect(tx.length).to.eq(10);
       expect(tx[0].id.toNumber()).to.eq(0);
       expect(tx[3].id.toNumber()).to.eq(3);
@@ -174,8 +172,8 @@ describe("Edition sig minting", async () => {
         metadata: uri,
         quantity: 10,
       };
-      const payload = await editionContract.signature.generate(toSign);
-      const tx = await editionContract.signature.mint(payload);
+      const payload = await editionContract.sig.generate(toSign);
+      const tx = await editionContract.sig.mint(payload);
       const nft = await editionContract.get(tx.id);
       assert.equal(nft.metadata.name, "Test1");
     });
@@ -195,11 +193,11 @@ describe("Edition sig minting", async () => {
         metadata: uri2,
         quantity: 10,
       };
-      const payloads = await editionContract.signature.generateBatch([
+      const payloads = await editionContract.sig.generateBatch([
         toSign1,
         toSign2,
       ]);
-      const tx = await editionContract.signature.mintBatch(payloads);
+      const tx = await editionContract.sig.mintBatch(payloads);
       const nft1 = await editionContract.get(tx[0].id);
       assert.equal(nft1.metadata.name, "Test1");
       const nft2 = await editionContract.get(tx[1].id);
@@ -208,29 +206,29 @@ describe("Edition sig minting", async () => {
 
     it("should allow a valid voucher to mint", async () => {
       await sdk.updateSignerOrProvider(samWallet);
-      const tx = await editionContract.signature.mint(v1);
+      const tx = await editionContract.sig.mint(v1);
       const newId = (await editionContract.get(tx.id)).metadata.id;
       assert.equal(newId.toString(), "0");
 
       await sdk.updateSignerOrProvider(samWallet);
-      const tx2 = await editionContract.signature.mint(v2);
+      const tx2 = await editionContract.sig.mint(v2);
       const newId2 = (await editionContract.get(tx2.id)).metadata.id;
       assert.equal(newId2.toString(), "1");
     });
 
     it("should mint the right metadata", async () => {
-      const tx = await editionContract.signature.mint(v1);
+      const tx = await editionContract.sig.mint(v1);
       const nft = await editionContract.get(tx.id);
       assert.equal(nft.metadata.name, (meta.metadata as any)?.name);
     });
 
     it("should mint additional supply", async () => {
-      const tx = await editionContract.signature.mint(v1);
-      const additional = await editionContract.signature.generateFromTokenId({
+      const tx = await editionContract.sig.mint(v1);
+      const additional = await editionContract.sig.generateFromTokenId({
         tokenId: tx.id,
         quantity: 100,
       });
-      await editionContract.signature.mint(additional);
+      await editionContract.sig.mint(additional);
       const nft = await editionContract.get(tx.id);
       expect(nft.supply.toNumber()).to.eq(101);
     });
@@ -244,13 +242,13 @@ describe("Edition sig minting", async () => {
         metadata: { name: "test" },
         supply: 0,
       });
-      const payload = await editionContract.signature.generateFromTokenId({
+      const payload = await editionContract.sig.generateFromTokenId({
         tokenId: "0",
         quantity: "1",
         metadata: "",
       });
       sdk.updateSignerOrProvider(samWallet);
-      await editionContract.signature.mint(payload);
+      await editionContract.sig.mint(payload);
       const newBalance = await editionContract.balanceOf(
         samWallet.address,
         "0",
@@ -260,7 +258,7 @@ describe("Edition sig minting", async () => {
 
     it("should mint the right custom token price", async () => {
       const oldBalance = await samWallet.getBalance();
-      const payload = await editionContract.signature.generate({
+      const payload = await editionContract.sig.generate({
         price: 1,
         currencyAddress: tokenAddress,
         metadata: {
@@ -271,7 +269,7 @@ describe("Edition sig minting", async () => {
         mintStartTime: new Date(),
       });
       await sdk.updateSignerOrProvider(samWallet);
-      await editionContract.signature.mint(payload);
+      await editionContract.sig.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
         oldBalance.sub(newBalance).gte(BigNumber.from(1)),
@@ -281,7 +279,7 @@ describe("Edition sig minting", async () => {
 
     it("should mint the right native price", async () => {
       const oldBalance = await samWallet.getBalance();
-      const payload = await editionContract.signature.generate({
+      const payload = await editionContract.sig.generate({
         price: 1,
         metadata: {
           name: "native token test",
@@ -291,7 +289,7 @@ describe("Edition sig minting", async () => {
         mintStartTime: new Date(),
       });
       await sdk.updateSignerOrProvider(samWallet);
-      await editionContract.signature.mint(payload);
+      await editionContract.sig.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
         oldBalance.sub(newBalance).gte(BigNumber.from(1)),
@@ -301,7 +299,7 @@ describe("Edition sig minting", async () => {
 
     it("should mint the right native price with multiple tokens", async () => {
       const oldBalance = await samWallet.getBalance();
-      const payload = await editionContract.signature.generate({
+      const payload = await editionContract.sig.generate({
         price: 1,
         metadata: {
           name: "native token test with quantity",
@@ -311,7 +309,7 @@ describe("Edition sig minting", async () => {
         mintStartTime: new Date(),
       });
       await sdk.updateSignerOrProvider(samWallet);
-      await editionContract.signature.mint(payload);
+      await editionContract.sig.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
         oldBalance.sub(newBalance).gte(BigNumber.from(2)),

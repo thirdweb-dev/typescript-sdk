@@ -40,7 +40,7 @@ await contract.edition.transfer(walletAddress, tokenId, quantity);
 |  [mint](./sdk.erc1155.mint.md) |  | [Erc1155Mintable](./sdk.erc1155mintable.md) \| undefined |  |
 |  [options](./sdk.erc1155.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [query](./sdk.erc1155.query.md) |  | [Erc1155Enumerable](./sdk.erc1155enumerable.md) \| undefined |  |
-|  [signature](./sdk.erc1155.signature.md) |  | [Erc1155SignatureMintable](./sdk.erc1155signaturemintable.md) \| undefined |  |
+|  [sig](./sdk.erc1155.sig.md) |  | [Erc1155SignatureMintable](./sdk.erc1155signaturemintable.md) \| undefined |  |
 |  [storage](./sdk.erc1155.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
 
 ## Methods

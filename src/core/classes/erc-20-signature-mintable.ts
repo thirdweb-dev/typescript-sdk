@@ -15,13 +15,17 @@ import { ContractWrapper } from "./contract-wrapper";
 import { ITokenERC20, TokenERC20 } from "contracts";
 import { ContractRoles } from "./contract-roles";
 import { Token } from "../../contracts";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
 
 /**
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
  * @public
  */
 // TODO consolidate into a single class
-export class Erc20SignatureMintable {
+export class Erc20SignatureMintable implements DetectableFeature {
+  featureName = FEATURE_TOKEN_SIGNATURE_MINTABLE.name;
+
   private contractWrapper: ContractWrapper<TokenERC20>;
   private roles:
     | ContractRoles<TokenERC20, typeof Token.contractRoles[number]>

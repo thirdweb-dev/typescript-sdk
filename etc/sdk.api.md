@@ -1551,7 +1551,7 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseSignatureMintERC
     // @internal
     setApprovalForAll(operator: string, approved: boolean): Promise<TransactionResult>;
     // (undocumented)
-    signature: Erc1155SignatureMintable | undefined;
+    sig: Erc1155SignatureMintable | undefined;
     // (undocumented)
     protected storage: IStorage;
     totalSupply(tokenId: BigNumberish): Promise<BigNumber>;
@@ -1639,7 +1639,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20> imp
     protected options: SDKOptions;
     setAllowance(spender: string, amount: Amount): Promise<TransactionResult>;
     // (undocumented)
-    signature: Erc20SignatureMintable | undefined;
+    sig: Erc20SignatureMintable | undefined;
     // (undocumented)
     protected storage: IStorage;
     totalSupply(): Promise<CurrencyValue>;
@@ -1667,8 +1667,10 @@ export class Erc20Mintable implements DetectableFeature {
 }
 
 // @public
-export class Erc20SignatureMintable {
+export class Erc20SignatureMintable implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TokenERC20>, roles?: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>);
+    // (undocumented)
+    featureName: "ERC20SignatureMintable";
     generate(mintRequest: PayloadToSign20): Promise<SignedPayload20>;
     generateBatch(payloadsToSign: PayloadToSign20[]): Promise<SignedPayload20[]>;
     mint(signedPayload: SignedPayload20): Promise<TransactionResult>;
@@ -1720,7 +1722,7 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     // @internal
     setApprovalForToken(operator: string, tokenId: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
-    signatureMint: Erc721SignatureMintable | undefined;
+    sig: Erc721SignatureMintable | undefined;
     // (undocumented)
     protected storage: IStorage;
     transfer(to: string, tokenId: BigNumberish): Promise<TransactionResult>;
@@ -2679,8 +2681,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
         name: string;
         }>;
     };
-    // (undocumented)
-    signature: Erc721SignatureMintable | undefined;
+    signature: Erc721SignatureMintable;
     totalSupply(): Promise<BigNumber>;
 }
 
@@ -4426,8 +4427,6 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
         }>;
     };
     // Warning: (ae-forgotten-export) The symbol "Erc721WithQuantitySignatureMintable" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     signature: Erc721WithQuantitySignatureMintable;
     totalClaimedSupply(): Promise<BigNumber>;
     totalSupply(): Promise<BigNumber>;

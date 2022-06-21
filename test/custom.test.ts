@@ -417,7 +417,7 @@ describe("Custom Contracts", async () => {
 
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
-    invariant(c.nft.signatureMint, "ERC721 drop");
+    invariant(c.nft.sig, "ERC721 drop");
 
     const payload = {
       metadata: {
@@ -432,12 +432,12 @@ describe("Custom Contracts", async () => {
 
     let goodPayload: SignedPayload721;
 
-    goodPayload = await c.nft.signatureMint.generate(payload);
+    goodPayload = await c.nft.sig.generate(payload);
 
-    const valid = await c.nft.signatureMint.verify(goodPayload);
+    const valid = await c.nft.sig.verify(goodPayload);
     assert.isTrue(valid, "This voucher should be valid");
 
-    const tx = await c.nft.signatureMint.mint(goodPayload);
+    const tx = await c.nft.sig.mint(goodPayload);
     // Better way to do this?
     expect(tx.id.toNumber()).to.eq(0);
   });

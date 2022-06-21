@@ -9,14 +9,21 @@ Enables generating ERC20 Tokens with rules and an associated signature, which ca
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc20SignatureMintable 
+export declare class Erc20SignatureMintable implements DetectableFeature 
 ```
+<b>Implements:</b> DetectableFeature
 
 ## Constructors
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
 |  [(constructor)(contractWrapper, roles)](./sdk.erc20signaturemintable._constructor_.md) |  | Constructs a new instance of the <code>Erc20SignatureMintable</code> class |
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [featureName](./sdk.erc20signaturemintable.featurename.md) |  | "ERC20SignatureMintable" |  |
 
 ## Methods
 

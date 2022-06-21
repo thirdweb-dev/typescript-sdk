@@ -27,6 +27,7 @@ import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
 import { QueryAllParams } from "../types";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { Erc721SignatureMintable } from "../core";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -103,7 +104,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
    */
-  public signature = this.signatureMint;
+  public signature = this.sig as Erc721SignatureMintable;
 
   private _mint = this.mint as Erc721Mintable;
   private _batchMint = this._mint.batch as Erc721BatchMintable;

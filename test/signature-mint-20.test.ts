@@ -64,18 +64,18 @@ describe("Token sig minting", async () => {
     let badPayload: SignedPayload20;
 
     beforeEach(async () => {
-      goodPayload = await contract.signature.generate(meta);
-      badPayload = await contract.signature.generate(meta);
+      goodPayload = await contract.sig.generate(meta);
+      badPayload = await contract.sig.generate(meta);
       badPayload.payload.price = "0";
     });
 
     it("should generate a valid signature", async () => {
-      const valid = await contract.signature.verify(goodPayload);
+      const valid = await contract.sig.verify(goodPayload);
       assert.isTrue(valid, "This voucher should be valid");
     });
 
     it("should reject invalid signatures", async () => {
-      const invalid = await contract.signature.verify(badPayload);
+      const invalid = await contract.sig.verify(badPayload);
       assert.isFalse(
         invalid,
         "This voucher should be invalid because the signature is invalid",
@@ -84,7 +84,7 @@ describe("Token sig minting", async () => {
 
     it("should reject invalid vouchers", async () => {
       goodPayload.payload.price = "0";
-      const invalidModified = await contract.signature.verify(goodPayload);
+      const invalidModified = await contract.sig.verify(goodPayload);
       assert.isFalse(
         invalidModified,
         "This voucher should be invalid because the price was changed",
@@ -106,10 +106,10 @@ describe("Token sig minting", async () => {
           quantity: 3,
         },
       ];
-      const batch = await contract.signature.generateBatch(input);
+      const batch = await contract.sig.generateBatch(input);
 
       for (const [_, v] of batch.entries()) {
-        await contract.signature.mint(v);
+        await contract.sig.mint(v);
       }
       const balance = await contract.balanceOf(samWallet.address);
       expect(balance.displayValue).to.eq("6.0");
@@ -129,23 +129,23 @@ describe("Token sig minting", async () => {
         payloads.push(freeMint);
       }
       const batch = await Promise.all(
-        payloads.map(async (p) => await contract.signature.generate(p)),
+        payloads.map(async (p) => await contract.sig.generate(p)),
       );
       await sdk.updateSignerOrProvider(samWallet);
-      await contract.signature.mintBatch(batch);
+      await contract.sig.mintBatch(batch);
       const balance = await contract.balanceOf(samWallet.address);
       expect(balance.displayValue).to.eq("10.0");
     });
 
     it("should mint the right custom token price", async () => {
       const oldBalance = await samWallet.getBalance();
-      const payload = await contract.signature.generate({
+      const payload = await contract.sig.generate({
         price: 1,
         quantity: 10,
         currencyAddress: tokenAddress,
       });
       await sdk.updateSignerOrProvider(samWallet);
-      await contract.signature.mint(payload);
+      await contract.sig.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
         oldBalance.sub(newBalance).gte(BigNumber.from(1)),
@@ -155,12 +155,12 @@ describe("Token sig minting", async () => {
 
     it("should mint the right native price", async () => {
       const oldBalance = await samWallet.getBalance();
-      const payload = await contract.signature.generate({
+      const payload = await contract.sig.generate({
         price: 1,
         quantity: 0.23,
       });
       await sdk.updateSignerOrProvider(samWallet);
-      await contract.signature.mint(payload);
+      await contract.sig.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
         oldBalance.sub(newBalance).gte(BigNumber.from(1)),
