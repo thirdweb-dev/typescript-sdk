@@ -9,7 +9,7 @@ Claim unique NFTs to a specific Wallet
 <b>Signature:</b>
 
 ```typescript
-claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 ```
 
 ## Parameters
@@ -18,6 +18,7 @@ claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]
 |  --- | --- | --- |
 |  destinationAddress | string | Address you want to send the token to |
 |  quantity | BigNumberish | Quantity of the tokens you want to claim |
+|  checkERC20Allowance | boolean | <i>(Optional)</i> Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer |
 |  proofs | BytesLike\[\] | <i>(Optional)</i> Array of proofs |
 
 <b>Returns:</b>
