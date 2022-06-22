@@ -1101,7 +1101,10 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "edition-drop";
-    createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
+    createBatch(metadatas: NFTMetadataOrUri[], options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC1155>;
     // (undocumented)
@@ -1723,7 +1726,6 @@ export class Erc721BatchMintable implements DetectableFeature {
     constructor(erc721: Erc721, contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>, storage: IStorage);
     // (undocumented)
     featureName: "ERC721BatchMintable";
-    // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     to(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 }
 
@@ -2704,7 +2706,7 @@ export class NFTDrop extends Erc721<DropERC721> {
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "nft-drop";
-    createBatch(metadatas: NFTMetadataInput[], options?: {
+    createBatch(metadatas: NFTMetadataOrUri[], options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)

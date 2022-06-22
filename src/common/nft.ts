@@ -16,6 +16,7 @@ import {
 import ERC721MetadataAbi from "../../abis/IERC721Metadata.json";
 import ERC1155MetadataAbi from "../../abis/IERC1155Metadata.json";
 import ERC165MetadataAbi from "../../abis/IERC165.json";
+import { UploadProgressEvent } from "../types/index";
 
 const FALLBACK_METADATA = {
   name: "Failed to load NFT metadata",
@@ -124,16 +125,30 @@ export async function uploadOrExtractURI(
  * @internal
  * @param metadatas
  * @param storage
+ * @param startNumber
+ * @param contractAddress
+ * @param signerAddress
+ * @param options
  */
 export async function uploadOrExtractURIs(
   metadatas: NFTMetadataOrUri[],
   storage: IStorage,
+  startNumber?: number,
+  contractAddress?: string,
+  signerAddress?: string,
+  options?: {
+    onProgress: (event: UploadProgressEvent) => void;
+  },
 ): Promise<string[]> {
   if (isUriList(metadatas)) {
     return metadatas;
   } else if (isMetadataList(metadatas)) {
     const { uris } = await storage.uploadMetadataBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),
+      startNumber,
+      contractAddress,
+      signerAddress,
+      options,
     );
     return uris;
   } else {

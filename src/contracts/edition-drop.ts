@@ -13,18 +13,18 @@ import {
 } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import {
-  CommonNFTInput,
-  NFTMetadata,
-  NFTMetadataInput,
-} from "../schema/tokens/common";
+import { NFTMetadata, NFTMetadataOrUri } from "../schema/tokens/common";
 import { BigNumber, BigNumberish, BytesLike, constants, utils } from "ethers";
 import { prepareClaim } from "../common/claim-conditions";
 import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { ClaimVerification, QueryAllParams } from "../types";
+import {
+  ClaimVerification,
+  QueryAllParams,
+  UploadProgressEvent,
+} from "../types";
 import { DropErc1155History } from "../core/classes/drop-erc1155-history";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
@@ -34,6 +34,7 @@ import { getRoleHash } from "../common";
 
 import { EditionMetadata, EditionMetadataOwner } from "../schema";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { uploadOrExtractURIs } from "../common/nft";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -253,21 +254,39 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * const firstTokenId = results[0].id; // token id of the first created NFT
    * const firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT
    * ```
+   *
+   * @param metadatas - The metadata to include in the batch.
+   * @param options - optional upload progress callback
    */
   public async createBatch(
-    metadatas: NFTMetadataInput[],
+    metadatas: NFTMetadataOrUri[],
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
     const startFileNumber =
       await this.contractWrapper.readContract.nextTokenIdToMint();
-    const batch = await this.storage.uploadMetadataBatch(
-      metadatas.map((m) => CommonNFTInput.parse(m)),
+    const batch = await uploadOrExtractURIs(
+      metadatas,
+      this.storage,
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
+      options,
     );
+    // ensure baseUri is the same for the entire batch
+    const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
+    for (let i = 0; i < batch.length; i++) {
+      const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
+      if (baseUri !== uri) {
+        throw new Error(
+          `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
+        );
+      }
+    }
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.uris.length,
-      `${batch.baseUri.endsWith("/") ? batch.baseUri : `${batch.baseUri}/`}`,
+      batch.length,
+      `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
     ]);
     const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
       "TokensLazyMinted",
