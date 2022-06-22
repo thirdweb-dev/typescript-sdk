@@ -4256,9 +4256,7 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
     };
 }>;
 
-// Warning: (ae-internal-missing-underscore) The name "SignatureDrop" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @public
 export class SignatureDrop extends Erc721<SignatureDrop_2> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<SignatureDrop_2>);
     // (undocumented)
@@ -4289,7 +4287,7 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     //
     // (undocumented)
     getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
-    // (undocumented)
+    // @internal (undocumented)
     interceptor: ContractInterceptor<SignatureDrop_2>;
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
@@ -4302,7 +4300,7 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     royalties: ContractRoyalty<SignatureDrop_2, typeof SignatureDrop.schema>;
     // (undocumented)
     sales: ContractPrimarySale<SignatureDrop_2>;
-    // (undocumented)
+    // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<extendShape<    {
         name: ZodString;

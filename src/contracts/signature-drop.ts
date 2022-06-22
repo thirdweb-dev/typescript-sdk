@@ -61,7 +61,7 @@ import { DelayedReveal } from "../core/index";
  * const contract = sdk.getSignatureDrop("{{contract_address}}");
  * ```
  *
- * @internal
+ * @public
  */
 export class SignatureDrop extends Erc721<SignatureDropContract> {
   static contractType = "signature-drop" as const;
