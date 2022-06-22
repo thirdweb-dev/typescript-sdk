@@ -440,6 +440,7 @@ export class DropClaimConditions<
    */
   public async prepareClaim(
     quantity: BigNumberish,
+    checkERC20Allowance: boolean,
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
@@ -450,6 +451,7 @@ export class DropClaimConditions<
       this.contractWrapper,
       this.storage,
       proofs,
+      checkERC20Allowance,
     );
   }
 }

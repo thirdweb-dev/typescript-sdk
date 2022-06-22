@@ -318,13 +318,12 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    *
    * const tx = await contract.claimTo(address, tokenId, quantity);
    * const receipt = tx.receipt; // the transaction receipt
-   * const claimedTokenId = tx.id; // the id of the NFT claimed
-   * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
    * ```
    *
    * @param destinationAddress - Address you want to send the token to
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param proofs - Array of proofs
    *
    * @returns - Receipt for the transaction
@@ -333,11 +332,13 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
+    checkERC20Allowance = true,
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     const claimVerification = await this.prepareClaim(
       tokenId,
       quantity,
+      checkERC20Allowance,
       proofs,
     );
     return {
@@ -364,6 +365,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    *
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param proofs - Array of proofs
    *
    * @returns - Receipt for the transaction
@@ -371,10 +373,17 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   public async claim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
+    checkERC20Allowance = true,
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     const address = await this.contractWrapper.getSignerAddress();
-    return this.claimTo(address, tokenId, quantity, proofs);
+    return this.claimTo(
+      address,
+      tokenId,
+      quantity,
+      checkERC20Allowance,
+      proofs,
+    );
   }
 
   /**
@@ -414,6 +423,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   private async prepareClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
+    checkERC20Allowance: boolean,
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
@@ -424,6 +434,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       this.contractWrapper,
       this.storage,
       proofs,
+      checkERC20Allowance,
     );
   }
 }

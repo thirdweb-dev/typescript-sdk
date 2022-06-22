@@ -46,7 +46,8 @@ export async function prepareClaim(
   tokenDecimals: number,
   contractWrapper: ContractWrapper<any>,
   storage: IStorage,
-  proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+  proofs: BytesLike[],
+  checkERC20Allowance: boolean,
 ): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
   let maxClaimable = BigNumber.from(0);
@@ -93,7 +94,7 @@ export async function prepareClaim(
       overrides["value"] = BigNumber.from(price)
         .mul(quantity)
         .div(ethers.utils.parseUnits("1", tokenDecimals));
-    } else {
+    } else if (checkERC20Allowance) {
       await approveErc20Allowance(
         contractWrapper,
         currencyAddress,

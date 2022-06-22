@@ -167,7 +167,7 @@
         "summary": "Airdrop multiple NFTs\n\n",
         "remarks": "\n\nAirdrop one or multiple NFTs to the provided wallet addresses.\n\n",
         "examples": {
-          "javascript": "// The token ID of the NFT you want to airdrop\nconst tokenId = \"0\";\n// Array of objects of addresses and quantities to airdrop NFTs to\nconst addresses = [\n {\n   address: \"0x...\",\n   quantity: 2,\n },\n {\n  address: \"0x...\",\n   quantity: 3,\n },\n];\nawait contract.airdrop(tokenId, addresses);\n\n// You can also pass an array of addresses, it will airdrop 1 NFT per address\nconst tokenId = \"0\";\nconst addresses = [\n \"0x...\", \"0x...\", \"0x...\",\n]\n\nawait contract.airdrop(tokenId, addresses);"
+          "javascript": "// The token ID of the NFT you want to airdrop\nconst tokenId = \"0\";\n// Array of objects of addresses and quantities to airdrop NFTs to\nconst addresses = [\n {\n   address: \"0x...\",\n   quantity: 2,\n },\n {\n  address: \"0x...\",\n   quantity: 3,\n },\n];\nawait contract.airdrop(tokenId, addresses);\n\n// You can also pass an array of addresses, it will airdrop 1 NFT per address\nconst tokenId = \"0\";\nconst addresses = [\n \"0x...\", \"0x...\", \"0x...\",\n]\nawait contract.airdrop(tokenId, addresses);"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155.airdrop"
@@ -557,7 +557,7 @@
         "summary": "Claim unique NFTs to a specific Wallet\n\n",
         "remarks": "\n\nLet the specified wallet claim NFTs.\n\n",
         "examples": {
-          "javascript": "const address = \"{{wallet_address}}\"; // address of the wallet you want to claim the NFTs\nconst quantity = 1; // how many unique NFTs you want to claim\n\nconst tx = await contract.claimTo(address, quantity);\nconst receipt = tx.receipt; // the transaction receipt\nconst claimedTokenId = tx.id; // the id of the NFT claimed\nconst claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata"
+          "javascript": "const address = \"{{wallet_address}}\"; // address of the wallet you want to claim the NFTs\nconst quantity = 1; // how many unique NFTs you want to claim\n\nconst tx = await contract.claimTo(address, quantity);\nconst receipt = tx[0].receipt; // the transaction receipt\nconst claimedTokenId = tx[0].id; // the id of the first NFT claimed\nconst claimedNFT = await tx[0].data(); // (optional) get the first claimed NFT metadata"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Dropable.claimTo"

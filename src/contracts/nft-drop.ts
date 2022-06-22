@@ -478,6 +478,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param proofs - Array of proofs
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
@@ -485,9 +486,14 @@ export class NFTDrop extends Erc721<DropERC721> {
   public async claimTo(
     destinationAddress: string,
     quantity: BigNumberish,
+    checkERC20Allowance = true,
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const claimVerification = await this.prepareClaim(quantity, proofs);
+    const claimVerification = await this.prepareClaim(
+      quantity,
+      checkERC20Allowance,
+      proofs,
+    );
     const receipt = await this.contractWrapper.sendTransaction(
       "claim",
       [
@@ -526,11 +532,13 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   public async claim(
     quantity: BigNumberish,
+    checkERC20Allowance = true,
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       quantity,
+      checkERC20Allowance,
       proofs,
     );
   }
@@ -563,6 +571,7 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   private async prepareClaim(
     quantity: BigNumberish,
+    checkERC20Allowance: boolean,
     proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
@@ -573,6 +582,7 @@ export class NFTDrop extends Erc721<DropERC721> {
       this.contractWrapper,
       this.storage,
       proofs,
+      checkERC20Allowance,
     );
   }
 }
