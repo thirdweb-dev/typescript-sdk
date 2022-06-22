@@ -242,7 +242,6 @@ export class Erc1155<
    * const addresses = [
    *  "0x...", "0x...", "0x...",
    * ]
-   * 
    * await contract.airdrop(tokenId, addresses);
    * ```
    */
