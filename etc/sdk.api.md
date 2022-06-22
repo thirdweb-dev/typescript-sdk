@@ -408,6 +408,12 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
 }>;
 
 // @public (undocumented)
+export type ClaimConditionsForToken = {
+    tokenId: BigNumberish;
+    claimConditions: ClaimConditionInput[];
+};
+
+// @public (undocumented)
 export enum ClaimEligibility {
     // (undocumented)
     AddressNotAllowed = "This address is not on the allowlist.",
@@ -912,7 +918,7 @@ export class DropErc1155ClaimConditions {
     getAll(tokenId: BigNumberish): Promise<ClaimCondition[]>;
     getClaimIneligibilityReasons(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
     set(tokenId: BigNumberish, claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
-    setBatch(tokenIds: BigNumberish[], claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<{
+    setBatch(claimConditionsForToken: ClaimConditionsForToken[], resetClaimEligibilityForAll?: boolean): Promise<{
         receipt: ethers.providers.TransactionReceipt;
     }>;
     update(tokenId: BigNumberish, index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
