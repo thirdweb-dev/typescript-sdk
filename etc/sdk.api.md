@@ -694,7 +694,7 @@ export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
     // Warning: (ae-forgotten-export) The symbol "AbiFunction" needs to be exported by the entry point index.d.ts
     //
     // @public (undocumented)
-    extractFunctions(): AbiFunction[];
+    extractFunctions(): Promise<AbiFunction[]>;
     // Warning: (ae-forgotten-export) The symbol "PublishedMetadata" needs to be exported by the entry point index.d.ts
     //
     // @public
@@ -1843,7 +1843,7 @@ export function extractFunctions(predeployMetadataUri: string, storage: IStorage
 // Warning: (ae-internal-missing-underscore) The name "extractFunctionsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>): AbiFunction[];
+export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>, metadata?: Record<string, any>): AbiFunction[];
 
 // Warning: (ae-internal-missing-underscore) The name "fetchContractMetadataFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //

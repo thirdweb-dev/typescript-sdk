@@ -36,17 +36,16 @@ describe("Publishing", async () => {
   let samWallet: SignerWithAddress;
   let bobWallet: SignerWithAddress;
   let sdk: ThirdwebSDK;
-  let storage: IpfsStorage;
 
   before("Upload abis", async () => {
     [adminWallet, samWallet, bobWallet] = signers;
+    console.log("beforeeee");
     sdk = new ThirdwebSDK(adminWallet);
-    storage = new IpfsStorage();
-    simpleContractUri = await uploadContractMetadata("Greeter", storage);
-    contructorParamsContractUri = await uploadContractMetadata(
-      "ConstructorParams",
-      storage,
-    );
+    simpleContractUri =
+      "ipfs://QmNPcYsXDAZvQZXCG73WSjdiwffZkNkoJYwrDDtcgM142A/0";
+    // if we change the test data - await uploadContractMetadata("Greeter", storage);
+    contructorParamsContractUri =
+      "ipfs://QmT5Dx3xigHr6BPG8scxbX7JaAucHRD9UPXc6FCtgcNn5e/0";
   });
 
   beforeEach(async () => {
@@ -165,8 +164,7 @@ describe("Publishing", async () => {
   });
 
   it("AzukiWithMinting mintable", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
-    const pub = await realSDK.getPublisher();
+    const pub = await sdk.getPublisher();
     const ipfsUri = "ipfs://QmPPPoKk2mwoxBVTW5qMMNwaV4Ja5qDoq7fFZNFFvr3YsW/1";
     const tx = await pub.publish(ipfsUri);
     const contract = await tx.data();
@@ -175,7 +173,7 @@ describe("Publishing", async () => {
       contract.id,
       [10, "bar"],
     );
-    const c = await realSDK.getContract(deployedAddr);
+    const c = await sdk.getContract(deployedAddr);
     invariant(c.nft, "no nft detected");
     invariant(c.nft.mint, "no minter detected");
     const tx2 = await c.nft.mint.to(adminWallet.address, {
@@ -201,11 +199,10 @@ describe("Publishing", async () => {
   });
 
   it("ERC721Dropable feature detection", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
-    const pub = realSDK.getPublisher();
+    const pub = sdk.getPublisher();
     const ipfsUri = "ipfs://QmWaidQMSYHPzYYZCxMc2nSk2vrD28mS43Xc9k7QFyAGja/0";
     const addr = await pub.deployContract(ipfsUri, []);
-    const c = await realSDK.getContract(addr);
+    const c = await sdk.getContract(addr);
 
     invariant(c.nft, "nft must be defined");
     invariant(c.nft.drop, "drop must be defined");
@@ -230,8 +227,7 @@ describe("Publishing", async () => {
   });
 
   it("Constructor params with tuples", async () => {
-    const realSDK = new ThirdwebSDK(adminWallet);
-    const pub = await realSDK.getPublisher();
+    const pub = await sdk.getPublisher();
     const ipfsUri = "ipfs://QmZQa56Cj1gFnZgKSkvGE5uzhaQrQV3nU6upDWDusCaCwY/0";
     const addr = await pub.deployContract(ipfsUri, [
       "0x1234",
