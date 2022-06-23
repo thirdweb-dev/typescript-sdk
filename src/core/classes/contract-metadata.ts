@@ -91,11 +91,15 @@ export class ContractMetadata<
     if (!data) {
       try {
         // try fetching metadata from bytecode
-        data = await fetchContractMetadataFromAddress(
+        const publishedMetadata = await fetchContractMetadataFromAddress(
           this.contractWrapper.readContract.address,
           this.contractWrapper.getProvider(),
           this.storage,
         );
+        data = {
+          name: publishedMetadata.name,
+          description: publishedMetadata.info.title,
+        };
       } catch (e) {
         // ignore
       }

@@ -19,10 +19,14 @@ import {
   IRoyalty,
   ThirdwebContract,
 } from "contracts";
-import { CustomContractSchema } from "../schema/contracts/custom";
+import { AbiSchema, CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { CallOverrides, ContractInterface } from "ethers";
-import { ALL_ROLES, detectContractFeature } from "../common";
+import {
+  ALL_ROLES,
+  detectContractFeature,
+  extractFunctionsFromAbi,
+} from "../common";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
@@ -190,7 +194,9 @@ export class SmartContract<
       // no-op
     }
 
-    const functions = this.publishedMetadata.extractFunctions();
+    const functions = extractFunctionsFromAbi(
+      AbiSchema.parse(this.contractWrapper.abi),
+    );
     const fn = functions.find((f) => f.name === functionName);
     if (!fn) {
       throw new Error(

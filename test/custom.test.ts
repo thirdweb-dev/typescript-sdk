@@ -2,7 +2,6 @@ import { expectError, signers } from "./before-setup";
 import { expect } from "chai";
 import invariant from "tiny-invariant";
 import {
-  DropERC721__factory,
   SignatureDrop__factory,
   TokenERC1155__factory,
   TokenERC20__factory,
@@ -10,8 +9,7 @@ import {
   VoteERC20__factory,
 } from "contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { uploadContractMetadata } from "./publisher.test";
-import { IpfsStorage, ThirdwebSDK } from "../src";
+import { ThirdwebSDK } from "../src";
 import { ethers } from "ethers";
 
 require("./before-setup");
@@ -28,14 +26,14 @@ describe("Custom Contracts", async () => {
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
   let sdk: ThirdwebSDK;
-  let storage: IpfsStorage;
   let simpleContractUri: string;
 
   before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
     sdk = new ThirdwebSDK(adminWallet);
-    storage = new IpfsStorage();
-    simpleContractUri = await uploadContractMetadata("Greeter", storage);
+    simpleContractUri =
+      "ipfs://QmNPcYsXDAZvQZXCG73WSjdiwffZkNkoJYwrDDtcgM142A/0";
+    // if we update the test data - await uploadContractMetadata("Greeter", storage);
   });
 
   beforeEach(async () => {
@@ -131,7 +129,7 @@ describe("Custom Contracts", async () => {
   it("should extract functions", async () => {
     const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
-    const functions = c.publishedMetadata.extractFunctions();
+    const functions = await c.publishedMetadata.extractFunctions();
     expect(functions.length).gt(0);
   });
 
