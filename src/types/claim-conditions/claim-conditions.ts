@@ -9,7 +9,7 @@ import {
   ClaimConditionOutputSchema,
   PartialClaimConditionInputSchema,
 } from "../../schema/contracts/common/claim-conditions";
-import { BigNumber, BytesLike, CallOverrides } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, CallOverrides } from "ethers";
 
 /**
  * Represents a claim condition fetched from the SDK
@@ -55,4 +55,9 @@ export type ClaimVerification = {
   maxQuantityPerTransaction: BigNumber;
   price: BigNumber;
   currencyAddress: string;
+};
+
+export type ClaimConditionsForToken = {
+  tokenId: BigNumberish;
+  claimConditions: ClaimConditionInput[];
 };

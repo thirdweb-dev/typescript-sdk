@@ -9,7 +9,7 @@ Set claim conditions on multiple NFTs at once
 <b>Signature:</b>
 
 ```typescript
-setBatch(tokenIds: BigNumberish[], claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<{
+setBatch(claimConditionsForToken: ClaimConditionsForToken[], resetClaimEligibilityForAll?: boolean): Promise<{
         receipt: ethers.providers.TransactionReceipt;
     }>;
 ```
@@ -18,8 +18,7 @@ setBatch(tokenIds: BigNumberish[], claimConditionInputs: ClaimConditionInput[], 
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  tokenIds | BigNumberish\[\] | the token ids to set the claim conditions on |
-|  claimConditionInputs | [ClaimConditionInput](./sdk.claimconditioninput.md)<!-- -->\[\] | The claim conditions |
+|  claimConditionsForToken | [ClaimConditionsForToken](./sdk.claimconditionsfortoken.md)<!-- -->\[\] | The claim conditions for each NFT |
 |  resetClaimEligibilityForAll | boolean | <i>(Optional)</i> Whether to reset the state of who already claimed NFTs previously |
 
 <b>Returns:</b>
@@ -34,22 +33,25 @@ Sets the claim conditions that need to be fulfilled by users to claim the given 
 
 
 ```javascript
-const presaleStartTime = new Date();
-const publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
-const claimConditions = [
+const claimConditionsForTokens = [
   {
-    startTime: presaleStartTime, // start the presale now
-    maxQuantity: 2, // limit how many mints for this presale
-    price: 0.01, // presale price
-    snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+    tokenId: 0,
+    claimConditions: [{
+      startTime: new Date(), // start the claim phase now
+      maxQuantity: 2, // limit how many mints for this tokenId
+      price: 0.01, // price for this tokenId
+      snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+    }]
   },
   {
-    startTime: publicSaleStartTime, // 24h after presale, start public sale
-    price: 0.08, // public sale price
-  }
-]);
+    tokenId: 1,
+    claimConditions: [{
+      startTime: new Date(),
+      price: 0.08, // different price for this tokenId
+    }]
+  },
+];
 
-const tokenIds = [0,1,2]; // the ids of the NFTs to set claim conditions on
-await dropContract.claimConditions.setBatch(tokenIds, claimConditions);
+await dropContract.claimConditions.setBatch(claimConditionsForTokens);
 ```
 

@@ -180,7 +180,7 @@ export class SmartContract<
     // parse last arg as tx options if present
     let txOptions: CallOverrides | undefined;
     try {
-      if (args.length > 1 && typeof args[args.length - 1] === "object") {
+      if (args.length > 0 && typeof args[args.length - 1] === "object") {
         const last = args[args.length - 1];
         txOptions = CallOverrideSchema.parse(last);
         // if call overrides found, remove it from args array
