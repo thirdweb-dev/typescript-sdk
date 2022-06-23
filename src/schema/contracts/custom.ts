@@ -110,6 +110,13 @@ export const PublishedContractSchema = z.object({
   metadataUri: z.string(),
 });
 
+export const ContractInfoSchema = z.object({
+  title: z.string().optional(),
+  author: z.string().optional(),
+  details: z.string().optional(),
+  notice: z.string().optional(),
+});
+
 export type ContractParam = z.infer<typeof AbiTypeSchema>;
 export type PublishedContract = z.infer<typeof PublishedContractSchema>;
 export type AbiFunction = {
@@ -123,8 +130,10 @@ export type ContractSource = {
   filename: string;
   source: string;
 };
+
 export type PublishedMetadata = {
   name: string;
   abi: z.infer<typeof AbiSchema>;
   metadata: Record<string, any>;
+  info: z.infer<typeof ContractInfoSchema>;
 };

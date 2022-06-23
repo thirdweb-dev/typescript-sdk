@@ -5,6 +5,7 @@ import {
   AbiFunction,
   AbiSchema,
   AbiTypeSchema,
+  ContractInfoSchema,
   ContractSource,
   PreDeployMetadata,
   PreDeployMetadataFetched,
@@ -281,10 +282,17 @@ async function fetchContractMetadata(
   const compilationTarget = metadata.settings.compilationTarget;
   const targets = Object.keys(compilationTarget);
   const name = compilationTarget[targets[0]];
+  const info = ContractInfoSchema.parse({
+    title: metadata.output.devdoc.title,
+    author: metadata.output.devdoc.author,
+    details: metadata.output.devdoc.detail,
+    notice: metadata.output.userdoc.notice,
+  });
   return {
     name,
     abi,
     metadata,
+    info,
   };
 }
 

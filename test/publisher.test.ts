@@ -188,6 +188,11 @@ describe("Publishing", async () => {
     const all = await c.nft.query.all();
     expect(all.length).to.eq(1);
     invariant(c.royalties, "no royalties detected");
+    const prevMeta = await c.metadata.get();
+    expect(prevMeta.name).to.eq("CustomAzukiContract");
+    expect(prevMeta.description).to.eq(
+      "Azuki contract that can be fully used in the thirdweb dashboard",
+    );
     await c.metadata.set({
       name: "Hello",
     });
