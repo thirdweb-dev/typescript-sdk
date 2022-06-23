@@ -36,6 +36,7 @@ export type ChainOrRpc =
   | "ethereum"
   | "fantom"
   | "avalanche"
+  | "avalanche-testnet"
   | "optimism"
   | "optimism-testnet"
   | "arbitrum"
@@ -87,6 +88,8 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
       return "https://rpc.ftm.tools";
     case "avalanche":
       return "https://api.avax.network/ext/bc/C/rpc";
+    case "avalanche-testnet":
+      return "https://api.avax-test.network/ext/bc/C/rpc";
     default:
       if (network.startsWith("http") || network.startsWith("ws")) {
         return network;
