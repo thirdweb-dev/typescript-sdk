@@ -45,8 +45,17 @@ export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
   /**
    * @public
    */
-  public extractFunctions(): AbiFunction[] {
+  public async extractFunctions(): Promise<AbiFunction[]> {
+    let publishedMetadata;
+    try {
+      publishedMetadata = await this.get();
+    } catch (e) {
+      // ignore for built-in contracts
+    }
     // to construct a contract we already **have** to have the abi on the contract wrapper, so there is no reason to look fetch it again (means this function can become synchronous as well!)
-    return extractFunctionsFromAbi(AbiSchema.parse(this.contractWrapper.abi));
+    return extractFunctionsFromAbi(
+      AbiSchema.parse(this.contractWrapper.abi),
+      publishedMetadata?.metadata,
+    );
   }
 }

@@ -131,7 +131,7 @@ describe("Custom Contracts", async () => {
   it("should extract functions", async () => {
     const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
-    const functions = c.publishedMetadata.extractFunctions();
+    const functions = await c.publishedMetadata.extractFunctions();
     expect(functions.length).gt(0);
   });
 

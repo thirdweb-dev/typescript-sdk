@@ -91,13 +91,28 @@ export function extractConstructorParamsFromAbi(
 /**
  * @internal
  * @param abi
+ * @param metadata
  */
 export function extractFunctionsFromAbi(
   abi: z.input<typeof AbiSchema>,
+  metadata?: Record<string, any>,
 ): AbiFunction[] {
   const functions = abi.filter((el) => el.type === "function");
+
   const parsed = [];
   for (const f of functions) {
+    const doc =
+      metadata?.output?.userdoc[
+        Object.keys(metadata?.output?.userdoc.methods || {}).find(
+          (fn) => fn.substring(0, fn.indexOf("(")) === f.name,
+        ) || ""
+      ]?.notice ||
+      metadata?.output?.devdoc.methods[
+        Object.keys(metadata?.output?.devdoc.methods || {}).find(
+          (fn) => fn.substring(0, fn.indexOf("(")) === f.name,
+        ) || ""
+      ]?.details;
+
     const args =
       f.inputs?.map((i) => `${i.name || "key"}: ${toJSType(i)}`)?.join(", ") ||
       "";
@@ -111,6 +126,7 @@ export function extractFunctionsFromAbi(
       name: f.name ?? "unknown",
       signature,
       stateMutability: f.stateMutability ?? "",
+      comment: doc,
     });
   }
   return parsed;
