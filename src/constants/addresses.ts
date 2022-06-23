@@ -109,8 +109,8 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.Arbitrum]: {
     biconomyForwarder: constants.AddressZero,
-    twFactory: "", // TODO
-    twRegistry: "", // TODO
+    twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
+    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
     twBYOCRegistry: constants.AddressZero,
     contractDeployer: constants.AddressZero,
     contractMetadataRegistry: constants.AddressZero,
@@ -118,8 +118,8 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.ArbitrumTestnet]: {
     biconomyForwarder: constants.AddressZero,
-    twFactory: "0xeb8de81F1eFA6523f72ad0cd0a1e6E5C0908b3Ce", // TODO from shared deployer wallet
-    twRegistry: "0x6D340cc8bF255d05aCad6c3d820D8B0d8905542c", // TODO from shared deployer wallet
+    twFactory: "0xb0435b47ad26115A39c59735b814f3769F07C2c1",
+    twRegistry: "0xcF4c511551aE4dab1F997866FC3900cd2aaeC40D",
     twBYOCRegistry: constants.AddressZero,
     contractDeployer: constants.AddressZero,
     contractMetadataRegistry: constants.AddressZero,
@@ -127,8 +127,8 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.Optimism]: {
     biconomyForwarder: constants.AddressZero,
-    twFactory: "", // TODO
-    twRegistry: "", // TODO
+    twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
+    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
     twBYOCRegistry: constants.AddressZero,
     contractDeployer: constants.AddressZero,
     contractMetadataRegistry: constants.AddressZero,
@@ -136,8 +136,8 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.OptimismTestnet]: {
     biconomyForwarder: constants.AddressZero,
-    twFactory: "0x3805FF4740F47c5F3206223af6e7D5d99e58a2E7", // TODO from shared deployer wallet
-    twRegistry: "0xc7B5A95ee69c3384F97edcDEb31F29ed0078bF52", // TODO from shared deployer wallet
+    twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
+    twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
     twBYOCRegistry: constants.AddressZero,
     contractDeployer: constants.AddressZero,
     contractMetadataRegistry: constants.AddressZero,
