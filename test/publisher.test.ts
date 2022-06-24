@@ -39,7 +39,6 @@ describe("Publishing", async () => {
 
   before("Upload abis", async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    console.log("beforeeee");
     sdk = new ThirdwebSDK(adminWallet);
     simpleContractUri =
       "ipfs://QmNPcYsXDAZvQZXCG73WSjdiwffZkNkoJYwrDDtcgM142A/0";
