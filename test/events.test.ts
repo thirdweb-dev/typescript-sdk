@@ -1,15 +1,23 @@
 import { ethers, Wallet } from "ethers";
-import { sdk } from "./before-setup";
+import { sdk, signers } from "./before-setup";
 import { EventType } from "../src/constants/events";
 import { expect } from "chai";
 import { ContractEvent, NFTDrop, ThirdwebSDK, NFTCollection } from "../src";
 import { AddressZero } from "@ethersproject/constants";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
 global.fetch = require("cross-fetch");
 
 describe("Events", async () => {
   let dropContract: NFTDrop;
   let nftContract: NFTCollection;
+  let adminWallet: SignerWithAddress,
+    samWallet: SignerWithAddress,
+    bobWallet: SignerWithAddress;
+
+  before(() => {
+    [adminWallet, samWallet, bobWallet] = signers;
+  });
 
   beforeEach(async () => {
     dropContract = sdk.getNFTDrop(
@@ -97,12 +105,28 @@ describe("Events", async () => {
       .setApprovalForAll(ethers.constants.AddressZero, true);
   });
 
-  it("should return different event types", async () => {
+  it("should return single event", async () => {
     await nftContract.mintToSelf({
       name: "Test1",
     });
 
     const events = await nftContract.events.getEvents("TokensMinted");
     expect(events.length).to.be.equal(1);
+  });
+
+  it("should return multiple events", async () => {
+    await nftContract.mintToSelf({
+      name: "Test1",
+    });
+
+    await nftContract.transfer(samWallet.address, 0);
+
+    const events = await nftContract.events.getAllEvents();
+    expect(events.filter((e) => e.eventName === "Transfer").length).to.be.equal(
+      2,
+    );
+    expect(
+      events.filter((e) => e.eventName === "TokensMinted").length,
+    ).to.be.equal(1);
   });
 });

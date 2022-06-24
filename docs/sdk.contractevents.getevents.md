@@ -4,6 +4,8 @@
 
 ## ContractEvents.getEvents() method
 
+Get Events
+
 <b>Signature:</b>
 
 ```typescript
@@ -14,10 +16,32 @@ getEvents(eventName: string, filters?: QueryAllEvents): Promise<ContractEvent[]>
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  eventName | string |  |
-|  filters | [QueryAllEvents](./sdk.queryallevents.md) | <i>(Optional)</i> |
+|  eventName | string | The name of the event to get logs for |
+|  filters | [QueryAllEvents](./sdk.queryallevents.md) | <i>(Optional)</i> Specify the from and to block numbers to get events for, defaults to all blocks |
 
 <b>Returns:</b>
 
 Promise&lt;[ContractEvent](./sdk.contractevent.md)<!-- -->\[\]&gt;
+
+The requested event objects with event data
+
+## Remarks
+
+Get a list of the events of a specific type emitted from this contract during the specified time period
+
+## Example
+
+
+```javascript
+// The name of the event to get logs for
+const eventName = "Transfer";
+// Optionally pass in filters to limit the blocks from which events are retrieved
+const filters = {
+  fromBlock: 0,
+  toBlock: 1000000,
+}
+const events = await contract.events.getEvents(eventName, filters);
+console.log(events[0].eventName);
+console.log(events[0].data);
+```
 

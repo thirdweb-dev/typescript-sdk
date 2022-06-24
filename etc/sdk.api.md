@@ -610,9 +610,7 @@ export class ContractEvents<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     addEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: (event: Record<string, any>) => void): void;
     addTransactionListener(listener: ListenerFn): void;
-    // (undocumented)
     getAllEvents(filters?: QueryAllEvents): Promise<ContractEvent[]>;
-    // (undocumented)
     getEvents(eventName: string, filters?: QueryAllEvents): Promise<ContractEvent[]>;
     listenToAllEvents(listener: (event: ContractEvent) => void): void;
     removeAllListeners(): void;

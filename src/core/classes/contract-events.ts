@@ -145,6 +145,24 @@ export class ContractEvents<TContract extends BaseContract> {
     this.contractWrapper.getProvider().removeAllListeners(filter);
   }
 
+  /**
+   * Get All Events
+   * @remarks Get a list of all the events emitted from this contract during the specified time period
+   * @example
+   * ```javascript
+   * // Optionally pass in filters to limit the blocks from which events are retrieved
+   * const filters = {
+   *   fromBlock: 0,
+   *   toBlock: 1000000,
+   * }
+   * const events = await contract.events.getAllEvents(filters);
+   * console.log(events[0].eventName);
+   * console.log(events[0].data);
+   * ```
+   *
+   * @param filters - Specify the from and to block numbers to get events for, defaults to all blocks
+   * @returns The event objects of the events emitted with event names and data for each event
+   */
   public async getAllEvents(
     filters?: QueryAllEvents,
   ): Promise<ContractEvent[]> {
@@ -162,6 +180,27 @@ export class ContractEvents<TContract extends BaseContract> {
     return this.parseEvents(events);
   }
 
+  /**
+   * Get Events
+   * @remarks Get a list of the events of a specific type emitted from this contract during the specified time period
+   * @example
+   * ```javascript
+   * // The name of the event to get logs for
+   * const eventName = "Transfer";
+   * // Optionally pass in filters to limit the blocks from which events are retrieved
+   * const filters = {
+   *   fromBlock: 0,
+   *   toBlock: 1000000,
+   * }
+   * const events = await contract.events.getEvents(eventName, filters);
+   * console.log(events[0].eventName);
+   * console.log(events[0].data);
+   * ```
+   *
+   * @param eventName - The name of the event to get logs for
+   * @param filters - Specify the from and to block numbers to get events for, defaults to all blocks
+   * @returns The requested event objects with event data
+   */
   public async getEvents(
     eventName: string,
     filters?: QueryAllEvents,
