@@ -581,7 +581,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     return prepareClaim(
       quantity,
       await this.claimCondition.get(),
-      (await this.metadata.get()).merkle,
+      async () => (await this.metadata.get()).merkle,
       0,
       this.contractWrapper,
       this.storage,

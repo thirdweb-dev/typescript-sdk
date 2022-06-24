@@ -446,7 +446,7 @@ export class DropClaimConditions<
     return prepareClaim(
       quantity,
       await this.getActive(),
-      (await this.metadata.get()).merkle,
+      async () => (await this.metadata.get()).merkle,
       0,
       this.contractWrapper,
       this.storage,

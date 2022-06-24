@@ -429,7 +429,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     return prepareClaim(
       quantity,
       await this.claimConditions.getActive(tokenId),
-      (await this.metadata.get()).merkle,
+      async () => (await this.metadata.get()).merkle,
       0,
       this.contractWrapper,
       this.storage,
