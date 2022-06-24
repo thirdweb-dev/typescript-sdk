@@ -10,7 +10,19 @@ export interface UploadProgressEvent {
   total: number;
 }
 
+/**
+ * Standardized return type for contract events that returns event arguments
+ */
 export type ContractEvent = {
   eventName: string;
   data: Record<string, any>;
 };
+
+/**
+ * Filters for querying past events
+ */
+export interface QueryAllEvents {
+  eventName?: string;
+  fromBlock?: number;
+  toBlock?: number;
+}

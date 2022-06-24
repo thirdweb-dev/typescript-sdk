@@ -3,7 +3,7 @@ import { BaseContract, providers } from "ethers";
 import { EventType } from "../../constants";
 import { ListenerFn } from "eventemitter3";
 import { EventFragment } from "@ethersproject/abi";
-import { ContractEvent } from "../../types/index";
+import { ContractEvent, QueryAllEvents } from "../../types/index";
 
 /**
  * Listen to Contract events in real time
@@ -143,6 +143,70 @@ export class ContractEvents<TContract extends BaseContract> {
     const address = this.contractWrapper.readContract.address;
     const filter = { address };
     this.contractWrapper.getProvider().removeAllListeners(filter);
+  }
+
+  public async getPastEvents(
+    filters?: QueryAllEvents,
+  ): Promise<ContractEvent[]> {
+    if (filters?.eventName) {
+      return this.getPastEvent(filters.eventName, filters);
+    }
+
+    // Default to returning data about all events
+    const eventNames = Object.values(
+      this.contractWrapper.readContract.interface.events,
+    ).map((e) => e.name);
+    const events = await Promise.all(
+      eventNames.map(async (eventName) => {
+        return this.getPastEvent(eventName, filters);
+      }),
+    );
+    return events.flat();
+  }
+
+  private async getPastEvent(
+    eventName: string,
+    filters?: Omit<QueryAllEvents, "eventName">,
+  ): Promise<ContractEvent[]> {
+    const event = this.contractWrapper.readContract.interface.getEvent(
+      eventName as string,
+    );
+    const filter = this.contractWrapper.readContract.filters[event.name];
+
+    const fromBlock = filters?.fromBlock || 0;
+    const toBlock =
+      filters?.toBlock ||
+      (await this.contractWrapper.readContract.provider.getBlockNumber());
+
+    const events = await this.contractWrapper.readContract.queryFilter(
+      filter(),
+      fromBlock,
+      toBlock,
+    );
+
+    const parsedEvents: ContractEvent[] = events.map((e) => {
+      if (e.args) {
+        const entries = Object.entries(e.args);
+        const args = entries.slice(entries.length / 2, entries.length);
+
+        const data: Record<string, any> = {};
+        for (const [key, value] of args) {
+          data[key] = value;
+        }
+
+        return {
+          eventName: e.event || eventName,
+          data,
+        };
+      }
+
+      return {
+        eventName: e.event || eventName,
+        data: {},
+      };
+    });
+
+    return parsedEvents;
   }
 
   private toContractEvent(
