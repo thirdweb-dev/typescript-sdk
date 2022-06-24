@@ -27,7 +27,7 @@ import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
 import { QueryAllParams } from "../types";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
-import { Erc721SignatureMintable } from "../core";
+import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -99,12 +99,12 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * const signedPayload = contract.signature.generate(payload);
    *
    * // now anyone can mint the NFT
-   * const tx = contract.signature.mint(signedPayload);
+   * const tx = contract.sig.mint(signedPayload);
    * const receipt = tx.receipt; // the mint transaction receipt
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
    */
-  public signature = this.sig as Erc721SignatureMintable;
+  override signature = super.signature as Erc721WithQuantitySignatureMintable;
 
   private _mint = this.mint as Erc721Mintable;
   private _batchMint = this._mint.batch as Erc721BatchMintable;
@@ -141,6 +141,11 @@ export class NFTCollection extends Erc721<TokenERC721> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.signature = new Erc721WithQuantitySignatureMintable(
+      this.contractWrapper,
+      this.storage,
+      this.roles,
+    );
   }
 
   /** ******************************

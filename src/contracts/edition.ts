@@ -30,6 +30,7 @@ import { QueryAllParams } from "../types";
 import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
 import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
 import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { Erc1155SignatureMintable } from "../core";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -85,6 +86,21 @@ export class Edition extends Erc1155<TokenERC1155> {
    * ```
    */
   public royalties: ContractRoyalty<TokenERC1155, typeof Edition.schema>;
+  /**
+   * Signature Minting
+   * @remarks Generate dynamic NFTs with your own signature, and let others mint them using that signature.
+   * @example
+   * ```javascript
+   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
+   * const signedPayload = contract.signature.generate(payload);
+   *
+   * // now anyone can mint the NFT
+   * const tx = contract.signature.mint(signedPayload);
+   * const receipt = tx.receipt; // the mint transaction receipt
+   * const mintedId = tx.id; // the id of the NFT minted
+   * ```
+   */
+  override signature = super.signature as Erc1155SignatureMintable;
 
   /**
    * @internal
@@ -121,6 +137,11 @@ export class Edition extends Erc1155<TokenERC1155> {
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.analytics = new ContractAnalytics(this.contractWrapper);
+    this.signature = new Erc1155SignatureMintable(
+      this.contractWrapper,
+      this.storage,
+      this.roles,
+    );
   }
 
   /** ******************************

@@ -32,7 +32,7 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   featureName = FEATURE_NFT_SIGNATURE_MINTABLE.name;
 
-  private contractWrapper: ContractWrapper<SignatureDropContract>;
+  private contractWrapper: ContractWrapper<SignatureDropContract | TokenERC721>;
   private storage: IStorage;
   private roles?: ContractRoles<
     TokenERC721,
@@ -40,7 +40,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   >;
 
   constructor(
-    contractWrapper: ContractWrapper<SignatureDropContract>,
+    contractWrapper: ContractWrapper<SignatureDropContract | TokenERC721>,
     storage: IStorage,
     roles?: ContractRoles<
       TokenERC721,

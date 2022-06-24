@@ -3,6 +3,7 @@ import { TokenERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import {
+  Erc20SignatureMintable,
   IStorage,
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -58,6 +59,20 @@ export class Token extends Erc20<TokenERC20> {
    */
   public analytics: ContractAnalytics<TokenERC20>;
   /**
+   * Signature Minting
+   * @remarks Generate tokens that can be minted only with your own signature, attaching your own set of mint conditions.
+   * @example
+   * ```javascript
+   * // see how to craft a payload to sign in the `contract.signature.generate()` documentation
+   * const signedPayload = contract.signature.generate(payload);
+   *
+   * // now anyone can mint the tokens
+   * const tx = contract.signature.mint(signedPayload);
+   * const receipt = tx.receipt; // the mint transaction receipt
+   * ```
+   */
+  override signature = super.signature as Erc20SignatureMintable;
+  /**
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC20>;
@@ -90,6 +105,10 @@ export class Token extends Erc20<TokenERC20> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
+    this.signature = new Erc20SignatureMintable(
+      this.contractWrapper,
+      this.roles,
+    );
   }
 
   /** ******************************

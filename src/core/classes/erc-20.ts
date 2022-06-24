@@ -37,7 +37,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
    * Mint tokens
    */
   public mint: Erc20Mintable | undefined;
-  public sig: Erc20SignatureMintable | undefined;
+  public signature: Erc20SignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
@@ -59,7 +59,7 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
       this.options = SDKOptionsSchema.parse({});
     }
     this.mint = this.detectErc20Mintable();
-    this.sig = this.detectErc20SignatureMintable();
+    this.signature = this.detectErc20SignatureMintable();
   }
 
   /**

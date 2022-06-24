@@ -30,14 +30,16 @@ import { DetectableFeature } from "../interfaces/DetectableFeature";
 export class Erc1155SignatureMintable implements DetectableFeature {
   featureName = FEATURE_EDITION_SIGNATURE_MINTABLE.name;
 
-  private contractWrapper: ContractWrapper<BaseSignatureMintERC1155>;
+  private contractWrapper: ContractWrapper<
+    BaseSignatureMintERC1155 | TokenERC1155
+  >;
   private storage: IStorage;
   private roles:
     | ContractRoles<TokenERC1155, typeof NFTCollection.contractRoles[number]>
     | undefined;
 
   constructor(
-    contractWrapper: ContractWrapper<BaseSignatureMintERC1155>,
+    contractWrapper: ContractWrapper<BaseSignatureMintERC1155 | TokenERC1155>,
     storage: IStorage,
     roles?: ContractRoles<
       TokenERC1155,

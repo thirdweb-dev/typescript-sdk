@@ -47,7 +47,7 @@ export class Erc1155<
   featureName = FEATURE_EDITION.name;
   public query: Erc1155Enumerable | undefined;
   public mint: Erc1155Mintable | undefined;
-  public sig: Erc1155SignatureMintable | undefined;
+  public signature: Erc1155SignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
   protected options: SDKOptions;
@@ -70,7 +70,7 @@ export class Erc1155<
     }
     this.query = this.detectErc1155Enumerable();
     this.mint = this.detectErc1155Mintable();
-    this.sig = this.detectErc1155SignatureMintable();
+    this.signature = this.detectErc1155SignatureMintable();
   }
 
   /**

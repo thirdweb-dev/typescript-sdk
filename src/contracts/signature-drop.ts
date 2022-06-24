@@ -174,7 +174,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
    */
-  public signature: Erc721WithQuantitySignatureMintable;
+  override signature = super.signature as Erc721WithQuantitySignatureMintable;
 
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
