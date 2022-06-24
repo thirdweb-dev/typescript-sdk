@@ -1,6 +1,4 @@
 import {
-  FilledSignature721WithQuantity,
-  FilledSignaturePayload721,
   MintRequest721,
   MintRequest721withQuantity,
   PayloadToSign721,
@@ -282,22 +280,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   public async generate(
     mintRequest: PayloadToSign721withQuantity | PayloadToSign721,
   ): Promise<SignedPayload721WithQuantitySignature | SignedPayload721> {
-    const contractType = ethers.utils.toUtf8String(
-      await this.contractWrapper.readContract.contractType(),
-    );
-
-    const isSignatureDrop = this.isSignatureDrop(
-      this.contractWrapper.readContract,
-      contractType,
-    );
-
-    if (isSignatureDrop) {
-      const mintRequestPayload = mintRequest as PayloadToSign721withQuantity;
-      return (await this.generateBatch([mintRequestPayload]))[0];
-    } else {
-      const mintRequestPayload = mintRequest as PayloadToSign721;
-      return (await this.generateBatchToken([mintRequestPayload]))[0];
-    }
+    return (await this.generateBatch([mintRequest]))[0];
   }
 
   /**
@@ -309,15 +292,32 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * @returns an array of payloads and signatures
    */
   public async generateBatch(
-    payloadsToSign: PayloadToSign721withQuantity[],
+    payloadsToSign: PayloadToSign721withQuantity[] | PayloadToSign721[],
   ): Promise<SignedPayload721WithQuantitySignature[]> {
+    const contractType = ethers.utils.toUtf8String(
+      await this.contractWrapper.readContract.contractType(),
+    );
+
+    const isSignatureDrop = this.isSignatureDrop(
+      this.contractWrapper.readContract,
+      contractType,
+    );
+
     await this.roles?.verify(
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );
-    const parsedRequests: FilledSignature721WithQuantity[] = payloadsToSign.map(
-      (m) => Signature721WithQuantityInput.parse(m),
-    );
+
+    let parsedRequests;
+    if (isSignatureDrop) {
+      parsedRequests = payloadsToSign.map((m) =>
+        Signature721WithQuantityInput.parse(m),
+      );
+    } else {
+      parsedRequests = payloadsToSign.map((m) =>
+        Signature721PayloadInput.parse(m),
+      );
+    }
 
     const metadatas = parsedRequests.map((r) => r.metadata);
     const uris = await uploadOrExtractURIs(metadatas, this.storage);
@@ -333,62 +333,35 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
           ...m,
           uri,
         });
-        const signature = await this.contractWrapper.signTypedData(
-          signer,
-          {
-            name: "SignatureMintERC721",
-            version: "1",
-            chainId,
-            verifyingContract: await this.contractWrapper.readContract.address,
-          },
-          { MintRequest: MintRequest721withQuantity }, // TYPEHASH
-          await this.mapPayloadToContractStruct(finalPayload),
-        );
-        return {
-          payload: finalPayload,
-          signature: signature.toString(),
-        };
-      }),
-    );
-  }
+        let signature;
 
-  public async generateBatchToken(
-    payloadsToSign: PayloadToSign721[],
-  ): Promise<SignedPayload721[]> {
-    await this.roles?.verify(
-      ["minter"],
-      await this.contractWrapper.getSignerAddress(),
-    );
+        if (isSignatureDrop) {
+          signature = await this.contractWrapper.signTypedData(
+            signer,
+            {
+              name: "SignatureMintERC721",
+              version: "1",
+              chainId,
+              verifyingContract: await this.contractWrapper.readContract
+                .address,
+            },
+            { MintRequest: MintRequest721withQuantity }, // TYPEHASH
+            await this.mapPayloadToContractStruct(finalPayload),
+          );
+        } else {
+          signature = await this.contractWrapper.signTypedData(
+            signer,
+            {
+              name: "TokenERC721",
+              version: "1",
+              chainId,
+              verifyingContract: this.contractWrapper.readContract.address,
+            },
+            { MintRequest: MintRequest721 },
+            await this.mapPayloadToContractStruct(finalPayload),
+          );
+        }
 
-    const parsedRequests: FilledSignaturePayload721[] = payloadsToSign.map(
-      (m) => Signature721PayloadInput.parse(m),
-    );
-
-    const metadatas = parsedRequests.map((r) => r.metadata);
-    const uris = await uploadOrExtractURIs(metadatas, this.storage);
-
-    const chainId = await this.contractWrapper.getChainID();
-    const signer = this.contractWrapper.getSigner();
-    invariant(signer, "No signer available");
-
-    return await Promise.all(
-      parsedRequests.map(async (m, i) => {
-        const uri = uris[i];
-        const finalPayload = Signature721WithQuantityOutput.parse({
-          ...m,
-          uri,
-        });
-        const signature = await this.contractWrapper.signTypedData(
-          signer,
-          {
-            name: "TokenERC721",
-            version: "1",
-            chainId,
-            verifyingContract: this.contractWrapper.readContract.address,
-          },
-          { MintRequest: MintRequest721 },
-          await this.mapPayloadToContractStruct(finalPayload),
-        );
         return {
           payload: finalPayload,
           signature: signature.toString(),

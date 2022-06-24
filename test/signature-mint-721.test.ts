@@ -123,7 +123,7 @@ describe("NFT signature minting", async () => {
           },
         },
       ];
-      const batch = await nftContract.signature.generateBatchToken(input);
+      const batch = await nftContract.signature.generateBatch(input);
 
       for (const [i, v] of batch.entries()) {
         const tx = await nftContract.signature.mint(v);
@@ -211,7 +211,7 @@ describe("NFT signature minting", async () => {
       const toSign2 = {
         metadata: uri2,
       };
-      const payloads = await nftContract.signature.generateBatchToken([
+      const payloads = await nftContract.signature.generateBatch([
         toSign1,
         toSign2,
       ]);
