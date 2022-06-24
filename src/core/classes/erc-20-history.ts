@@ -32,8 +32,8 @@ export class TokenERC20History {
    * ```
    */
   public async getAllHolderBalances(): Promise<TokenHolderBalance[]> {
-    const a = await this.events.getPastEvents({ eventName: "Transfer" });
-    const txns = a.map((b) => b.data);
+    const a = await this.events.getEvents("Transfer");
+    const txns: Record<string, any>[] = a.map((b) => b.data);
     const balances: {
       [key: string]: BigNumber;
     } = {};

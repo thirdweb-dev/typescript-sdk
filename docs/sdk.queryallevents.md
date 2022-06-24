@@ -16,7 +16,6 @@ export interface QueryAllEvents
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [eventName?](./sdk.queryallevents.eventname.md) | string | <i>(Optional)</i> |
 |  [fromBlock?](./sdk.queryallevents.fromblock.md) | number | <i>(Optional)</i> |
 |  [toBlock?](./sdk.queryallevents.toblock.md) | number | <i>(Optional)</i> |
 

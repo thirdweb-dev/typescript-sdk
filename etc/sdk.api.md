@@ -611,7 +611,9 @@ export class ContractEvents<TContract extends BaseContract> {
     addEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: (event: Record<string, any>) => void): void;
     addTransactionListener(listener: ListenerFn): void;
     // (undocumented)
-    getPastEvents(filters?: QueryAllEvents): Promise<ContractEvent[]>;
+    getAllEvents(filters?: QueryAllEvents): Promise<ContractEvent[]>;
+    // (undocumented)
+    getEvents(eventName: string, filters?: QueryAllEvents): Promise<ContractEvent[]>;
     listenToAllEvents(listener: (event: ContractEvent) => void): void;
     removeAllListeners(): void;
     removeEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: providers.Listener): void;
@@ -3234,8 +3236,6 @@ export const QuantitySchema: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z
 
 // @public
 export interface QueryAllEvents {
-    // (undocumented)
-    eventName?: string;
     // (undocumented)
     fromBlock?: number;
     // (undocumented)

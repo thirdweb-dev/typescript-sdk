@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { BaseContract, providers } from "ethers";
+import { BaseContract, Event, providers } from "ethers";
 import { EventType } from "../../constants";
 import { ListenerFn } from "eventemitter3";
 import { EventFragment } from "@ethersproject/abi";
@@ -145,28 +145,26 @@ export class ContractEvents<TContract extends BaseContract> {
     this.contractWrapper.getProvider().removeAllListeners(filter);
   }
 
-  public async getPastEvents(
+  public async getAllEvents(
     filters?: QueryAllEvents,
   ): Promise<ContractEvent[]> {
-    if (filters?.eventName) {
-      return this.getPastEvent(filters.eventName, filters);
-    }
+    const fromBlock = filters?.fromBlock || 0;
+    const toBlock =
+      filters?.toBlock ||
+      (await this.contractWrapper.readContract.provider.getBlockNumber());
 
-    // Default to returning data about all events
-    const eventNames = Object.values(
-      this.contractWrapper.readContract.interface.events,
-    ).map((e) => e.name);
-    const events = await Promise.all(
-      eventNames.map(async (eventName) => {
-        return this.getPastEvent(eventName, filters);
-      }),
+    const events = await this.contractWrapper.readContract.queryFilter(
+      {},
+      fromBlock,
+      toBlock,
     );
-    return events.flat();
+
+    return this.parseEvents(events);
   }
 
-  private async getPastEvent(
+  public async getEvents(
     eventName: string,
-    filters?: Omit<QueryAllEvents, "eventName">,
+    filters?: QueryAllEvents,
   ): Promise<ContractEvent[]> {
     const event = this.contractWrapper.readContract.interface.getEvent(
       eventName as string,
@@ -184,7 +182,11 @@ export class ContractEvents<TContract extends BaseContract> {
       toBlock,
     );
 
-    const parsedEvents: ContractEvent[] = events.map((e) => {
+    return this.parseEvents(events);
+  }
+
+  private parseEvents(events: Event[]): ContractEvent[] {
+    return events.map((e) => {
       if (e.args) {
         const entries = Object.entries(e.args);
         const args = entries.slice(entries.length / 2, entries.length);
@@ -195,18 +197,16 @@ export class ContractEvents<TContract extends BaseContract> {
         }
 
         return {
-          eventName: e.event || eventName,
+          eventName: e.event || "",
           data,
         };
       }
 
       return {
-        eventName: e.event || eventName,
+        eventName: e.event || "",
         data: {},
       };
     });
-
-    return parsedEvents;
   }
 
   private toContractEvent(

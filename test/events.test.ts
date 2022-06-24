@@ -102,9 +102,7 @@ describe("Events", async () => {
       name: "Test1",
     });
 
-    const events = await nftContract.events.getPastEvents({
-      eventName: "TokensMinted",
-    });
+    const events = await nftContract.events.getEvents("TokensMinted");
     expect(events.length).to.be.equal(1);
   });
 });

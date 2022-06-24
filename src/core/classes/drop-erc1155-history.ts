@@ -28,9 +28,9 @@ export class DropErc1155History {
   public async getAllClaimerAddresses(
     tokenId: BigNumberish,
   ): Promise<string[]> {
-    const a = (
-      await this.events.getPastEvents({ eventName: "TokensClaimed" })
-    ).filter((e) => e.data.tokenId.eq(tokenId));
+    const a = (await this.events.getEvents("TokensClaimed")).filter((e) =>
+      e.data.tokenId.eq(tokenId),
+    );
 
     return Array.from(new Set(a.map((b) => b.data?.claimer)));
   }

@@ -22,7 +22,6 @@ export type ContractEvent = {
  * Filters for querying past events
  */
 export interface QueryAllEvents {
-  eventName?: string;
   fromBlock?: number;
   toBlock?: number;
 }
