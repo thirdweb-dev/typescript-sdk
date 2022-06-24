@@ -77,15 +77,12 @@ export class ContractMetadata<
    * @returns the metadata of the given contract
    */
   public async get() {
-    let uri;
     let data;
-    try {
-      if (this.supportsContractMetadata(this.contractWrapper)) {
-        uri = await this.contractWrapper.readContract.contractURI();
+    if (this.supportsContractMetadata(this.contractWrapper)) {
+      const uri = await this.contractWrapper.readContract.contractURI();
+      if (uri) {
         data = await this.storage.get(uri);
       }
-    } catch (e) {
-      // ignore
     }
 
     if (!data) {
@@ -101,12 +98,8 @@ export class ContractMetadata<
           description: publishedMetadata.info.title,
         };
       } catch (e) {
-        // ignore
+        throw new Error("Could not fetch contract metadata");
       }
-    }
-
-    if (!data) {
-      throw new Error("Contract does not support reading contract metadata");
     }
 
     return this.parseOutputMetadata(data);
