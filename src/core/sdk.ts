@@ -36,10 +36,13 @@ import {
   ChainOrRpc,
   getProviderForNetwork,
   getReadOnlyProvider,
+  NATIVE_TOKEN_ADDRESS,
 } from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
 import { Multiwrap } from "../contracts/multiwrap";
 import { WalletAuthenticator } from "./auth/wallet-authenticator";
+import { CurrencyValue } from "../types/index";
+import { fetchCurrencyValue } from "../common/currency";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -464,6 +467,23 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     );
     this.contractCache.set(address, contract);
     return contract;
+  }
+
+  /**
+   * Get the native balance of a given address (wallet or contract)
+   * @example
+   * ```javascript
+   * const balance = await sdk.getBalance("0x...");
+   * console.log(balance.displayValue);
+   * ```
+   * @param address - the address to check the balance for
+   */
+  public async getBalance(address: string): Promise<CurrencyValue> {
+    return fetchCurrencyValue(
+      this.getProvider(),
+      NATIVE_TOKEN_ADDRESS,
+      await this.getProvider().getBalance(address),
+    );
   }
 
   /**

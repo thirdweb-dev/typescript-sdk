@@ -4988,6 +4988,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     //
     // @beta
     static fromSigner(signer: Signer, network?: ChainOrRpc, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
+    getBalance(address: string): Promise<CurrencyValue>;
     // @internal (undocumented)
     getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     // @beta
