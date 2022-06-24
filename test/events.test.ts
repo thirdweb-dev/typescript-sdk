@@ -2,13 +2,14 @@ import { ethers, Wallet } from "ethers";
 import { sdk } from "./before-setup";
 import { EventType } from "../src/constants/events";
 import { expect } from "chai";
-import { ContractEvent, NFTDrop, ThirdwebSDK } from "../src";
+import { ContractEvent, NFTDrop, ThirdwebSDK, NFTCollection } from "../src";
 import { AddressZero } from "@ethersproject/constants";
 
 global.fetch = require("cross-fetch");
 
 describe("Events", async () => {
   let dropContract: NFTDrop;
+  let nftContract: NFTCollection;
 
   beforeEach(async () => {
     dropContract = sdk.getNFTDrop(
@@ -19,6 +20,20 @@ describe("Events", async () => {
           "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
         primary_sale_recipient: AddressZero,
         seller_fee_basis_points: 500,
+        fee_recipient: AddressZero,
+        platform_fee_basis_points: 10,
+        platform_fee_recipient: AddressZero,
+      }),
+    );
+
+    nftContract = sdk.getNFTCollection(
+      await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
+        name: "NFT Contract",
+        description: "Test NFT contract from tests",
+        image:
+          "https://pbs.twimg.com/profile_images/1433508973215367176/XBCfBn3g_400x400.jpg",
+        primary_sale_recipient: AddressZero,
+        seller_fee_basis_points: 1000,
         fee_recipient: AddressZero,
         platform_fee_basis_points: 10,
         platform_fee_recipient: AddressZero,
@@ -80,5 +95,16 @@ describe("Events", async () => {
     await esdk
       .getNFTDrop(dropContract.getAddress())
       .setApprovalForAll(ethers.constants.AddressZero, true);
+  });
+
+  it("should return different event types", async () => {
+    await nftContract.mintToSelf({
+      name: "Test1",
+    });
+
+    const events = await nftContract.events.getPastEvents({
+      eventName: "TokensMinted",
+    });
+    expect(events.length).to.be.equal(1);
   });
 });

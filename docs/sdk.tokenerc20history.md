@@ -16,7 +16,7 @@ export declare class TokenERC20History
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(contractWrapper, analytics)](./sdk.tokenerc20history._constructor_.md) |  | Constructs a new instance of the <code>TokenERC20History</code> class |
+|  [(constructor)(contractWrapper, events)](./sdk.tokenerc20history._constructor_.md) |  | Constructs a new instance of the <code>TokenERC20History</code> class |
 
 ## Methods
 
