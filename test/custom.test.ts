@@ -124,6 +124,7 @@ describe("Custom Contracts", async () => {
     invariant(c, "Contract undefined");
     const meta = await c.publishedMetadata.get();
     expect(meta.name).to.eq("Greeter");
+    expect(meta.licenses.length).gt(0);
   });
 
   it("should extract functions", async () => {
