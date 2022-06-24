@@ -1,10 +1,15 @@
 import {
   FilledSignature721WithQuantity,
+  FilledSignaturePayload721,
+  MintRequest721,
   MintRequest721withQuantity,
+  PayloadToSign721,
   PayloadToSign721withQuantity,
   PayloadWithUri721withQuantity,
+  Signature721PayloadInput,
   Signature721WithQuantityInput,
   Signature721WithQuantityOutput,
+  SignedPayload721,
   SignedPayload721WithQuantitySignature,
 } from "../../schema/contracts/common/signature";
 import { TransactionResultWithId } from "../types";
@@ -14,6 +19,7 @@ import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   ISignatureMintERC721,
+  ITokenERC721,
   SignatureDrop as SignatureDropContract,
   TokenERC721,
 } from "contracts";
@@ -24,6 +30,7 @@ import { uploadOrExtractURIs } from "../../common/nft";
 import { TokensMintedWithSignatureEvent } from "contracts/ITokenERC721";
 import { FEATURE_NFT_SIGNATURE_MINTABLE } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
+import { ethers } from "hardhat";
 
 /**
  * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
@@ -74,14 +81,38 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   ): Promise<TransactionResultWithId> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
-    const message = await this.mapPayloadToContractStruct(mintRequest);
+    const contractStruct = await this.mapPayloadToContractStruct(mintRequest);
     const overrides = await this.contractWrapper.getCallOverrides();
-    await setErc20Allowance(
-      this.contractWrapper,
-      message.pricePerToken,
-      mintRequest.currencyAddress,
-      overrides,
+
+    const contractType = ethers.utils.toUtf8String(
+      await this.contractWrapper.readContract.contractType(),
     );
+
+    const isSignatureDrop = this.isSignatureDrop(
+      this.contractWrapper.readContract,
+      contractType,
+    );
+
+    let message;
+
+    if (isSignatureDrop) {
+      message = contractStruct as ISignatureMintERC721.MintRequestStructOutput;
+      await setErc20Allowance(
+        this.contractWrapper,
+        message.pricePerToken,
+        mintRequest.currencyAddress,
+        overrides,
+      );
+    } else {
+      message = contractStruct as ITokenERC721.MintRequestStructOutput;
+      await setErc20Allowance(
+        this.contractWrapper,
+        message.price,
+        mintRequest.currencyAddress,
+        overrides,
+      );
+    }
+
     const receipt = await this.contractWrapper.sendTransaction(
       "mintWithSignature",
       [message, signature],
@@ -110,27 +141,60 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   public async mintBatch(
     signedPayloads: SignedPayload721WithQuantitySignature[],
   ): Promise<TransactionResultWithId[]> {
+    const contractType = ethers.utils.toUtf8String(
+      await this.contractWrapper.readContract.contractType(),
+    );
+
+    const isSignatureDrop = this.isSignatureDrop(
+      this.contractWrapper.readContract,
+      contractType,
+    );
+
     const contractPayloads = await Promise.all(
       signedPayloads.map(async (s) => {
-        const message = await this.mapPayloadToContractStruct(s.payload);
+        const contractStruct = await this.mapPayloadToContractStruct(s.payload);
         const signature = s.signature;
-        const price = s.payload.price;
+        const price = s.payload.pricePerToken;
         if (BigNumber.from(price).gt(0)) {
           throw new Error(
             "Can only batch free mints. For mints with a price, use regular mint()",
           );
         }
-        return {
-          message,
-          signature,
-        };
+
+        let message;
+
+        if (isSignatureDrop) {
+          message =
+            contractStruct as ISignatureMintERC721.MintRequestStructOutput;
+          return {
+            message,
+            signature,
+          };
+        } else {
+          message = contractStruct as ITokenERC721.MintRequestStructOutput;
+          return {
+            message,
+            signature,
+          };
+        }
       }),
     );
+
     const encoded = contractPayloads.map((p) => {
-      return this.contractWrapper.readContract.interface.encodeFunctionData(
-        "mintWithSignature",
-        [p.message, p.signature],
-      );
+      if (isSignatureDrop) {
+        const contract = this.contractWrapper
+          .readContract as SignatureDropContract;
+        return contract.interface.encodeFunctionData("mintWithSignature", [
+          p.message as ISignatureMintERC721.MintRequestStructOutput,
+          p.signature,
+        ]);
+      } else {
+        const contract = this.contractWrapper.readContract as TokenERC721;
+        return contract.interface.encodeFunctionData("mintWithSignature", [
+          p.message as ITokenERC721.MintRequestStructOutput,
+          p.signature,
+        ]);
+      }
     });
     const receipt = await this.contractWrapper.multiCall(encoded);
     const events =
@@ -156,9 +220,29 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   ): Promise<boolean> {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
-    const message = await this.mapPayloadToContractStruct(mintRequest);
-    const verification: [boolean, string] =
-      await this.contractWrapper.readContract.verify(message, signature);
+    const contractStruct = await this.mapPayloadToContractStruct(mintRequest);
+    const contractType = ethers.utils.toUtf8String(
+      await this.contractWrapper.readContract.contractType(),
+    );
+
+    const isSignatureDrop = this.isSignatureDrop(
+      this.contractWrapper.readContract,
+      contractType,
+    );
+
+    let message;
+    let verification: [boolean, string];
+    if (isSignatureDrop) {
+      message = contractStruct as ISignatureMintERC721.MintRequestStruct;
+      const contract = this.contractWrapper
+        .readContract as SignatureDropContract;
+      verification = await contract.verify(message, signature);
+    } else {
+      message = contractStruct as ITokenERC721.MintRequestStruct;
+      const contract = this.contractWrapper.readContract as TokenERC721;
+      verification = await contract.verify(message, signature);
+    }
+
     return verification[0];
   }
 
@@ -196,13 +280,28 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * @returns the signed payload and the corresponding signature
    */
   public async generate(
-    mintRequest: PayloadToSign721withQuantity,
-  ): Promise<SignedPayload721WithQuantitySignature> {
-    return (await this.generateBatch([mintRequest]))[0];
+    mintRequest: PayloadToSign721withQuantity | PayloadToSign721,
+  ): Promise<SignedPayload721WithQuantitySignature | SignedPayload721> {
+    const contractType = ethers.utils.toUtf8String(
+      await this.contractWrapper.readContract.contractType(),
+    );
+
+    const isSignatureDrop = this.isSignatureDrop(
+      this.contractWrapper.readContract,
+      contractType,
+    );
+
+    if (isSignatureDrop) {
+      const mintRequestPayload = mintRequest as PayloadToSign721withQuantity;
+      return (await this.generateBatch([mintRequestPayload]))[0];
+    } else {
+      const mintRequestPayload = mintRequest as PayloadToSign721;
+      return (await this.generateBatchToken([mintRequestPayload]))[0];
+    }
   }
 
   /**
-   * Genrate a batch of signatures that can be used to mint many dynamic NFTs.
+   * Generate a batch of signatures that can be used to mint many dynamic NFTs.
    *
    * @remarks See {@link Erc721SignatureMinting.generate}
    *
@@ -216,7 +315,6 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );
-
     const parsedRequests: FilledSignature721WithQuantity[] = payloadsToSign.map(
       (m) => Signature721WithQuantityInput.parse(m),
     );
@@ -243,7 +341,52 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
             chainId,
             verifyingContract: await this.contractWrapper.readContract.address,
           },
-          { MintRequest: MintRequest721withQuantity },
+          { MintRequest: MintRequest721withQuantity }, // TYPEHASH
+          await this.mapPayloadToContractStruct(finalPayload),
+        );
+        return {
+          payload: finalPayload,
+          signature: signature.toString(),
+        };
+      }),
+    );
+  }
+
+  public async generateBatchToken(
+    payloadsToSign: PayloadToSign721[],
+  ): Promise<SignedPayload721[]> {
+    await this.roles?.verify(
+      ["minter"],
+      await this.contractWrapper.getSignerAddress(),
+    );
+
+    const parsedRequests: FilledSignaturePayload721[] = payloadsToSign.map(
+      (m) => Signature721PayloadInput.parse(m),
+    );
+
+    const metadatas = parsedRequests.map((r) => r.metadata);
+    const uris = await uploadOrExtractURIs(metadatas, this.storage);
+
+    const chainId = await this.contractWrapper.getChainID();
+    const signer = this.contractWrapper.getSigner();
+    invariant(signer, "No signer available");
+
+    return await Promise.all(
+      parsedRequests.map(async (m, i) => {
+        const uri = uris[i];
+        const finalPayload = Signature721WithQuantityOutput.parse({
+          ...m,
+          uri,
+        });
+        const signature = await this.contractWrapper.signTypedData(
+          signer,
+          {
+            name: "TokenERC721",
+            version: "1",
+            chainId,
+            verifyingContract: this.contractWrapper.readContract.address,
+          },
+          { MintRequest: MintRequest721 },
           await this.mapPayloadToContractStruct(finalPayload),
         );
         return {
@@ -268,24 +411,56 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    */
   private async mapPayloadToContractStruct(
     mintRequest: PayloadWithUri721withQuantity,
-  ): Promise<ISignatureMintERC721.MintRequestStructOutput> {
+  ) {
     const normalizedPricePerToken = await normalizePriceValue(
       this.contractWrapper.getProvider(),
-      mintRequest.price,
+      mintRequest.pricePerToken,
       mintRequest.currencyAddress,
     );
-    return {
-      to: mintRequest.to,
-      royaltyRecipient: mintRequest.royaltyRecipient,
-      royaltyBps: mintRequest.royaltyBps,
-      primarySaleRecipient: mintRequest.primarySaleRecipient,
-      uri: mintRequest.uri,
-      quantity: mintRequest.quantity,
-      pricePerToken: normalizedPricePerToken,
-      currency: mintRequest.currencyAddress,
-      validityEndTimestamp: mintRequest.mintEndTime,
-      validityStartTimestamp: mintRequest.mintStartTime,
-      uid: mintRequest.uid,
-    } as ISignatureMintERC721.MintRequestStructOutput;
+
+    const contractType = ethers.utils.toUtf8String(
+      await this.contractWrapper.readContract.contractType(),
+    );
+
+    const isSignatureDrop = this.isSignatureDrop(
+      this.contractWrapper.readContract,
+      contractType,
+    );
+
+    if (isSignatureDrop) {
+      return {
+        to: mintRequest.to,
+        royaltyRecipient: mintRequest.royaltyRecipient,
+        royaltyBps: mintRequest.royaltyBps,
+        primarySaleRecipient: mintRequest.primarySaleRecipient,
+        uri: mintRequest.uri,
+        quantity: mintRequest.quantity,
+        pricePerToken: normalizedPricePerToken,
+        currency: mintRequest.currencyAddress,
+        validityEndTimestamp: mintRequest.mintEndTime,
+        validityStartTimestamp: mintRequest.mintStartTime,
+        uid: mintRequest.uid,
+      } as ISignatureMintERC721.MintRequestStructOutput;
+    } else {
+      return {
+        to: mintRequest.to,
+        price: normalizedPricePerToken,
+        uri: mintRequest.uri,
+        currency: mintRequest.currencyAddress,
+        validityEndTimestamp: mintRequest.mintEndTime,
+        validityStartTimestamp: mintRequest.mintStartTime,
+        uid: mintRequest.uid,
+        royaltyRecipient: mintRequest.royaltyRecipient,
+        royaltyBps: mintRequest.royaltyBps,
+        primarySaleRecipient: mintRequest.primarySaleRecipient,
+      } as ITokenERC721.MintRequestStructOutput;
+    }
+  }
+
+  private isSignatureDrop(
+    _contract: SignatureDropContract | TokenERC721,
+    contractType: string,
+  ): _contract is SignatureDropContract {
+    return contractType.includes("SignatureDrop");
   }
 }

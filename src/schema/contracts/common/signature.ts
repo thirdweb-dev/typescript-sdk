@@ -17,7 +17,6 @@ import { resolveOrGenerateId } from "../../../common/signature-minting";
  */
 export const BaseSignaturePayloadInput = z.object({
   to: z.string().default(constants.AddressZero),
-  price: PriceSchema.default(0),
   pricePerToken: PriceSchema.default(0),
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   mintStartTime: StartDateSchema,
@@ -92,7 +91,7 @@ export const Signature1155PayloadOutput = Signature721PayloadOutput.extend({
  */
 export const Signature721WithQuantityInput = Signature721PayloadInput.extend({
   metadata: NFTInputOrUriSchema.default(""),
-  quantity: BigNumberishSchema.default(1),
+  quantity: BigNumberSchema.default(1),
 });
 
 /**
@@ -100,7 +99,6 @@ export const Signature721WithQuantityInput = Signature721PayloadInput.extend({
  */
 export const Signature721WithQuantityOutput = Signature721PayloadOutput.extend({
   quantity: BigNumberSchema.default(1),
-  price: BigNumberishSchema.default(1),
 });
 
 /**

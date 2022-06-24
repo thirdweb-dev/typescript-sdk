@@ -39,14 +39,13 @@ import { isBrowser } from "../../common/utils";
 export class ContractWrapper<
   TContract extends BaseContract,
 > extends RPCConnectionHandler {
-  private isValidContract = false;
-  private customOverrides: () => CallOverrides = () => ({});
   /**
    * @internal
    */
   public writeContract;
   public readContract;
   public abi;
+  private isValidContract = false;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -91,6 +90,7 @@ export class ContractWrapper<
     const { chainId } = await provider.getNetwork();
     return chainId;
   }
+
   /**
    * @internal
    */
@@ -156,39 +156,6 @@ export class ContractWrapper<
   }
 
   /**
-   * Calculates the priority fee per gas according to user preferences
-   * @param defaultPriorityFeePerGas - the base priority fee
-   */
-  private getPreferredPriorityFee(
-    defaultPriorityFeePerGas: BigNumber,
-  ): BigNumber {
-    const speed = this.options.gasSettings.speed;
-    const maxGasPrice = this.options.gasSettings.maxPriceInGwei;
-    let extraTip;
-    switch (speed) {
-      case "standard":
-        extraTip = BigNumber.from(0); // default is 2.5 gwei for ETH, 31 gwei for polygon
-        break;
-      case "fast":
-        extraTip = defaultPriorityFeePerGas.div(100).mul(5); // + 5% - 2.625 gwei / 32.5 gwei
-        break;
-      case "fastest":
-        extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10% - 2.75 gwei / 34.1 gwei
-        break;
-    }
-    let txGasPrice = defaultPriorityFeePerGas.add(extraTip);
-    const max = ethers.utils.parseUnits(maxGasPrice.toString(), "gwei"); // no more than max gas setting
-    const min = ethers.utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
-    if (txGasPrice.gt(max)) {
-      txGasPrice = max;
-    }
-    if (txGasPrice.lt(min)) {
-      txGasPrice = min;
-    }
-    return txGasPrice;
-  }
-
-  /**
    * Calculates the gas price for transactions according to user preferences
    */
   public async getPreferredGasPrice(): Promise<BigNumber> {
@@ -214,19 +181,6 @@ export class ContractWrapper<
       txGasPrice = max;
     }
     return txGasPrice;
-  }
-
-  /**
-   * @internal
-   */
-  private emitTransactionEvent(
-    status: "submitted" | "completed",
-    transactionHash: string,
-  ) {
-    this.emit(EventType.Transaction, {
-      status,
-      transactionHash,
-    });
   }
 
   /**
@@ -308,6 +262,95 @@ export class ContractWrapper<
     }
   }
 
+  public async signTypedData(
+    signer: ethers.Signer,
+    domain: {
+      name: string;
+      version: string;
+      chainId: number;
+      verifyingContract: string;
+    },
+    types: any,
+    message: any,
+  ): Promise<BytesLike> {
+    this.emit(EventType.Signature, {
+      status: "submitted",
+      message,
+      signature: "",
+    });
+    const { signature: sig } = await signTypedDataInternal(
+      signer,
+      domain,
+      types,
+      message,
+    );
+    this.emit(EventType.Signature, {
+      status: "completed",
+      message,
+      signature: sig,
+    });
+    return sig;
+  }
+
+  public parseLogs<T = any>(eventName: string, logs?: providers.Log[]): T[] {
+    if (!logs || logs.length === 0) {
+      return [];
+    }
+    const topic = this.writeContract.interface.getEventTopic(eventName);
+    const parsedLogs = logs.filter((x) => x.topics.indexOf(topic) >= 0);
+    return parsedLogs.map(
+      (l) => this.writeContract.interface.parseLog(l) as unknown as T,
+    );
+  }
+
+  private customOverrides: () => CallOverrides = () => ({});
+
+  /**
+   * Calculates the priority fee per gas according to user preferences
+   * @param defaultPriorityFeePerGas - the base priority fee
+   */
+  private getPreferredPriorityFee(
+    defaultPriorityFeePerGas: BigNumber,
+  ): BigNumber {
+    const speed = this.options.gasSettings.speed;
+    const maxGasPrice = this.options.gasSettings.maxPriceInGwei;
+    let extraTip;
+    switch (speed) {
+      case "standard":
+        extraTip = BigNumber.from(0); // default is 2.5 gwei for ETH, 31 gwei for polygon
+        break;
+      case "fast":
+        extraTip = defaultPriorityFeePerGas.div(100).mul(5); // + 5% - 2.625 gwei / 32.5 gwei
+        break;
+      case "fastest":
+        extraTip = defaultPriorityFeePerGas.div(100).mul(10); // + 10% - 2.75 gwei / 34.1 gwei
+        break;
+    }
+    let txGasPrice = defaultPriorityFeePerGas.add(extraTip);
+    const max = ethers.utils.parseUnits(maxGasPrice.toString(), "gwei"); // no more than max gas setting
+    const min = ethers.utils.parseUnits("2.5", "gwei"); // no less than 2.5 gwei
+    if (txGasPrice.gt(max)) {
+      txGasPrice = max;
+    }
+    if (txGasPrice.lt(min)) {
+      txGasPrice = min;
+    }
+    return txGasPrice;
+  }
+
+  /**
+   * @internal
+   */
+  private emitTransactionEvent(
+    status: "submitted" | "completed",
+    transactionHash: string,
+  ) {
+    this.emit(EventType.Transaction, {
+      status,
+      transactionHash,
+    });
+  }
+
   /**
    * @internal
    */
@@ -386,47 +429,6 @@ export class ContractWrapper<
     };
 
     return await this.defaultGaslessSendFunction(tx);
-  }
-
-  public async signTypedData(
-    signer: ethers.Signer,
-    domain: {
-      name: string;
-      version: string;
-      chainId: number;
-      verifyingContract: string;
-    },
-    types: any,
-    message: any,
-  ): Promise<BytesLike> {
-    this.emit(EventType.Signature, {
-      status: "submitted",
-      message,
-      signature: "",
-    });
-    const { signature: sig } = await signTypedDataInternal(
-      signer,
-      domain,
-      types,
-      message,
-    );
-    this.emit(EventType.Signature, {
-      status: "completed",
-      message,
-      signature: sig,
-    });
-    return sig;
-  }
-
-  public parseLogs<T = any>(eventName: string, logs?: providers.Log[]): T[] {
-    if (!logs || logs.length === 0) {
-      return [];
-    }
-    const topic = this.writeContract.interface.getEventTopic(eventName);
-    const parsedLogs = logs.filter((x) => x.topics.indexOf(topic) >= 0);
-    return parsedLogs.map(
-      (l) => this.writeContract.interface.parseLog(l) as unknown as T,
-    );
   }
 
   private async defaultGaslessSendFunction(

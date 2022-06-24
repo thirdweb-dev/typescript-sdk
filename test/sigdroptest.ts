@@ -53,7 +53,7 @@ describe("Signature drop tests", async () => {
       metadata: {
         name: "OUCH VOUCH",
       },
-      price: "1",
+      pricePerToken: "1",
       quantity: 1,
       to: samWallet.address,
     };
@@ -85,7 +85,7 @@ describe("Signature drop tests", async () => {
     beforeEach(async () => {
       goodPayload = await signatureDropContract.signature.generate(meta);
       badPayload = await signatureDropContract.signature.generate(meta);
-      badPayload.payload.price = "0";
+      badPayload.payload.pricePerToken = "0";
     });
 
     it("should generate a valid signature", async () => {
@@ -102,7 +102,7 @@ describe("Signature drop tests", async () => {
     });
 
     it("should reject invalid vouchers", async () => {
-      goodPayload.payload.price = "0";
+      goodPayload.payload.pricePerToken = "0";
       const invalidModified = await signatureDropContract.signature.verify(
         goodPayload,
       );
@@ -241,7 +241,7 @@ describe("Signature drop tests", async () => {
     it("should mint the right custom token price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await signatureDropContract.signature.generate({
-        price: 1,
+        pricePerToken: 1,
         currencyAddress: tokenAddress,
         metadata: {
           name: "custom token test",
@@ -262,7 +262,7 @@ describe("Signature drop tests", async () => {
     it("should mint the right native price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await signatureDropContract.signature.generate({
-        price: 1,
+        pricePerToken: 1,
         metadata: {
           name: "native token test",
         },
@@ -282,7 +282,7 @@ describe("Signature drop tests", async () => {
     it("should mint the right native price with multiple tokens", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await signatureDropContract.signature.generate({
-        price: 1,
+        pricePerToken: 1,
         metadata: {
           name: "native token test with quantity",
         },

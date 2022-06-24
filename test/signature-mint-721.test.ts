@@ -42,7 +42,7 @@ describe("NFT signature minting", async () => {
       metadata: {
         name: "OUCH VOUCH",
       },
-      price: "1",
+      pricePerToken: "1",
       to: samWallet.address,
       mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
       mintStartTime: new Date(),
@@ -77,7 +77,7 @@ describe("NFT signature minting", async () => {
     beforeEach(async () => {
       goodPayload = await nftContract.signature.generate(meta);
       badPayload = await nftContract.signature.generate(meta);
-      badPayload.payload.price = "0";
+      badPayload.payload.pricePerToken = "0";
     });
 
     it("should generate a valid signature", async () => {
@@ -94,7 +94,7 @@ describe("NFT signature minting", async () => {
     });
 
     it("should reject invalid vouchers", async () => {
-      goodPayload.payload.price = "0";
+      goodPayload.payload.pricePerToken = "0";
       const invalidModified = await nftContract.signature.verify(goodPayload);
       assert.isFalse(
         invalidModified,
@@ -123,7 +123,7 @@ describe("NFT signature minting", async () => {
           },
         },
       ];
-      const batch = await nftContract.signature.generateBatch(input);
+      const batch = await nftContract.signature.generateBatchToken(input);
 
       for (const [i, v] of batch.entries()) {
         const tx = await nftContract.signature.mint(v);
@@ -211,7 +211,7 @@ describe("NFT signature minting", async () => {
       const toSign2 = {
         metadata: uri2,
       };
-      const payloads = await nftContract.signature.generateBatch([
+      const payloads = await nftContract.signature.generateBatchToken([
         toSign1,
         toSign2,
       ]);
@@ -225,7 +225,7 @@ describe("NFT signature minting", async () => {
     it("should mint the right custom token price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await nftContract.signature.generate({
-        price: 1,
+        pricePerToken: 1,
         currencyAddress: tokenAddress,
         metadata: {
           name: "custom token test",
@@ -245,7 +245,7 @@ describe("NFT signature minting", async () => {
     it("should mint the right native price", async () => {
       const oldBalance = await samWallet.getBalance();
       const payload = await nftContract.signature.generate({
-        price: 1,
+        pricePerToken: 1,
         metadata: {
           name: "native token test",
         },
