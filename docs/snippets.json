@@ -133,6 +133,24 @@
         "reference": "https://docs.thirdweb.com/typescript/sdk.ContractEvents.addTransactionListener"
       },
       {
+        "name": "getAllEvents",
+        "summary": "Get All Events\n\n",
+        "remarks": "\n\nGet a list of all the events emitted from this contract during the specified time period\n\n",
+        "examples": {
+          "javascript": "// Optionally pass in filters to limit the blocks from which events are retrieved\nconst filters = {\n  fromBlock: 0,\n  toBlock: 1000000,\n}\nconst events = await contract.events.getAllEvents(filters);\nconsole.log(events[0].eventName);\nconsole.log(events[0].data);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractEvents.getAllEvents"
+      },
+      {
+        "name": "getEvents",
+        "summary": "Get Events\n\n",
+        "remarks": "\n\nGet a list of the events of a specific type emitted from this contract during the specified time period\n\n",
+        "examples": {
+          "javascript": "// The name of the event to get logs for\nconst eventName = \"Transfer\";\n// Optionally pass in filters to limit the blocks from which events are retrieved\nconst filters = {\n  fromBlock: 0,\n  toBlock: 1000000,\n}\nconst events = await contract.events.getEvents(eventName, filters);\nconsole.log(events[0].eventName);\nconsole.log(events[0].data);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ContractEvents.getEvents"
+      },
+      {
         "name": "listenToAllEvents",
         "summary": "Listen to all events emitted from this contract\n\n",
         "remarks": "\n\nRemove a listener that was added with addEventListener\n\n",

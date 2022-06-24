@@ -43,7 +43,6 @@ import {
   TokensClaimedEvent,
   TokensLazyMintedEvent,
 } from "contracts/DropERC721";
-import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { Erc721WithQuantitySignatureMinting } from "../core/classes/erc-721-with-quantity-signature-minting";
 import { DelayedReveal } from "../core/index";
 
@@ -85,7 +84,6 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     SignatureDropContract,
     typeof SignatureDrop.contractRoles[number]
   >;
-  public analytics: ContractAnalytics<SignatureDropContract>;
   /**
    * @internal
    */
@@ -202,7 +200,6 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
-    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);

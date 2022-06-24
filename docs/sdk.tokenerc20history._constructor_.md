@@ -9,7 +9,7 @@ Constructs a new instance of the `TokenERC20History` class
 <b>Signature:</b>
 
 ```typescript
-constructor(contractWrapper: ContractWrapper<TokenERC20>, analytics: ContractAnalytics<TokenERC20>);
+constructor(contractWrapper: ContractWrapper<TokenERC20>, events: ContractEvents<TokenERC20>);
 ```
 
 ## Parameters
@@ -17,5 +17,5 @@ constructor(contractWrapper: ContractWrapper<TokenERC20>, analytics: ContractAna
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;TokenERC20&gt; |  |
-|  analytics | ContractAnalytics&lt;TokenERC20&gt; |  |
+|  events | [ContractEvents](./sdk.contractevents.md)<!-- -->&lt;TokenERC20&gt; |  |
 

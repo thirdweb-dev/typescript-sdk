@@ -15,7 +15,6 @@ import { SplitsContractSchema } from "../schema/contracts/splits";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractEvents } from "../core/classes/contract-events";
 import ERC20Abi from "../../abis/IERC20.json";
-import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
  * Create custom royalty splits to distribute funds.
@@ -50,10 +49,6 @@ export class Split implements UpdateableNetwork {
    * @internal
    */
   public interceptor: ContractInterceptor<SplitContract>;
-  /**
-   * @internal
-   */
-  public analytics: ContractAnalytics<SplitContract>;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -74,7 +69,6 @@ export class Split implements UpdateableNetwork {
       Split.schema,
       this.storage,
     );
-    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);

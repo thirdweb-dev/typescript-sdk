@@ -99,6 +99,7 @@
 |  [Proposal](./sdk.proposal.md) |  |
 |  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
 |  [ProposalVote](./sdk.proposalvote.md) |  |
+|  [QueryAllEvents](./sdk.queryallevents.md) | Filters for querying past events |
 |  [QueryAllParams](./sdk.queryallparams.md) | Pagination Parameters |
 |  [SplitContractDeployMetadata](./sdk.splitcontractdeploymetadata.md) | Options for deploying Split contract |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
@@ -133,7 +134,7 @@
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
 |  [ClaimConditionsForToken](./sdk.claimconditionsfortoken.md) |  |
 |  [ClaimVerification](./sdk.claimverification.md) |  |
-|  [ContractEvent](./sdk.contractevent.md) |  |
+|  [ContractEvent](./sdk.contractevent.md) | Standardized return type for contract events that returns event arguments |
 |  [ContractForContractType](./sdk.contractforcontracttype.md) |  |
 |  [ContractType](./sdk.contracttype.md) |  |
 |  [Currency](./sdk.currency.md) |  |
