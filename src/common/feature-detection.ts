@@ -288,11 +288,17 @@ async function fetchContractMetadata(
     details: metadata.output.devdoc.detail,
     notice: metadata.output.userdoc.notice,
   });
+  const licenses: string[] = [
+    ...new Set(
+      Object.entries(metadata.sources).map(([_, src]) => (src as any).license),
+    ),
+  ];
   return {
     name,
     abi,
     metadata,
     info,
+    licenses,
   };
 }
 

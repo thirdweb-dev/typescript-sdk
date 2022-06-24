@@ -138,4 +138,5 @@ export type PublishedMetadata = {
   abi: z.infer<typeof AbiSchema>;
   metadata: Record<string, any>;
   info: z.infer<typeof ContractInfoSchema>;
+  licenses: string[];
 };

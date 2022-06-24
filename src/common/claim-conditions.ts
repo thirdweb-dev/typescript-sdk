@@ -42,7 +42,7 @@ import { IDropClaimCondition } from "contracts/DropERC20";
 export async function prepareClaim(
   quantity: BigNumberish,
   activeClaimCondition: ClaimCondition,
-  merkleMetadata: Record<string, string>,
+  merkleMetadataFetcher: () => Promise<Record<string, string>>,
   tokenDecimals: number,
   contractWrapper: ContractWrapper<any>,
   storage: IStorage,
@@ -60,7 +60,7 @@ export async function prepareClaim(
     ) {
       const claims = await fetchSnapshot(
         activeClaimCondition.merkleRootHash.toString(),
-        merkleMetadata,
+        await merkleMetadataFetcher(),
         storage,
       );
       const item =

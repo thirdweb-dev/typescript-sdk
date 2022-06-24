@@ -318,7 +318,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     return prepareClaim(
       quantity,
       await this.claimConditions.getActive(),
-      (await this.metadata.get()).merkle,
+      async () => (await this.metadata.get()).merkle,
       await this.contractWrapper.readContract.decimals(),
       this.contractWrapper,
       this.storage,
