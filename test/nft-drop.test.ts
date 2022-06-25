@@ -40,6 +40,16 @@ describe("NFT Drop Contract", async () => {
     dropContract = sdk.getNFTDrop(address);
   });
 
+  it("should lazy mint with URI", async () => {
+    const uri = await storage.uploadMetadata({
+      name: "Test1",
+    });
+    await dropContract.createBatch([uri]);
+    const nft = await dropContract.get("0");
+    assert.isNotNull(nft);
+    assert.equal(nft.metadata.name, "Test1");
+  });
+
   it("should allow a snapshot to be set", async () => {
     await dropContract.claimConditions.set([
       {

@@ -9,7 +9,7 @@ Claim a certain amount of tokens to a specific Wallet
 <b>Signature:</b>
 
 ```typescript
-claimTo(destinationAddress: string, amount: Amount, proofs?: BytesLike[]): Promise<TransactionResult>;
+claimTo(destinationAddress: string, amount: Amount, checkERC20Allowance?: boolean): Promise<TransactionResult>;
 ```
 
 ## Parameters
@@ -18,7 +18,7 @@ claimTo(destinationAddress: string, amount: Amount, proofs?: BytesLike[]): Promi
 |  --- | --- | --- |
 |  destinationAddress | string | Address you want to send the token to |
 |  amount | [Amount](./sdk.amount.md) | Quantity of the tokens you want to claim |
-|  proofs | BytesLike\[\] | <i>(Optional)</i> Optional Array of proofs |
+|  checkERC20Allowance | boolean | <i>(Optional)</i> Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer |
 
 <b>Returns:</b>
 

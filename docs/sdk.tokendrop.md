@@ -50,8 +50,8 @@ const contract = sdk.getTokenDrop("{{contract_address}}");
 |  --- | --- | --- |
 |  [burn(amount)](./sdk.tokendrop.burn.md) |  | Burn Tokens |
 |  [burnFrom(holder, amount)](./sdk.tokendrop.burnfrom.md) |  | Burn Tokens |
-|  [claim(amount, proofs)](./sdk.tokendrop.claim.md) |  | Claim a certain amount of tokens |
-|  [claimTo(destinationAddress, amount, proofs)](./sdk.tokendrop.claimto.md) |  | Claim a certain amount of tokens to a specific Wallet |
+|  [claim(amount, checkERC20Allowance)](./sdk.tokendrop.claim.md) |  | Claim a certain amount of tokens |
+|  [claimTo(destinationAddress, amount, checkERC20Allowance)](./sdk.tokendrop.claimto.md) |  | Claim a certain amount of tokens to a specific Wallet |
 |  [getDelegation()](./sdk.tokendrop.getdelegation.md) |  | Get your voting delegatee address |
 |  [getDelegationOf(account)](./sdk.tokendrop.getdelegationof.md) |  | Get a specific address voting delegatee address |
 |  [getVoteBalance()](./sdk.tokendrop.getvotebalance.md) |  | Get your wallet voting power for the current checkpoints |

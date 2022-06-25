@@ -4,6 +4,8 @@
 
 ## ContractEvent type
 
+Standardized return type for contract events that returns event arguments
+
 <b>Signature:</b>
 
 ```typescript

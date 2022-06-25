@@ -37,6 +37,7 @@ export type ChainIdOrName =
   | "ethereum"
   | "fantom"
   | "avalanche"
+  | "avalanche-testnet"
   | "optimism"
   | "optimism-testnet"
   | "arbitrum"

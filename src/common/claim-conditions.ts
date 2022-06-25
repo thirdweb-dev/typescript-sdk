@@ -1,7 +1,6 @@
 import {
   BigNumber,
   BigNumberish,
-  BytesLike,
   ethers,
   constants,
   providers,
@@ -42,15 +41,15 @@ import { IDropClaimCondition } from "contracts/DropERC20";
 export async function prepareClaim(
   quantity: BigNumberish,
   activeClaimCondition: ClaimCondition,
-  merkleMetadata: Record<string, string>,
+  merkleMetadataFetcher: () => Promise<Record<string, string>>,
   tokenDecimals: number,
   contractWrapper: ContractWrapper<any>,
   storage: IStorage,
-  proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+  checkERC20Allowance: boolean,
 ): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
   let maxClaimable = BigNumber.from(0);
-
+  let proofs = [utils.hexZeroPad([0], 32)];
   try {
     if (
       !activeClaimCondition.merkleRootHash
@@ -59,7 +58,7 @@ export async function prepareClaim(
     ) {
       const claims = await fetchSnapshot(
         activeClaimCondition.merkleRootHash.toString(),
-        merkleMetadata,
+        await merkleMetadataFetcher(),
         storage,
       );
       const item =
@@ -93,7 +92,7 @@ export async function prepareClaim(
       overrides["value"] = BigNumber.from(price)
         .mul(quantity)
         .div(ethers.utils.parseUnits("1", tokenDecimals));
-    } else {
+    } else if (checkERC20Allowance) {
       await approveErc20Allowance(
         contractWrapper,
         currencyAddress,

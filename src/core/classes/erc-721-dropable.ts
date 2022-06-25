@@ -1,5 +1,5 @@
 import { TokensClaimedEvent } from "contracts/Drop";
-import { BigNumber, BigNumberish, BytesLike, ethers, utils } from "ethers";
+import { BigNumber, BigNumberish, ethers } from "ethers";
 import { FEATURE_NFT_DROPABLE } from "../../constants/erc721-features";
 import {
   CommonNFTInput,
@@ -151,28 +151,28 @@ export class Erc721Dropable implements DetectableFeature {
    * const quantity = 1; // how many unique NFTs you want to claim
    *
    * const tx = await contract.claimTo(address, quantity);
-   * const receipt = tx.receipt; // the transaction receipt
-   * const claimedTokenId = tx.id; // the id of the NFT claimed
-   * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
+   * const receipt = tx[0].receipt; // the transaction receipt
+   * const claimedTokenId = tx[0].id; // the id of the first NFT claimed
+   * const claimedNFT = await tx[0].data(); // (optional) get the first claimed NFT metadata
    * ```
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
-   * @param proofs - Optional Array of proofs
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   public async claimTo(
     destinationAddress: string,
     quantity: BigNumberish,
+    checkERC20Allowance = true,
     claimData?: ClaimVerification,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     let claimVerification = claimData;
     if (this.claimConditions && !claimData) {
       claimVerification = await this.claimConditions.prepareClaim(
         quantity,
-        proofs,
+        checkERC20Allowance,
       );
     }
 
@@ -220,14 +220,14 @@ export class Erc721Dropable implements DetectableFeature {
    */
   public async claim(
     quantity: BigNumberish,
+    checkERC20Allowance = true,
     claimData?: ClaimVerification,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       quantity,
+      checkERC20Allowance,
       claimData,
-      proofs,
     );
   }
 

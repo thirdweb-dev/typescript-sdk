@@ -1,12 +1,5 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import {
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  constants,
-  ethers,
-  utils,
-} from "ethers";
+import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -19,9 +12,8 @@ import {
 import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
 import { SDKOptions } from "../schema/sdk-options";
 import {
-  CommonNFTInput,
   NFTMetadata,
-  NFTMetadataInput,
+  NFTMetadataOrUri,
   NFTMetadataOwner,
 } from "../schema/tokens/common";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
@@ -44,8 +36,8 @@ import {
   TokensClaimedEvent,
   TokensLazyMintedEvent,
 } from "contracts/DropERC721";
-import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { UploadProgressEvent } from "../types/events";
+import { uploadOrExtractURIs } from "../common/nft";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -77,10 +69,6 @@ export class NFTDrop extends Erc721<DropERC721> {
   public platformFees: ContractPlatformFee<DropERC721>;
   public events: ContractEvents<DropERC721>;
   public roles: ContractRoles<DropERC721, typeof NFTDrop.contractRoles[number]>;
-  /**
-   * @internal
-   */
-  public analytics: ContractAnalytics<DropERC721>;
   /**
    * @internal
    */
@@ -188,7 +176,6 @@ export class NFTDrop extends Erc721<DropERC721> {
       this.metadata,
       this.storage,
     );
-    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
@@ -413,23 +400,33 @@ export class NFTDrop extends Erc721<DropERC721> {
    * @param options - optional upload progress callback
    */
   public async createBatch(
-    metadatas: NFTMetadataInput[],
+    metadatas: NFTMetadataOrUri[],
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
     const startFileNumber =
       await this.contractWrapper.readContract.nextTokenIdToMint();
-    const batch = await this.storage.uploadMetadataBatch(
-      metadatas.map((m) => CommonNFTInput.parse(m)),
+    const batch = await uploadOrExtractURIs(
+      metadatas,
+      this.storage,
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
       options,
     );
-    const baseUri = batch.baseUri;
+    // ensure baseUri is the same for the entire batch
+    const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
+    for (let i = 0; i < batch.length; i++) {
+      const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
+      if (baseUri !== uri) {
+        throw new Error(
+          `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
+        );
+      }
+    }
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.uris.length,
+      batch.length,
       baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
       ethers.utils.toUtf8Bytes(""),
     ]);
@@ -468,16 +465,19 @@ export class NFTDrop extends Erc721<DropERC721> {
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
-   * @param proofs - Array of proofs
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   public async claimTo(
     destinationAddress: string,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance = true,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const claimVerification = await this.prepareClaim(quantity, proofs);
+    const claimVerification = await this.prepareClaim(
+      quantity,
+      checkERC20Allowance,
+    );
     const receipt = await this.contractWrapper.sendTransaction(
       "claim",
       [
@@ -516,12 +516,12 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   public async claim(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance = true,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       quantity,
-      proofs,
+      checkERC20Allowance,
     );
   }
 
@@ -553,16 +553,16 @@ export class NFTDrop extends Erc721<DropERC721> {
    */
   private async prepareClaim(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance: boolean,
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
       await this.claimConditions.getActive(),
-      (await this.metadata.get()).merkle,
+      async () => (await this.metadata.get()).merkle,
       0,
       this.contractWrapper,
       this.storage,
-      proofs,
+      checkERC20Allowance,
     );
   }
 }

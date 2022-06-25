@@ -1,7 +1,8 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
+import { assert, expect } from "chai";
 import { sdk, signers } from "./before-setup";
 import { Split, Token } from "../src";
+import { ethers } from "ethers";
 
 global.fetch = require("cross-fetch");
 
@@ -39,6 +40,15 @@ describe("Splits Contract", async () => {
       },
     );
     splitsContract = sdk.getSplit(address);
+  });
+
+  it("should fetch contract balance", async () => {
+    await adminWallet.sendTransaction({
+      to: splitsContract.getAddress(),
+      value: ethers.utils.parseEther("1.2"),
+    });
+    const balance = await sdk.getBalance(splitsContract.getAddress());
+    expect(balance.displayValue).to.eq("1.2");
   });
 
   // TODO: Fix bug in the `getAllRecipients` function

@@ -7,14 +7,7 @@ import {
   IERC20Metadata,
   ContractMetadata as ContractMetadataContract,
 } from "contracts";
-import {
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  constants,
-  ethers,
-  utils,
-} from "ethers";
+import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import {
@@ -440,16 +433,16 @@ export class DropClaimConditions<
    */
   public async prepareClaim(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance: boolean,
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
       await this.getActive(),
-      (await this.metadata.get()).merkle,
+      async () => (await this.metadata.get()).merkle,
       0,
       this.contractWrapper,
       this.storage,
-      proofs,
+      checkERC20Allowance,
     );
   }
 }

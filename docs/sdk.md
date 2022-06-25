@@ -50,6 +50,7 @@
 |  [NFTDrop](./sdk.nftdrop.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [Pack](./sdk.pack.md) | Create lootboxes of NFTs with rarity based open mechanics. |
 |  [RemoteStorage](./sdk.remotestorage.md) | Fetch and upload files to IPFS or any other storage. |
+|  [SignatureDrop](./sdk.signaturedrop.md) | Setup a collection of NFTs where when it comes to minting, you can authorize some external party to mint tokens on your contract, and specify what exactly will be minted by that external party.. |
 |  [SmartContract](./sdk.smartcontract.md) | <b><i>(BETA)</i></b> Custom contract dynamic class with feature detection |
 |  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
 |  [ThirdwebSDK](./sdk.thirdwebsdk.md) | The main entry point for the thirdweb SDK |
@@ -99,6 +100,7 @@
 |  [Proposal](./sdk.proposal.md) |  |
 |  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
 |  [ProposalVote](./sdk.proposalvote.md) |  |
+|  [QueryAllEvents](./sdk.queryallevents.md) | Filters for querying past events |
 |  [QueryAllParams](./sdk.queryallparams.md) | Pagination Parameters |
 |  [SplitContractDeployMetadata](./sdk.splitcontractdeploymetadata.md) | Options for deploying Split contract |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |
@@ -132,9 +134,10 @@
 |  [BufferOrStringWithName](./sdk.bufferorstringwithname.md) |  |
 |  [ClaimCondition](./sdk.claimcondition.md) | Represents a claim condition fetched from the SDK |
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
+|  [ClaimConditionsForToken](./sdk.claimconditionsfortoken.md) |  |
 |  [ClaimVerification](./sdk.claimverification.md) |  |
 |  [ConnectionInfo](./sdk.connectioninfo.md) |  |
-|  [ContractEvent](./sdk.contractevent.md) |  |
+|  [ContractEvent](./sdk.contractevent.md) | Standardized return type for contract events that returns event arguments |
 |  [ContractForContractType](./sdk.contractforcontracttype.md) |  |
 |  [ContractType](./sdk.contracttype.md) |  |
 |  [Currency](./sdk.currency.md) |  |

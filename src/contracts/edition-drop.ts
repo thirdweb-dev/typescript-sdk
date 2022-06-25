@@ -13,18 +13,18 @@ import {
 } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import {
-  CommonNFTInput,
-  NFTMetadata,
-  NFTMetadataInput,
-} from "../schema/tokens/common";
-import { BigNumber, BigNumberish, BytesLike, constants, utils } from "ethers";
+import { NFTMetadata, NFTMetadataOrUri } from "../schema/tokens/common";
+import { BigNumber, BigNumberish, constants } from "ethers";
 import { prepareClaim } from "../common/claim-conditions";
 import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { ClaimVerification, QueryAllParams } from "../types";
+import {
+  ClaimVerification,
+  QueryAllParams,
+  UploadProgressEvent,
+} from "../types";
 import { DropErc1155History } from "../core/classes/drop-erc1155-history";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
@@ -33,7 +33,7 @@ import { TokensLazyMintedEvent } from "contracts/DropERC1155";
 import { getRoleHash } from "../common";
 
 import { EditionMetadata, EditionMetadataOwner } from "../schema";
-import { ContractAnalytics } from "../core/classes/contract-analytics";
+import { uploadOrExtractURIs } from "../common/nft";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -66,10 +66,6 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   public estimator: GasCostEstimator<DropERC1155>;
   public events: ContractEvents<DropERC1155>;
   public metadata: ContractMetadata<DropERC1155, typeof EditionDrop.schema>;
-  /**
-   * @internal
-   */
-  public analytics: ContractAnalytics<DropERC1155>;
   public roles: ContractRoles<
     DropERC1155,
     typeof EditionDrop.contractRoles[number]
@@ -152,10 +148,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       this.metadata,
       this.storage,
     );
-    this.analytics = new ContractAnalytics(this.contractWrapper);
-    this.history = new DropErc1155History(this.analytics);
-    this.encoder = new ContractEncoder(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
+    this.history = new DropErc1155History(this.events);
+    this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
@@ -253,21 +248,39 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * const firstTokenId = results[0].id; // token id of the first created NFT
    * const firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT
    * ```
+   *
+   * @param metadatas - The metadata to include in the batch.
+   * @param options - optional upload progress callback
    */
   public async createBatch(
-    metadatas: NFTMetadataInput[],
+    metadatas: NFTMetadataOrUri[],
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
     const startFileNumber =
       await this.contractWrapper.readContract.nextTokenIdToMint();
-    const batch = await this.storage.uploadMetadataBatch(
-      metadatas.map((m) => CommonNFTInput.parse(m)),
+    const batch = await uploadOrExtractURIs(
+      metadatas,
+      this.storage,
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
+      options,
     );
+    // ensure baseUri is the same for the entire batch
+    const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
+    for (let i = 0; i < batch.length; i++) {
+      const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
+      if (baseUri !== uri) {
+        throw new Error(
+          `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
+        );
+      }
+    }
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.uris.length,
-      `${batch.baseUri.endsWith("/") ? batch.baseUri : `${batch.baseUri}/`}`,
+      batch.length,
+      `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
     ]);
     const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
       "TokensLazyMinted",
@@ -299,13 +312,12 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    *
    * const tx = await contract.claimTo(address, tokenId, quantity);
    * const receipt = tx.receipt; // the transaction receipt
-   * const claimedTokenId = tx.id; // the id of the NFT claimed
-   * const claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata
    * ```
    *
    * @param destinationAddress - Address you want to send the token to
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param proofs - Array of proofs
    *
    * @returns - Receipt for the transaction
@@ -314,12 +326,12 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     destinationAddress: string,
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance = true,
   ): Promise<TransactionResult> {
     const claimVerification = await this.prepareClaim(
       tokenId,
       quantity,
-      proofs,
+      checkERC20Allowance,
     );
     return {
       receipt: await this.contractWrapper.sendTransaction(
@@ -345,6 +357,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    *
    * @param tokenId - Id of the token you want to claim
    * @param quantity - Quantity of the tokens you want to claim
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    * @param proofs - Array of proofs
    *
    * @returns - Receipt for the transaction
@@ -352,10 +365,10 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   public async claim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance = true,
   ): Promise<TransactionResult> {
     const address = await this.contractWrapper.getSignerAddress();
-    return this.claimTo(address, tokenId, quantity, proofs);
+    return this.claimTo(address, tokenId, quantity, checkERC20Allowance);
   }
 
   /**
@@ -395,16 +408,16 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   private async prepareClaim(
     tokenId: BigNumberish,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance: boolean,
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
       await this.claimConditions.getActive(tokenId),
-      (await this.metadata.get()).merkle,
+      async () => (await this.metadata.get()).merkle,
       0,
       this.contractWrapper,
       this.storage,
-      proofs,
+      checkERC20Allowance,
     );
   }
 }

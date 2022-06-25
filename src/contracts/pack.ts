@@ -12,7 +12,6 @@ import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { Erc1155 } from "../core/classes/erc-1155";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractEvents } from "../core/classes/contract-events";
-import { ContractAnalytics } from "../core/classes/contract-analytics";
 import {
   PackMetadataInput,
   PackMetadataInputSchema,
@@ -67,10 +66,6 @@ export class Pack extends Erc1155<PackContract> {
   public events: ContractEvents<PackContract>;
   public estimator: GasCostEstimator<PackContract>;
   /**
-   * @internal
-   */
-  public analytics: ContractAnalytics<PackContract>;
-  /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per pack
    * @example
@@ -113,7 +108,6 @@ export class Pack extends Erc1155<PackContract> {
       Pack.schema,
       this.storage,
     );
-    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.roles = new ContractRoles(this.contractWrapper, Pack.contractRoles);
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.encoder = new ContractEncoder(this.contractWrapper);

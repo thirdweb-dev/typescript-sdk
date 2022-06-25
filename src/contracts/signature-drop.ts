@@ -1,13 +1,6 @@
 import { ContractRoles } from "../core/classes/contract-roles";
 import { SignatureDrop as SignatureDropContract } from "contracts";
-import {
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  constants,
-  ethers,
-  utils,
-} from "ethers";
+import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -43,7 +36,6 @@ import {
   TokensClaimedEvent,
   TokensLazyMintedEvent,
 } from "contracts/DropERC721";
-import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { Erc721WithQuantitySignatureMinting } from "../core/classes/erc-721-with-quantity-signature-minting";
 import { DelayedReveal } from "../core/index";
 
@@ -61,7 +53,7 @@ import { DelayedReveal } from "../core/index";
  * const contract = sdk.getSignatureDrop("{{contract_address}}");
  * ```
  *
- * @internal
+ * @public
  */
 export class SignatureDrop extends Erc721<SignatureDropContract> {
   static contractType = "signature-drop" as const;
@@ -85,7 +77,6 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     SignatureDropContract,
     typeof SignatureDrop.contractRoles[number]
   >;
-  public analytics: ContractAnalytics<SignatureDropContract>;
   /**
    * @internal
    */
@@ -202,7 +193,6 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     );
     this.royalties = new ContractRoyalty(this.contractWrapper, this.metadata);
     this.sales = new ContractPrimarySale(this.contractWrapper);
-    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
@@ -486,16 +476,19 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    *
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
-   * @param proofs - Array of proofs
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
   public async claimTo(
     destinationAddress: string,
     quantity: BigNumberish,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance = true,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const claimVerification = await this.prepareClaim(quantity, proofs);
+    const claimVerification = await this.prepareClaim(
+      quantity,
+      checkERC20Allowance,
+    );
     const receipt = await this.contractWrapper.sendTransaction(
       "claim",
       [
@@ -537,12 +530,12 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    */
   public async claim(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance = true,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       quantity,
-      proofs,
+      checkERC20Allowance,
     );
   }
 
@@ -567,16 +560,16 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    */
   private async prepareClaim(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance: boolean,
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
       await this.claimCondition.get(),
-      (await this.metadata.get()).merkle,
+      async () => (await this.metadata.get()).merkle,
       0,
       this.contractWrapper,
       this.storage,
-      proofs,
+      checkERC20Allowance,
     );
   }
 }

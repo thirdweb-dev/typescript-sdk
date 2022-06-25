@@ -1,9 +1,9 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { BaseContract, providers } from "ethers";
+import { BaseContract, Event, providers } from "ethers";
 import { EventType } from "../../constants";
 import { ListenerFn } from "eventemitter3";
 import { EventFragment } from "@ethersproject/abi";
-import { ContractEvent } from "../../types/index";
+import { ContractEvent, QueryAllEvents } from "../../types/index";
 
 /**
  * Listen to Contract events in real time
@@ -143,6 +143,109 @@ export class ContractEvents<TContract extends BaseContract> {
     const address = this.contractWrapper.readContract.address;
     const filter = { address };
     this.contractWrapper.getProvider().removeAllListeners(filter);
+  }
+
+  /**
+   * Get All Events
+   * @remarks Get a list of all the events emitted from this contract during the specified time period
+   * @example
+   * ```javascript
+   * // Optionally pass in filters to limit the blocks from which events are retrieved
+   * const filters = {
+   *   fromBlock: 0,
+   *   toBlock: 1000000,
+   * }
+   * const events = await contract.events.getAllEvents(filters);
+   * console.log(events[0].eventName);
+   * console.log(events[0].data);
+   * ```
+   *
+   * @param filters - Specify the from and to block numbers to get events for, defaults to all blocks
+   * @returns The event objects of the events emitted with event names and data for each event
+   */
+  public async getAllEvents(
+    filters?: QueryAllEvents,
+  ): Promise<ContractEvent[]> {
+    const fromBlock = filters?.fromBlock || 0;
+    const toBlock =
+      filters?.toBlock ||
+      (await this.contractWrapper.readContract.provider.getBlockNumber());
+
+    const events = await this.contractWrapper.readContract.queryFilter(
+      {},
+      fromBlock,
+      toBlock,
+    );
+
+    return this.parseEvents(events);
+  }
+
+  /**
+   * Get Events
+   * @remarks Get a list of the events of a specific type emitted from this contract during the specified time period
+   * @example
+   * ```javascript
+   * // The name of the event to get logs for
+   * const eventName = "Transfer";
+   * // Optionally pass in filters to limit the blocks from which events are retrieved
+   * const filters = {
+   *   fromBlock: 0,
+   *   toBlock: 1000000,
+   * }
+   * const events = await contract.events.getEvents(eventName, filters);
+   * console.log(events[0].eventName);
+   * console.log(events[0].data);
+   * ```
+   *
+   * @param eventName - The name of the event to get logs for
+   * @param filters - Specify the from and to block numbers to get events for, defaults to all blocks
+   * @returns The requested event objects with event data
+   */
+  public async getEvents(
+    eventName: string,
+    filters?: QueryAllEvents,
+  ): Promise<ContractEvent[]> {
+    const event = this.contractWrapper.readContract.interface.getEvent(
+      eventName as string,
+    );
+    const filter = this.contractWrapper.readContract.filters[event.name];
+
+    const fromBlock = filters?.fromBlock || 0;
+    const toBlock =
+      filters?.toBlock ||
+      (await this.contractWrapper.readContract.provider.getBlockNumber());
+
+    const events = await this.contractWrapper.readContract.queryFilter(
+      filter(),
+      fromBlock,
+      toBlock,
+    );
+
+    return this.parseEvents(events);
+  }
+
+  private parseEvents(events: Event[]): ContractEvent[] {
+    return events.map((e) => {
+      if (e.args) {
+        const entries = Object.entries(e.args);
+        const args = entries.slice(entries.length / 2, entries.length);
+
+        const data: Record<string, any> = {};
+        for (const [key, value] of args) {
+          data[key] = value;
+        }
+
+        return {
+          eventName: e.event || "",
+          data,
+        };
+      }
+
+      return {
+        eventName: e.event || "",
+        data: {},
+      };
+    });
   }
 
   private toContractEvent(

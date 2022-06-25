@@ -9,7 +9,7 @@ Claim NFTs to the connected wallet.
 <b>Signature:</b>
 
 ```typescript
-claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+claim(quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 ```
 
 ## Parameters
@@ -17,7 +17,7 @@ claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWi
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  quantity | BigNumberish |  |
-|  proofs | BytesLike\[\] | <i>(Optional)</i> |
+|  checkERC20Allowance | boolean | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

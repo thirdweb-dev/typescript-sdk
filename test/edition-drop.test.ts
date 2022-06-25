@@ -387,16 +387,31 @@ describe("Edition Drop Contract", async () => {
         description: "test2",
       },
     ]);
-    await bdContract.claimConditions.setBatch(
-      [0, 1],
-      [
-        {
-          price: 1,
-        },
-      ],
-    );
-    await bdContract.claim("0", 1);
-    await bdContract.claim("1", 1);
+    await bdContract.claimConditions.setBatch([
+      {
+        tokenId: 0,
+        claimConditions: [
+          {
+            price: 1,
+          },
+        ],
+      },
+      {
+        tokenId: 1,
+        claimConditions: [
+          {
+            price: 0.1,
+            maxQuantity: 1,
+          },
+        ],
+      },
+    ]);
+    await bdContract.claim("0", 2);
+    try {
+      await bdContract.claim("1", 2);
+    } catch (e) {
+      expectError(e, "exceed max mint supply");
+    }
   });
 
   describe("eligibility", () => {

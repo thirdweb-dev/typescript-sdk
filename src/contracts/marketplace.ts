@@ -22,7 +22,6 @@ import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
-import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
  * Create your own whitelabel marketplace that enables users to buy and sell any digital assets.
@@ -54,10 +53,6 @@ export class Marketplace implements UpdateableNetwork {
   public events: ContractEvents<MarketplaceContract>;
   public estimator: GasCostEstimator<MarketplaceContract>;
   public platformFees: ContractPlatformFee<MarketplaceContract>;
-  /**
-   * @internal
-   */
-  public analytics: ContractAnalytics<MarketplaceContract>;
   public metadata: ContractMetadata<
     MarketplaceContract,
     typeof Marketplace.schema
@@ -164,7 +159,6 @@ export class Marketplace implements UpdateableNetwork {
       this.contractWrapper,
       Marketplace.contractRoles,
     );
-    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.direct = new MarketplaceDirect(this.contractWrapper, this.storage);
@@ -464,7 +458,6 @@ export class Marketplace implements UpdateableNetwork {
         try {
           listing = await this.getListing(i);
         } catch (err) {
-          console.warn(`Error fetching listing with id: ${i}`, err);
           return undefined;
         }
 

@@ -14,7 +14,7 @@ import { CallOverrides } from 'ethers';
 import { ContractInterface } from 'ethers';
 import type { ContractTransaction } from 'ethers';
 import { ethers } from 'ethers';
-import { Event as Event_2 } from 'ethers';
+import type { Event as Event_2 } from 'ethers';
 import EventEmitter from 'eventemitter3';
 import type { EventFilter } from 'ethers';
 import type { EventFragment } from '@ethersproject/abi';
@@ -191,7 +191,7 @@ export enum ChainId {
 // Warning: (ae-internal-missing-underscore) The name "ChainIdOrName" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type ChainIdOrName = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "avalanche" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | ChainId | (number & {});
+export type ChainIdOrName = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "avalanche" | "avalanche-testnet" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | ChainId | (number & {});
 
 // @public
 export class ChainMismatchError extends Error {
@@ -419,6 +419,12 @@ export const ClaimConditionOutputSchema: z.ZodObject<z.extendShape<{
 }>;
 
 // @public (undocumented)
+export type ClaimConditionsForToken = {
+    tokenId: BigNumberish;
+    claimConditions: ClaimConditionInput[];
+};
+
+// @public (undocumented)
 export enum ClaimEligibility {
     // (undocumented)
     AddressNotAllowed = "This address is not on the allowlist.",
@@ -611,7 +617,7 @@ export class ContractEncoder<TContract extends BaseContract> {
     encode(fn: keyof TContract["functions"], args: Parameters<TContract["functions"][typeof fn]>): string;
 }
 
-// @public (undocumented)
+// @public
 export type ContractEvent = {
     eventName: string;
     data: Record<string, any>;
@@ -622,6 +628,8 @@ export class ContractEvents<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     addEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: (event: Record<string, any>) => void): void;
     addTransactionListener(listener: ListenerFn): void;
+    getAllEvents(filters?: QueryAllEvents): Promise<ContractEvent[]>;
+    getEvents(eventName: string, filters?: QueryAllEvents): Promise<ContractEvent[]>;
     listenToAllEvents(listener: (event: ContractEvent) => void): void;
     removeAllListeners(): void;
     removeEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: providers.Listener): void;
@@ -706,7 +714,7 @@ export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
     // Warning: (ae-forgotten-export) The symbol "AbiFunction" needs to be exported by the entry point index.d.ts
     //
     // @public (undocumented)
-    extractFunctions(): AbiFunction[];
+    extractFunctions(): Promise<AbiFunction[]>;
     // Warning: (ae-forgotten-export) The symbol "PublishedMetadata" needs to be exported by the entry point index.d.ts
     //
     // @public
@@ -920,7 +928,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | Base
     getAll(): Promise<ClaimCondition[]>;
     getClaimIneligibilityReasons(quantity: Amount, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // @internal
-    prepareClaim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<ClaimVerification>;
+    prepareClaim(quantity: BigNumberish, checkERC20Allowance: boolean): Promise<ClaimVerification>;
     set(claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
     update(index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
 }
@@ -935,7 +943,7 @@ export class DropErc1155ClaimConditions {
     getAll(tokenId: BigNumberish): Promise<ClaimCondition[]>;
     getClaimIneligibilityReasons(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
     set(tokenId: BigNumberish, claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
-    setBatch(tokenIds: BigNumberish[], claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<{
+    setBatch(claimConditionsForToken: ClaimConditionsForToken[], resetClaimEligibilityForAll?: boolean): Promise<{
         receipt: ethers.providers.TransactionReceipt;
     }>;
     update(tokenId: BigNumberish, index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
@@ -943,8 +951,7 @@ export class DropErc1155ClaimConditions {
 
 // @public
 export class DropErc1155History {
-    // Warning: (ae-forgotten-export) The symbol "ContractAnalytics" needs to be exported by the entry point index.d.ts
-    constructor(analytics: ContractAnalytics<DropERC1155>);
+    constructor(events: ContractEvents<DropERC1155>);
     getAllClaimerAddresses(tokenId: BigNumberish): Promise<string[]>;
 }
 
@@ -967,8 +974,6 @@ export class DuplicateLeafsError extends Error {
 // @public
 export class Edition extends Erc1155<TokenERC1155> {
     constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
-    // @internal (undocumented)
-    analytics: ContractAnalytics<TokenERC1155>;
     burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
@@ -1112,19 +1117,20 @@ export class Edition extends Erc1155<TokenERC1155> {
 // @public
 export class EditionDrop extends Erc1155<DropERC1155> {
     constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
-    // @internal (undocumented)
-    analytics: ContractAnalytics<DropERC1155>;
     burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
-    claim(tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
+    claim(tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     claimConditions: DropErc1155ClaimConditions;
-    claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResult>;
+    claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "edition-drop";
-    createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
+    createBatch(metadatas: NFTMetadataOrUri[], options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<DropERC1155>;
     // (undocumented)
@@ -1740,17 +1746,16 @@ export class Erc721BatchMintable implements DetectableFeature {
     constructor(erc721: Erc721, contractWrapper: ContractWrapper<IMintableERC721 & IMulticall>, storage: IStorage);
     // (undocumented)
     featureName: "ERC721BatchMintable";
-    // Warning: (ae-forgotten-export) The symbol "NFTMetadataOrUri" needs to be exported by the entry point index.d.ts
     to(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 }
 
 // @public
 export class Erc721Dropable implements DetectableFeature {
     constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseDropERC721>, storage: IStorage);
-    claim(quantity: BigNumberish, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claim(quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // Warning: (ae-forgotten-export) The symbol "BaseDropERC721" needs to be exported by the entry point index.d.ts
     claimConditions: DropClaimConditions<BaseDropERC721> | undefined;
-    claimTo(destinationAddress: string, quantity: BigNumberish, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     featureName: "ERC721Dropable";
     lazyMint(metadatas: NFTMetadataInput[], options?: {
@@ -1852,7 +1857,7 @@ export function extractFunctions(predeployMetadataUri: string, storage: IStorage
 // Warning: (ae-internal-missing-underscore) The name "extractFunctionsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>): AbiFunction[];
+export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>, metadata?: Record<string, any>): AbiFunction[];
 
 // Warning: (ae-internal-missing-underscore) The name "fetchContractMetadataFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -2154,8 +2159,6 @@ export class Marketplace implements UpdateableNetwork {
     constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Marketplace_2>);
     allowListingFromAnyAsset(): Promise<void>;
     allowListingFromSpecificAssetOnly(contractAddress: string): Promise<void>;
-    // @internal (undocumented)
-    analytics: ContractAnalytics<Marketplace_2>;
     auction: MarketplaceAuction;
     buyoutListing(listingId: BigNumberish, quantityDesired?: BigNumberish, receiver?: string): Promise<TransactionResult>;
     // (undocumented)
@@ -2555,8 +2558,6 @@ export interface NewDirectListing {
 // @public
 export class NFTCollection extends Erc721<TokenERC721> {
     constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
-    // @internal (undocumented)
-    analytics: ContractAnalytics<TokenERC721>;
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
@@ -2714,19 +2715,17 @@ export interface NFTContractDeployMetadata {
 // @public
 export class NFTDrop extends Erc721<DropERC721> {
     constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
-    // @internal (undocumented)
-    analytics: ContractAnalytics<DropERC721>;
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
-    claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claim(quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     claimConditions: DropClaimConditions<DropERC721>;
-    claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "nft-drop";
-    createBatch(metadatas: NFTMetadataInput[], options?: {
+    createBatch(metadatas: NFTMetadataOrUri[], options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
@@ -2928,8 +2927,6 @@ export const OZ_DEFENDER_FORWARDER_ADDRESS = "0xc82BbE41f2cF04e3a8efA18F7032BDD7
 // @public
 export class Pack extends Erc1155<Pack_2> {
     constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Pack_2>);
-    // @internal (undocumented)
-    analytics: ContractAnalytics<Pack_2>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -3256,6 +3253,14 @@ export class QuantityAboveLimitError extends Error {
 //
 // @internal (undocumented)
 export const QuantitySchema: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>;
+
+// @public
+export interface QueryAllEvents {
+    // (undocumented)
+    fromBlock?: number;
+    // (undocumented)
+    toBlock?: number;
+}
 
 // @public
 export interface QueryAllParams {
@@ -4279,18 +4284,14 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
     royaltyBps: string | number | bigint | BigNumber;
 }>;
 
-// Warning: (ae-internal-missing-underscore) The name "SignatureDrop" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal
+// @public
 export class SignatureDrop extends Erc721<SignatureDrop_2> {
     constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<SignatureDrop_2>);
-    // (undocumented)
-    analytics: ContractAnalytics<SignatureDrop_2>;
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
-    claim(quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claim(quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // Warning: (ae-forgotten-export) The symbol "DropSingleClaimConditions" needs to be exported by the entry point index.d.ts
     claimCondition: DropSingleClaimConditions<SignatureDrop_2>;
-    claimTo(destinationAddress: string, quantity: BigNumberish, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -4312,7 +4313,7 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     //
     // (undocumented)
     getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
-    // (undocumented)
+    // @internal (undocumented)
     interceptor: ContractInterceptor<SignatureDrop_2>;
     isTransferRestricted(): Promise<boolean>;
     // (undocumented)
@@ -4325,7 +4326,7 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     royalties: ContractRoyalty<SignatureDrop_2, typeof SignatureDrop.schema>;
     // (undocumented)
     sales: ContractPrimarySale<SignatureDrop_2>;
-    // (undocumented)
+    // @internal (undocumented)
     static schema: {
         deploy: ZodObject<extendShape<extendShape<extendShape<extendShape<extendShape<extendShape<    {
         name: ZodString;
@@ -4477,8 +4478,6 @@ export type SignerOrProvider = Signer | providers.Provider;
 // @beta
 export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract> implements UpdateableNetwork {
     constructor(connection: ConnectionInfo, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
-    // @internal (undocumented)
-    analytics: ContractAnalytics<TContract>;
     call(functionName: string, ...args: unknown[] | [...unknown[], CallOverrides]): Promise<any>;
     // (undocumented)
     static contractType: "custom";
@@ -4767,8 +4766,6 @@ export const SnapshotSchema: z.ZodObject<{
 // @public
 export class Split implements UpdateableNetwork {
     constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<Split_2>);
-    // @internal (undocumented)
-    analytics: ContractAnalytics<Split_2>;
     balanceOf(address: string): Promise<BigNumber>;
     balanceOfAllRecipients(): Promise<{
         [key: string]: BigNumber;
@@ -5006,7 +5003,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // Warning: (ae-incompatible-release-tags) The symbol "fromSigner" is marked as @beta, but its signature references "ChainIdOrName" which is marked as @internal
     //
     // @beta
-    static fromSigner(signer: Signer, chainId: ChainIdOrName, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
+    static fromSigner(signer: Signer, chain: ChainIdOrName, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
+    getBalance(address: string): Promise<CurrencyValue>;
     // @internal (undocumented)
     getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     // @beta
@@ -5045,8 +5043,6 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 // @public
 export class Token extends Erc20<TokenERC20> {
     constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC20>);
-    // @internal (undocumented)
-    analytics: ContractAnalytics<TokenERC20>;
     burn(amount: Amount): Promise<TransactionResult>;
     burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
     // (undocumented)
@@ -5183,13 +5179,11 @@ export interface TokenContractDeployMetadata {
 // @public
 export class TokenDrop extends Erc20<DropERC20> {
     constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC20>);
-    // @internal (undocumented)
-    analytics: ContractAnalytics<DropERC20>;
     burn(amount: Amount): Promise<TransactionResult>;
     burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
-    claim(amount: Amount, proofs?: BytesLike[]): Promise<TransactionResult>;
+    claim(amount: Amount, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     claimConditions: DropClaimConditions<DropERC20>;
-    claimTo(destinationAddress: string, amount: Amount, proofs?: BytesLike[]): Promise<TransactionResult>;
+    claimTo(destinationAddress: string, amount: Amount, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -5316,7 +5310,7 @@ export class TokenDrop extends Erc20<DropERC20> {
 
 // @public
 export class TokenERC20History {
-    constructor(contractWrapper: ContractWrapper<TokenERC20>, analytics: ContractAnalytics<TokenERC20>);
+    constructor(contractWrapper: ContractWrapper<TokenERC20>, events: ContractEvents<TokenERC20>);
     getAllHolderBalances(): Promise<TokenHolderBalance[]>;
 }
 
@@ -5446,8 +5440,6 @@ export type ValueOf<T> = T[keyof T];
 // @public
 export class Vote implements UpdateableNetwork {
     constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<VoteERC20>);
-    // @internal (undocumented)
-    analytics: ContractAnalytics<VoteERC20>;
     balance(): Promise<CurrencyValue>;
     balanceOfToken(tokenAddress: string): Promise<CurrencyValue>;
     canExecute(proposalId: string): Promise<boolean>;

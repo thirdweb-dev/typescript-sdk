@@ -19,14 +19,17 @@ import {
   IRoyalty,
   ThirdwebContract,
 } from "contracts";
-import { CustomContractSchema } from "../schema/contracts/custom";
+import { AbiSchema, CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { CallOverrides, ContractInterface, Signer } from "ethers";
-import { ALL_ROLES, detectContractFeature } from "../common";
+import {
+  ALL_ROLES,
+  detectContractFeature,
+  extractFunctionsFromAbi,
+} from "../common";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
-import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { CallOverrideSchema } from "../schema/index";
 
 /**
@@ -73,10 +76,6 @@ export class SmartContract<
   public interceptor: ContractInterceptor<TContract>;
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
-  /**
-   * @internal
-   */
-  public analytics: ContractAnalytics<TContract>;
 
   // features
   public metadata: ContractMetadata<ThirdwebContract, any>;
@@ -129,8 +128,6 @@ export class SmartContract<
       this.storage,
     );
 
-    this.analytics = new ContractAnalytics(this.contractWrapper);
-
     // feature detection
     this.royalties = this.detectRoyalties();
     this.roles = this.detectRoles();
@@ -178,7 +175,7 @@ export class SmartContract<
     // parse last arg as tx options if present
     let txOptions: CallOverrides | undefined;
     try {
-      if (args.length > 1 && typeof args[args.length - 1] === "object") {
+      if (args.length > 0 && typeof args[args.length - 1] === "object") {
         const last = args[args.length - 1];
         txOptions = CallOverrideSchema.parse(last);
         // if call overrides found, remove it from args array
@@ -188,7 +185,9 @@ export class SmartContract<
       // no-op
     }
 
-    const functions = this.publishedMetadata.extractFunctions();
+    const functions = extractFunctionsFromAbi(
+      AbiSchema.parse(this.contractWrapper.abi),
+    );
     const fn = functions.find((f) => f.name === functionName);
     if (!fn) {
       throw new Error(

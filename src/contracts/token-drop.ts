@@ -3,7 +3,7 @@ import { IStorage } from "../core/interfaces/IStorage";
 import { ConnectionInfo, TransactionResult } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { BigNumberish, BytesLike, constants, utils } from "ethers";
+import { BigNumberish, constants } from "ethers";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
@@ -18,7 +18,6 @@ import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 
 import { prepareClaim } from "../common/claim-conditions";
 import { getRoleHash } from "../common";
-import { ContractAnalytics } from "../core/classes/contract-analytics";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -51,10 +50,6 @@ export class TokenDrop extends Erc20<DropERC20> {
   public estimator: GasCostEstimator<DropERC20>;
   public sales: ContractPrimarySale<DropERC20>;
   public platformFees: ContractPlatformFee<DropERC20>;
-  /**
-   * @internal
-   */
-  public analytics: ContractAnalytics<DropERC20>;
   /**
    * Configure claim conditions
    * @remarks Define who can claim Tokens, when and how many.
@@ -110,7 +105,6 @@ export class TokenDrop extends Erc20<DropERC20> {
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.claimConditions = new DropClaimConditions<DropERC20>(
       this.contractWrapper,
       this.metadata,
@@ -178,16 +172,16 @@ export class TokenDrop extends Erc20<DropERC20> {
    * Claim a certain amount of tokens
    * @remarks See {@link TokenDrop.claimTo}
    * @param amount - the amount of tokens to mint
-   * @param proofs - Optional claim proofs
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    */
   public async claim(
     amount: Amount,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance = true,
   ): Promise<TransactionResult> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       amount,
-      proofs,
+      checkERC20Allowance,
     );
   }
 
@@ -207,17 +201,20 @@ export class TokenDrop extends Erc20<DropERC20> {
    *
    * @param destinationAddress - Address you want to send the token to
    * @param amount - Quantity of the tokens you want to claim
-   * @param proofs - Optional Array of proofs
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
    *
    * @returns - The transaction receipt
    */
   public async claimTo(
     destinationAddress: string,
     amount: Amount,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance = true,
   ): Promise<TransactionResult> {
     const quantity = await this.normalizeAmount(amount);
-    const claimVerification = await this.prepareClaim(quantity, proofs);
+    const claimVerification = await this.prepareClaim(
+      quantity,
+      checkERC20Allowance,
+    );
     const receipt = await this.contractWrapper.sendTransaction(
       "claim",
       [
@@ -309,16 +306,16 @@ export class TokenDrop extends Erc20<DropERC20> {
    */
   private async prepareClaim(
     quantity: BigNumberish,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
+    checkERC20Allowance = true,
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
       await this.claimConditions.getActive(),
-      (await this.metadata.get()).merkle,
+      async () => (await this.metadata.get()).merkle,
       await this.contractWrapper.readContract.decimals(),
       this.contractWrapper,
       this.storage,
-      proofs,
+      checkERC20Allowance,
     );
   }
 }

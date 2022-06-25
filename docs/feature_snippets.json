@@ -557,7 +557,7 @@
         "summary": "Claim unique NFTs to a specific Wallet\n\n",
         "remarks": "\n\nLet the specified wallet claim NFTs.\n\n",
         "examples": {
-          "javascript": "const address = \"{{wallet_address}}\"; // address of the wallet you want to claim the NFTs\nconst quantity = 1; // how many unique NFTs you want to claim\n\nconst tx = await contract.claimTo(address, quantity);\nconst receipt = tx.receipt; // the transaction receipt\nconst claimedTokenId = tx.id; // the id of the NFT claimed\nconst claimedNFT = await tx.data(); // (optional) get the claimed NFT metadata"
+          "javascript": "const address = \"{{wallet_address}}\"; // address of the wallet you want to claim the NFTs\nconst quantity = 1; // how many unique NFTs you want to claim\n\nconst tx = await contract.claimTo(address, quantity);\nconst receipt = tx[0].receipt; // the transaction receipt\nconst claimedTokenId = tx[0].id; // the id of the first NFT claimed\nconst claimedNFT = await tx[0].data(); // (optional) get the first claimed NFT metadata"
         },
         "reference": {
           "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Dropable.claimTo"

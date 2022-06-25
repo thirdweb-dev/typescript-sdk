@@ -20,7 +20,7 @@ static fromPrivateKey(privateKey: string, chain: ChainIdOrName, options?: SDKOpt
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  privateKey | string | the private key - \*\*DO NOT EXPOSE THIS TO THE PUBLIC\*\* |
-|  chain | ChainIdOrName |  |
+|  chain | ChainIdOrName | the chainId to connect to (e.g. ChainId.Mainnet, ChainId.Rinkeby, ChainId.Polygon, ChainId.Mumbai...) |
 |  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> the SDK options to use |
 |  storage | [IStorage](./sdk.istorage.md) | <i>(Optional)</i> the storage handler to use |
 

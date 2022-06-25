@@ -23,7 +23,6 @@ import { BigNumber, BigNumberish, constants } from "ethers";
 import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
 import { QueryAllParams } from "../types";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { ContractAnalytics } from "../core/classes/contract-analytics";
 import { ConnectionInfo } from "../core/types";
 
 /**
@@ -59,10 +58,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
   public events: ContractEvents<TokenERC721>;
   public sales: ContractPrimarySale<TokenERC721>;
   public platformFees: ContractPlatformFee<TokenERC721>;
-  /**
-   * @internal
-   */
-  public analytics: ContractAnalytics<TokenERC721>;
   /**
    * Configure royalties
    * @remarks Set your own royalties for the entire contract or per token
@@ -137,7 +132,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
       this.roles,
       this.storage,
     );
-    this.analytics = new ContractAnalytics(this.contractWrapper);
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);

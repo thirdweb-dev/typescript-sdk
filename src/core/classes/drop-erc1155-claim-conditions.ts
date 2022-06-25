@@ -5,7 +5,11 @@ import { DropERC1155, IERC20, IERC20__factory } from "contracts";
 import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
-import { ClaimCondition, ClaimConditionInput } from "../../types";
+import {
+  ClaimCondition,
+  ClaimConditionInput,
+  ClaimConditionsForToken,
+} from "../../types";
 import deepEqual from "fast-deep-equal";
 import { ClaimEligibility } from "../../enums";
 import { TransactionResult } from "../index";
@@ -302,8 +306,12 @@ export class DropErc1155ClaimConditions {
     resetClaimEligibilityForAll = false,
   ): Promise<TransactionResult> {
     return this.setBatch(
-      [tokenId],
-      claimConditionInputs,
+      [
+        {
+          tokenId,
+          claimConditions: claimConditionInputs,
+        },
+      ],
       resetClaimEligibilityForAll,
     );
   }
@@ -315,47 +323,57 @@ export class DropErc1155ClaimConditions {
    *
    * @example
    * ```javascript
-   * const presaleStartTime = new Date();
-   * const publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
-   * const claimConditions = [
+   * const claimConditionsForTokens = [
    *   {
-   *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
-   *     price: 0.01, // presale price
-   *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+   *     tokenId: 0,
+   *     claimConditions: [{
+   *       startTime: new Date(), // start the claim phase now
+   *       maxQuantity: 2, // limit how many mints for this tokenId
+   *       price: 0.01, // price for this tokenId
+   *       snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+   *     }]
    *   },
    *   {
-   *     startTime: publicSaleStartTime, // 24h after presale, start public sale
-   *     price: 0.08, // public sale price
-   *   }
-   * ]);
+   *     tokenId: 1,
+   *     claimConditions: [{
+   *       startTime: new Date(),
+   *       price: 0.08, // different price for this tokenId
+   *     }]
+   *   },
+   * ];
    *
-   * const tokenIds = [0,1,2]; // the ids of the NFTs to set claim conditions on
-   * await dropContract.claimConditions.setBatch(tokenIds, claimConditions);
+   * await dropContract.claimConditions.setBatch(claimConditionsForTokens);
    * ```
    *
-   * @param tokenIds - the token ids to set the claim conditions on
-   * @param claimConditionInputs - The claim conditions
+   * @param claimConditionsForToken - The claim conditions for each NFT
    * @param resetClaimEligibilityForAll - Whether to reset the state of who already claimed NFTs previously
    */
   public async setBatch(
-    tokenIds: BigNumberish[],
-    claimConditionInputs: ClaimConditionInput[],
+    claimConditionsForToken: ClaimConditionsForToken[],
     resetClaimEligibilityForAll = false,
   ) {
-    // process inputs
-    const { snapshotInfos, sortedConditions } =
-      await processClaimConditionInputs(
-        claimConditionInputs,
-        0,
-        this.contractWrapper.getProvider(),
-        this.storage,
-      );
-
     const merkleInfo: { [key: string]: string } = {};
-    snapshotInfos.forEach((s) => {
-      merkleInfo[s.merkleRoot] = s.snapshotUri;
-    });
+    const processedClaimConditions = await Promise.all(
+      claimConditionsForToken.map(async ({ tokenId, claimConditions }) => {
+        // process inputs
+        const { snapshotInfos, sortedConditions } =
+          await processClaimConditionInputs(
+            claimConditions,
+            0,
+            this.contractWrapper.getProvider(),
+            this.storage,
+          );
+
+        snapshotInfos.forEach((s) => {
+          merkleInfo[s.merkleRoot] = s.snapshotUri;
+        });
+        return {
+          tokenId,
+          sortedConditions,
+        };
+      }),
+    );
+
     const metadata = await this.metadata.get();
     const encoded = [];
 
@@ -382,7 +400,7 @@ export class DropErc1155ClaimConditions {
       );
     }
 
-    tokenIds.forEach((tokenId) => {
+    processedClaimConditions.forEach(({ tokenId, sortedConditions }) => {
       encoded.push(
         this.contractWrapper.readContract.interface.encodeFunctionData(
           "setClaimConditions",
