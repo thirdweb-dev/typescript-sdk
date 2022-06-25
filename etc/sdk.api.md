@@ -602,7 +602,8 @@ export class ContractEncoder<TContract extends BaseContract> {
 // @public
 export type ContractEvent = {
     eventName: string;
-    data: Record<string, any>;
+    data: Record<string, unknown>;
+    transaction: Omit<providers.Log, "args">;
 };
 
 // @public
@@ -610,8 +611,8 @@ export class ContractEvents<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     addEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: (event: Record<string, any>) => void): () => void;
     addTransactionListener(listener: ListenerFn): void;
-    getAllEvents(filters?: QueryAllEvents): Promise<ContractEvent[]>;
-    getEvents(eventName: string, filters?: QueryAllEvents): Promise<ContractEvent[]>;
+    getAllEvents(filters?: EventQueryFilter): Promise<ContractEvent[]>;
+    getEvents(eventName: string, filters?: EventQueryFilter): Promise<ContractEvent[]>;
     listenToAllEvents(listener: (event: ContractEvent) => void): () => void;
     removeAllListeners(): void;
     removeEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: providers.Listener): void;
@@ -1795,6 +1796,16 @@ export type ERC721Wrappable = {
     contractAddress: string;
     tokenId: BigNumberish;
 };
+
+// @public
+export interface EventQueryFilter {
+    // (undocumented)
+    fromBlock?: providers.BlockTag;
+    // (undocumented)
+    order?: "asc" | "desc";
+    // (undocumented)
+    toBlock?: providers.BlockTag;
+}
 
 // @public (undocumented)
 export enum EventType {
@@ -3231,14 +3242,6 @@ export class QuantityAboveLimitError extends Error {
 //
 // @internal (undocumented)
 export const QuantitySchema: z.ZodDefault<z.ZodUnion<[z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber]>, string, string | number>, z.ZodLiteral<"unlimited">]>>;
-
-// @public
-export interface QueryAllEvents {
-    // (undocumented)
-    fromBlock?: number;
-    // (undocumented)
-    toBlock?: number;
-}
 
 // @public
 export interface QueryAllParams {

@@ -9,7 +9,7 @@ Get Events
 <b>Signature:</b>
 
 ```typescript
-getEvents(eventName: string, filters?: QueryAllEvents): Promise<ContractEvent[]>;
+getEvents(eventName: string, filters?: EventQueryFilter): Promise<ContractEvent[]>;
 ```
 
 ## Parameters
@@ -17,7 +17,7 @@ getEvents(eventName: string, filters?: QueryAllEvents): Promise<ContractEvent[]>
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  eventName | string | The name of the event to get logs for |
-|  filters | [QueryAllEvents](./sdk.queryallevents.md) | <i>(Optional)</i> Specify the from and to block numbers to get events for, defaults to all blocks |
+|  filters | [EventQueryFilter](./sdk.eventqueryfilter.md) | <i>(Optional)</i> Specify the from and to block numbers to get events for, defaults to all blocks. |
 
 <b>Returns:</b>
 
