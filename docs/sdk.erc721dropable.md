@@ -43,7 +43,7 @@ await contract.drop.claim(quantity);
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [claim(quantity, checkERC20Allowance, claimData, proofs)](./sdk.erc721dropable.claim.md) |  | Claim NFTs to the connected wallet. |
-|  [claimTo(destinationAddress, quantity, checkERC20Allowance, claimData, proofs)](./sdk.erc721dropable.claimto.md) |  | Claim unique NFTs to a specific Wallet |
+|  [claim(quantity, checkERC20Allowance, claimData)](./sdk.erc721dropable.claim.md) |  | Claim NFTs to the connected wallet. |
+|  [claimTo(destinationAddress, quantity, checkERC20Allowance, claimData)](./sdk.erc721dropable.claimto.md) |  | Claim unique NFTs to a specific Wallet |
 |  [lazyMint(metadatas, options)](./sdk.erc721dropable.lazymint.md) |  | Create a batch of unique NFTs to be claimed in the future |
 

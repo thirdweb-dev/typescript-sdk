@@ -905,7 +905,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | Base
     getAll(): Promise<ClaimCondition[]>;
     getClaimIneligibilityReasons(quantity: Amount, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // @internal
-    prepareClaim(quantity: BigNumberish, checkERC20Allowance: boolean, proofs?: BytesLike[]): Promise<ClaimVerification>;
+    prepareClaim(quantity: BigNumberish, checkERC20Allowance: boolean): Promise<ClaimVerification>;
     set(claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
     update(index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
 }
@@ -1095,9 +1095,9 @@ export class Edition extends Erc1155<TokenERC1155> {
 export class EditionDrop extends Erc1155<DropERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
     burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
-    claim(tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean, proofs?: BytesLike[]): Promise<TransactionResult>;
+    claim(tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     claimConditions: DropErc1155ClaimConditions;
-    claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean, proofs?: BytesLike[]): Promise<TransactionResult>;
+    claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -1735,10 +1735,10 @@ export class Erc721BatchMintable implements DetectableFeature {
 // @public
 export class Erc721Dropable implements DetectableFeature {
     constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseDropERC721>, storage: IStorage);
-    claim(quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claim(quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // Warning: (ae-forgotten-export) The symbol "BaseDropERC721" needs to be exported by the entry point index.d.ts
     claimConditions: DropClaimConditions<BaseDropERC721> | undefined;
-    claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     featureName: "ERC721Dropable";
     lazyMint(metadatas: NFTMetadataInput[], options?: {
@@ -2694,9 +2694,9 @@ export interface NFTContractDeployMetadata {
 export class NFTDrop extends Erc721<DropERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
-    claim(quantity: BigNumberish, checkERC20Allowance?: boolean, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claim(quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     claimConditions: DropClaimConditions<DropERC721>;
-    claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -4263,10 +4263,10 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
 export class SignatureDrop extends Erc721<SignatureDrop_2> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<SignatureDrop_2>);
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
-    claim(quantity: BigNumberish, checkERC20Allowance?: boolean, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claim(quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // Warning: (ae-forgotten-export) The symbol "DropSingleClaimConditions" needs to be exported by the entry point index.d.ts
     claimCondition: DropSingleClaimConditions<SignatureDrop_2>;
-    claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean, proofs?: BytesLike[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -5157,9 +5157,9 @@ export class TokenDrop extends Erc20<DropERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC20>);
     burn(amount: Amount): Promise<TransactionResult>;
     burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
-    claim(amount: Amount, checkERC20Allowance?: boolean, proofs?: BytesLike[]): Promise<TransactionResult>;
+    claim(amount: Amount, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     claimConditions: DropClaimConditions<DropERC20>;
-    claimTo(destinationAddress: string, amount: Amount, checkERC20Allowance?: boolean, proofs?: BytesLike[]): Promise<TransactionResult>;
+    claimTo(destinationAddress: string, amount: Amount, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)

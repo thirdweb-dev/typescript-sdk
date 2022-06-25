@@ -1,7 +1,6 @@
 import {
   BigNumber,
   BigNumberish,
-  BytesLike,
   ethers,
   constants,
   providers,
@@ -46,12 +45,11 @@ export async function prepareClaim(
   tokenDecimals: number,
   contractWrapper: ContractWrapper<any>,
   storage: IStorage,
-  proofs: BytesLike[],
   checkERC20Allowance: boolean,
 ): Promise<ClaimVerification> {
   const addressToClaim = await contractWrapper.getSignerAddress();
   let maxClaimable = BigNumber.from(0);
-
+  let proofs = [utils.hexZeroPad([0], 32)];
   try {
     if (
       !activeClaimCondition.merkleRootHash
