@@ -12,6 +12,16 @@ Standardized return type for contract events that returns event arguments
 export declare type ContractEvent = {
     eventName: string;
     data: Record<string, unknown>;
-    transaction: Omit<providers.Log, "args">;
+    transaction: {
+        blockNumber: number;
+        blockHash: string;
+        transactionIndex: number;
+        removed: boolean;
+        address: string;
+        data: string;
+        topics: Array<string>;
+        transactionHash: string;
+        logIndex: number;
+    };
 };
 ```

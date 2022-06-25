@@ -1,5 +1,3 @@
-import type { providers } from "ethers";
-
 export interface UploadProgressEvent {
   /**
    * The number of bytes uploaded.
@@ -18,14 +16,29 @@ export interface UploadProgressEvent {
 export type ContractEvent = {
   eventName: string;
   data: Record<string, unknown>;
-  transaction: Omit<providers.Log, "args">;
+  // from ethers.providers.Log
+  transaction: {
+    blockNumber: number;
+    blockHash: string;
+    transactionIndex: number;
+
+    removed: boolean;
+
+    address: string;
+    data: string;
+
+    topics: Array<string>;
+
+    transactionHash: string;
+    logIndex: number;
+  };
 };
 
 /**
  * Filters for querying past events
  */
 export interface EventQueryFilter {
-  fromBlock?: providers.BlockTag;
-  toBlock?: providers.BlockTag;
+  fromBlock?: string | number;
+  toBlock?: string | number;
   order?: "asc" | "desc";
 }

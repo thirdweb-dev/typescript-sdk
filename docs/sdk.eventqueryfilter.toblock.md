@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-toBlock?: providers.BlockTag;
+toBlock?: string | number;
 ```

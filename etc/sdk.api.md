@@ -603,7 +603,17 @@ export class ContractEncoder<TContract extends BaseContract> {
 export type ContractEvent = {
     eventName: string;
     data: Record<string, unknown>;
-    transaction: Omit<providers.Log, "args">;
+    transaction: {
+        blockNumber: number;
+        blockHash: string;
+        transactionIndex: number;
+        removed: boolean;
+        address: string;
+        data: string;
+        topics: Array<string>;
+        transactionHash: string;
+        logIndex: number;
+    };
 };
 
 // @public
@@ -1800,11 +1810,11 @@ export type ERC721Wrappable = {
 // @public
 export interface EventQueryFilter {
     // (undocumented)
-    fromBlock?: providers.BlockTag;
+    fromBlock?: string | number;
     // (undocumented)
     order?: "asc" | "desc";
     // (undocumented)
-    toBlock?: providers.BlockTag;
+    toBlock?: string | number;
 }
 
 // @public (undocumented)

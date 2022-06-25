@@ -16,7 +16,7 @@ export interface EventQueryFilter
 
 |  Property | Type | Description |
 |  --- | --- | --- |
-|  [fromBlock?](./sdk.eventqueryfilter.fromblock.md) | providers.BlockTag | <i>(Optional)</i> |
+|  [fromBlock?](./sdk.eventqueryfilter.fromblock.md) | string \| number | <i>(Optional)</i> |
 |  [order?](./sdk.eventqueryfilter.order.md) | "asc" \| "desc" | <i>(Optional)</i> |
-|  [toBlock?](./sdk.eventqueryfilter.toblock.md) | providers.BlockTag | <i>(Optional)</i> |
+|  [toBlock?](./sdk.eventqueryfilter.toblock.md) | string \| number | <i>(Optional)</i> |
 
