@@ -16,7 +16,7 @@ removeTransactionListener(listener: ListenerFn): void;
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  listener | ListenerFn | the receiver to remove |
+|  listener | ListenerFn | the callback function to remove |
 
 <b>Returns:</b>
 
