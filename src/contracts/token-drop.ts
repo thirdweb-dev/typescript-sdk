@@ -3,7 +3,7 @@ import { IStorage } from "../core/interfaces/IStorage";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { BigNumberish, BytesLike, constants, utils } from "ethers";
+import { BigNumberish, constants } from "ethers";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
@@ -173,18 +173,15 @@ export class TokenDrop extends Erc20<DropERC20> {
    * @remarks See {@link TokenDrop.claimTo}
    * @param amount - the amount of tokens to mint
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param proofs - Optional claim proofs
    */
   public async claim(
     amount: Amount,
     checkERC20Allowance = true,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       amount,
       checkERC20Allowance,
-      proofs,
     );
   }
 
@@ -205,7 +202,6 @@ export class TokenDrop extends Erc20<DropERC20> {
    * @param destinationAddress - Address you want to send the token to
    * @param amount - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param proofs - Optional Array of proofs
    *
    * @returns - The transaction receipt
    */
@@ -213,13 +209,11 @@ export class TokenDrop extends Erc20<DropERC20> {
     destinationAddress: string,
     amount: Amount,
     checkERC20Allowance = true,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     const quantity = await this.normalizeAmount(amount);
     const claimVerification = await this.prepareClaim(
       quantity,
       checkERC20Allowance,
-      proofs,
     );
     const receipt = await this.contractWrapper.sendTransaction(
       "claim",
@@ -313,7 +307,6 @@ export class TokenDrop extends Erc20<DropERC20> {
   private async prepareClaim(
     quantity: BigNumberish,
     checkERC20Allowance = true,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
@@ -322,7 +315,6 @@ export class TokenDrop extends Erc20<DropERC20> {
       await this.contractWrapper.readContract.decimals(),
       this.contractWrapper,
       this.storage,
-      proofs,
       checkERC20Allowance,
     );
   }

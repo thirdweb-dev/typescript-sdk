@@ -1,12 +1,5 @@
 import { ContractRoles } from "../core/classes/contract-roles";
-import {
-  BigNumber,
-  BigNumberish,
-  BytesLike,
-  constants,
-  ethers,
-  utils,
-} from "ethers";
+import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -473,7 +466,6 @@ export class NFTDrop extends Erc721<DropERC721> {
    * @param destinationAddress - Address you want to send the token to
    * @param quantity - Quantity of the tokens you want to claim
    * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param proofs - Array of proofs
    *
    * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
    */
@@ -481,12 +473,10 @@ export class NFTDrop extends Erc721<DropERC721> {
     destinationAddress: string,
     quantity: BigNumberish,
     checkERC20Allowance = true,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     const claimVerification = await this.prepareClaim(
       quantity,
       checkERC20Allowance,
-      proofs,
     );
     const receipt = await this.contractWrapper.sendTransaction(
       "claim",
@@ -527,13 +517,11 @@ export class NFTDrop extends Erc721<DropERC721> {
   public async claim(
     quantity: BigNumberish,
     checkERC20Allowance = true,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
     return this.claimTo(
       await this.contractWrapper.getSignerAddress(),
       quantity,
       checkERC20Allowance,
-      proofs,
     );
   }
 
@@ -566,7 +554,6 @@ export class NFTDrop extends Erc721<DropERC721> {
   private async prepareClaim(
     quantity: BigNumberish,
     checkERC20Allowance: boolean,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
@@ -575,7 +562,6 @@ export class NFTDrop extends Erc721<DropERC721> {
       0,
       this.contractWrapper,
       this.storage,
-      proofs,
       checkERC20Allowance,
     );
   }

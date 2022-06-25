@@ -14,7 +14,7 @@ import {
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { NFTMetadata, NFTMetadataOrUri } from "../schema/tokens/common";
-import { BigNumber, BigNumberish, BytesLike, constants, utils } from "ethers";
+import { BigNumber, BigNumberish, constants } from "ethers";
 import { prepareClaim } from "../common/claim-conditions";
 import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
@@ -327,13 +327,11 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     tokenId: BigNumberish,
     quantity: BigNumberish,
     checkERC20Allowance = true,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     const claimVerification = await this.prepareClaim(
       tokenId,
       quantity,
       checkERC20Allowance,
-      proofs,
     );
     return {
       receipt: await this.contractWrapper.sendTransaction(
@@ -368,16 +366,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     tokenId: BigNumberish,
     quantity: BigNumberish,
     checkERC20Allowance = true,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<TransactionResult> {
     const address = await this.contractWrapper.getSignerAddress();
-    return this.claimTo(
-      address,
-      tokenId,
-      quantity,
-      checkERC20Allowance,
-      proofs,
-    );
+    return this.claimTo(address, tokenId, quantity, checkERC20Allowance);
   }
 
   /**
@@ -418,7 +409,6 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     tokenId: BigNumberish,
     quantity: BigNumberish,
     checkERC20Allowance: boolean,
-    proofs: BytesLike[] = [utils.hexZeroPad([0], 32)],
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
@@ -427,7 +417,6 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       0,
       this.contractWrapper,
       this.storage,
-      proofs,
       checkERC20Allowance,
     );
   }
