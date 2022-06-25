@@ -608,11 +608,11 @@ export type ContractEvent = {
 // @public
 export class ContractEvents<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
-    addEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: (event: Record<string, any>) => void): void;
+    addEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: (event: Record<string, any>) => void): () => void;
     addTransactionListener(listener: ListenerFn): void;
     getAllEvents(filters?: QueryAllEvents): Promise<ContractEvent[]>;
     getEvents(eventName: string, filters?: QueryAllEvents): Promise<ContractEvent[]>;
-    listenToAllEvents(listener: (event: ContractEvent) => void): void;
+    listenToAllEvents(listener: (event: ContractEvent) => void): () => void;
     removeAllListeners(): void;
     removeEventListener(eventName: keyof TContract["filters"] | (string & {}), listener: providers.Listener): void;
     removeTransactionListener(listener: ListenerFn): void;
