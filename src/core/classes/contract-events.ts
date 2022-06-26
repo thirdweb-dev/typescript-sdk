@@ -25,7 +25,7 @@ export class ContractEvents<TContract extends BaseContract> {
    *   console.log(event);
    * }
    * ```
-   * @param listener - the receiver that will be called on every transaction
+   * @param listener - the callback function that will be called on every transaction
    * @public
    */
   public addTransactionListener(listener: ListenerFn) {
@@ -41,7 +41,7 @@ export class ContractEvents<TContract extends BaseContract> {
    *  console.log(event);
    * }
    * ```
-   * @param listener - the receiver to remove
+   * @param listener - the callback function to remove
    * @public
    */
   public removeTransactionListener(listener: ListenerFn) {
@@ -61,7 +61,8 @@ export class ContractEvents<TContract extends BaseContract> {
    * ```
    * @public
    * @param eventName - the event name as defined in the contract
-   * @param listener - the receiver that will be called on every new event
+   * @param listener - the callback function that will be called on every new event
+   * @returns a function to un-subscribe from the event
    */
   public addEventListener(
     eventName: keyof TContract["filters"] | (string & {}),
@@ -71,16 +72,22 @@ export class ContractEvents<TContract extends BaseContract> {
     const event = this.contractWrapper.readContract.interface.getEvent(
       eventName as string,
     );
-    this.contractWrapper.readContract.on(event.name, (...args) => {
+
+    const wrappedListener = (...args: unknown[]) => {
       // convert event info into nice object with named properties
       const results = this.toContractEvent(event, args);
       listener(results);
-    });
+    };
+
+    this.contractWrapper.readContract.on(event.name, wrappedListener);
+    return () => {
+      this.contractWrapper.readContract.off(event.name, wrappedListener);
+    };
   }
 
   /**
    * Listen to all events emitted from this contract
-   * @remarks Remove a listener that was added with addEventListener
+   *
    * @example
    * ```javascript
    * contract.events.listenToAllEvents((event) => {
@@ -89,12 +96,14 @@ export class ContractEvents<TContract extends BaseContract> {
    * }
    * ```
    * @public
-   * @param listener - the receiver that will be called on every new event
+   * @param listener - the callback function that will be called on every new event
+   * @returns A function that can be called to stop listening to events
    */
   public listenToAllEvents(listener: (event: ContractEvent) => void) {
     const address = this.contractWrapper.readContract.address;
     const filter = { address };
-    this.contractWrapper.getProvider().on(filter, (log) => {
+
+    const wrappedListener = (log: { topics: Array<string>; data: string }) => {
       try {
         const parsedLog =
           this.contractWrapper.readContract.interface.parseLog(log);
@@ -102,7 +111,13 @@ export class ContractEvents<TContract extends BaseContract> {
       } catch (e) {
         console.error("Could not parse event:", log, e);
       }
-    });
+    };
+
+    this.contractWrapper.getProvider().on(filter, wrappedListener);
+
+    return () => {
+      this.contractWrapper.getProvider().off(filter, wrappedListener);
+    };
   }
 
   /**
