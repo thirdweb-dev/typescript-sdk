@@ -9,7 +9,7 @@ Get an instance of an Edition contract
 <b>Signature:</b>
 
 ```typescript
-getEdition(address: string): Edition;
+getEdition(address: string): Promise<Edition>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ getEdition(address: string): Edition;
 
 <b>Returns:</b>
 
-[Edition](./sdk.edition.md)
+Promise&lt;[Edition](./sdk.edition.md)<!-- -->&gt;
 
 the contract
 

@@ -9,7 +9,7 @@ Get an instance of a Token Drop contract
 <b>Signature:</b>
 
 ```typescript
-getTokenDrop(address: string): TokenDrop;
+getTokenDrop(address: string): Promise<TokenDrop>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ getTokenDrop(address: string): TokenDrop;
 
 <b>Returns:</b>
 
-[TokenDrop](./sdk.tokendrop.md)
+Promise&lt;[TokenDrop](./sdk.tokendrop.md)<!-- -->&gt;
 
 the contract
 

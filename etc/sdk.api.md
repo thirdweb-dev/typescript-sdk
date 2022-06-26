@@ -153,6 +153,12 @@ export type BufferOrStringWithName = {
 };
 
 // @public (undocumented)
+export type ChainAndAddress = {
+    chainId: ChainIdOrName;
+    address: string;
+};
+
+// @public (undocumented)
 export enum ChainId {
     // (undocumented)
     Arbitrum = 42161,
@@ -5006,34 +5012,64 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     static fromSigner(signer: Signer, chain: ChainIdOrName, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
     getBalance(address: string): Promise<CurrencyValue>;
     // @internal (undocumented)
-    getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
+    getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType, chain?: ChainIdOrName): Promise<{
+        readonly custom: typeof SmartContract;
+        readonly "nft-drop": typeof NFTDrop;
+        readonly "signature-drop": typeof SignatureDrop;
+        readonly "nft-collection": typeof NFTCollection;
+        readonly "edition-drop": typeof EditionDrop;
+        readonly edition: typeof Edition;
+        readonly "token-drop": typeof TokenDrop;
+        readonly token: typeof Token;
+        readonly vote: typeof Vote;
+        readonly split: typeof Split;
+        readonly marketplace: typeof Marketplace;
+        readonly pack: typeof Pack;
+        readonly multiwrap: typeof Multiwrap;
+    }[TContractType] extends infer T ? T extends {
+        readonly custom: typeof SmartContract;
+        readonly "nft-drop": typeof NFTDrop;
+        readonly "signature-drop": typeof SignatureDrop;
+        readonly "nft-collection": typeof NFTCollection;
+        readonly "edition-drop": typeof EditionDrop;
+        readonly edition: typeof Edition;
+        readonly "token-drop": typeof TokenDrop;
+        readonly token: typeof Token;
+        readonly vote: typeof Vote;
+        readonly split: typeof Split;
+        readonly marketplace: typeof Marketplace;
+        readonly pack: typeof Pack;
+        readonly multiwrap: typeof Multiwrap;
+    }[TContractType] ? T extends new (...args: any[]) => object ? object : any : never : never>;
     // @beta
-    getContract(address: string): Promise<SmartContract<ThirdwebContract>>;
+    getContract(address: string, chain?: number): Promise<SmartContract<ThirdwebContract>>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getContractFromAbi" is marked as @beta, but its signature references "ChainIdOrName" which is marked as @internal
+    //
     // @beta
-    getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ThirdwebContract>;
+    getContractFromAbi(address: string, abi: ContractInterface, chain?: ChainIdOrName): SmartContract<ThirdwebContract>;
     getContractList(walletAddress: string): Promise<{
         address: string;
         contractType: "custom" | "token" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
-    getEdition(address: string): Edition;
-    getEditionDrop(address: string): EditionDrop;
-    getMarketplace(address: string): Marketplace;
+    getEdition(address: string): Promise<Edition>;
+    getEditionDrop(address: string): Promise<EditionDrop>;
+    getMarketplace(address: string): Promise<Marketplace>;
     // @beta
-    getMultiwrap(address: string): Multiwrap;
-    getNFTCollection(address: string): NFTCollection;
-    getNFTDrop(contractAddress: string): NFTDrop;
-    getPack(address: string): Pack;
+    getMultiwrap(address: string): Promise<Multiwrap>;
+    getNFTCollection(address: string): Promise<NFTCollection>;
+    getNFTDrop(contractAddress: string): Promise<NFTDrop>;
+    getPack(address: string): Promise<Pack>;
     // Warning: (ae-forgotten-export) The symbol "ContractPublisher" needs to be exported by the entry point index.d.ts
     //
     // @internal (undocumented)
     getPublisher(): ContractPublisher;
     // @internal
-    getSignatureDrop(contractAddress: string): SignatureDrop;
-    getSplit(address: string): Split;
-    getToken(address: string): Token;
-    getTokenDrop(address: string): TokenDrop;
-    getVote(address: string): Vote;
+    getSignatureDrop(contractAddress: string): Promise<SignatureDrop>;
+    getSplit(address: string): Promise<Split>;
+    getToken(address: string): Promise<Token>;
+    getTokenDrop(address: string): Promise<TokenDrop>;
+    getVote(address: string): Promise<Vote>;
     // (undocumented)
     resolveContractType(contractAddress: string): Promise<ContractType>;
     storage: RemoteStorage;
@@ -5648,6 +5684,10 @@ export type WrappedTokens = {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/src/core/types.d.ts:48:5 - (ae-incompatible-release-tags) The symbol "chainId" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 

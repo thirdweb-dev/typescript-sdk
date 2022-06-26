@@ -9,7 +9,7 @@ Get an instance of a Pack contract
 <b>Signature:</b>
 
 ```typescript
-getPack(address: string): Pack;
+getPack(address: string): Promise<Pack>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ getPack(address: string): Pack;
 
 <b>Returns:</b>
 
-[Pack](./sdk.pack.md)
+Promise&lt;[Pack](./sdk.pack.md)<!-- -->&gt;
 
 the contract
 

@@ -12,7 +12,7 @@ Get an instance of a Custom contract from a json ABI
 <b>Signature:</b>
 
 ```typescript
-getContractFromAbi(address: string, abi: ContractInterface): SmartContract<import("contracts").ThirdwebContract>;
+getContractFromAbi(address: string, abi: ContractInterface, chain?: ChainIdOrName): SmartContract<import("contracts").ThirdwebContract>;
 ```
 
 ## Parameters
@@ -21,6 +21,7 @@ getContractFromAbi(address: string, abi: ContractInterface): SmartContract<impor
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
 |  abi | ContractInterface | the JSON abi |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional the chain (id or name) of the contract (defaults to the SDK chainId) |
 
 <b>Returns:</b>
 

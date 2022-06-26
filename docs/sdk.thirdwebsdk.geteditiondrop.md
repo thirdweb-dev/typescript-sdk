@@ -9,7 +9,7 @@ Get an instance of a Edition Drop contract
 <b>Signature:</b>
 
 ```typescript
-getEditionDrop(address: string): EditionDrop;
+getEditionDrop(address: string): Promise<EditionDrop>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ getEditionDrop(address: string): EditionDrop;
 
 <b>Returns:</b>
 
-[EditionDrop](./sdk.editiondrop.md)
+Promise&lt;[EditionDrop](./sdk.editiondrop.md)<!-- -->&gt;
 
 the contract
 

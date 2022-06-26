@@ -35,8 +35,8 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 |  [fromPrivateKey(privateKey, chain, options, storage)](./sdk.thirdwebsdk.fromprivatekey.md) | <code>static</code> | <b><i>(BETA)</i></b> Get an instance of the thirdweb SDK based on a private key. |
 |  [fromSigner(signer, chain, options, storage)](./sdk.thirdwebsdk.fromsigner.md) | <code>static</code> | <b><i>(BETA)</i></b> Get an instance of the thirdweb SDK based on an existing ethers signer |
 |  [getBalance(address)](./sdk.thirdwebsdk.getbalance.md) |  | Get the native balance of a given address (wallet or contract) |
-|  [getContract(address)](./sdk.thirdwebsdk.getcontract.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom ThirdwebContract |
-|  [getContractFromAbi(address, abi)](./sdk.thirdwebsdk.getcontractfromabi.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom contract from a json ABI |
+|  [getContract(address, chain)](./sdk.thirdwebsdk.getcontract.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom ThirdwebContract |
+|  [getContractFromAbi(address, abi, chain)](./sdk.thirdwebsdk.getcontractfromabi.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom contract from a json ABI |
 |  [getContractList(walletAddress)](./sdk.thirdwebsdk.getcontractlist.md) |  | Return all the contracts deployed by the specified address |
 |  [getEdition(address)](./sdk.thirdwebsdk.getedition.md) |  | Get an instance of an Edition contract |
 |  [getEditionDrop(address)](./sdk.thirdwebsdk.geteditiondrop.md) |  | Get an instance of a Edition Drop contract |

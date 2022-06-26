@@ -9,7 +9,7 @@ Get an instance of a Splits contract
 <b>Signature:</b>
 
 ```typescript
-getSplit(address: string): Split;
+getSplit(address: string): Promise<Split>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ getSplit(address: string): Split;
 
 <b>Returns:</b>
 
-[Split](./sdk.split.md)
+Promise&lt;[Split](./sdk.split.md)<!-- -->&gt;
 
 the contract
 

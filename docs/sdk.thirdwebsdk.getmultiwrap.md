@@ -12,7 +12,7 @@ Get an instance of a Multiwrap contract
 <b>Signature:</b>
 
 ```typescript
-getMultiwrap(address: string): Multiwrap;
+getMultiwrap(address: string): Promise<Multiwrap>;
 ```
 
 ## Parameters
@@ -23,7 +23,7 @@ getMultiwrap(address: string): Multiwrap;
 
 <b>Returns:</b>
 
-[Multiwrap](./sdk.multiwrap.md)
+Promise&lt;[Multiwrap](./sdk.multiwrap.md)<!-- -->&gt;
 
 the contract
 

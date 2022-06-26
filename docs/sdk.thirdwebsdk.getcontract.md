@@ -12,7 +12,7 @@ Get an instance of a Custom ThirdwebContract
 <b>Signature:</b>
 
 ```typescript
-getContract(address: string): Promise<SmartContract<import("contracts").ThirdwebContract>>;
+getContract(address: string, chain?: number): Promise<SmartContract<import("contracts").ThirdwebContract>>;
 ```
 
 ## Parameters
@@ -20,6 +20,7 @@ getContract(address: string): Promise<SmartContract<import("contracts").Thirdweb
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
+|  chain | number | <i>(Optional)</i> optional the chain (id or name) of the contract (defaults to the SDK chainId) |
 
 <b>Returns:</b>
 

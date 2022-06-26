@@ -9,7 +9,7 @@ Get an instance of a Drop contract
 <b>Signature:</b>
 
 ```typescript
-getNFTDrop(contractAddress: string): NFTDrop;
+getNFTDrop(contractAddress: string): Promise<NFTDrop>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ getNFTDrop(contractAddress: string): NFTDrop;
 
 <b>Returns:</b>
 
-[NFTDrop](./sdk.nftdrop.md)
+Promise&lt;[NFTDrop](./sdk.nftdrop.md)<!-- -->&gt;
 
 the contract
 

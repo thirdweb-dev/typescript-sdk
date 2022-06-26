@@ -1,5 +1,6 @@
 import { BigNumber, BytesLike, CallOverrides, Signer, providers } from "ethers";
 import type { CONTRACTS_MAP, KNOWN_CONTRACTS_MAP } from "../contracts/maps";
+import { ChainIdOrName } from "../constants/index";
 
 // --- utility types extracted from from ts-toolbelt --- //
 
@@ -76,6 +77,11 @@ export type TransactionResult<T = never> = If<
   Omit<TransactionResultWithMetadata, "data">,
   TransactionResultWithMetadata<T>
 >;
+
+export type ChainAndAddress = {
+  chainId: ChainIdOrName;
+  address: string;
+};
 
 /**
  * Forward Request Message that's used for gasless transaction

@@ -9,7 +9,7 @@ Get an instance of a Vote contract
 <b>Signature:</b>
 
 ```typescript
-getVote(address: string): Vote;
+getVote(address: string): Promise<Vote>;
 ```
 
 ## Parameters
@@ -20,7 +20,7 @@ getVote(address: string): Vote;
 
 <b>Returns:</b>
 
-[Vote](./sdk.vote.md)
+Promise&lt;[Vote](./sdk.vote.md)<!-- -->&gt;
 
 the contract
 
