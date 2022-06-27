@@ -73,15 +73,20 @@ export class ContractEvents<TContract extends BaseContract> {
       eventName as string,
     );
 
-    const wrappedListener = (...args: unknown[]) => {
-      // convert event info into nice object with named properties
-      const results = this.toContractEvent(event, args);
-      listener(results);
+    const address = this.contractWrapper.readContract.address;
+    const filter = { address, topics: [event.name] };
+
+    const wrappedListener = (log: providers.Log) => {
+      const parsedLog =
+        this.contractWrapper.readContract.interface.parseLog(log);
+      listener(
+        this.toContractEvent(parsedLog.eventFragment, parsedLog.args, log),
+      );
     };
 
-    this.contractWrapper.readContract.on(event.name, wrappedListener);
+    this.contractWrapper.getProvider().on(filter, wrappedListener);
     return () => {
-      this.contractWrapper.readContract.off(event.name, wrappedListener);
+      this.contractWrapper.getProvider().off(filter, wrappedListener);
     };
   }
 
@@ -103,11 +108,14 @@ export class ContractEvents<TContract extends BaseContract> {
     const address = this.contractWrapper.readContract.address;
     const filter = { address };
 
-    const wrappedListener = (log: { topics: Array<string>; data: string }) => {
+    const wrappedListener = (log: providers.Log) => {
       try {
         const parsedLog =
           this.contractWrapper.readContract.interface.parseLog(log);
-        listener(this.toContractEvent(parsedLog.eventFragment, parsedLog.args));
+
+        listener(
+          this.toContractEvent(parsedLog.eventFragment, parsedLog.args, log),
+        );
       } catch (e) {
         console.error("Could not parse event:", log, e);
       }
@@ -283,9 +291,10 @@ export class ContractEvents<TContract extends BaseContract> {
   private toContractEvent(
     event: EventFragment,
     args: ReadonlyArray<any>,
+    rawLog: providers.Log,
   ): ContractEvent {
     const transaction = Object.fromEntries(
-      Object.entries(event).filter(
+      Object.entries(rawLog).filter(
         (a) => typeof a[1] !== "function" && a[0] !== "args",
       ),
     ) as providers.Log;
