@@ -91,14 +91,14 @@ export const Signature1155PayloadOutput = Signature721PayloadOutput.extend({
  */
 export const Signature721WithQuantityInput = Signature721PayloadInput.extend({
   metadata: NFTInputOrUriSchema.default(""),
-  quantity: BigNumberishSchema,
+  quantity: BigNumberSchema.default(1),
 });
 
 /**
  * @internal
  */
 export const Signature721WithQuantityOutput = Signature721PayloadOutput.extend({
-  quantity: BigNumberSchema,
+  quantity: BigNumberSchema.default(1),
 });
 
 /**
