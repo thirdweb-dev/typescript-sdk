@@ -79,22 +79,11 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
 
-    let isNFT = false;
-
-    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
-      const contractType = ethers.utils.toUtf8String(
-        await this.contractWrapper.readContract.contractType(),
-      );
-
-      isNFT = this.isNFTCollection(
-        this.contractWrapper.readContract,
-        contractType,
-      );
-    }
+    const isLegacyNFTContract = await this.isNFTCollection();
 
     let message;
     let price;
-    if (isNFT) {
+    if (isLegacyNFTContract) {
       message = await this.mapTokenPayloadToContractStruct(mintRequest);
       price = message.price;
     } else {
@@ -138,24 +127,13 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   public async mintBatch(
     signedPayloads: SignedPayload721WithQuantitySignature[],
   ): Promise<TransactionResultWithId[]> {
-    let isNFT = false;
-
-    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
-      const contractType = ethers.utils.toUtf8String(
-        await this.contractWrapper.readContract.contractType(),
-      );
-
-      isNFT = this.isNFTCollection(
-        this.contractWrapper.readContract,
-        contractType,
-      );
-    }
+    const isLegacyNFTContract = await this.isNFTCollection();
 
     const contractPayloads = await Promise.all(
       signedPayloads.map(async (s) => {
         let message;
 
-        if (isNFT) {
+        if (isLegacyNFTContract) {
           message = await this.mapTokenPayloadToContractStruct(s.payload);
         } else {
           message = await this.mapPayloadToContractStruct(s.payload);
@@ -175,7 +153,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
       }),
     );
     const encoded = contractPayloads.map((p) => {
-      if (isNFT) {
+      if (isLegacyNFTContract) {
         const contract = this.contractWrapper.readContract as TokenERC721;
         return contract.interface.encodeFunctionData("mintWithSignature", [
           p.message as ITokenERC721.MintRequestStructOutput,
@@ -212,25 +190,15 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   public async verify(
     signedPayload: SignedPayload721WithQuantitySignature,
   ): Promise<boolean> {
-    let isNFT = false;
+    const isLegacyNFTContract = await this.isNFTCollection();
 
-    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
-      const contractType = ethers.utils.toUtf8String(
-        await this.contractWrapper.readContract.contractType(),
-      );
-
-      isNFT = this.isNFTCollection(
-        this.contractWrapper.readContract,
-        contractType,
-      );
-    }
     let mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
 
     let message;
     let verification: [boolean, string];
 
-    if (isNFT) {
+    if (isLegacyNFTContract) {
       const contract = this.contractWrapper.readContract as TokenERC721;
       message = await this.mapTokenPayloadToContractStruct(mintRequest);
       verification = await contract.verify(message, signature);
@@ -294,25 +262,14 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   public async generateBatch(
     payloadsToSign: PayloadToSign721withQuantity[] | PayloadToSign721[],
   ): Promise<SignedPayload721WithQuantitySignature[]> {
-    let isNFT = false;
-
-    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
-      const contractType = ethers.utils.toUtf8String(
-        await this.contractWrapper.readContract.contractType(),
-      );
-
-      isNFT = this.isNFTCollection(
-        this.contractWrapper.readContract,
-        contractType,
-      );
-    }
+    const isLegacyNFTContract = await this.isNFTCollection();
 
     await this.roles?.verify(
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );
     let parsedRequests;
-    if (isNFT) {
+    if (isLegacyNFTContract) {
       parsedRequests = payloadsToSign.map((m) =>
         Signature721PayloadInput.parse(m),
       );
@@ -337,7 +294,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
         });
         let signature;
 
-        if (isNFT) {
+        if (isLegacyNFTContract) {
           signature = await this.contractWrapper.signTypedData(
             signer,
             {
@@ -428,10 +385,16 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     } as ITokenERC721.MintRequestStructOutput;
   }
 
-  private isNFTCollection(
-    _contract: ISignatureMintERC721 | TokenERC721,
-    contractType: string,
-  ): _contract is TokenERC721 {
-    return contractType.includes("TokenERC721");
+  private async isNFTCollection() {
+    let contractType;
+    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
+      contractType = ethers.utils.toUtf8String(
+        await this.contractWrapper.readContract.contractType(),
+      );
+    } else {
+      contractType = "";
+    }
+
+    return !!contractType.includes("TokenERC721");
   }
 }
