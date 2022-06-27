@@ -1,9 +1,9 @@
-import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
-import {assert} from "chai";
-import {ethers} from "ethers";
-import {ethers as hardhatEthers} from "hardhat";
-import {sdk, signers} from "./before-setup";
-import {Token, Vote} from "../src";
+import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
+import { assert } from "chai";
+import { ethers } from "ethers";
+import { ethers as hardhatEthers } from "hardhat";
+import { sdk, signers } from "./before-setup";
+import { Token, Vote } from "../src";
 
 global.fetch = require("cross-fetch");
 
@@ -40,7 +40,7 @@ describe("Vote Contract", async () => {
         proposal_token_threshold: ethers.utils.parseUnits("1", 18),
       },
     );
-    voteContract = await .getVote(voteContractAddress);
+    voteContract = await sdk.getVote(voteContractAddress);
 
     // step 1: mint 1000 governance tokens to my wallet
     await currencyContract.mintTo(samWallet.address, "100");
@@ -107,20 +107,6 @@ describe("Vote Contract", async () => {
     }
 
     await voteContract.execute(proposalId.toString());
-  });
-  it.skip("", async () => {
-    const blockTimes = [];
-    const provider = ethers.getDefaultProvider();
-
-    const latest = await provider.getBlock("latest");
-    for (let i = 0; i <= 10; i++) {
-      const current = await provider.getBlock(latest.number - i);
-      const previous = await provider.getBlock(latest.number - i - 1);
-      const diff = current.timestamp - previous.timestamp;
-      blockTimes.push(diff);
-    }
-
-    const sum = blockTimes.reduce((result, a) => result + a, 0);
   });
 
   it("should permit a proposal to be passed if it receives the right votes", async () => {
