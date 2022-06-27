@@ -6,14 +6,12 @@ import { ContractRegistry } from "../src/core/classes/registry";
 describe("Contract Registry", () => {
   let registry: ContractRegistry;
 
-  let adminWallet: SignerWithAddress,
-    samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
+  let adminWallet: SignerWithAddress;
 
   let address: string;
 
   before(async () => {
-    [adminWallet, samWallet, bobWallet] = signers;
+    [adminWallet] = signers;
   });
 
   it("should allow adding and removing contracts", async () => {

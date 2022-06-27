@@ -9,7 +9,7 @@ Get an instance of a Marketplace contract
 <b>Signature:</b>
 
 ```typescript
-getMarketplace(address: string): Marketplace;
+getMarketplace(address: string, chain?: ChainIdOrName): Promise<Marketplace>;
 ```
 
 ## Parameters
@@ -17,10 +17,11 @@ getMarketplace(address: string): Marketplace;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to) |
 
 <b>Returns:</b>
 
-[Marketplace](./sdk.marketplace.md)
+Promise&lt;[Marketplace](./sdk.marketplace.md)<!-- -->&gt;
 
 the contract
 

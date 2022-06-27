@@ -9,7 +9,7 @@ Get an instance of a Token Drop contract
 <b>Signature:</b>
 
 ```typescript
-getTokenDrop(address: string): TokenDrop;
+getTokenDrop(address: string, chain?: ChainIdOrName): Promise<TokenDrop>;
 ```
 
 ## Parameters
@@ -17,10 +17,11 @@ getTokenDrop(address: string): TokenDrop;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to) |
 
 <b>Returns:</b>
 
-[TokenDrop](./sdk.tokendrop.md)
+Promise&lt;[TokenDrop](./sdk.tokendrop.md)<!-- -->&gt;
 
 the contract
 

@@ -314,6 +314,14 @@ export async function fetchSourceFilesFromMetadata(
   return await Promise.all(
     Object.entries(publishedMetadata.metadata.sources).map(
       async ([path, info]) => {
+        // standard metadata can contain either the full source inline
+        if ((info as any).content) {
+          return {
+            filename: path,
+            source: (info as any).content,
+          };
+        }
+        // or a URL to it
         const urls = (info as any).urls as string[];
         const ipfsLink = urls.find((url) => url.includes("ipfs"));
         if (ipfsLink) {

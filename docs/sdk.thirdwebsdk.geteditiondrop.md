@@ -9,7 +9,7 @@ Get an instance of a Edition Drop contract
 <b>Signature:</b>
 
 ```typescript
-getEditionDrop(address: string): EditionDrop;
+getEditionDrop(address: string, chain?: ChainIdOrName): Promise<EditionDrop>;
 ```
 
 ## Parameters
@@ -17,10 +17,11 @@ getEditionDrop(address: string): EditionDrop;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to) |
 
 <b>Returns:</b>
 
-[EditionDrop](./sdk.editiondrop.md)
+Promise&lt;[EditionDrop](./sdk.editiondrop.md)<!-- -->&gt;
 
 the contract
 

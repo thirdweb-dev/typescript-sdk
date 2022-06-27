@@ -23,16 +23,16 @@ export declare class ContractDeployer extends RPCConnectionHandler
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [deployEdition(metadata)](./sdk.contractdeployer.deployedition.md) |  | Deploys a new Edition contract |
-|  [deployEditionDrop(metadata)](./sdk.contractdeployer.deployeditiondrop.md) |  | Deploys a new EditionDrop contract |
-|  [deployMarketplace(metadata)](./sdk.contractdeployer.deploymarketplace.md) |  | Deploys a new Marketplace contract |
-|  [deployMultiwrap(metadata)](./sdk.contractdeployer.deploymultiwrap.md) |  | <b><i>(BETA)</i></b> Deploys a new Multiwrap contract |
-|  [deployNFTCollection(metadata)](./sdk.contractdeployer.deploynftcollection.md) |  | Deploys an NFT Collection contract |
-|  [deployNFTDrop(metadata)](./sdk.contractdeployer.deploynftdrop.md) |  | Deploys a new NFTDrop contract |
-|  [deployPack(metadata)](./sdk.contractdeployer.deploypack.md) |  | Deploys a new Pack contract |
-|  [deploySplit(metadata)](./sdk.contractdeployer.deploysplit.md) |  | Deploys a new Split contract |
-|  [deployToken(metadata)](./sdk.contractdeployer.deploytoken.md) |  | Deploys a new Token contract |
-|  [deployTokenDrop(metadata)](./sdk.contractdeployer.deploytokendrop.md) |  | Deploys a new Token Drop contract |
-|  [deployVote(metadata)](./sdk.contractdeployer.deployvote.md) |  | Deploys a new Vote contract |
+|  [deployEdition(metadata, chain)](./sdk.contractdeployer.deployedition.md) |  | Deploys a new Edition contract |
+|  [deployEditionDrop(metadata, chain)](./sdk.contractdeployer.deployeditiondrop.md) |  | Deploys a new EditionDrop contract |
+|  [deployMarketplace(metadata, chain)](./sdk.contractdeployer.deploymarketplace.md) |  | Deploys a new Marketplace contract |
+|  [deployMultiwrap(metadata, chain)](./sdk.contractdeployer.deploymultiwrap.md) |  | <b><i>(BETA)</i></b> Deploys a new Multiwrap contract |
+|  [deployNFTCollection(metadata, chain)](./sdk.contractdeployer.deploynftcollection.md) |  | Deploys an NFT Collection contract |
+|  [deployNFTDrop(metadata, chain)](./sdk.contractdeployer.deploynftdrop.md) |  | Deploys a new NFTDrop contract |
+|  [deployPack(metadata, chain)](./sdk.contractdeployer.deploypack.md) |  | Deploys a new Pack contract |
+|  [deploySplit(metadata, chain)](./sdk.contractdeployer.deploysplit.md) |  | Deploys a new Split contract |
+|  [deployToken(metadata, chain)](./sdk.contractdeployer.deploytoken.md) |  | Deploys a new Token contract |
+|  [deployTokenDrop(metadata, chain)](./sdk.contractdeployer.deploytokendrop.md) |  | Deploys a new Token Drop contract |
+|  [deployVote(metadata, chain)](./sdk.contractdeployer.deployvote.md) |  | Deploys a new Vote contract |
 |  [updateSigner(signer)](./sdk.contractdeployer.updatesigner.md) |  |  |
 

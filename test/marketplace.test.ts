@@ -33,7 +33,7 @@ let tokenAddress = NATIVE_TOKEN_ADDRESS;
 describe("Marketplace Contract", async () => {
   let marketplaceContract: Marketplace;
   let dummyNftContract: NFTCollection;
-  let dummyBundleContract: Edition;
+  let dummyEditionContract: Edition;
   let customTokenContract: Token;
 
   let adminWallet: SignerWithAddress,
@@ -51,13 +51,13 @@ describe("Marketplace Contract", async () => {
 
     await sdk.wallet.connect(adminWallet);
 
-    marketplaceContract = sdk.getMarketplace(
+    marketplaceContract = await sdk.getMarketplace(
       await sdk.deployer.deployBuiltInContract(Marketplace.contractType, {
         name: "Test Marketplace",
         seller_fee_basis_points: 0,
       }),
     );
-    dummyNftContract = sdk.getNFTCollection(
+    dummyNftContract = await sdk.getNFTCollection(
       await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
         name: "TEST NFT",
         seller_fee_basis_points: 200,
@@ -79,14 +79,14 @@ describe("Marketplace Contract", async () => {
         name: "Test 4",
       },
     ]);
-    dummyBundleContract = sdk.getEdition(
+    dummyEditionContract = await sdk.getEdition(
       await sdk.deployer.deployBuiltInContract(Edition.contractType, {
-        name: "TEST BUNDLE",
+        name: "TEST EDITION",
         seller_fee_basis_points: 100,
         primary_sale_recipient: adminWallet.address,
       }),
     );
-    await dummyBundleContract.mintBatch([
+    await dummyEditionContract.mintBatch([
       {
         metadata: {
           name: "Test 0",
@@ -101,7 +101,7 @@ describe("Marketplace Contract", async () => {
       },
     ]);
 
-    customTokenContract = sdk.getToken(
+    customTokenContract = await sdk.getToken(
       await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
@@ -191,7 +191,7 @@ describe("Marketplace Contract", async () => {
 
     it("should list direct listings with 1155s", async () => {
       const listingId = await createDirectListing(
-        dummyBundleContract.getAddress(),
+        dummyEditionContract.getAddress(),
         0,
         10,
       );
@@ -217,10 +217,10 @@ describe("Marketplace Contract", async () => {
 
     it("should be able to restrict listing", async () => {
       await marketplaceContract.allowListingFromSpecificAssetOnly(
-        dummyBundleContract.getAddress(),
+        dummyEditionContract.getAddress(),
       );
       const listingId = await createDirectListing(
-        dummyBundleContract.getAddress(),
+        dummyEditionContract.getAddress(),
         0,
         10,
       );
@@ -239,15 +239,15 @@ describe("Marketplace Contract", async () => {
       await createDirectListing(dummyNftContract.getAddress(), 0);
       await createAuctionListing(dummyNftContract.getAddress(), 1);
 
-      await createDirectListing(dummyBundleContract.getAddress(), 0, 10);
-      await createAuctionListing(dummyBundleContract.getAddress(), 0, 10);
+      await createDirectListing(dummyEditionContract.getAddress(), 0, 10);
+      await createAuctionListing(dummyEditionContract.getAddress(), 0, 10);
 
-      await dummyBundleContract.transfer(samWallet.address, "0", 10);
-      await dummyBundleContract.transfer(samWallet.address, "1", 10);
+      await dummyEditionContract.transfer(samWallet.address, "0", 10);
+      await dummyEditionContract.transfer(samWallet.address, "1", 10);
 
       await sdk.wallet.connect(samWallet);
-      await createDirectListing(dummyBundleContract.getAddress(), 0, 10);
-      await createAuctionListing(dummyBundleContract.getAddress(), 1, 10);
+      await createDirectListing(dummyEditionContract.getAddress(), 0, 10);
+      await createAuctionListing(dummyEditionContract.getAddress(), 1, 10);
     });
 
     it("should paginate properly", async () => {
@@ -267,7 +267,7 @@ describe("Marketplace Contract", async () => {
 
     it("should filter asset contract properly", async () => {
       const listings = await marketplaceContract.getAllListings({
-        tokenContract: dummyBundleContract.getAddress(),
+        tokenContract: dummyEditionContract.getAddress(),
       });
       assert.equal(listings.length, 4, "filter doesn't work");
     });
@@ -712,7 +712,7 @@ describe("Marketplace Contract", async () => {
     it("should allow an auction buyout", async () => {
       const id = (
         await marketplaceContract.auction.createListing({
-          assetContractAddress: dummyBundleContract.getAddress(),
+          assetContractAddress: dummyEditionContract.getAddress(),
           buyoutPricePerToken: 0.8,
           currencyContractAddress: tokenAddress,
           // to start tomorrow so we can update it
@@ -726,7 +726,7 @@ describe("Marketplace Contract", async () => {
       await sdk.wallet.connect(bobWallet);
       await marketplaceContract.buyoutListing(id);
 
-      const balance = await dummyBundleContract.balanceOf(
+      const balance = await dummyEditionContract.balanceOf(
         bobWallet.address,
         "1",
       );

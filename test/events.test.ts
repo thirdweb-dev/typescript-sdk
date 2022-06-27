@@ -1,14 +1,7 @@
-import { ethers, Wallet } from "ethers";
+import { ethers } from "ethers";
 import { sdk, signers } from "./before-setup";
-import { EventType } from "../src/constants/events";
 import { expect } from "chai";
-import {
-  ContractEvent,
-  NFTDrop,
-  ThirdwebSDK,
-  NFTCollection,
-  ChainId,
-} from "../src";
+import { ContractEvent, NFTCollection, NFTDrop } from "../src";
 import { AddressZero } from "@ethersproject/constants";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 
@@ -17,16 +10,14 @@ global.fetch = require("cross-fetch");
 describe("Events", async () => {
   let dropContract: NFTDrop;
   let nftContract: NFTCollection;
-  let adminWallet: SignerWithAddress,
-    samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
+  let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
   before(() => {
-    [adminWallet, samWallet, bobWallet] = signers;
+    [adminWallet, samWallet] = signers;
   });
 
   beforeEach(async () => {
-    dropContract = sdk.getNFTDrop(
+    dropContract = await sdk.getNFTDrop(
       await sdk.deployer.deployBuiltInContract(NFTDrop.contractType, {
         name: `Testing drop from SDK`,
         description: "Test contract from tests",
@@ -40,7 +31,7 @@ describe("Events", async () => {
       }),
     );
 
-    nftContract = sdk.getNFTCollection(
+    nftContract = await sdk.getNFTCollection(
       await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
         name: "NFT Contract",
         description: "Test NFT contract from tests",
@@ -86,29 +77,6 @@ describe("Events", async () => {
     dropContract.events.removeAllListeners();
     expect(events.length).to.be.gt(0);
     expect(events.map((e) => e.eventName)).to.include("TokensLazyMinted");
-  });
-
-  // TODO
-  it.skip("should emit Signature events", async () => {
-    const RPC_URL = "https://rpc-mumbai.maticvigil.com/";
-    const provider = ethers.getDefaultProvider(RPC_URL);
-    const wallet = Wallet.createRandom().connect(provider);
-    const esdk = ThirdwebSDK.fromSigner(wallet, ChainId.Hardhat, {
-      gasless: {
-        openzeppelin: {
-          relayerUrl: "https://google.com", // TODO test relayer url?
-        },
-      },
-    });
-    sdk.on(EventType.Transaction, (event) => {
-      console.log(event);
-    });
-    sdk.on(EventType.Signature, (event) => {
-      console.log(event);
-    });
-    await esdk
-      .getNFTDrop(dropContract.getAddress())
-      .setApprovalForAll(ethers.constants.AddressZero, true);
   });
 
   it("should return single event", async () => {

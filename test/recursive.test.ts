@@ -4,6 +4,8 @@ import { IpfsStorage, JsonObject } from "../src";
 const ipfsGatewayUrl = "https://ipfs.thirdweb.com/ipfs/";
 const storage = new IpfsStorage(ipfsGatewayUrl);
 
+global.fetch = require("cross-fetch");
+
 describe("Recursive Testing", async () => {
   let json: JsonObject;
   beforeEach(async () => {

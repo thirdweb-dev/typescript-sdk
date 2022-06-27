@@ -11,9 +11,6 @@ describe("Vote Contract", async () => {
   let voteContract: Vote;
   let currencyContract: Token;
 
-  const voteStartWaitTimeInSeconds = 0;
-  const voteWaitTimeInSeconds = 5;
-
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -33,7 +30,7 @@ describe("Vote Contract", async () => {
         primary_sale_recipient: adminWallet.address,
       },
     );
-    currencyContract = sdk.getToken(tokenContractAddress);
+    currencyContract = await sdk.getToken(tokenContractAddress);
     const voteContractAddress = await sdk.deployer.deployBuiltInContract(
       Vote.contractType,
       {
@@ -43,7 +40,7 @@ describe("Vote Contract", async () => {
         proposal_token_threshold: ethers.utils.parseUnits("1", 18),
       },
     );
-    voteContract = sdk.getVote(voteContractAddress);
+    voteContract = await sdk.getVote(voteContractAddress);
 
     // step 1: mint 1000 governance tokens to my wallet
     await currencyContract.mintTo(samWallet.address, "100");
@@ -110,20 +107,6 @@ describe("Vote Contract", async () => {
     }
 
     await voteContract.execute(proposalId.toString());
-  });
-  it.skip("", async () => {
-    const blockTimes = [];
-    const provider = ethers.getDefaultProvider();
-
-    const latest = await provider.getBlock("latest");
-    for (let i = 0; i <= 10; i++) {
-      const current = await provider.getBlock(latest.number - i);
-      const previous = await provider.getBlock(latest.number - i - 1);
-      const diff = current.timestamp - previous.timestamp;
-      blockTimes.push(diff);
-    }
-
-    const sum = blockTimes.reduce((result, a) => result + a, 0);
   });
 
   it("should permit a proposal to be passed if it receives the right votes", async () => {

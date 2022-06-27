@@ -82,6 +82,10 @@ export class ContractWrapper<
     ) as TContract;
   }
 
+  public getAddress(): string {
+    return this.readContract.address;
+  }
+
   /**
    * @internal
    */

@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import { PayloadToSign20, SignedPayload20, Token } from "../src";
 import { sdk, signers } from "./before-setup";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
@@ -23,7 +23,7 @@ describe("Token sig minting", async () => {
   beforeEach(async () => {
     sdk.wallet.connect(adminWallet);
 
-    contract = sdk.getToken(
+    contract = await sdk.getToken(
       await sdk.deployer.deployToken({
         name: "Token sigmint",
         symbol: "TSIG",
@@ -39,7 +39,7 @@ describe("Token sig minting", async () => {
       primarySaleRecipient: adminWallet.address,
     };
 
-    customTokenContract = sdk.getToken(
+    customTokenContract = await sdk.getToken(
       await sdk.deployer.deployToken({
         name: "Test",
         symbol: "TEST",

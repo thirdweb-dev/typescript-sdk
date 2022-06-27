@@ -35,7 +35,7 @@ export class RPCConnectionHandler extends EventEmitter {
           connection.chainId,
           this.options.chainIdToRPCUrlMap,
         );
-    this.signer = connection.signer;
+    this.signer = this.maybeConnectSigner(connection.signer);
   }
 
   /**
@@ -45,12 +45,12 @@ export class RPCConnectionHandler extends EventEmitter {
    * @internal
    */
   public updateSigner(signer: Signer | undefined) {
-    this.signer = signer;
     // TODO (rpc) - make sure we don't need to do this for type of signers
     if (this.chainId === ChainId.Hardhat) {
       // For hardhat tests - the provider inside the signer is enhanced for tests, need to use it as the provider
       this.provider = signer?.provider || this.provider;
     }
+    this.signer = this.maybeConnectSigner(signer);
   }
   /**
    *
@@ -95,5 +95,13 @@ export class RPCConnectionHandler extends EventEmitter {
       signer: this.getSigner(),
       provider: this.getProvider(),
     };
+  }
+
+  private maybeConnectSigner(signer: Signer | undefined) {
+    try {
+      return signer?.connect(this.provider);
+    } catch (e) {
+      return signer;
+    }
   }
 }

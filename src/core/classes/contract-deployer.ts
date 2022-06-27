@@ -1,7 +1,6 @@
 import { ConnectionInfo, ValidContractClass } from "../types";
 import { z } from "zod";
 import { ContractRegistry } from "./registry";
-import { getContractAddressByChainId } from "../../constants/addresses";
 import { ContractFactory } from "./factory";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces";
@@ -29,22 +28,15 @@ import {
 import { TokenDrop } from "../../contracts/token-drop";
 import { Multiwrap } from "../../contracts/multiwrap";
 import { Signer } from "ethers";
+import { ChainIdOrName, toChainId } from "../../constants/index";
 
 /**
  * Handles deploying new contracts
  * @public
  */
 export class ContractDeployer extends RPCConnectionHandler {
-  /**
-   * @internal
-   * should never be accessed directly, use {@link ContractDeployer.getFactory} instead
-   */
-  private _factory: Promise<ContractFactory> | undefined;
-  /**
-   * @internal
-   * should never be accessed directly, use {@link ContractDeployer.getRegistry} instead
-   */
-  private _registry: Promise<ContractRegistry> | undefined;
+  private registryCache = new Map<number, ContractRegistry>();
+  private factoryCache = new Map<number, ContractFactory>();
   private storage: IStorage;
 
   constructor(
@@ -69,14 +61,17 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployNFTCollection(
     metadata: NFTContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
     return await this.deployBuiltInContract(
       NFTCollection.contractType,
       metadata,
+      chain,
     );
   }
 
@@ -93,12 +88,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployNFTDrop(
     metadata: NFTContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(NFTDrop.contractType, metadata);
+    return await this.deployBuiltInContract(
+      NFTDrop.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -114,15 +115,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    * @internal
    */
   public async deploySignatureDrop(
     metadata: NFTContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
     return await this.deployBuiltInContract(
       SignatureDrop.contractType,
       metadata,
+      chain,
     );
   }
 
@@ -138,13 +142,19 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    * @beta
    */
   public async deployMultiwrap(
     metadata: MultiwrapContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Multiwrap.contractType, metadata);
+    return await this.deployBuiltInContract(
+      Multiwrap.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -160,12 +170,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployEdition(
     metadata: NFTContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Edition.contractType, metadata);
+    return await this.deployBuiltInContract(
+      Edition.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -181,13 +197,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployEditionDrop(
     metadata: NFTContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    const parsed = EditionDrop.schema.deploy.parse(metadata);
-    return await this.deployBuiltInContract(EditionDrop.contractType, parsed);
+    return await this.deployBuiltInContract(
+      EditionDrop.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -203,12 +224,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployToken(
     metadata: TokenContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Token.contractType, metadata);
+    return await this.deployBuiltInContract(
+      Token.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -224,12 +251,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployTokenDrop(
     metadata: TokenContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(TokenDrop.contractType, metadata);
+    return await this.deployBuiltInContract(
+      TokenDrop.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -245,12 +278,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployMarketplace(
     metadata: MarketplaceContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Marketplace.contractType, metadata);
+    return await this.deployBuiltInContract(
+      Marketplace.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -266,12 +305,14 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployPack(
     metadata: NFTContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Pack.contractType, metadata);
+    return await this.deployBuiltInContract(Pack.contractType, metadata, chain);
   }
 
   /**
@@ -297,12 +338,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deploySplit(
     metadata: SplitContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Split.contractType, metadata);
+    return await this.deployBuiltInContract(
+      Split.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -319,12 +366,14 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployVote(
     metadata: VoteContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Vote.contractType, metadata);
+    return await this.deployBuiltInContract(Vote.contractType, metadata, chain);
   }
 
   /**
@@ -333,77 +382,72 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @internal
    * @param contractType - the type of contract to deploy
    * @param contractMetadata - the metadata to deploy the contract with
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns a promise of the address of the newly deployed contract
    */
   public async deployBuiltInContract<TContract extends ValidContractClass>(
     contractType: TContract["contractType"],
     contractMetadata: z.input<TContract["schema"]["deploy"]>,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    const factory = await this.getFactory();
+    const factory = await this.getFactory(chain);
     return await factory.deploy(contractType, contractMetadata);
   }
 
   /**
    * @internal
    */
-  public async getRegistry(): Promise<ContractRegistry> {
-    // if we already have a registry just return it back
-    if (this._registry) {
-      return this._registry;
+  public async getRegistry(
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<ContractRegistry> {
+    const chainId = toChainId(chain);
+    if (this.registryCache.has(chainId)) {
+      return this.registryCache.get(chainId) as ContractRegistry;
     }
-
-    // otherwise get the registry address for the active chain and get a new one
-
-    // have to do it like this otherwise we run it over and over and over
-    // "this._registry" has to be assigned to the promise upfront.
-    return (this._registry = this.getProvider()
-      .getNetwork()
-      .then(async ({ chainId }) => {
-        const registryAddress = getContractAddressByChainId(
-          chainId,
-          "twRegistry",
-        );
-        return new ContractRegistry(
-          registryAddress,
-          this.getConnectionInfo(),
-          this.options,
-        );
-      }));
+    let connectionInfo = this.getConnectionInfo();
+    if (chainId !== this.getConnectionInfo().chainId) {
+      connectionInfo = {
+        chainId,
+        provider: undefined,
+        signer: connectionInfo.signer,
+      };
+    }
+    const registry = new ContractRegistry(connectionInfo, this.options);
+    this.registryCache.set(chainId, registry);
+    return registry;
   }
 
-  private async getFactory(): Promise<ContractFactory> {
-    // if we already have a factory just return it back
-    if (this._factory) {
-      return this._factory;
+  private async getFactory(
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<ContractFactory> {
+    const chainId = toChainId(chain);
+    if (this.factoryCache.has(chainId)) {
+      return this.factoryCache.get(chainId) as ContractFactory;
     }
-
-    // otherwise get the factory address for the active chain and get a new one
-
-    // have to do it like this otherwise we run it over and over and over
-    // "this._factory" has to be assigned to the promise upfront.
-    return (this._factory = this.getProvider()
-      .getNetwork()
-      .then(async ({ chainId }) => {
-        const factoryAddress = getContractAddressByChainId(
-          chainId,
-          "twFactory",
-        );
-        return new ContractFactory(
-          factoryAddress,
-          this.getConnectionInfo(),
-          this.storage,
-          this.options,
-        );
-      }));
+    let connectionInfo = this.getConnectionInfo();
+    if (chainId !== this.getConnectionInfo().chainId) {
+      connectionInfo = {
+        chainId,
+        provider: undefined,
+        signer: connectionInfo.signer,
+      };
+    }
+    const factory = new ContractFactory(
+      connectionInfo,
+      this.storage,
+      this.options,
+    );
+    this.factoryCache.set(chainId, factory);
+    return factory;
   }
 
   public override updateSigner(signer: Signer | undefined) {
     super.updateSigner(signer);
-    this._factory?.then((factory) => {
-      factory.updateSigner(signer);
-    });
-    this._registry?.then((registry) => {
-      registry.updateSigner(signer);
-    });
+    for (const [, contract] of this.registryCache) {
+      contract.updateSigner(this.getSigner());
+    }
+    for (const [, contract] of this.factoryCache) {
+      contract.updateSigner(this.getSigner());
+    }
   }
 }

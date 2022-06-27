@@ -9,7 +9,7 @@ Deploys a new Marketplace contract
 <b>Signature:</b>
 
 ```typescript
-deployMarketplace(metadata: MarketplaceContractDeployMetadata): Promise<string>;
+deployMarketplace(metadata: MarketplaceContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ deployMarketplace(metadata: MarketplaceContractDeployMetadata): Promise<string>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  metadata | [MarketplaceContractDeployMetadata](./sdk.marketplacecontractdeploymetadata.md) | the contract metadata |
+|  chain | ChainIdOrName | <i>(Optional)</i> the chain to deploy the contract to, defaults to the chain the SDK is connected to |
 
 <b>Returns:</b>
 

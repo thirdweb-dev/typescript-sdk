@@ -9,12 +9,10 @@ global.fetch = require("cross-fetch");
 describe("NFT Contract", async () => {
   type NewType = NFTCollection;
   let nftContract: NewType;
-  let adminWallet: SignerWithAddress,
-    samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
+  let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
   before(() => {
-    [adminWallet, samWallet, bobWallet] = signers;
+    [adminWallet, samWallet] = signers;
   });
 
   beforeEach(async () => {
@@ -33,7 +31,7 @@ describe("NFT Contract", async () => {
         platform_fee_recipient: AddressZero,
       },
     );
-    nftContract = sdk.getNFTCollection(address);
+    nftContract = await sdk.getNFTCollection(address);
   });
 
   it("should return nfts even if some are burned", async () => {

@@ -153,6 +153,12 @@ export type BufferOrStringWithName = {
 };
 
 // @public (undocumented)
+export type ChainAndAddress = {
+    chainId: ChainIdOrName;
+    address: string;
+};
+
+// @public (undocumented)
 export enum ChainId {
     // (undocumented)
     Arbitrum = 42161,
@@ -586,25 +592,37 @@ export const CONTRACT_ADDRESSES: Record<SUPPORTED_CHAIN_ID, {
 export class ContractDeployer extends RPCConnectionHandler {
     constructor(connection: ConnectionInfo, options: SDKOptions, storage: IStorage);
     // @internal
-    deployBuiltInContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;
-    deployEdition(metadata: NFTContractDeployMetadata): Promise<string>;
-    deployEditionDrop(metadata: NFTContractDeployMetadata): Promise<string>;
-    deployMarketplace(metadata: MarketplaceContractDeployMetadata): Promise<string>;
+    deployBuiltInContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>, chain?: ChainIdOrName): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "deployEdition" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    deployEdition(metadata: NFTContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "deployEditionDrop" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    deployEditionDrop(metadata: NFTContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "deployMarketplace" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    deployMarketplace(metadata: MarketplaceContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "deployMultiwrap" is marked as @beta, but its signature references "ChainIdOrName" which is marked as @internal
+    //
     // @beta
-    deployMultiwrap(metadata: MultiwrapContractDeployMetadata): Promise<string>;
-    deployNFTCollection(metadata: NFTContractDeployMetadata): Promise<string>;
-    deployNFTDrop(metadata: NFTContractDeployMetadata): Promise<string>;
-    deployPack(metadata: NFTContractDeployMetadata): Promise<string>;
+    deployMultiwrap(metadata: MultiwrapContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "deployNFTCollection" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    deployNFTCollection(metadata: NFTContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "deployNFTDrop" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    deployNFTDrop(metadata: NFTContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "deployPack" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    deployPack(metadata: NFTContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
     // @internal
-    deploySignatureDrop(metadata: NFTContractDeployMetadata): Promise<string>;
-    deploySplit(metadata: SplitContractDeployMetadata): Promise<string>;
-    deployToken(metadata: TokenContractDeployMetadata): Promise<string>;
-    deployTokenDrop(metadata: TokenContractDeployMetadata): Promise<string>;
-    deployVote(metadata: VoteContractDeployMetadata): Promise<string>;
+    deploySignatureDrop(metadata: NFTContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "deploySplit" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    deploySplit(metadata: SplitContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "deployToken" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    deployToken(metadata: TokenContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "deployTokenDrop" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    deployTokenDrop(metadata: TokenContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
+    // Warning: (ae-incompatible-release-tags) The symbol "deployVote" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    deployVote(metadata: VoteContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
     // Warning: (ae-forgotten-export) The symbol "ContractRegistry" needs to be exported by the entry point index.d.ts
     //
     // @internal (undocumented)
-    getRegistry(): Promise<ContractRegistry>;
+    getRegistry(chain?: ChainIdOrName): Promise<ContractRegistry>;
     // (undocumented)
     updateSigner(signer: Signer | undefined): void;
 }
@@ -5006,39 +5024,91 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     static fromSigner(signer: Signer, chain: ChainIdOrName, options?: SDKOptions, storage?: IStorage): ThirdwebSDK;
     getBalance(address: string): Promise<CurrencyValue>;
     // @internal (undocumented)
-    getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
+    getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType, chain?: ChainIdOrName): Promise<{
+        readonly custom: typeof SmartContract;
+        readonly "nft-drop": typeof NFTDrop;
+        readonly "signature-drop": typeof SignatureDrop;
+        readonly "nft-collection": typeof NFTCollection;
+        readonly "edition-drop": typeof EditionDrop;
+        readonly edition: typeof Edition;
+        readonly "token-drop": typeof TokenDrop;
+        readonly token: typeof Token;
+        readonly vote: typeof Vote;
+        readonly split: typeof Split;
+        readonly marketplace: typeof Marketplace;
+        readonly pack: typeof Pack;
+        readonly multiwrap: typeof Multiwrap;
+    }[TContractType] extends infer T ? T extends {
+        readonly custom: typeof SmartContract;
+        readonly "nft-drop": typeof NFTDrop;
+        readonly "signature-drop": typeof SignatureDrop;
+        readonly "nft-collection": typeof NFTCollection;
+        readonly "edition-drop": typeof EditionDrop;
+        readonly edition: typeof Edition;
+        readonly "token-drop": typeof TokenDrop;
+        readonly token: typeof Token;
+        readonly vote: typeof Vote;
+        readonly split: typeof Split;
+        readonly marketplace: typeof Marketplace;
+        readonly pack: typeof Pack;
+        readonly multiwrap: typeof Multiwrap;
+    }[TContractType] ? T extends new (...args: any[]) => object ? object : any : never : never>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getContract" is marked as @beta, but its signature references "ChainIdOrName" which is marked as @internal
+    //
     // @beta
-    getContract(address: string): Promise<SmartContract<ThirdwebContract>>;
+    getContract(address: string, chain?: ChainIdOrName): Promise<SmartContract<ThirdwebContract>>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getContractFromAbi" is marked as @beta, but its signature references "ChainIdOrName" which is marked as @internal
+    //
     // @beta
-    getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ThirdwebContract>;
-    getContractList(walletAddress: string): Promise<{
+    getContractFromAbi(address: string, abi: ContractInterface, chain?: ChainIdOrName): SmartContract<ThirdwebContract>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getContractList" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    getContractList(walletAddress: string, chain?: ChainIdOrName): Promise<{
         address: string;
         contractType: "custom" | "token" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
-    getEdition(address: string): Edition;
-    getEditionDrop(address: string): EditionDrop;
-    getMarketplace(address: string): Marketplace;
+    // Warning: (ae-incompatible-release-tags) The symbol "getEdition" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    getEdition(address: string, chain?: ChainIdOrName): Promise<Edition>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getEditionDrop" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    getEditionDrop(address: string, chain?: ChainIdOrName): Promise<EditionDrop>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getMarketplace" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    getMarketplace(address: string, chain?: ChainIdOrName): Promise<Marketplace>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getMultiwrap" is marked as @beta, but its signature references "ChainIdOrName" which is marked as @internal
+    //
     // @beta
-    getMultiwrap(address: string): Multiwrap;
-    getNFTCollection(address: string): NFTCollection;
-    getNFTDrop(contractAddress: string): NFTDrop;
-    getPack(address: string): Pack;
+    getMultiwrap(address: string, chain?: ChainIdOrName): Promise<Multiwrap>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getNFTCollection" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    getNFTCollection(address: string, chain?: ChainIdOrName): Promise<NFTCollection>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getNFTDrop" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    getNFTDrop(contractAddress: string, chain?: ChainIdOrName): Promise<NFTDrop>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getPack" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    getPack(address: string, chain?: ChainIdOrName): Promise<Pack>;
     // Warning: (ae-forgotten-export) The symbol "ContractPublisher" needs to be exported by the entry point index.d.ts
     //
     // @internal (undocumented)
     getPublisher(): ContractPublisher;
     // @internal
-    getSignatureDrop(contractAddress: string): SignatureDrop;
-    getSplit(address: string): Split;
-    getToken(address: string): Token;
-    getTokenDrop(address: string): TokenDrop;
-    getVote(address: string): Vote;
+    getSignatureDrop(contractAddress: string, chain?: ChainIdOrName): Promise<SignatureDrop>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getSplit" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    getSplit(address: string, chain?: ChainIdOrName): Promise<Split>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getToken" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    getToken(address: string, chain?: ChainIdOrName): Promise<Token>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getTokenDrop" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    getTokenDrop(address: string, chain?: ChainIdOrName): Promise<TokenDrop>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getVote" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    getVote(address: string, chain?: ChainIdOrName): Promise<Vote>;
+    // Warning: (ae-incompatible-release-tags) The symbol "resolveContractType" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    //
     // (undocumented)
-    resolveContractType(contractAddress: string): Promise<ContractType>;
+    resolveContractType(contractAddress: string, chain?: ChainIdOrName): Promise<ContractType>;
     storage: RemoteStorage;
     wallet: UserWallet;
 }
+
+// Warning: (ae-internal-missing-underscore) The name "toChainId" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function toChainId(chain: ChainIdOrName): number;
 
 // @public
 export class Token extends Erc20<TokenERC20> {
@@ -5648,6 +5718,10 @@ export type WrappedTokens = {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/src/core/types.d.ts:48:5 - (ae-incompatible-release-tags) The symbol "chainId" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 

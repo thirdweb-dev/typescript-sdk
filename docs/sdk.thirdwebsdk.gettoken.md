@@ -9,7 +9,7 @@ Get an instance of a Token contract
 <b>Signature:</b>
 
 ```typescript
-getToken(address: string): Token;
+getToken(address: string, chain?: ChainIdOrName): Promise<Token>;
 ```
 
 ## Parameters
@@ -17,10 +17,11 @@ getToken(address: string): Token;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to) |
 
 <b>Returns:</b>
 
-[Token](./sdk.token.md)
+Promise&lt;[Token](./sdk.token.md)<!-- -->&gt;
 
 the contract
 

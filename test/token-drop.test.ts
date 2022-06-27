@@ -39,7 +39,7 @@ describe("Token Drop Contract", async () => {
         platform_fee_recipient: AddressZero,
       },
     );
-    dropContract = sdk.getTokenDrop(address);
+    dropContract = await sdk.getTokenDrop(address);
   });
 
   it("should allow a snapshot to be set", async () => {
@@ -342,6 +342,7 @@ describe("Token Drop Contract", async () => {
         },
       ]);
       const active = await dropContract.claimConditions.getActive();
+      expect(active.maxQuantity).to.eq("10.8");
     });
 
     it("should check if its been long enough since the last claim", async () => {
