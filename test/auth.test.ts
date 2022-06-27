@@ -1,4 +1,4 @@
-import { signers } from "./before-setup";
+import { expectError, signers } from "./before-setup";
 import { expect } from "chai";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { ChainId, ThirdwebSDK } from "../src";
@@ -50,7 +50,8 @@ describe("Wallet Authentication", async () => {
       sdk.auth.verify("test.thirdweb.com", payload);
       expect.fail();
     } catch (err) {
-      expect(err.message).to.equal(
+      expectError(
+        err,
         "Expected domain 'test.thirdweb.com' does not match domain on payload 'thirdweb.com'",
       );
     }
@@ -66,7 +67,7 @@ describe("Wallet Authentication", async () => {
       sdk.auth.verify(domain, payload);
       expect.fail();
     } catch (err) {
-      expect(err.message).to.equal("Login request has expired");
+      expectError(err, "Login request has expired");
     }
   });
 
@@ -82,9 +83,7 @@ describe("Wallet Authentication", async () => {
       });
       expect.fail();
     } catch (err) {
-      expect(err.message).to.equal(
-        "Chain ID '137' does not match payload chain ID '1'",
-      );
+      expectError(err, "Chain ID '137' does not match payload chain ID '1'");
     }
   });
 
@@ -97,7 +96,7 @@ describe("Wallet Authentication", async () => {
       sdk.auth.verify(domain, payload);
       expect.fail();
     } catch (err) {
-      expect(err.message).to.contain("does not match payload address");
+      expectError(err, "does not match payload address");
     }
   });
 
@@ -121,7 +120,8 @@ describe("Wallet Authentication", async () => {
       await sdk.auth.authenticate("test.thirdweb.com", token);
       expect.fail();
     } catch (err) {
-      expect(err.message).to.contain(
+      expectError(
+        err,
         "Expected token to be for the domain 'test.thirdweb.com', but found token with domain 'thirdweb.com'",
       );
     }
@@ -139,7 +139,7 @@ describe("Wallet Authentication", async () => {
       await sdk.auth.authenticate(domain, token);
       expect.fail();
     } catch (err) {
-      expect(err.message).to.contain("This token is invalid before");
+      expectError(err, "This token is invalid before");
     }
   });
 
@@ -155,7 +155,7 @@ describe("Wallet Authentication", async () => {
       await sdk.auth.authenticate(domain, token);
       expect.fail();
     } catch (err) {
-      expect(err.message).to.contain("This token expired");
+      expectError(err, "This token expired");
     }
   });
 
@@ -170,7 +170,8 @@ describe("Wallet Authentication", async () => {
       await sdk.auth.authenticate(domain, token);
       expect.fail();
     } catch (err) {
-      expect(err.message).to.contain(
+      expectError(
+        err,
         `Expected the connected wallet address '${signerWallet.address}' to match the token issuer address '${adminWallet.address}'`,
       );
     }

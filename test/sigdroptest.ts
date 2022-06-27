@@ -39,7 +39,7 @@ describe("Signature drop tests", async () => {
   beforeEach(async () => {
     sdk.wallet.connect(adminWallet);
 
-    signatureDropContract = sdk.getSignatureDrop(
+    signatureDropContract = await sdk.getSignatureDrop(
       await sdk.deployer.deployBuiltInContract(SignatureDrop.contractType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",
@@ -58,7 +58,7 @@ describe("Signature drop tests", async () => {
       to: samWallet.address,
     };
 
-    customTokenContract = sdk.getToken(
+    customTokenContract = await sdk.getToken(
       await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",

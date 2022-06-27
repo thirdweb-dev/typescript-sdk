@@ -8,7 +8,7 @@ import { AddressZero } from "@ethersproject/constants";
 global.fetch = require("cross-fetch");
 
 describe("Roles Contract", async () => {
-  let bundleContract: Edition;
+  let editionContract: Edition;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -21,7 +21,7 @@ describe("Roles Contract", async () => {
   beforeEach(async () => {
     sdk.wallet.connect(adminWallet);
 
-    bundleContract = sdk.getEdition(
+    editionContract = await sdk.getEdition(
       await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "NFT Contract",
         primary_sale_recipient: adminWallet.address,
@@ -34,7 +34,7 @@ describe("Roles Contract", async () => {
     /**
      * This wallet owns only one token in the collection (that contains 6 tokens)
      */
-    const roles = await bundleContract.roles.get("admin");
+    const roles = await editionContract.roles.get("admin");
     assert.include(
       roles,
       adminWallet.address,
@@ -52,7 +52,7 @@ describe("Roles Contract", async () => {
    */
 
   it("should override current roles in the contract", async () => {
-    await bundleContract.roles.setAll({
+    await editionContract.roles.setAll({
       admin: [adminWallet.address],
       minter: [
         "0x553C5E856801b5876e80D32a192086b2035286C1",
@@ -61,7 +61,7 @@ describe("Roles Contract", async () => {
       transfer: ["0x553C5E856801b5876e80D32a192086b2035286C1"],
     });
 
-    const newRoles = await bundleContract.roles.getAll();
+    const newRoles = await editionContract.roles.getAll();
     assert.isTrue(
       newRoles.admin.length === 1 &&
         newRoles.admin.includes(adminWallet.address),
@@ -82,7 +82,7 @@ describe("Roles Contract", async () => {
   });
 
   it("Replace all roles - confirm that all roles were replaced (not just added)", async () => {
-    await bundleContract.roles.setAll({
+    await editionContract.roles.setAll({
       admin: [
         adminWallet.address,
         "0x553C5E856801b5876e80D32a192086b2035286C1",
@@ -93,7 +93,7 @@ describe("Roles Contract", async () => {
       ],
       transfer: ["0xf16851cb58F3b3881e6bdAD21f57144E9aCf602E"],
     });
-    const newRoles = await bundleContract.roles.getAll();
+    const newRoles = await editionContract.roles.getAll();
     assert.isTrue(
       newRoles.admin.length === 2 &&
         newRoles.admin.includes(adminWallet.address) &&
@@ -115,39 +115,39 @@ describe("Roles Contract", async () => {
   });
 
   it("Make collection non-transferable", async () => {
-    const oldRoles = await bundleContract.roles.getAll();
-    await bundleContract.roles.setAll({
+    const oldRoles = await editionContract.roles.getAll();
+    await editionContract.roles.setAll({
       admin: [...oldRoles.admin],
       minter: [...oldRoles.minter],
       transfer: [],
     });
-    const newRoles = await bundleContract.roles.getAll();
+    const newRoles = await editionContract.roles.getAll();
     assert.isTrue(newRoles.admin.length === oldRoles.admin.length);
     assert.isTrue(newRoles.minter.length === oldRoles.minter.length);
     assert.isTrue(newRoles.transfer.length === 0);
   });
 
   it("Make collection transferable", async () => {
-    const oldRoles = await bundleContract.roles.getAll();
-    await bundleContract.roles.setAll({
+    const oldRoles = await editionContract.roles.getAll();
+    await editionContract.roles.setAll({
       admin: [...oldRoles.admin],
       minter: [...oldRoles.minter],
       transfer: [AddressZero],
     });
-    const newRoles = await bundleContract.roles.getAll();
+    const newRoles = await editionContract.roles.getAll();
     assert.isTrue(newRoles.admin.length === oldRoles.admin.length);
     assert.isTrue(newRoles.minter.length === oldRoles.minter.length);
     assert.isTrue(newRoles.transfer.includes(AddressZero));
   });
 
   it("Make collection non-transferable with some wallets being able to transfer", async () => {
-    const oldRoles = await bundleContract.roles.getAll();
-    await bundleContract.roles.setAll({
+    const oldRoles = await editionContract.roles.getAll();
+    await editionContract.roles.setAll({
       admin: [...oldRoles.admin],
       minter: [...oldRoles.minter],
       transfer: [bobWallet.address, samWallet.address],
     });
-    const newRoles = await bundleContract.roles.getAll();
+    const newRoles = await editionContract.roles.getAll();
     assert.isTrue(newRoles.admin.length === oldRoles.admin.length);
     assert.isTrue(newRoles.minter.length === oldRoles.minter.length);
     assert.isTrue(

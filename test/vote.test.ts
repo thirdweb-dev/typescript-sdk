@@ -1,18 +1,15 @@
-import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { assert } from "chai";
-import { ethers } from "ethers";
-import { ethers as hardhatEthers } from "hardhat";
-import { sdk, signers } from "./before-setup";
-import { Token, Vote } from "../src";
+import {SignerWithAddress} from "@nomiclabs/hardhat-ethers/signers";
+import {assert} from "chai";
+import {ethers} from "ethers";
+import {ethers as hardhatEthers} from "hardhat";
+import {sdk, signers} from "./before-setup";
+import {Token, Vote} from "../src";
 
 global.fetch = require("cross-fetch");
 
 describe("Vote Contract", async () => {
   let voteContract: Vote;
   let currencyContract: Token;
-
-  const voteStartWaitTimeInSeconds = 0;
-  const voteWaitTimeInSeconds = 5;
 
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -33,7 +30,7 @@ describe("Vote Contract", async () => {
         primary_sale_recipient: adminWallet.address,
       },
     );
-    currencyContract = sdk.getToken(tokenContractAddress);
+    currencyContract = await sdk.getToken(tokenContractAddress);
     const voteContractAddress = await sdk.deployer.deployBuiltInContract(
       Vote.contractType,
       {
@@ -43,7 +40,7 @@ describe("Vote Contract", async () => {
         proposal_token_threshold: ethers.utils.parseUnits("1", 18),
       },
     );
-    voteContract = sdk.getVote(voteContractAddress);
+    voteContract = await .getVote(voteContractAddress);
 
     // step 1: mint 1000 governance tokens to my wallet
     await currencyContract.mintTo(samWallet.address, "100");
