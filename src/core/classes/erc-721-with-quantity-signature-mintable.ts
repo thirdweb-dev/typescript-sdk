@@ -79,12 +79,12 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
 
-    const isLegacyNFTContract = await this.isNFTCollection();
+    const isLegacyNFTContract = await this.isLegacyNFTContract();
 
     let message;
     let price;
     if (isLegacyNFTContract) {
-      message = await this.mapTokenPayloadToContractStruct(mintRequest);
+      message = await this.mapLegacyPayloadToContractStruct(mintRequest);
       price = message.price;
     } else {
       message = await this.mapPayloadToContractStruct(mintRequest);
@@ -127,14 +127,14 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   public async mintBatch(
     signedPayloads: SignedPayload721WithQuantitySignature[],
   ): Promise<TransactionResultWithId[]> {
-    const isLegacyNFTContract = await this.isNFTCollection();
+    const isLegacyNFTContract = await this.isLegacyNFTContract();
 
     const contractPayloads = await Promise.all(
       signedPayloads.map(async (s) => {
         let message;
 
         if (isLegacyNFTContract) {
-          message = await this.mapTokenPayloadToContractStruct(s.payload);
+          message = await this.mapLegacyPayloadToContractStruct(s.payload);
         } else {
           message = await this.mapPayloadToContractStruct(s.payload);
         }
@@ -190,7 +190,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   public async verify(
     signedPayload: SignedPayload721WithQuantitySignature,
   ): Promise<boolean> {
-    const isLegacyNFTContract = await this.isNFTCollection();
+    const isLegacyNFTContract = await this.isLegacyNFTContract();
 
     let mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
@@ -200,7 +200,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
 
     if (isLegacyNFTContract) {
       const contract = this.contractWrapper.readContract as TokenERC721;
-      message = await this.mapTokenPayloadToContractStruct(mintRequest);
+      message = await this.mapLegacyPayloadToContractStruct(mintRequest);
       verification = await contract.verify(message, signature);
     } else {
       const contract = this.contractWrapper.readContract as SignatureMintERC721;
@@ -262,7 +262,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   public async generateBatch(
     payloadsToSign: PayloadToSign721withQuantity[] | PayloadToSign721[],
   ): Promise<SignedPayload721WithQuantitySignature[]> {
-    const isLegacyNFTContract = await this.isNFTCollection();
+    const isLegacyNFTContract = await this.isLegacyNFTContract();
 
     await this.roles?.verify(
       ["minter"],
@@ -304,7 +304,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
               verifyingContract: this.contractWrapper.readContract.address,
             },
             { MintRequest: MintRequest721 },
-            await this.mapTokenPayloadToContractStruct(finalPayload),
+            await this.mapLegacyPayloadToContractStruct(finalPayload),
           );
         } else {
           signature = await this.contractWrapper.signTypedData(
@@ -363,7 +363,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     } as ISignatureMintERC721.MintRequestStructOutput;
   }
 
-  private async mapTokenPayloadToContractStruct(
+  private async mapLegacyPayloadToContractStruct(
     mintRequest: PayloadWithUri721withQuantity,
   ): Promise<ITokenERC721.MintRequestStructOutput> {
     const normalizedPricePerToken = await normalizePriceValue(
@@ -385,16 +385,15 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     } as ITokenERC721.MintRequestStructOutput;
   }
 
-  private async isNFTCollection() {
+  private async isLegacyNFTContract() {
     let contractType;
     if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
       contractType = ethers.utils.toUtf8String(
         await this.contractWrapper.readContract.contractType(),
       );
+      return !!contractType.includes("TokenERC721");
     } else {
-      contractType = "";
+      return false;
     }
-
-    return !!contractType.includes("TokenERC721");
   }
 }
