@@ -1,5 +1,9 @@
 import { IStorage } from "../core/interfaces/IStorage";
-import type { TransactionResult, TransactionResultWithId } from "../core/types";
+import type {
+  ConnectionInfo,
+  TransactionResult,
+  TransactionResultWithId,
+} from "../core/types";
 import { Erc721BatchMintable } from "../core/classes/erc-721-batch-mintable";
 import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
 import { Erc721Mintable } from "../core/classes/erc-721-mintable";
@@ -23,7 +27,6 @@ import { BigNumber, BigNumberish, constants } from "ethers";
 import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
 import { QueryAllParams } from "../types";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { ConnectionInfo } from "../core/types";
 
 /**
  * Create a collection of one-of-one NFTs.

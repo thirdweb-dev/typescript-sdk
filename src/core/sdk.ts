@@ -19,12 +19,12 @@ import { SDKOptions } from "../schema/sdk-options";
 import { IpfsStorage } from "./classes/ipfs-storage";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
+  ChainAndAddress,
   ConnectionInfo,
   ContractForContractType,
   ContractType,
   ValidContractInstance,
 } from "./types";
-import { ChainAndAddress } from "./types";
 import { IThirdwebContract__factory } from "contracts";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { SmartContract } from "../contracts/smart-contract";
