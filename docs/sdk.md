@@ -87,6 +87,7 @@
 |  [AuctionListing](./sdk.auctionlisting.md) | Represents a new marketplace auction listing. |
 |  [BatchToReveal](./sdk.batchtoreveal.md) |  |
 |  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
+|  [EventQueryFilter](./sdk.eventqueryfilter.md) | Filters for querying past events |
 |  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
 |  [IStorage](./sdk.istorage.md) | Interface for any storage provider |
 |  [MarketplaceContractDeployMetadata](./sdk.marketplacecontractdeploymetadata.md) | Options for deploying a Marketplace contract |
@@ -100,7 +101,6 @@
 |  [Proposal](./sdk.proposal.md) |  |
 |  [ProposalExecutable](./sdk.proposalexecutable.md) |  |
 |  [ProposalVote](./sdk.proposalvote.md) |  |
-|  [QueryAllEvents](./sdk.queryallevents.md) | Filters for querying past events |
 |  [QueryAllParams](./sdk.queryallparams.md) | Pagination Parameters |
 |  [SplitContractDeployMetadata](./sdk.splitcontractdeploymetadata.md) | Options for deploying Split contract |
 |  [SplitRecipient](./sdk.splitrecipient.md) | The SplitRecipient type represents a recipient of some royalty, indicated by their split percentage. |

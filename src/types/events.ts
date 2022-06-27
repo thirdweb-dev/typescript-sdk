@@ -15,13 +15,30 @@ export interface UploadProgressEvent {
  */
 export type ContractEvent = {
   eventName: string;
-  data: Record<string, any>;
+  data: Record<string, unknown>;
+  // from ethers.providers.Log
+  transaction: {
+    blockNumber: number;
+    blockHash: string;
+    transactionIndex: number;
+
+    removed: boolean;
+
+    address: string;
+    data: string;
+
+    topics: Array<string>;
+
+    transactionHash: string;
+    logIndex: number;
+  };
 };
 
 /**
  * Filters for querying past events
  */
-export interface QueryAllEvents {
-  fromBlock?: number;
-  toBlock?: number;
+export interface EventQueryFilter {
+  fromBlock?: string | number;
+  toBlock?: string | number;
+  order?: "asc" | "desc";
 }

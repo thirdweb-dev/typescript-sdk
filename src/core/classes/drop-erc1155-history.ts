@@ -1,5 +1,5 @@
 import { DropERC1155 } from "contracts";
-import { BigNumberish } from "ethers";
+import { BigNumber, BigNumberish } from "ethers";
 import { ContractEvents } from "./contract-events";
 
 /**
@@ -29,9 +29,17 @@ export class DropErc1155History {
     tokenId: BigNumberish,
   ): Promise<string[]> {
     const a = (await this.events.getEvents("TokensClaimed")).filter((e) =>
-      e.data.tokenId.eq(tokenId),
+      e.data && BigNumber.isBigNumber(e.data.tokenId)
+        ? e.data.tokenId.eq(tokenId)
+        : false,
     );
 
-    return Array.from(new Set(a.map((b) => b.data?.claimer)));
+    return Array.from(
+      new Set(
+        a
+          .filter((b) => typeof b.data?.claimer === "string")
+          .map((b) => b.data.claimer as string),
+      ),
+    );
   }
 }

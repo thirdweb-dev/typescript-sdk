@@ -9,14 +9,14 @@ Get All Events
 <b>Signature:</b>
 
 ```typescript
-getAllEvents(filters?: QueryAllEvents): Promise<ContractEvent[]>;
+getAllEvents(filters?: EventQueryFilter): Promise<ContractEvent[]>;
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  filters | [QueryAllEvents](./sdk.queryallevents.md) | <i>(Optional)</i> Specify the from and to block numbers to get events for, defaults to all blocks |
+|  filters | [EventQueryFilter](./sdk.eventqueryfilter.md) | <i>(Optional)</i> Specify the from and to block numbers to get events for, defaults to all blocks |
 
 <b>Returns:</b>
 
