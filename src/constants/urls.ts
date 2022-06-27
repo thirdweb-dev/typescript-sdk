@@ -94,6 +94,14 @@ export const defaultRPCMap: Record<
 
 /**
  * @internal
+ * @param chain
+ */
+export function toChainId(chain: ChainIdOrName) {
+  return typeof chain === "string" ? chainNameToId[chain] : chain;
+}
+
+/**
+ * @internal
  * @param chainId
  * @param customRpcMap
  */

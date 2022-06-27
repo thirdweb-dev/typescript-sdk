@@ -4,17 +4,19 @@ import { ConnectionInfo } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { constants, utils } from "ethers";
 import { TransactionResult } from "..";
+import { getContractAddressByChainId } from "../../constants/index";
 
 /**
  * @internal
  */
 export class ContractRegistry extends ContractWrapper<TWRegistry> {
-  constructor(
-    registryAddress: string,
-    connection: ConnectionInfo,
-    options?: SDKOptions,
-  ) {
-    super(connection, registryAddress, TWRegistry__factory.abi, options);
+  constructor(connection: ConnectionInfo, options?: SDKOptions) {
+    super(
+      connection,
+      getContractAddressByChainId(connection.chainId, "twRegistry"),
+      TWRegistry__factory.abi,
+      options,
+    );
   }
 
   public async getContractAddresses(walletAddress: string) {

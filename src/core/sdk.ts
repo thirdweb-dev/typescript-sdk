@@ -24,6 +24,7 @@ import type {
   ContractType,
   ValidContractInstance,
 } from "./types";
+import { ChainAndAddress } from "./types";
 import { IThirdwebContract__factory } from "contracts";
 import { ContractDeployer } from "./classes/contract-deployer";
 import { SmartContract } from "../contracts/smart-contract";
@@ -32,17 +33,17 @@ import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
 import {
-  chainNameToId,
   ChainIdOrName,
+  chainNameToId,
   getProviderForChain,
   NATIVE_TOKEN_ADDRESS,
+  toChainId,
 } from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
 import { Multiwrap } from "../contracts/multiwrap";
 import { WalletAuthenticator } from "./auth/wallet-authenticator";
 import { CurrencyValue } from "../types/index";
 import { fetchCurrencyValue } from "../common/currency";
-import { ChainAndAddress } from "./types";
 
 /**
  * The main entry point for the thirdweb SDK
@@ -106,7 +107,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
-    const chainId = typeof chain === "string" ? chainNameToId[chain] : chain;
+    const chainId = toChainId(chain);
     const provider = getProviderForChain(chainId, options.chainIdToRPCUrlMap);
     const signer = new ethers.Wallet(privateKey, provider);
     return ThirdwebSDK.fromSigner(signer, chainId, options, storage);
@@ -153,7 +154,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   ) {
     // Throw helpful error for old usages of this constructor
     verifyInputs(chain);
-    const chainId = typeof chain === "string" ? chainNameToId[chain] : chain;
+    const chainId = toChainId(chain);
     const connection: ConnectionInfo = {
       chainId,
       signer: undefined,
@@ -336,7 +337,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     contractType: TContractType,
     chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ) {
-    const chainId = typeof chain === "string" ? chainNameToId[chain] : chain;
+    const chainId = toChainId(chain);
     // if we have a contract in the cache we will return it
     // we will do this **without** checking any contract type things for simplicity, this may have to change in the future?
     if (this.contractCache.has({ chainId, address })) {
@@ -373,15 +374,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   /**
    * @param contractAddress - the address of the contract to attempt to resolve the contract type for
+   * @param chain - optional the chain (id or name) of the contract (defaults to the SDK chainId)
    * @returns the {@link ContractType} for the given contract address
    * @throws if the contract type cannot be determined (is not a valid thirdweb contract)
    */
   public async resolveContractType(
     contractAddress: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<ContractType> {
+    const chainId = toChainId(chain);
     const contract = IThirdwebContract__factory.connect(
       contractAddress,
-      this.getSignerOrProvider(),
+      getProviderForChain(chainId, this.options.chainIdToRPCUrlMap),
     );
     const remoteContractType = ethers.utils
       .toUtf8String(await contract.contractType())
@@ -399,24 +403,27 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * Return all the contracts deployed by the specified address
    * @param walletAddress - the deployed address
+   * @param chain - the chain to fetch from contracts from
    */
-  public async getContractList(walletAddress: string) {
-    const addresses = await (
-      await this.deployer.getRegistry()
-    ).getContractAddresses(walletAddress);
+  public async getContractList(
+    walletAddress: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ) {
+    const registry = await this.deployer.getRegistry(chain);
+    const addresses = await registry.getContractAddresses(walletAddress);
 
     const addressesWithContractTypes = await Promise.all(
       addresses.map(async (address) => {
         let contractType: ContractType = "custom";
         try {
-          contractType = await this.resolveContractType(address);
+          contractType = await this.resolveContractType(address, chain);
         } catch (e) {
           // this going to happen frequently and be OK, we'll just catch it and ignore it
         }
         let metadata: ContractMetadata<any, any> | undefined;
         if (contractType === "custom") {
           try {
-            metadata = (await this.getContract(address)).metadata;
+            metadata = (await this.getContract(address, chain)).metadata;
           } catch (e) {
             console.log(
               `Couldn't get contract metadata for custom contract: ${address}`,
@@ -426,6 +433,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           const builtInContract = await this.getBuiltInContract(
             address,
             contractType,
+            chain,
           );
           metadata = builtInContract.metadata;
         }
@@ -458,9 +466,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public async getContract(
     address: string,
-    chain: number = this.getConnectionInfo().chainId,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ) {
-    const chainId = typeof chain === "string" ? chainNameToId[chain] : chain;
+    const chainId = toChainId(chain);
     if (this.contractCache.has({ chainId, address })) {
       return this.contractCache.get({ chainId, address }) as SmartContract;
     }
@@ -488,7 +496,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     abi: ContractInterface,
     chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ) {
-    const chainId = typeof chain === "string" ? chainNameToId[chain] : chain;
+    const chainId = toChainId(chain);
     if (this.contractCache.has({ chainId, address })) {
       return this.contractCache.get({ chainId, address }) as SmartContract;
     }

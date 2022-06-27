@@ -37,7 +37,7 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 |  [getBalance(address)](./sdk.thirdwebsdk.getbalance.md) |  | Get the native balance of a given address (wallet or contract) |
 |  [getContract(address, chain)](./sdk.thirdwebsdk.getcontract.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom ThirdwebContract |
 |  [getContractFromAbi(address, abi, chain)](./sdk.thirdwebsdk.getcontractfromabi.md) |  | <b><i>(BETA)</i></b> Get an instance of a Custom contract from a json ABI |
-|  [getContractList(walletAddress)](./sdk.thirdwebsdk.getcontractlist.md) |  | Return all the contracts deployed by the specified address |
+|  [getContractList(walletAddress, chain)](./sdk.thirdwebsdk.getcontractlist.md) |  | Return all the contracts deployed by the specified address |
 |  [getEdition(address)](./sdk.thirdwebsdk.getedition.md) |  | Get an instance of an Edition contract |
 |  [getEditionDrop(address)](./sdk.thirdwebsdk.geteditiondrop.md) |  | Get an instance of a Edition Drop contract |
 |  [getMarketplace(address)](./sdk.thirdwebsdk.getmarketplace.md) |  | Get an instance of a Marketplace contract |
@@ -49,5 +49,5 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 |  [getToken(address)](./sdk.thirdwebsdk.gettoken.md) |  | Get an instance of a Token contract |
 |  [getTokenDrop(address)](./sdk.thirdwebsdk.gettokendrop.md) |  | Get an instance of a Token Drop contract |
 |  [getVote(address)](./sdk.thirdwebsdk.getvote.md) |  | Get an instance of a Vote contract |
-|  [resolveContractType(contractAddress)](./sdk.thirdwebsdk.resolvecontracttype.md) |  |  |
+|  [resolveContractType(contractAddress, chain)](./sdk.thirdwebsdk.resolvecontracttype.md) |  |  |
 

@@ -610,7 +610,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     // Warning: (ae-forgotten-export) The symbol "ContractRegistry" needs to be exported by the entry point index.d.ts
     //
     // @internal (undocumented)
-    getRegistry(): Promise<ContractRegistry>;
+    getRegistry(chain?: ChainIdOrName): Promise<ContractRegistry>;
     // (undocumented)
     updateSigner(signer: Signer | undefined): void;
 }
@@ -5041,13 +5041,16 @@ export class ThirdwebSDK extends RPCConnectionHandler {
         readonly pack: typeof Pack;
         readonly multiwrap: typeof Multiwrap;
     }[TContractType] ? T extends new (...args: any[]) => object ? object : any : never : never>;
+    // Warning: (ae-incompatible-release-tags) The symbol "getContract" is marked as @beta, but its signature references "ChainIdOrName" which is marked as @internal
+    //
     // @beta
-    getContract(address: string, chain?: number): Promise<SmartContract<ThirdwebContract>>;
+    getContract(address: string, chain?: ChainIdOrName): Promise<SmartContract<ThirdwebContract>>;
     // Warning: (ae-incompatible-release-tags) The symbol "getContractFromAbi" is marked as @beta, but its signature references "ChainIdOrName" which is marked as @internal
     //
     // @beta
     getContractFromAbi(address: string, abi: ContractInterface, chain?: ChainIdOrName): SmartContract<ThirdwebContract>;
-    getContractList(walletAddress: string): Promise<{
+    // Warning: (ae-incompatible-release-tags) The symbol "getContractList" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    getContractList(walletAddress: string, chain?: ChainIdOrName): Promise<{
         address: string;
         contractType: "custom" | "token" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
         metadata: () => Promise<any>;
@@ -5070,11 +5073,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getToken(address: string): Promise<Token>;
     getTokenDrop(address: string): Promise<TokenDrop>;
     getVote(address: string): Promise<Vote>;
+    // Warning: (ae-incompatible-release-tags) The symbol "resolveContractType" is marked as @public, but its signature references "ChainIdOrName" which is marked as @internal
+    //
     // (undocumented)
-    resolveContractType(contractAddress: string): Promise<ContractType>;
+    resolveContractType(contractAddress: string, chain?: ChainIdOrName): Promise<ContractType>;
     storage: RemoteStorage;
     wallet: UserWallet;
 }
+
+// Warning: (ae-internal-missing-underscore) The name "toChainId" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function toChainId(chain: ChainIdOrName): number;
 
 // @public
 export class Token extends Erc20<TokenERC20> {

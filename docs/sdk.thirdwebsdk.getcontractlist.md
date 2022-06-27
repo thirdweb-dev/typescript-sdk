@@ -9,7 +9,7 @@ Return all the contracts deployed by the specified address
 <b>Signature:</b>
 
 ```typescript
-getContractList(walletAddress: string): Promise<{
+getContractList(walletAddress: string, chain?: ChainIdOrName): Promise<{
         address: string;
         contractType: "custom" | "token" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
         metadata: () => Promise<any>;
@@ -21,6 +21,7 @@ getContractList(walletAddress: string): Promise<{
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  walletAddress | string | the deployed address |
+|  chain | ChainIdOrName | <i>(Optional)</i> the chain to fetch from contracts from |
 
 <b>Returns:</b>
 

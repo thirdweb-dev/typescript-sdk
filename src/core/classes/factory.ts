@@ -19,6 +19,7 @@ import { CONTRACTS_MAP, REMOTE_CONTRACT_NAME } from "../../contracts/maps";
 
 import {
   CONTRACT_ADDRESSES,
+  getContractAddressByChainId,
   OZ_DEFENDER_FORWARDER_ADDRESS,
   SUPPORTED_CHAIN_IDS,
 } from "../../constants";
@@ -33,12 +34,16 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
   private storage: IStorage;
 
   constructor(
-    factoryAddr: string,
     connection: ConnectionInfo,
     storage: IStorage,
     options?: SDKOptions,
   ) {
-    super(connection, factoryAddr, TWFactory__factory.abi, options);
+    super(
+      connection,
+      getContractAddressByChainId(connection.chainId, "twFactory"),
+      TWFactory__factory.abi,
+      options,
+    );
     this.storage = storage;
   }
 
