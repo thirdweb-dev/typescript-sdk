@@ -192,133 +192,190 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * Get an instance of a Drop contract
    * @param contractAddress - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public async getNFTDrop(contractAddress: string): Promise<NFTDrop> {
+  public async getNFTDrop(
+    contractAddress: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<NFTDrop> {
     return this.getBuiltInContract<"nft-drop">(
       contractAddress,
       NFTDrop.contractType,
+      chain,
     );
   }
 
   /**
    * Get an instance of a SignatureDrop contract
    * @param contractAddress - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    * @internal
    */
   public async getSignatureDrop(
     contractAddress: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<SignatureDrop> {
     return this.getBuiltInContract<"signature-drop">(
       contractAddress,
       SignatureDrop.contractType,
+      chain,
     );
   }
 
   /**
    * Get an instance of a NFT Collection contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public async getNFTCollection(address: string): Promise<NFTCollection> {
+  public async getNFTCollection(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<NFTCollection> {
     return this.getBuiltInContract<"nft-collection">(
       address,
       NFTCollection.contractType,
+      chain,
     );
   }
 
   /**
    * Get an instance of a Edition Drop contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public async getEditionDrop(address: string): Promise<EditionDrop> {
+  public async getEditionDrop(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<EditionDrop> {
     return this.getBuiltInContract<"edition-drop">(
       address,
       EditionDrop.contractType,
+      chain,
     );
   }
 
   /**
    * Get an instance of an Edition contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public async getEdition(address: string): Promise<Edition> {
-    return this.getBuiltInContract<"edition">(address, Edition.contractType);
+  public async getEdition(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Edition> {
+    return this.getBuiltInContract<"edition">(
+      address,
+      Edition.contractType,
+      chain,
+    );
   }
 
   /**
    * Get an instance of a Token Drop contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public async getTokenDrop(address: string): Promise<TokenDrop> {
+  public async getTokenDrop(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<TokenDrop> {
     return this.getBuiltInContract<"token-drop">(
       address,
       TokenDrop.contractType,
+      chain,
     );
   }
 
   /**
    * Get an instance of a Token contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public async getToken(address: string): Promise<Token> {
-    return this.getBuiltInContract<"token">(address, Token.contractType);
+  public async getToken(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Token> {
+    return this.getBuiltInContract<"token">(address, Token.contractType, chain);
   }
 
   /**
    * Get an instance of a Vote contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public async getVote(address: string): Promise<Vote> {
-    return this.getBuiltInContract<"vote">(address, Vote.contractType);
+  public async getVote(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Vote> {
+    return this.getBuiltInContract<"vote">(address, Vote.contractType, chain);
   }
 
   /**
    * Get an instance of a Splits contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public async getSplit(address: string): Promise<Split> {
-    return this.getBuiltInContract<"split">(address, Split.contractType);
+  public async getSplit(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Split> {
+    return this.getBuiltInContract<"split">(address, Split.contractType, chain);
   }
 
   /**
    * Get an instance of a Marketplace contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public async getMarketplace(address: string): Promise<Marketplace> {
+  public async getMarketplace(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Marketplace> {
     return this.getBuiltInContract<"marketplace">(
       address,
       Marketplace.contractType,
+      chain,
     );
   }
 
   /**
    * Get an instance of a Pack contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public async getPack(address: string): Promise<Pack> {
-    return this.getBuiltInContract<"pack">(address, Pack.contractType);
+  public async getPack(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Pack> {
+    return this.getBuiltInContract<"pack">(address, Pack.contractType, chain);
   }
 
   /**
    * Get an instance of a Multiwrap contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    * @beta
    */
-  public async getMultiwrap(address: string): Promise<Multiwrap> {
+  public async getMultiwrap(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Multiwrap> {
     return this.getBuiltInContract<"multiwrap">(
       address,
       Multiwrap.contractType,
+      chain,
     );
   }
 
@@ -327,7 +384,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @internal
    * @param address - the address of the contract to instantiate
    * @param contractType - the type of contract to instantiate
-   * @param chain - optional the chain (id or name) of the contract (defaults to the SDK chainId)
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns a promise that resolves with the contract instance
    */
   public async getBuiltInContract<

@@ -9,7 +9,7 @@ Get an instance of a Splits contract
 <b>Signature:</b>
 
 ```typescript
-getSplit(address: string): Promise<Split>;
+getSplit(address: string, chain?: ChainIdOrName): Promise<Split>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ getSplit(address: string): Promise<Split>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to) |
 
 <b>Returns:</b>
 

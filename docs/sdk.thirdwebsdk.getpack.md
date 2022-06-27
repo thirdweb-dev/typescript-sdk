@@ -9,7 +9,7 @@ Get an instance of a Pack contract
 <b>Signature:</b>
 
 ```typescript
-getPack(address: string): Promise<Pack>;
+getPack(address: string, chain?: ChainIdOrName): Promise<Pack>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ getPack(address: string): Promise<Pack>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to) |
 
 <b>Returns:</b>
 

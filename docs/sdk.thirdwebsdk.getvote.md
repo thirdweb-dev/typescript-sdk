@@ -9,7 +9,7 @@ Get an instance of a Vote contract
 <b>Signature:</b>
 
 ```typescript
-getVote(address: string): Promise<Vote>;
+getVote(address: string, chain?: ChainIdOrName): Promise<Vote>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ getVote(address: string): Promise<Vote>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to) |
 
 <b>Returns:</b>
 

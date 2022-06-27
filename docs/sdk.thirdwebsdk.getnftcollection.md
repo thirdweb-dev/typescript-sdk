@@ -9,7 +9,7 @@ Get an instance of a NFT Collection contract
 <b>Signature:</b>
 
 ```typescript
-getNFTCollection(address: string): Promise<NFTCollection>;
+getNFTCollection(address: string, chain?: ChainIdOrName): Promise<NFTCollection>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ getNFTCollection(address: string): Promise<NFTCollection>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to) |
 
 <b>Returns:</b>
 

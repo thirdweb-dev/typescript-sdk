@@ -9,7 +9,7 @@ Deploys an NFT Collection contract
 <b>Signature:</b>
 
 ```typescript
-deployNFTCollection(metadata: NFTContractDeployMetadata): Promise<string>;
+deployNFTCollection(metadata: NFTContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ deployNFTCollection(metadata: NFTContractDeployMetadata): Promise<string>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  metadata | [NFTContractDeployMetadata](./sdk.nftcontractdeploymetadata.md) | the contract metadata |
+|  chain | ChainIdOrName | <i>(Optional)</i> the chain to deploy the contract to, defaults to the chain the SDK is connected to |
 
 <b>Returns:</b>
 

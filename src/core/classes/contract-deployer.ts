@@ -61,14 +61,17 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployNFTCollection(
     metadata: NFTContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
     return await this.deployBuiltInContract(
       NFTCollection.contractType,
       metadata,
+      chain,
     );
   }
 
@@ -85,12 +88,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployNFTDrop(
     metadata: NFTContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(NFTDrop.contractType, metadata);
+    return await this.deployBuiltInContract(
+      NFTDrop.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -106,15 +115,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    * @internal
    */
   public async deploySignatureDrop(
     metadata: NFTContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
     return await this.deployBuiltInContract(
       SignatureDrop.contractType,
       metadata,
+      chain,
     );
   }
 
@@ -130,13 +142,19 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    * @beta
    */
   public async deployMultiwrap(
     metadata: MultiwrapContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Multiwrap.contractType, metadata);
+    return await this.deployBuiltInContract(
+      Multiwrap.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -152,12 +170,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployEdition(
     metadata: NFTContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Edition.contractType, metadata);
+    return await this.deployBuiltInContract(
+      Edition.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -173,13 +197,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployEditionDrop(
     metadata: NFTContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    const parsed = EditionDrop.schema.deploy.parse(metadata);
-    return await this.deployBuiltInContract(EditionDrop.contractType, parsed);
+    return await this.deployBuiltInContract(
+      EditionDrop.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -195,12 +224,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployToken(
     metadata: TokenContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Token.contractType, metadata);
+    return await this.deployBuiltInContract(
+      Token.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -216,12 +251,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployTokenDrop(
     metadata: TokenContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(TokenDrop.contractType, metadata);
+    return await this.deployBuiltInContract(
+      TokenDrop.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -237,12 +278,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployMarketplace(
     metadata: MarketplaceContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Marketplace.contractType, metadata);
+    return await this.deployBuiltInContract(
+      Marketplace.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -258,12 +305,14 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployPack(
     metadata: NFTContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Pack.contractType, metadata);
+    return await this.deployBuiltInContract(Pack.contractType, metadata, chain);
   }
 
   /**
@@ -289,12 +338,18 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deploySplit(
     metadata: SplitContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Split.contractType, metadata);
+    return await this.deployBuiltInContract(
+      Split.contractType,
+      metadata,
+      chain,
+    );
   }
 
   /**
@@ -311,12 +366,14 @@ export class ContractDeployer extends RPCConnectionHandler {
    * });
    * ```
    * @param metadata - the contract metadata
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns the address of the deployed contract
    */
   public async deployVote(
     metadata: VoteContractDeployMetadata,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    return await this.deployBuiltInContract(Vote.contractType, metadata);
+    return await this.deployBuiltInContract(Vote.contractType, metadata, chain);
   }
 
   /**
@@ -325,13 +382,15 @@ export class ContractDeployer extends RPCConnectionHandler {
    * @internal
    * @param contractType - the type of contract to deploy
    * @param contractMetadata - the metadata to deploy the contract with
+   * @param chain - the chain to deploy the contract to, defaults to the chain the SDK is connected to
    * @returns a promise of the address of the newly deployed contract
    */
   public async deployBuiltInContract<TContract extends ValidContractClass>(
     contractType: TContract["contractType"],
     contractMetadata: z.input<TContract["schema"]["deploy"]>,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<string> {
-    const factory = await this.getFactory();
+    const factory = await this.getFactory(chain);
     return await factory.deploy(contractType, contractMetadata);
   }
 

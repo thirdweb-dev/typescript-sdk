@@ -9,7 +9,7 @@ Get an instance of an Edition contract
 <b>Signature:</b>
 
 ```typescript
-getEdition(address: string): Promise<Edition>;
+getEdition(address: string, chain?: ChainIdOrName): Promise<Edition>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ getEdition(address: string): Promise<Edition>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to) |
 
 <b>Returns:</b>
 

@@ -9,7 +9,7 @@ Get an instance of a Drop contract
 <b>Signature:</b>
 
 ```typescript
-getNFTDrop(contractAddress: string): Promise<NFTDrop>;
+getNFTDrop(contractAddress: string, chain?: ChainIdOrName): Promise<NFTDrop>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ getNFTDrop(contractAddress: string): Promise<NFTDrop>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractAddress | string | the address of the deployed contract |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to) |
 
 <b>Returns:</b>
 

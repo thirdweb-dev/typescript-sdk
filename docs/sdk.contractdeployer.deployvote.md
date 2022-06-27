@@ -9,7 +9,7 @@ Deploys a new Vote contract
 <b>Signature:</b>
 
 ```typescript
-deployVote(metadata: VoteContractDeployMetadata): Promise<string>;
+deployVote(metadata: VoteContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ deployVote(metadata: VoteContractDeployMetadata): Promise<string>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  metadata | [VoteContractDeployMetadata](./sdk.votecontractdeploymetadata.md) | the contract metadata |
+|  chain | ChainIdOrName | <i>(Optional)</i> the chain to deploy the contract to, defaults to the chain the SDK is connected to |
 
 <b>Returns:</b>
 

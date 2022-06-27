@@ -12,7 +12,7 @@ Get an instance of a Multiwrap contract
 <b>Signature:</b>
 
 ```typescript
-getMultiwrap(address: string): Promise<Multiwrap>;
+getMultiwrap(address: string, chain?: ChainIdOrName): Promise<Multiwrap>;
 ```
 
 ## Parameters
@@ -20,6 +20,7 @@ getMultiwrap(address: string): Promise<Multiwrap>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  address | string | the address of the deployed contract |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to) |
 
 <b>Returns:</b>
 
