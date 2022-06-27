@@ -46,7 +46,7 @@ const contract = sdk.getSignatureDrop("{{contract_address}}");
 |  [roles](./sdk.signaturedrop.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;SignatureDropContract, typeof [SignatureDrop.contractRoles](./sdk.signaturedrop.contractroles.md)<!-- -->\[number\]&gt; |  |
 |  [royalties](./sdk.signaturedrop.royalties.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;SignatureDropContract, typeof SignatureDrop.schema&gt; | Configure royalties |
 |  [sales](./sdk.signaturedrop.sales.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;SignatureDropContract&gt; |  |
-|  [signature](./sdk.signaturedrop.signature.md) |  | Erc721WithQuantitySignatureMinting | Signature Minting |
+|  [signature](./sdk.signaturedrop.signature.md) |  | [Erc721WithQuantitySignatureMintable](./sdk.erc721withquantitysignaturemintable.md) | Signature Minting |
 
 ## Methods
 

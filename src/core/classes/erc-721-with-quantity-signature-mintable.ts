@@ -7,14 +7,18 @@ import {
   Signature721PayloadInput,
   Signature721WithQuantityInput,
   Signature721WithQuantityOutput,
-  SignedPayload721,
   SignedPayload721WithQuantitySignature,
 } from "../../schema/contracts/common/signature";
 import { TransactionResultWithId } from "../types";
 import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
-import { ISignatureMintERC721, ITokenERC721, TokenERC721 } from "contracts";
+import {
+  ISignatureMintERC721,
+  ITokenERC721,
+  SignatureMintERC721,
+  TokenERC721,
+} from "contracts";
 import { IStorage } from "../interfaces";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
@@ -23,6 +27,7 @@ import { uploadOrExtractURIs } from "../../common/nft";
 import { TokensMintedWithSignatureEvent } from "contracts/SignatureDrop";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_NFT_SIGNATURE_MINTABLE } from "../../constants/erc721-features";
+import { hasFunction } from "../../common";
 
 /**
  * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely * @public
@@ -30,7 +35,7 @@ import { FEATURE_NFT_SIGNATURE_MINTABLE } from "../../constants/erc721-features"
 export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   featureName = FEATURE_NFT_SIGNATURE_MINTABLE.name;
 
-  private contractWrapper: ContractWrapper<ISignatureMintERC721 | TokenERC721>;
+  private contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>;
 
   private storage: IStorage;
   private roles?: ContractRoles<
@@ -39,7 +44,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   >;
 
   constructor(
-    contractWrapper: ContractWrapper<ISignatureMintERC721 | TokenERC721>,
+    contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>,
     storage: IStorage,
     roles?: ContractRoles<
       TokenERC721,
@@ -66,7 +71,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * const receipt = tx.receipt; // the mint transaction receipt
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
-   * @param signedPayload - the previously generated payload and signature with {@link Erc721SignatureMinting.generate}
+   * @param signedPayload - the previously generated payload and signature with {@link Erc721WithQuantitySignatureMintable.generate}
    */
   public async mint(
     signedPayload: SignedPayload721WithQuantitySignature,
@@ -74,18 +79,22 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
 
-    const contractType = ethers.utils.toUtf8String(
-      await this.contractWrapper.readContract.contractType(),
-    );
+    let isNFT = false;
 
-    const isNFTCollection = this.isNFTCollection(
-      this.contractWrapper.readContract,
-      contractType,
-    );
+    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
+      const contractType = ethers.utils.toUtf8String(
+        await this.contractWrapper.readContract.contractType(),
+      );
+
+      isNFT = this.isNFTCollection(
+        this.contractWrapper.readContract,
+        contractType,
+      );
+    }
 
     let message;
     let price;
-    if (isNFTCollection) {
+    if (isNFT) {
       message = await this.mapTokenPayloadToContractStruct(mintRequest);
       price = message.price;
     } else {
@@ -129,20 +138,24 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   public async mintBatch(
     signedPayloads: SignedPayload721WithQuantitySignature[],
   ): Promise<TransactionResultWithId[]> {
-    const contractType = ethers.utils.toUtf8String(
-      await this.contractWrapper.readContract.contractType(),
-    );
+    let isNFT = false;
 
-    const isNFTCollection = this.isNFTCollection(
-      this.contractWrapper.readContract,
-      contractType,
-    );
+    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
+      const contractType = ethers.utils.toUtf8String(
+        await this.contractWrapper.readContract.contractType(),
+      );
+
+      isNFT = this.isNFTCollection(
+        this.contractWrapper.readContract,
+        contractType,
+      );
+    }
 
     const contractPayloads = await Promise.all(
       signedPayloads.map(async (s) => {
         let message;
 
-        if (isNFTCollection) {
+        if (isNFT) {
           message = await this.mapTokenPayloadToContractStruct(s.payload);
         } else {
           message = await this.mapPayloadToContractStruct(s.payload);
@@ -162,7 +175,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
       }),
     );
     const encoded = contractPayloads.map((p) => {
-      if (isNFTCollection) {
+      if (isNFT) {
         const contract = this.contractWrapper.readContract as TokenERC721;
         return contract.interface.encodeFunctionData("mintWithSignature", [
           p.message as ITokenERC721.MintRequestStructOutput,
@@ -170,7 +183,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
         ]);
       } else {
         const contract = this.contractWrapper
-          .readContract as ISignatureMintERC721;
+          .readContract as SignatureMintERC721;
         return contract.interface.encodeFunctionData("mintWithSignature", [
           p.message as ISignatureMintERC721.MintRequestStructOutput,
           p.signature,
@@ -197,29 +210,32 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * @param signedPayload - the payload to verify
    */
   public async verify(
-    signedPayload: SignedPayload721WithQuantitySignature | SignedPayload721,
+    signedPayload: SignedPayload721WithQuantitySignature,
   ): Promise<boolean> {
-    const mintRequest = signedPayload.payload;
-    const signature = signedPayload.signature;
-    const contractType = ethers.utils.toUtf8String(
-      await this.contractWrapper.readContract.contractType(),
-    );
+    let isNFT = false;
 
-    const isNFTCollection = this.isNFTCollection(
-      this.contractWrapper.readContract,
-      contractType,
-    );
+    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
+      const contractType = ethers.utils.toUtf8String(
+        await this.contractWrapper.readContract.contractType(),
+      );
+
+      isNFT = this.isNFTCollection(
+        this.contractWrapper.readContract,
+        contractType,
+      );
+    }
+    let mintRequest = signedPayload.payload;
+    const signature = signedPayload.signature;
 
     let message;
     let verification: [boolean, string];
 
-    if (isNFTCollection) {
+    if (isNFT) {
       const contract = this.contractWrapper.readContract as TokenERC721;
       message = await this.mapTokenPayloadToContractStruct(mintRequest);
       verification = await contract.verify(message, signature);
     } else {
-      const contract = this.contractWrapper
-        .readContract as ISignatureMintERC721;
+      const contract = this.contractWrapper.readContract as SignatureMintERC721;
       message = await this.mapPayloadToContractStruct(mintRequest);
       verification = await contract.verify(message, signature);
     }
@@ -262,15 +278,15 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * @returns the signed payload and the corresponding signature
    */
   public async generate(
-    mintRequest: PayloadToSign721withQuantity | PayloadToSign721,
-  ): Promise<SignedPayload721WithQuantitySignature | SignedPayload721> {
+    mintRequest: PayloadToSign721withQuantity,
+  ): Promise<SignedPayload721WithQuantitySignature> {
     return (await this.generateBatch([mintRequest]))[0];
   }
 
   /**
    * Genrate a batch of signatures that can be used to mint many dynamic NFTs.
    *
-   * @remarks See {@link Erc721SignatureMinting.generate}
+   * @remarks See {@link Erc721WithQuantitySignatureMintable.generate}
    *
    * @param payloadsToSign - the payloads to sign
    * @returns an array of payloads and signatures
@@ -278,21 +294,25 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   public async generateBatch(
     payloadsToSign: PayloadToSign721withQuantity[] | PayloadToSign721[],
   ): Promise<SignedPayload721WithQuantitySignature[]> {
-    const contractType = ethers.utils.toUtf8String(
-      await this.contractWrapper.readContract.contractType(),
-    );
+    let isNFT = false;
 
-    const isNFTCollection = this.isNFTCollection(
-      this.contractWrapper.readContract,
-      contractType,
-    );
+    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
+      const contractType = ethers.utils.toUtf8String(
+        await this.contractWrapper.readContract.contractType(),
+      );
+
+      isNFT = this.isNFTCollection(
+        this.contractWrapper.readContract,
+        contractType,
+      );
+    }
 
     await this.roles?.verify(
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );
     let parsedRequests;
-    if (isNFTCollection) {
+    if (isNFT) {
       parsedRequests = payloadsToSign.map((m) =>
         Signature721PayloadInput.parse(m),
       );
@@ -317,7 +337,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
         });
         let signature;
 
-        if (isNFTCollection) {
+        if (isNFT) {
           signature = await this.contractWrapper.signTypedData(
             signer,
             {

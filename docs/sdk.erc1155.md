@@ -9,7 +9,7 @@ Standard ERC1155 NFT functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseERC1155> implements UpdateableNetwork, DetectableFeature 
+export declare class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseERC1155 | BaseSignatureMintERC1155> implements UpdateableNetwork, DetectableFeature 
 ```
 <b>Implements:</b> UpdateableNetwork, DetectableFeature
 
@@ -40,6 +40,7 @@ await contract.edition.transfer(walletAddress, tokenId, quantity);
 |  [mint](./sdk.erc1155.mint.md) |  | [Erc1155Mintable](./sdk.erc1155mintable.md) \| undefined |  |
 |  [options](./sdk.erc1155.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [query](./sdk.erc1155.query.md) |  | [Erc1155Enumerable](./sdk.erc1155enumerable.md) \| undefined |  |
+|  [signature](./sdk.erc1155.signature.md) |  | [Erc1155SignatureMintable](./sdk.erc1155signaturemintable.md) \| undefined |  |
 |  [storage](./sdk.erc1155.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
 
 ## Methods

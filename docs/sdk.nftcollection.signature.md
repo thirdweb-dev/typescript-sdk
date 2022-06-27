@@ -9,7 +9,7 @@ Signature Minting
 <b>Signature:</b>
 
 ```typescript
-signature: Erc721SignatureMinting;
+signature: Erc721WithQuantitySignatureMintable;
 ```
 
 ## Remarks
