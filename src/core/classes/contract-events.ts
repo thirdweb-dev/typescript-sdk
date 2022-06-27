@@ -3,7 +3,7 @@ import { BaseContract, Event, providers } from "ethers";
 import { EventType } from "../../constants";
 import { ListenerFn } from "eventemitter3";
 import { EventFragment } from "@ethersproject/abi";
-import { ContractEvent, QueryAllEvents } from "../../types/index";
+import { ContractEvent, EventQueryFilter } from "../../types/index";
 
 /**
  * Listen to Contract events in real time
@@ -73,15 +73,20 @@ export class ContractEvents<TContract extends BaseContract> {
       eventName as string,
     );
 
-    const wrappedListener = (...args: unknown[]) => {
-      // convert event info into nice object with named properties
-      const results = this.toContractEvent(event, args);
-      listener(results);
+    const address = this.contractWrapper.readContract.address;
+    const filter = { address, topics: [event.name] };
+
+    const wrappedListener = (log: providers.Log) => {
+      const parsedLog =
+        this.contractWrapper.readContract.interface.parseLog(log);
+      listener(
+        this.toContractEvent(parsedLog.eventFragment, parsedLog.args, log),
+      );
     };
 
-    this.contractWrapper.readContract.on(event.name, wrappedListener);
+    this.contractWrapper.getProvider().on(filter, wrappedListener);
     return () => {
-      this.contractWrapper.readContract.off(event.name, wrappedListener);
+      this.contractWrapper.getProvider().off(filter, wrappedListener);
     };
   }
 
@@ -103,11 +108,14 @@ export class ContractEvents<TContract extends BaseContract> {
     const address = this.contractWrapper.readContract.address;
     const filter = { address };
 
-    const wrappedListener = (log: { topics: Array<string>; data: string }) => {
+    const wrappedListener = (log: providers.Log) => {
       try {
         const parsedLog =
           this.contractWrapper.readContract.interface.parseLog(log);
-        listener(this.toContractEvent(parsedLog.eventFragment, parsedLog.args));
+
+        listener(
+          this.toContractEvent(parsedLog.eventFragment, parsedLog.args, log),
+        );
       } catch (e) {
         console.error("Could not parse event:", log, e);
       }
@@ -179,20 +187,25 @@ export class ContractEvents<TContract extends BaseContract> {
    * @returns The event objects of the events emitted with event names and data for each event
    */
   public async getAllEvents(
-    filters?: QueryAllEvents,
+    filters: EventQueryFilter = {
+      fromBlock: 0,
+      toBlock: "latest",
+      order: "desc",
+    },
   ): Promise<ContractEvent[]> {
-    const fromBlock = filters?.fromBlock || 0;
-    const toBlock =
-      filters?.toBlock ||
-      (await this.contractWrapper.readContract.provider.getBlockNumber());
-
     const events = await this.contractWrapper.readContract.queryFilter(
       {},
-      fromBlock,
-      toBlock,
+      filters.fromBlock,
+      filters.toBlock,
     );
 
-    return this.parseEvents(events);
+    const orderedEvents = events.sort((a, b) => {
+      return filters.order === "desc"
+        ? b.blockNumber - a.blockNumber
+        : a.blockNumber - b.blockNumber;
+    });
+
+    return this.parseEvents(orderedEvents);
   }
 
   /**
@@ -213,39 +226,49 @@ export class ContractEvents<TContract extends BaseContract> {
    * ```
    *
    * @param eventName - The name of the event to get logs for
-   * @param filters - Specify the from and to block numbers to get events for, defaults to all blocks
+   * @param filters - Specify the from and to block numbers to get events for, defaults to all blocks. @see EventQueryFilter
    * @returns The requested event objects with event data
    */
   public async getEvents(
     eventName: string,
-    filters?: QueryAllEvents,
+    filters: EventQueryFilter = {
+      fromBlock: 0,
+      toBlock: "latest",
+      order: "desc",
+    },
   ): Promise<ContractEvent[]> {
     const event = this.contractWrapper.readContract.interface.getEvent(
       eventName as string,
     );
     const filter = this.contractWrapper.readContract.filters[event.name];
 
-    const fromBlock = filters?.fromBlock || 0;
-    const toBlock =
-      filters?.toBlock ||
-      (await this.contractWrapper.readContract.provider.getBlockNumber());
-
     const events = await this.contractWrapper.readContract.queryFilter(
       filter(),
-      fromBlock,
-      toBlock,
+      filters.fromBlock,
+      filters.toBlock,
     );
 
-    return this.parseEvents(events);
+    const orderedEvents = events.sort((a, b) => {
+      return filters.order === "desc"
+        ? b.blockNumber - a.blockNumber
+        : a.blockNumber - b.blockNumber;
+    });
+
+    return this.parseEvents(orderedEvents);
   }
 
   private parseEvents(events: Event[]): ContractEvent[] {
     return events.map((e) => {
+      const transaction = Object.fromEntries(
+        Object.entries(e).filter(
+          (a) => typeof a[1] !== "function" && a[0] !== "args",
+        ),
+      ) as providers.Log;
       if (e.args) {
         const entries = Object.entries(e.args);
         const args = entries.slice(entries.length / 2, entries.length);
 
-        const data: Record<string, any> = {};
+        const data: Record<string, unknown> = {};
         for (const [key, value] of args) {
           data[key] = value;
         }
@@ -253,12 +276,14 @@ export class ContractEvents<TContract extends BaseContract> {
         return {
           eventName: e.event || "",
           data,
+          transaction,
         };
       }
 
       return {
         eventName: e.event || "",
         data: {},
+        transaction,
       };
     });
   }
@@ -266,11 +291,17 @@ export class ContractEvents<TContract extends BaseContract> {
   private toContractEvent(
     event: EventFragment,
     args: ReadonlyArray<any>,
+    rawLog: providers.Log,
   ): ContractEvent {
-    const results: Record<string, any> = {};
+    const transaction = Object.fromEntries(
+      Object.entries(rawLog).filter(
+        (a) => typeof a[1] !== "function" && a[0] !== "args",
+      ),
+    ) as providers.Log;
+    const results: Record<string, unknown> = {};
     event.inputs.forEach((param, index) => {
       if (Array.isArray(args[index])) {
-        const obj: Record<string, any> = {};
+        const obj: Record<string, unknown> = {};
         const components = param.components;
         if (components) {
           const arr = args[index];
@@ -287,6 +318,7 @@ export class ContractEvents<TContract extends BaseContract> {
     return {
       eventName: event.name,
       data: results,
+      transaction,
     };
   }
 }

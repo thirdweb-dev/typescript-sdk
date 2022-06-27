@@ -59,7 +59,7 @@ export class RPCConnectionHandler extends EventEmitter {
   }
 
   /**
-   * Explicitly get the active signer.
+   * Explicitly get the active provider.
    * @returns the active provider
    */
   public getProvider(): providers.Provider {
