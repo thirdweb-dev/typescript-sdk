@@ -660,6 +660,9 @@ export class ContractWrapper<
     });
     if (response.ok) {
       const resp = await response.json();
+      if (!resp.result) {
+        throw new Error(`Relay transaction failed: ${resp.message}`);
+      }
       const result = JSON.parse(resp.result);
       return result.txHash;
     }
