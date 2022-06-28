@@ -3,7 +3,6 @@ import {
   MintRequest721withQuantity,
   PayloadToSign721withQuantity,
   PayloadWithUri721withQuantity,
-  Signature721PayloadInput,
   Signature721WithQuantityInput,
   Signature721WithQuantityOutput,
   SignedPayload721WithQuantitySignature,
@@ -29,7 +28,7 @@ import { FEATURE_NFT_SIGNATURE_MINTABLE } from "../../constants/erc721-features"
 import { hasFunction } from "../../common";
 
 /**
- * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely *
+ * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
  * @public
  */
 export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
@@ -269,15 +268,10 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
       await this.contractWrapper.getSignerAddress(),
     );
     let parsedRequests;
-    if (isLegacyNFTContract) {
-      parsedRequests = payloadsToSign.map((m) =>
-        Signature721PayloadInput.parse(m),
-      );
-    } else {
-      parsedRequests = payloadsToSign.map((m) =>
-        Signature721WithQuantityInput.parse(m),
-      );
-    }
+    parsedRequests = payloadsToSign.map((m) =>
+      Signature721WithQuantityInput.parse(m),
+    );
+
     const metadatas = parsedRequests.map((r) => r.metadata);
     const uris = await uploadOrExtractURIs(metadatas, this.storage);
 

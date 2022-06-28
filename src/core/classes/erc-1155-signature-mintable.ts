@@ -66,7 +66,7 @@ export class Erc1155SignatureMintable implements DetectableFeature {
    * const receipt = tx.receipt; // the mint transaction receipt
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
-   * @param signedPayload - the previously generated payload and signature with {@link Erc721WithQuantitySignatureMintable.generate}
+   * @param signedPayload - the previously generated payload and signature with {@link Erc1155SignatureMintable.generate}
    */
   public async mint(
     signedPayload: SignedPayload1155,
