@@ -4,7 +4,7 @@
 
 ## Erc721WithQuantitySignatureMintable class
 
-Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely \*
+Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely
 
 <b>Signature:</b>
 

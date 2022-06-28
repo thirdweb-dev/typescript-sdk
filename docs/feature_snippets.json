@@ -748,7 +748,7 @@
   },
   "ERC721SignatureMint": {
     "name": "Erc721WithQuantitySignatureMintable",
-    "summary": "Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely *\n\n\n",
+    "summary": "Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely\n\n\n",
     "remarks": null,
     "examples": {},
     "methods": [

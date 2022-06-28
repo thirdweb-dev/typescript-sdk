@@ -267,8 +267,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );
-    let parsedRequests;
-    parsedRequests = payloadsToSign.map((m) =>
+    const parsedRequests = payloadsToSign.map((m) =>
       Signature721WithQuantityInput.parse(m),
     );
 
