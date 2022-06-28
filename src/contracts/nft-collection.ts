@@ -1,6 +1,6 @@
 import { IStorage } from "../core/interfaces/IStorage";
 import type {
-  NetworkOrSignerOrProvider,
+  ConnectionInfo,
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
@@ -105,18 +105,18 @@ export class NFTCollection extends Erc721<TokenERC721> {
   private _owned = this._query.owned as Erc721Enumerable;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<TokenERC721>(
-      network,
+      connection,
       address,
       NFTCollection.contractAbi,
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       NFTCollection.schema,

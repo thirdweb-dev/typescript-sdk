@@ -1,5 +1,5 @@
 import { ContractMetadata } from "../core/classes/contract-metadata";
-import { IStorage, NetworkOrSignerOrProvider } from "../core";
+import { ConnectionInfo, IStorage } from "../core";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
@@ -21,7 +21,7 @@ import {
 } from "contracts";
 import { AbiSchema, CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { CallOverrides, ContractInterface } from "ethers";
+import { CallOverrides, ContractInterface, Signer } from "ethers";
 import {
   ALL_ROLES,
   detectContractFeature,
@@ -70,7 +70,6 @@ export class SmartContract<
 
   private contractWrapper;
   private storage;
-  private options;
 
   // utilities
   public events: ContractEvents<TContract>;
@@ -100,19 +99,18 @@ export class SmartContract<
   public edition: Erc1155 | undefined;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     abi: ContractInterface,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<TContract>(
-      network,
+      connection,
       address,
       abi,
       options,
     ),
   ) {
-    this.options = options;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
 
@@ -141,12 +139,16 @@ export class SmartContract<
     this.edition = this.detectErc1155();
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainId(): number {
+    return this.contractWrapper.getConnectionInfo().chainId;
   }
 
   /**
@@ -274,21 +276,21 @@ export class SmartContract<
 
   private detectErc20() {
     if (detectContractFeature<BaseERC20>(this.contractWrapper, "ERC20")) {
-      return new Erc20(this.contractWrapper, this.storage, this.options);
+      return new Erc20(this.contractWrapper, this.storage);
     }
     return undefined;
   }
 
   private detectErc721() {
     if (detectContractFeature<BaseERC721>(this.contractWrapper, "ERC721")) {
-      return new Erc721(this.contractWrapper, this.storage, this.options);
+      return new Erc721(this.contractWrapper, this.storage);
     }
     return undefined;
   }
 
   private detectErc1155() {
     if (detectContractFeature<BaseERC1155>(this.contractWrapper, "ERC1155")) {
-      return new Erc1155(this.contractWrapper, this.storage, this.options);
+      return new Erc1155(this.contractWrapper, this.storage);
     }
     return undefined;
   }

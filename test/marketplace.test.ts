@@ -33,7 +33,7 @@ let tokenAddress = NATIVE_TOKEN_ADDRESS;
 describe("Marketplace Contract", async () => {
   let marketplaceContract: Marketplace;
   let dummyNftContract: NFTCollection;
-  let dummyBundleContract: Edition;
+  let dummyEditionContract: Edition;
   let customTokenContract: Token;
 
   let adminWallet: SignerWithAddress,
@@ -49,15 +49,15 @@ describe("Marketplace Contract", async () => {
     await jsonProvider.send("hardhat_reset", []);
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
 
-    await sdk.updateSignerOrProvider(adminWallet);
+    await sdk.wallet.connect(adminWallet);
 
-    marketplaceContract = sdk.getMarketplace(
+    marketplaceContract = await sdk.getMarketplace(
       await sdk.deployer.deployBuiltInContract(Marketplace.contractType, {
         name: "Test Marketplace",
         seller_fee_basis_points: 0,
       }),
     );
-    dummyNftContract = sdk.getNFTCollection(
+    dummyNftContract = await sdk.getNFTCollection(
       await sdk.deployer.deployBuiltInContract(NFTCollection.contractType, {
         name: "TEST NFT",
         seller_fee_basis_points: 200,
@@ -79,14 +79,14 @@ describe("Marketplace Contract", async () => {
         name: "Test 4",
       },
     ]);
-    dummyBundleContract = sdk.getEdition(
+    dummyEditionContract = await sdk.getEdition(
       await sdk.deployer.deployBuiltInContract(Edition.contractType, {
-        name: "TEST BUNDLE",
+        name: "TEST EDITION",
         seller_fee_basis_points: 100,
         primary_sale_recipient: adminWallet.address,
       }),
     );
-    await dummyBundleContract.mintBatch([
+    await dummyEditionContract.mintBatch([
       {
         metadata: {
           name: "Test 0",
@@ -101,7 +101,7 @@ describe("Marketplace Contract", async () => {
       },
     ]);
 
-    customTokenContract = sdk.getToken(
+    customTokenContract = await sdk.getToken(
       await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
@@ -185,13 +185,13 @@ describe("Marketplace Contract", async () => {
         reservePricePerToken: 0.0001,
       });
       const id = tx.id;
-      sdk.updateSignerOrProvider(samWallet);
+      sdk.wallet.connect(samWallet);
       await marketplaceContract.auction.makeBid(id, 0.1);
     });
 
     it("should list direct listings with 1155s", async () => {
       const listingId = await createDirectListing(
-        dummyBundleContract.getAddress(),
+        dummyEditionContract.getAddress(),
         0,
         10,
       );
@@ -217,10 +217,10 @@ describe("Marketplace Contract", async () => {
 
     it("should be able to restrict listing", async () => {
       await marketplaceContract.allowListingFromSpecificAssetOnly(
-        dummyBundleContract.getAddress(),
+        dummyEditionContract.getAddress(),
       );
       const listingId = await createDirectListing(
-        dummyBundleContract.getAddress(),
+        dummyEditionContract.getAddress(),
         0,
         10,
       );
@@ -235,19 +235,19 @@ describe("Marketplace Contract", async () => {
 
   describe("Listing Filters", () => {
     beforeEach(async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       await createDirectListing(dummyNftContract.getAddress(), 0);
       await createAuctionListing(dummyNftContract.getAddress(), 1);
 
-      await createDirectListing(dummyBundleContract.getAddress(), 0, 10);
-      await createAuctionListing(dummyBundleContract.getAddress(), 0, 10);
+      await createDirectListing(dummyEditionContract.getAddress(), 0, 10);
+      await createAuctionListing(dummyEditionContract.getAddress(), 0, 10);
 
-      await dummyBundleContract.transfer(samWallet.address, "0", 10);
-      await dummyBundleContract.transfer(samWallet.address, "1", 10);
+      await dummyEditionContract.transfer(samWallet.address, "0", 10);
+      await dummyEditionContract.transfer(samWallet.address, "1", 10);
 
-      await sdk.updateSignerOrProvider(samWallet);
-      await createDirectListing(dummyBundleContract.getAddress(), 0, 10);
-      await createAuctionListing(dummyBundleContract.getAddress(), 1, 10);
+      await sdk.wallet.connect(samWallet);
+      await createDirectListing(dummyEditionContract.getAddress(), 0, 10);
+      await createAuctionListing(dummyEditionContract.getAddress(), 1, 10);
     });
 
     it("should paginate properly", async () => {
@@ -267,7 +267,7 @@ describe("Marketplace Contract", async () => {
 
     it("should filter asset contract properly", async () => {
       const listings = await marketplaceContract.getAllListings({
-        tokenContract: dummyBundleContract.getAddress(),
+        tokenContract: dummyEditionContract.getAddress(),
       });
       assert.equal(listings.length, 4, "filter doesn't work");
     });
@@ -304,7 +304,7 @@ describe("Marketplace Contract", async () => {
     let auctionListingId: BigNumber;
 
     beforeEach(async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       directListingId = await createDirectListing(
         dummyNftContract.getAddress(),
         0,
@@ -318,7 +318,7 @@ describe("Marketplace Contract", async () => {
     it("should return only active listings", async () => {
       const before = await marketplaceContract.getActiveListings();
       expect(before.length).to.eq(1);
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await marketplaceContract.buyoutListing(directListingId, 1);
       const afterDirectBuyout = await marketplaceContract.getActiveListings();
       expect(afterDirectBuyout.length).to.eq(0);
@@ -374,7 +374,7 @@ describe("Marketplace Contract", async () => {
     let auctionListingId: BigNumber;
 
     beforeEach(async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       directListingId = await createDirectListing(
         dummyNftContract.getAddress(),
         0,
@@ -387,7 +387,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should allow the seller to accept an offer", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
 
       const currentBalance = await dummyNftContract.balanceOf(
         bobWallet.address,
@@ -406,7 +406,7 @@ describe("Marketplace Contract", async () => {
         new Date(Date.now() + 60 * 60 * 24 * 10 * 1000),
       );
 
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       await marketplaceContract.direct.acceptOffer(
         directListingId,
         bobWallet.address,
@@ -421,7 +421,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should allow a buyer to buyout a direct listing", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
 
       const currentBalance = await dummyNftContract.balanceOf(
         bobWallet.address,
@@ -441,7 +441,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should allow a buyer to buyout a direct listing after making an offer", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
 
       const currentBalance = await dummyNftContract.balanceOf(
         bobWallet.address,
@@ -467,7 +467,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should allow a buyer to buyout a direct listing for someone else", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
 
       const currentBalance = await dummyNftContract.balanceOf(w4.address);
       assert.equal(
@@ -485,7 +485,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should allow offers to be made on direct listings", async () => {
-      sdk.updateSignerOrProvider(bobWallet);
+      sdk.wallet.connect(bobWallet);
       await marketplaceContract.direct.makeOffer(
         directListingId,
         1,
@@ -505,7 +505,7 @@ describe("Marketplace Contract", async () => {
       );
       assert.equal(offer.listingId.toString(), directListingId.toString());
 
-      sdk.updateSignerOrProvider(samWallet);
+      sdk.wallet.connect(samWallet);
       await marketplaceContract.direct.makeOffer(
         directListingId,
         1,
@@ -535,7 +535,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should allow bids by the same person", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
       await marketplaceContract.auction.makeBid(auctionListingId, 0.06);
       await marketplaceContract.auction.makeBid(auctionListingId, 0.08);
 
@@ -551,7 +551,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should allow bids to be made on auction listings", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
       await marketplaceContract.auction.makeBid(auctionListingId, 0.06);
 
       let winningBid = (await marketplaceContract.auction.getWinningBid(
@@ -569,7 +569,7 @@ describe("Marketplace Contract", async () => {
       );
 
       // Make a higher winning bid
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await marketplaceContract.auction.makeBid(auctionListingId, 0.09);
 
       winningBid = (await marketplaceContract.auction.getWinningBid(
@@ -592,7 +592,7 @@ describe("Marketplace Contract", async () => {
     let auctionListingId: BigNumber;
 
     beforeEach(async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       directListingId = await createDirectListing(
         dummyNftContract.getAddress(),
         0,
@@ -628,7 +628,7 @@ describe("Marketplace Contract", async () => {
     let auctionListingId: BigNumber;
 
     beforeEach(async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       auctionListingId = await createAuctionListing(
         dummyNftContract.getAddress(),
         1,
@@ -636,7 +636,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should automatically award a buyout", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
       const currentBalance = await dummyNftContract.balanceOf(
         bobWallet.address,
       );
@@ -659,7 +659,7 @@ describe("Marketplace Contract", async () => {
     // has ended and so the call to `acceptWinningBid` is failing on this
     // test because the listing is still active.
     it.skip("should allow the seller to accept the winning bid", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
       const currentBalance = await dummyNftContract.balanceOf(
         bobWallet.address,
       );
@@ -680,7 +680,7 @@ describe("Marketplace Contract", async () => {
         "Bob should be the winning bidder",
       );
 
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
       await marketplaceContract.auction.closeListing(auctionListingId);
       const balance = await dummyNftContract.balanceOf(bobWallet.address);
       assert.equal(
@@ -693,7 +693,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should throw an error if a bid being placed is not a winning bid", async () => {
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
       const currentBalance = await dummyNftContract.balanceOf(
         bobWallet.address,
       );
@@ -712,7 +712,7 @@ describe("Marketplace Contract", async () => {
     it("should allow an auction buyout", async () => {
       const id = (
         await marketplaceContract.auction.createListing({
-          assetContractAddress: dummyBundleContract.getAddress(),
+          assetContractAddress: dummyEditionContract.getAddress(),
           buyoutPricePerToken: 0.8,
           currencyContractAddress: tokenAddress,
           // to start tomorrow so we can update it
@@ -723,10 +723,10 @@ describe("Marketplace Contract", async () => {
           reservePricePerToken: 0.2,
         })
       ).id;
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
       await marketplaceContract.buyoutListing(id);
 
-      const balance = await dummyBundleContract.balanceOf(
+      const balance = await dummyEditionContract.balanceOf(
         bobWallet.address,
         "1",
       );
@@ -739,7 +739,7 @@ describe("Marketplace Contract", async () => {
     let auctionListingId: BigNumber;
 
     beforeEach(async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       directListingId = await createDirectListing(
         dummyNftContract.getAddress(),
         0,
@@ -837,7 +837,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should distribute the tokens when a listing closes", async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       const listingId = (
         await marketplaceContract.auction.createListing({
           assetContractAddress: dummyNftContract.getAddress(),
@@ -851,7 +851,7 @@ describe("Marketplace Contract", async () => {
         })
       ).id;
 
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
 
       await marketplaceContract.auction.makeBid(listingId, 2);
 
@@ -878,7 +878,7 @@ describe("Marketplace Contract", async () => {
       /**
        * Seller
        */
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       const oldTokenBalance = await customTokenContract.balanceOf(
         adminWallet.address,
       );
@@ -909,7 +909,7 @@ describe("Marketplace Contract", async () => {
     let directListingId: BigNumber;
 
     beforeEach(async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       directListingId = await createDirectListing(
         dummyNftContract.getAddress(),
         0,
@@ -1041,7 +1041,7 @@ describe("Marketplace Contract", async () => {
 
   describe("Buffers", () => {
     beforeEach(async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
     });
 
     it("should set the correct bid buffer default of 15 minutes", async () => {
@@ -1071,7 +1071,7 @@ describe("Marketplace Contract", async () => {
     let directListingId: BigNumber;
 
     beforeEach(async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       directListingId = await createDirectListing(
         dummyNftContract.getAddress(),
         0,
@@ -1079,10 +1079,10 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should throw an error when trying to buyout an invalid direct listing", async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       await dummyNftContract.transfer(samWallet.address, "0");
 
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
 
       try {
         await marketplaceContract.direct.buyoutListing(directListingId, 1);
@@ -1093,7 +1093,7 @@ describe("Marketplace Contract", async () => {
     });
 
     it("should not return invalid direct listings", async () => {
-      await sdk.updateSignerOrProvider(adminWallet);
+      await sdk.wallet.connect(adminWallet);
       await dummyNftContract.transfer(samWallet.address, "0");
 
       const allListings = await marketplaceContract.getAllListings();

@@ -29,7 +29,7 @@ await contract.edition.transfer(walletAddress, tokenId, quantity);
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(contractWrapper, storage, options)](./sdk.erc1155._constructor_.md) |  | Constructs a new instance of the <code>Erc1155</code> class |
+|  [(constructor)(contractWrapper, storage)](./sdk.erc1155._constructor_.md) |  | Constructs a new instance of the <code>Erc1155</code> class |
 
 ## Properties
 
@@ -38,7 +38,6 @@ await contract.edition.transfer(walletAddress, tokenId, quantity);
 |  [contractWrapper](./sdk.erc1155.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
 |  [featureName](./sdk.erc1155.featurename.md) |  | "ERC1155" |  |
 |  [mint](./sdk.erc1155.mint.md) |  | [Erc1155Mintable](./sdk.erc1155mintable.md) \| undefined |  |
-|  [options](./sdk.erc1155.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [query](./sdk.erc1155.query.md) |  | [Erc1155Enumerable](./sdk.erc1155enumerable.md) \| undefined |  |
 |  [storage](./sdk.erc1155.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
 
@@ -51,6 +50,7 @@ await contract.edition.transfer(walletAddress, tokenId, quantity);
 |  [balanceOf(address, tokenId)](./sdk.erc1155.balanceof.md) |  | Get NFT Balance |
 |  [get(tokenId)](./sdk.erc1155.get.md) |  | Get a single NFT Metadata |
 |  [getAddress()](./sdk.erc1155.getaddress.md) |  |  |
+|  [getChainId()](./sdk.erc1155.getchainid.md) |  |  |
 |  [isApproved(address, operator)](./sdk.erc1155.isapproved.md) |  | Get whether this wallet has approved transfers from the given operator |
 |  [totalSupply(tokenId)](./sdk.erc1155.totalsupply.md) |  | Returns the total supply of a specific token |
 |  [transfer(to, tokenId, amount, data)](./sdk.erc1155.transfer.md) |  | Transfer a single NFT |

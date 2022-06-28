@@ -52,6 +52,7 @@ const tokenId = "0";
 const addresses = [
  "0x...", "0x...", "0x...",
 ]
+
 await contract.airdrop(tokenId, addresses);
 ```
 

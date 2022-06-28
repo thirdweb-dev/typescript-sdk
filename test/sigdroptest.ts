@@ -37,9 +37,9 @@ describe("Signature drop tests", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
 
-    signatureDropContract = sdk.getSignatureDrop(
+    signatureDropContract = await sdk.getSignatureDrop(
       await sdk.deployer.deployBuiltInContract(SignatureDrop.contractType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",
@@ -58,7 +58,7 @@ describe("Signature drop tests", async () => {
       to: samWallet.address,
     };
 
-    customTokenContract = sdk.getToken(
+    customTokenContract = await sdk.getToken(
       await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
@@ -217,12 +217,12 @@ describe("Signature drop tests", async () => {
     });
 
     it("should allow a valid voucher to mint", async () => {
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       const tx = await signatureDropContract.signature.mint(v1);
       const newId = (await signatureDropContract.get(tx.id)).metadata.id;
       assert.equal(newId.toString(), "0");
 
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       const tx2 = await signatureDropContract.signature.mint(v2);
       const newId2 = (await signatureDropContract.get(tx2.id)).metadata.id;
       assert.equal(newId2.toString(), "1");
@@ -250,7 +250,7 @@ describe("Signature drop tests", async () => {
         mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
         mintStartTime: new Date(),
       });
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await signatureDropContract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
@@ -270,7 +270,7 @@ describe("Signature drop tests", async () => {
         mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
         mintStartTime: new Date(),
       });
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await signatureDropContract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
@@ -290,7 +290,7 @@ describe("Signature drop tests", async () => {
         mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
         mintStartTime: new Date(),
       });
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await signatureDropContract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
@@ -535,7 +535,7 @@ describe("Signature drop tests", async () => {
        */
 
       for (const member of testWallets) {
-        await sdk.updateSignerOrProvider(member);
+        await sdk.wallet.connect(member);
         await signatureDropContract.claim(1);
       }
     });
@@ -561,12 +561,12 @@ describe("Signature drop tests", async () => {
        */
 
       for (const member of testWallets) {
-        await sdk.updateSignerOrProvider(member);
+        await sdk.wallet.connect(member);
         await signatureDropContract.claim(1);
       }
 
       try {
-        await sdk.updateSignerOrProvider(samWallet);
+        await sdk.wallet.connect(samWallet);
         await signatureDropContract.claim(1);
         assert.fail("should have thrown");
       } catch (e) {
@@ -617,7 +617,7 @@ describe("Signature drop tests", async () => {
         { name: "name", description: "description" },
       ]);
 
-      await sdk.updateSignerOrProvider(w1);
+      await sdk.wallet.connect(w1);
       try {
         await signatureDropContract.claim(1);
       } catch (err: any) {
@@ -652,11 +652,11 @@ describe("Signature drop tests", async () => {
           { address: w2.address, maxClaimable: 1 },
         ],
       });
-      await sdk.updateSignerOrProvider(w1);
+      await sdk.wallet.connect(w1);
       const tx = await signatureDropContract.claim(2);
       expect(tx.length).to.eq(2);
       try {
-        await sdk.updateSignerOrProvider(w2);
+        await sdk.wallet.connect(w2);
         await signatureDropContract.claim(2);
       } catch (e) {
         expectError(e, "invalid quantity proof");

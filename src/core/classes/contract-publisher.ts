@@ -1,4 +1,4 @@
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import { ConnectionInfo, TransactionResult } from "../types";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
@@ -8,6 +8,7 @@ import {
   constants,
   ContractInterface,
   ethers,
+  Signer,
   utils,
 } from "ethers";
 import invariant from "tiny-invariant";
@@ -44,25 +45,23 @@ export class ContractPublisher extends RPCConnectionHandler {
   private publisher: ContractWrapper<OnChainContractPublisher>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     options: SDKOptions,
     storage: IStorage,
   ) {
-    super(network, options);
+    super(connection);
     this.storage = storage;
     this.publisher = new ContractWrapper<OnChainContractPublisher>(
-      network,
+      connection,
       getContractPublisherAddress(),
       ContractPublisherAbi,
       options,
     );
   }
 
-  public override updateSignerOrProvider(
-    network: NetworkOrSignerOrProvider,
-  ): void {
-    super.updateSignerOrProvider(network);
-    this.publisher.updateSignerOrProvider(network);
+  public override updateSigner(signer: Signer | undefined): void {
+    super.updateSigner(signer);
+    this.publisher.updateSigner(signer);
   }
 
   /**

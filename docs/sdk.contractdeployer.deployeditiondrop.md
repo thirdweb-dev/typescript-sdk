@@ -9,7 +9,7 @@ Deploys a new EditionDrop contract
 <b>Signature:</b>
 
 ```typescript
-deployEditionDrop(metadata: NFTContractDeployMetadata): Promise<string>;
+deployEditionDrop(metadata: NFTContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ deployEditionDrop(metadata: NFTContractDeployMetadata): Promise<string>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  metadata | [NFTContractDeployMetadata](./sdk.nftcontractdeploymetadata.md) | the contract metadata |
+|  chain | ChainIdOrName | <i>(Optional)</i> the chain to deploy the contract to, defaults to the chain the SDK is connected to |
 
 <b>Returns:</b>
 

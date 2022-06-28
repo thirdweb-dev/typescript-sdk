@@ -27,7 +27,7 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, storage, options, contractWrapper)](./sdk.marketplace._constructor_.md) |  | Constructs a new instance of the <code>Marketplace</code> class |
+|  [(constructor)(connection, address, storage, options, contractWrapper)](./sdk.marketplace._constructor_.md) |  | Constructs a new instance of the <code>Marketplace</code> class |
 
 ## Properties
 
@@ -56,11 +56,12 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 |  [getAddress()](./sdk.marketplace.getaddress.md) |  |  |
 |  [getAllListings(filter)](./sdk.marketplace.getalllistings.md) |  | Get all the listings |
 |  [getBidBufferBps()](./sdk.marketplace.getbidbufferbps.md) |  | Get the buffer in basis points between offers |
+|  [getChainId()](./sdk.marketplace.getchainid.md) |  |  |
 |  [getListing(listingId)](./sdk.marketplace.getlisting.md) |  | Convenience function to get either a direct or auction listing |
 |  [getTimeBufferInSeconds()](./sdk.marketplace.gettimebufferinseconds.md) |  | get the buffer time in seconds between offers |
 |  [getTotalCount()](./sdk.marketplace.gettotalcount.md) |  | Get the total number of Listings |
 |  [isRestrictedToListerRoleOnly()](./sdk.marketplace.isrestrictedtolisterroleonly.md) |  | Get whether listing is restricted only to addresses with the Lister role |
-|  [onNetworkUpdated(network)](./sdk.marketplace.onnetworkupdated.md) |  |  |
+|  [onSignerUpdated(signer)](./sdk.marketplace.onsignerupdated.md) |  |  |
 |  [setBidBufferBps(bufferBps)](./sdk.marketplace.setbidbufferbps.md) |  | Set the Auction bid buffer |
 |  [setTimeBufferInSeconds(bufferInSeconds)](./sdk.marketplace.settimebufferinseconds.md) |  | Set the Auction Time buffer: |
 

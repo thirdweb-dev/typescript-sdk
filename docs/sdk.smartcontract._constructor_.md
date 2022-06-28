@@ -12,14 +12,14 @@ Constructs a new instance of the `SmartContract` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
+constructor(connection: ConnectionInfo, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  connection | [ConnectionInfo](./sdk.connectioninfo.md) |  |
 |  address | string |  |
 |  abi | ContractInterface |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |

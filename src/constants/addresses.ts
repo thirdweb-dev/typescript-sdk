@@ -149,11 +149,11 @@ export const CONTRACT_ADDRESSES: Record<
  * @internal
  */
 export function getContractAddressByChainId(
-  chainId: SUPPORTED_CHAIN_ID | ChainId.Hardhat,
+  chainId: SUPPORTED_CHAIN_ID | ChainId.Hardhat | ChainId.Localhost,
   contractName: keyof typeof CONTRACT_ADDRESSES[SUPPORTED_CHAIN_ID],
 ): string {
   // for testing only
-  if (chainId === ChainId.Hardhat) {
+  if (chainId === ChainId.Hardhat || chainId === ChainId.Localhost) {
     if (contractName === "twFactory") {
       return process.env.factoryAddress as string;
     } else if (contractName === "twRegistry") {

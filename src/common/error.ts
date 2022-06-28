@@ -1,4 +1,5 @@
 import { BigNumberish, providers } from "ethers";
+import { ChainIdOrName } from "../constants/index";
 
 /**
  * Error that may get thrown if IPFS returns nothing for a given uri.
@@ -8,6 +9,17 @@ export class NotFoundError extends Error {
   /** @internal */
   constructor(identifier?: string) {
     super(identifier ? `Object with id ${identifier} NOT FOUND` : "NOT_FOUND");
+  }
+}
+
+/**
+ * Thrown when trying to do a transaction on a non-expected chain
+ */
+export class ChainMismatchError extends Error {
+  constructor(expectedChainId: ChainIdOrName, actualChainId: number) {
+    super(
+      `Chain Mismatch Error: Trying to call a contract on chain '${expectedChainId}', but the connected signer is on chain '${actualChainId}'`,
+    );
   }
 }
 

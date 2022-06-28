@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare function getReadOnlyProvider(network: string, chainId?: number): ethers.providers.BaseProvider;
+export declare function getReadOnlyProvider(network: string, chainId: number): ethers.providers.BaseProvider;
 ```
 
 ## Parameters
@@ -15,7 +15,7 @@ export declare function getReadOnlyProvider(network: string, chainId?: number): 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  network | string | the chain name or rpc url |
-|  chainId | number | <i>(Optional)</i> the optional chain id |
+|  chainId | number | the optional chain id |
 
 <b>Returns:</b>
 

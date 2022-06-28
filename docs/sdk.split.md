@@ -27,7 +27,7 @@ const contract = sdk.getSplit("{{contract_address}}");
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, storage, options, contractWrapper)](./sdk.split._constructor_.md) |  | Constructs a new instance of the <code>Split</code> class |
+|  [(constructor)(connection, address, storage, options, contractWrapper)](./sdk.split._constructor_.md) |  | Constructs a new instance of the <code>Split</code> class |
 
 ## Properties
 
@@ -52,8 +52,9 @@ const contract = sdk.getSplit("{{contract_address}}");
 |  [distributeToken(tokenAddress)](./sdk.split.distributetoken.md) |  | Distribute Funds |
 |  [getAddress()](./sdk.split.getaddress.md) |  |  |
 |  [getAllRecipients()](./sdk.split.getallrecipients.md) |  | Get Recipients of this splits contract |
+|  [getChainId()](./sdk.split.getchainid.md) |  |  |
 |  [getRecipientSplitPercentage(address)](./sdk.split.getrecipientsplitpercentage.md) |  | Get the % of funds owed to a given address |
-|  [onNetworkUpdated(network)](./sdk.split.onnetworkupdated.md) |  |  |
+|  [onSignerUpdated(signer)](./sdk.split.onsignerupdated.md) |  |  |
 |  [withdraw(walletAddress)](./sdk.split.withdraw.md) |  | Withdraw Funds |
 |  [withdrawToken(walletAddress, tokenAddress)](./sdk.split.withdrawtoken.md) |  | Triggers a transfer to account of the amount of a given currency they are owed. |
 

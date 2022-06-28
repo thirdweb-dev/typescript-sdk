@@ -9,14 +9,14 @@ Constructs a new instance of the `TokenDrop` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC20>);
+constructor(connection: ConnectionInfo, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC20>);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  connection | [ConnectionInfo](./sdk.connectioninfo.md) |  |
 |  address | string |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> |

@@ -3,7 +3,7 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { IStorage } from "../core/interfaces/IStorage";
 import {
-  NetworkOrSignerOrProvider,
+  ConnectionInfo,
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
@@ -17,7 +17,7 @@ import {
   VoteSettings,
 } from "../types/vote";
 import { fetchCurrencyMetadata, fetchCurrencyValue } from "../common/currency";
-import { BigNumber, BigNumberish, Contract, ethers } from "ethers";
+import { BigNumber, BigNumberish, Contract, ethers, Signer } from "ethers";
 import { VoteType } from "../enums";
 import { CurrencyValue } from "../types/currency";
 import { UpdateableNetwork } from "../core/interfaces/contract";
@@ -62,12 +62,12 @@ export class Vote implements UpdateableNetwork {
   public interceptor: ContractInterceptor<VoteERC20>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<VoteERC20>(
-      network,
+      connection,
       address,
       Vote.contractAbi,
       options,
@@ -86,12 +86,16 @@ export class Vote implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainId(): number {
+    return this.contractWrapper.getConnectionInfo().chainId;
   }
 
   /** ******************************

@@ -3,14 +3,14 @@ import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { IStorage } from "../core/interfaces/IStorage";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
+import { ConnectionInfo, TransactionResult } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { UpdateableNetwork } from "../core/interfaces/contract";
 import { MarketplaceContractSchema } from "../schema/contracts/marketplace";
 import { AuctionListing, DirectListing } from "../types/marketplace";
 import { ListingType } from "../enums";
-import { BigNumber, BigNumberish, constants } from "ethers";
+import { BigNumber, BigNumberish, constants, Signer } from "ethers";
 import invariant from "tiny-invariant";
 import { ListingNotFoundError } from "../common";
 import { MarketplaceFilter } from "../types/marketplace/MarketPlaceFilter";
@@ -137,12 +137,12 @@ export class Marketplace implements UpdateableNetwork {
   public auction: MarketplaceAuction;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<MarketplaceContract>(
-      network,
+      connection,
       address,
       Marketplace.contractAbi,
       options,
@@ -168,12 +168,16 @@ export class Marketplace implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainId(): number {
+    return this.contractWrapper.getConnectionInfo().chainId;
   }
 
   /** ******************************

@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import { PayloadToSign20, SignedPayload20, Token } from "../src";
 import { sdk, signers } from "./before-setup";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
@@ -21,9 +21,9 @@ describe("Token sig minting", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
 
-    contract = sdk.getToken(
+    contract = await sdk.getToken(
       await sdk.deployer.deployToken({
         name: "Token sigmint",
         symbol: "TSIG",
@@ -39,7 +39,7 @@ describe("Token sig minting", async () => {
       primarySaleRecipient: adminWallet.address,
     };
 
-    customTokenContract = sdk.getToken(
+    customTokenContract = await sdk.getToken(
       await sdk.deployer.deployToken({
         name: "Test",
         symbol: "TEST",
@@ -131,7 +131,7 @@ describe("Token sig minting", async () => {
       const batch = await Promise.all(
         payloads.map(async (p) => await contract.signature.generate(p)),
       );
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await contract.signature.mintBatch(batch);
       const balance = await contract.balanceOf(samWallet.address);
       expect(balance.displayValue).to.eq("10.0");
@@ -144,7 +144,7 @@ describe("Token sig minting", async () => {
         quantity: 10,
         currencyAddress: tokenAddress,
       });
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await contract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
@@ -159,7 +159,7 @@ describe("Token sig minting", async () => {
         price: 1,
         quantity: 0.23,
       });
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await contract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(

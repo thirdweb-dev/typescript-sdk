@@ -9,14 +9,14 @@ Constructs a new instance of the `ContractDeployer` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, options: SDKOptions, storage: IStorage);
+constructor(connection: ConnectionInfo, options: SDKOptions, storage: IStorage);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  connection | [ConnectionInfo](./sdk.connectioninfo.md) |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |
 

@@ -3,13 +3,13 @@ import { IERC20, Split as SplitContract } from "contracts";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { IStorage } from "../core/interfaces/IStorage";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
+import { ConnectionInfo, TransactionResult } from "../core/types";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { SDKOptions } from "../schema/sdk-options";
 import { CurrencyValue } from "../types/currency";
 import { fetchCurrencyValue } from "../common/currency";
-import { BigNumber, Contract } from "ethers";
+import { BigNumber, Contract, Signer } from "ethers";
 import { SplitRecipient } from "../types/SplitRecipient";
 import { SplitsContractSchema } from "../schema/contracts/splits";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
@@ -51,12 +51,12 @@ export class Split implements UpdateableNetwork {
   public interceptor: ContractInterceptor<SplitContract>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<SplitContract>(
-      network,
+      connection,
       address,
       Split.contractAbi,
       options,
@@ -75,12 +75,16 @@ export class Split implements UpdateableNetwork {
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
 
-  onNetworkUpdated(network: NetworkOrSignerOrProvider) {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainId(): number {
+    return this.contractWrapper.getConnectionInfo().chainId;
   }
 
   /** ******************************

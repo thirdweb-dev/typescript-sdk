@@ -11,9 +11,6 @@ describe("Vote Contract", async () => {
   let voteContract: Vote;
   let currencyContract: Token;
 
-  const voteStartWaitTimeInSeconds = 0;
-  const voteWaitTimeInSeconds = 5;
-
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -23,7 +20,7 @@ describe("Vote Contract", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
 
     const tokenContractAddress = await sdk.deployer.deployBuiltInContract(
       Token.contractType,
@@ -33,7 +30,7 @@ describe("Vote Contract", async () => {
         primary_sale_recipient: adminWallet.address,
       },
     );
-    currencyContract = sdk.getToken(tokenContractAddress);
+    currencyContract = await sdk.getToken(tokenContractAddress);
     const voteContractAddress = await sdk.deployer.deployBuiltInContract(
       Vote.contractType,
       {
@@ -43,7 +40,7 @@ describe("Vote Contract", async () => {
         proposal_token_threshold: ethers.utils.parseUnits("1", 18),
       },
     );
-    voteContract = sdk.getVote(voteContractAddress);
+    voteContract = await sdk.getVote(voteContractAddress);
 
     // step 1: mint 1000 governance tokens to my wallet
     await currencyContract.mintTo(samWallet.address, "100");
@@ -52,14 +49,14 @@ describe("Vote Contract", async () => {
     // should be separate function since you need gov token to deploy vote contract
     await currencyContract.roles.grant("minter", voteContract.getAddress());
 
-    await sdk.updateSignerOrProvider(samWallet);
+    await sdk.wallet.connect(samWallet);
 
     // step 2: delegate the governance token to someone for voting. in this case, myself.
     await currencyContract.delegateTo(samWallet.address);
   });
 
   it("should permit a proposal to be passed if it receives the right votes", async () => {
-    await sdk.updateSignerOrProvider(samWallet);
+    await sdk.wallet.connect(samWallet);
     await currencyContract.delegateTo(samWallet.address);
 
     const proposalId = (
@@ -100,7 +97,7 @@ describe("Vote Contract", async () => {
     assert.equal(balanceOfBobsWallet.displayValue, "1.0");
   });
   it("should be able to execute proposal even when `executions` is not passed", async () => {
-    await sdk.updateSignerOrProvider(samWallet);
+    await sdk.wallet.connect(samWallet);
     await currencyContract.delegateTo(samWallet.address);
     const proposalId = (await voteContract.propose("Mint Tokens")).id;
     await voteContract.vote(proposalId.toString(), 1);
@@ -111,23 +108,9 @@ describe("Vote Contract", async () => {
 
     await voteContract.execute(proposalId.toString());
   });
-  it.skip("", async () => {
-    const blockTimes = [];
-    const provider = ethers.getDefaultProvider();
-
-    const latest = await provider.getBlock("latest");
-    for (let i = 0; i <= 10; i++) {
-      const current = await provider.getBlock(latest.number - i);
-      const previous = await provider.getBlock(latest.number - i - 1);
-      const diff = current.timestamp - previous.timestamp;
-      blockTimes.push(diff);
-    }
-
-    const sum = blockTimes.reduce((result, a) => result + a, 0);
-  });
 
   it("should permit a proposal to be passed if it receives the right votes", async () => {
-    await sdk.updateSignerOrProvider(samWallet);
+    await sdk.wallet.connect(samWallet);
     const description = "Mint Tokens";
     const proposalId = (
       await voteContract.propose(description, [
@@ -146,7 +129,7 @@ describe("Vote Contract", async () => {
   });
 
   it("should permit a proposal with native token values to be passed if it receives the right votes", async () => {
-    await sdk.updateSignerOrProvider(samWallet);
+    await sdk.wallet.connect(samWallet);
     await currencyContract.delegateTo(samWallet.address);
 
     await samWallet.sendTransaction({

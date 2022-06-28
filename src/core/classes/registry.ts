@@ -1,20 +1,22 @@
 import { TWRegistry, TWRegistry__factory } from "contracts";
 import { SDKOptions } from "../../schema/sdk-options";
-import { NetworkOrSignerOrProvider } from "../types";
+import { ConnectionInfo } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { constants, utils } from "ethers";
 import { TransactionResult } from "..";
+import { getContractAddressByChainId } from "../../constants/index";
 
 /**
  * @internal
  */
 export class ContractRegistry extends ContractWrapper<TWRegistry> {
-  constructor(
-    registryAddress: string,
-    network: NetworkOrSignerOrProvider,
-    options?: SDKOptions,
-  ) {
-    super(network, registryAddress, TWRegistry__factory.abi, options);
+  constructor(connection: ConnectionInfo, options?: SDKOptions) {
+    super(
+      connection,
+      getContractAddressByChainId(connection.chainId, "twRegistry"),
+      TWRegistry__factory.abi,
+      options,
+    );
   }
 
   public async getContractAddresses(walletAddress: string) {

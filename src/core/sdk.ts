@@ -1,4 +1,4 @@
-import { ContractInterface, ethers, Signer } from "ethers";
+import { ContractInterface, ethers, providers, Signer } from "ethers";
 import { IStorage } from "./interfaces/IStorage";
 import { RemoteStorage } from "./classes/remote-storage";
 import {
@@ -19,10 +19,10 @@ import { SDKOptions } from "../schema/sdk-options";
 import { IpfsStorage } from "./classes/ipfs-storage";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
+  ChainAndAddress,
+  ConnectionInfo,
   ContractForContractType,
   ContractType,
-  NetworkOrSignerOrProvider,
-  SignerOrProvider,
   ValidContractInstance,
 } from "./types";
 import { IThirdwebContract__factory } from "contracts";
@@ -33,10 +33,11 @@ import { TokenDrop } from "../contracts/token-drop";
 import { ContractPublisher } from "./classes/contract-publisher";
 import { ContractMetadata } from "./classes";
 import {
-  ChainOrRpc,
-  getProviderForNetwork,
-  getReadOnlyProvider,
+  ChainIdOrName,
+  chainNameToId,
+  getProviderForChain,
   NATIVE_TOKEN_ADDRESS,
+  toChainId,
 } from "../constants";
 import { UserWallet } from "./wallet/UserWallet";
 import { Multiwrap } from "../contracts/multiwrap";
@@ -62,20 +63,21 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    *
    * @param signer - a ethers Signer to be used for transactions
-   * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
+   * @param chain - the chainId to connect to (e.g. ChainId.Mainnet, ChainId.Rinkeby, ChainId.Polygon, ChainId.Mumbai...)
    * @param options - the SDK options to use
+   * @param storage - the storage handler to use
    * @returns an instance of the SDK
    *
    * @beta
    */
   static fromSigner(
     signer: Signer,
-    network?: ChainOrRpc,
+    chain: ChainIdOrName,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
-    const sdk = new ThirdwebSDK(network || signer, options, storage);
-    sdk.updateSignerOrProvider(signer);
+    const sdk = new ThirdwebSDK(chain, options, storage);
+    sdk.wallet.connect(signer);
     return sdk;
   }
 
@@ -92,26 +94,23 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * ```
    *
    * @param privateKey - the private key - **DO NOT EXPOSE THIS TO THE PUBLIC**
-   * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
+   * @param chain - the chainId to connect to (e.g. ChainId.Mainnet, ChainId.Rinkeby, ChainId.Polygon, ChainId.Mumbai...)
    * @param options - the SDK options to use
+   * @param storage - the storage handler to use
    * @returns an instance of the SDK
    *
    * @beta
    */
   static fromPrivateKey(
     privateKey: string,
-    network: ChainOrRpc,
+    chain: ChainIdOrName,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ): ThirdwebSDK {
-    const signerOrProvider = getProviderForNetwork(network);
-    const provider = Signer.isSigner(signerOrProvider)
-      ? signerOrProvider.provider
-      : typeof signerOrProvider === "string"
-      ? getReadOnlyProvider(signerOrProvider)
-      : signerOrProvider;
+    const chainId = toChainId(chain);
+    const provider = getProviderForChain(chainId, options.chainIdToRPCUrlMap);
     const signer = new ethers.Wallet(privateKey, provider);
-    return ThirdwebSDK.fromSigner(signer, network, options, storage);
+    return ThirdwebSDK.fromSigner(signer, chainId, options, storage);
   }
 
   /**
@@ -119,7 +118,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * the cache of contracts that we have already seen
    */
   private contractCache = new Map<
-    string,
+    ChainAndAddress,
     ValidContractInstance | SmartContract
   >();
   /**
@@ -149,172 +148,260 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   public auth: WalletAuthenticator;
 
   constructor(
-    network: ChainOrRpc | SignerOrProvider,
+    chain: ChainIdOrName,
     options: SDKOptions = {},
     storage: IStorage = new IpfsStorage(),
   ) {
-    const signerOrProvider = getProviderForNetwork(network);
-    super(signerOrProvider, options);
+    // Throw helpful error for old usages of this constructor
+    verifyInputs(chain);
+    const chainId = toChainId(chain);
+    const connection: ConnectionInfo = {
+      chainId,
+      signer: undefined,
+      provider: undefined,
+    };
+    super(connection, options);
     this.storageHandler = storage;
     this.storage = new RemoteStorage(storage);
-    this.wallet = new UserWallet(signerOrProvider, options);
-    this.deployer = new ContractDeployer(signerOrProvider, options, storage);
-    this.auth = new WalletAuthenticator(signerOrProvider, this.wallet, options);
+    this.deployer = new ContractDeployer(
+      this.getConnectionInfo(),
+      options,
+      storage,
+    );
+    this.wallet = new UserWallet(this.getConnectionInfo(), options);
+    this.auth = new WalletAuthenticator(
+      this.getConnectionInfo(),
+      this.wallet,
+      options,
+    );
     this._publisher = new ContractPublisher(
-      signerOrProvider,
+      this.getConnectionInfo(),
       this.options,
       this.storageHandler,
     );
+    // when there is a new signer connected in the wallet sdk, update that signer
+    this.wallet.events.on("connected", (s) => {
+      this.propagateSignerUpdated(s);
+    });
+    // when the wallet disconnects, update the signer to undefined
+    this.wallet.events.on("disconnected", () => {
+      this.propagateSignerUpdated(undefined);
+    });
   }
 
   /**
    * Get an instance of a Drop contract
    * @param contractAddress - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public getNFTDrop(contractAddress: string): NFTDrop {
-    return this.getBuiltInContract(
+  public async getNFTDrop(
+    contractAddress: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<NFTDrop> {
+    return this.getBuiltInContract<"nft-drop">(
       contractAddress,
       NFTDrop.contractType,
-    ) as NFTDrop;
+      chain,
+    );
   }
 
   /**
    * Get an instance of a SignatureDrop contract
    * @param contractAddress - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    * @internal
    */
-  public getSignatureDrop(contractAddress: string): SignatureDrop {
-    return this.getBuiltInContract(
+  public async getSignatureDrop(
+    contractAddress: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<SignatureDrop> {
+    return this.getBuiltInContract<"signature-drop">(
       contractAddress,
       SignatureDrop.contractType,
-    ) as SignatureDrop;
+      chain,
+    );
   }
 
   /**
    * Get an instance of a NFT Collection contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public getNFTCollection(address: string): NFTCollection {
-    return this.getBuiltInContract(
+  public async getNFTCollection(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<NFTCollection> {
+    return this.getBuiltInContract<"nft-collection">(
       address,
       NFTCollection.contractType,
-    ) as NFTCollection;
+      chain,
+    );
   }
 
   /**
    * Get an instance of a Edition Drop contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public getEditionDrop(address: string): EditionDrop {
-    return this.getBuiltInContract(
+  public async getEditionDrop(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<EditionDrop> {
+    return this.getBuiltInContract<"edition-drop">(
       address,
       EditionDrop.contractType,
-    ) as EditionDrop;
+      chain,
+    );
   }
 
   /**
    * Get an instance of an Edition contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public getEdition(address: string): Edition {
-    return this.getBuiltInContract(address, Edition.contractType) as Edition;
+  public async getEdition(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Edition> {
+    return this.getBuiltInContract<"edition">(
+      address,
+      Edition.contractType,
+      chain,
+    );
   }
 
   /**
    * Get an instance of a Token Drop contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public getTokenDrop(address: string): TokenDrop {
-    return this.getBuiltInContract(
+  public async getTokenDrop(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<TokenDrop> {
+    return this.getBuiltInContract<"token-drop">(
       address,
       TokenDrop.contractType,
-    ) as TokenDrop;
+      chain,
+    );
   }
 
   /**
    * Get an instance of a Token contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public getToken(address: string): Token {
-    return this.getBuiltInContract(address, Token.contractType) as Token;
+  public async getToken(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Token> {
+    return this.getBuiltInContract<"token">(address, Token.contractType, chain);
   }
 
   /**
    * Get an instance of a Vote contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public getVote(address: string): Vote {
-    return this.getBuiltInContract(address, Vote.contractType) as Vote;
+  public async getVote(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Vote> {
+    return this.getBuiltInContract<"vote">(address, Vote.contractType, chain);
   }
 
   /**
    * Get an instance of a Splits contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public getSplit(address: string): Split {
-    return this.getBuiltInContract(address, Split.contractType) as Split;
+  public async getSplit(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Split> {
+    return this.getBuiltInContract<"split">(address, Split.contractType, chain);
   }
 
   /**
    * Get an instance of a Marketplace contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public getMarketplace(address: string): Marketplace {
-    return this.getBuiltInContract(
+  public async getMarketplace(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Marketplace> {
+    return this.getBuiltInContract<"marketplace">(
       address,
       Marketplace.contractType,
-    ) as Marketplace;
+      chain,
+    );
   }
 
   /**
    * Get an instance of a Pack contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    */
-  public getPack(address: string): Pack {
-    return this.getBuiltInContract(address, Pack.contractType) as Pack;
+  public async getPack(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Pack> {
+    return this.getBuiltInContract<"pack">(address, Pack.contractType, chain);
   }
 
   /**
    * Get an instance of a Multiwrap contract
    * @param address - the address of the deployed contract
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns the contract
    * @beta
    */
-  public getMultiwrap(address: string): Multiwrap {
-    return this.getBuiltInContract(
+  public async getMultiwrap(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ): Promise<Multiwrap> {
+    return this.getBuiltInContract<"multiwrap">(
       address,
       Multiwrap.contractType,
-    ) as Multiwrap;
+      chain,
+    );
   }
 
   /**
    *
    * @internal
    * @param address - the address of the contract to instantiate
-   * @param contractType - optional, the type of contract to instantiate
+   * @param contractType - the type of contract to instantiate
+   * @param chain - optional, chain (id or name) of the contract (defaults to the chain the SDK is connected to)
    * @returns a promise that resolves with the contract instance
    */
-  public getBuiltInContract<TContractType extends ContractType = ContractType>(
+  public async getBuiltInContract<
+    TContractType extends ContractType = ContractType,
+  >(
     address: string,
     contractType: TContractType,
-  ): ContractForContractType<TContractType> {
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ) {
+    const chainId = toChainId(chain);
     // if we have a contract in the cache we will return it
     // we will do this **without** checking any contract type things for simplicity, this may have to change in the future?
-    if (this.contractCache.has(address)) {
-      return this.contractCache.get(
+    if (this.contractCache.has({ chainId, address })) {
+      return this.contractCache.get({
+        chainId,
         address,
-      ) as ContractForContractType<TContractType>;
+      }) as ContractForContractType<TContractType>;
     }
 
     if (contractType === "custom") {
@@ -323,11 +410,20 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       );
     }
 
+    let connectionInfo = this.getConnectionInfo();
+    if (chainId !== this.getConnectionInfo().chainId) {
+      connectionInfo = {
+        chainId,
+        provider: undefined,
+        signer: connectionInfo.signer,
+      };
+    }
+
     const newContract = new KNOWN_CONTRACTS_MAP[
       contractType as keyof typeof KNOWN_CONTRACTS_MAP
-    ](this.getSignerOrProvider(), address, this.storageHandler, this.options);
+    ](connectionInfo, address, this.storageHandler, this.options);
 
-    this.contractCache.set(address, newContract);
+    this.contractCache.set({ chainId, address }, newContract);
 
     // return the new contract
     return newContract as ContractForContractType<TContractType>;
@@ -335,15 +431,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   /**
    * @param contractAddress - the address of the contract to attempt to resolve the contract type for
+   * @param chain - optional the chain (id or name) of the contract (defaults to the SDK chainId)
    * @returns the {@link ContractType} for the given contract address
    * @throws if the contract type cannot be determined (is not a valid thirdweb contract)
    */
   public async resolveContractType(
     contractAddress: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
   ): Promise<ContractType> {
+    const chainId = toChainId(chain);
     const contract = IThirdwebContract__factory.connect(
       contractAddress,
-      this.getSignerOrProvider(),
+      getProviderForChain(chainId, this.options.chainIdToRPCUrlMap),
     );
     const remoteContractType = ethers.utils
       .toUtf8String(await contract.contractType())
@@ -361,31 +460,39 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   /**
    * Return all the contracts deployed by the specified address
    * @param walletAddress - the deployed address
+   * @param chain - the chain to fetch from contracts from
    */
-  public async getContractList(walletAddress: string) {
-    const addresses = await (
-      await this.deployer.getRegistry()
-    ).getContractAddresses(walletAddress);
+  public async getContractList(
+    walletAddress: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ) {
+    const registry = await this.deployer.getRegistry(chain);
+    const addresses = await registry.getContractAddresses(walletAddress);
 
     const addressesWithContractTypes = await Promise.all(
       addresses.map(async (address) => {
         let contractType: ContractType = "custom";
         try {
-          contractType = await this.resolveContractType(address);
+          contractType = await this.resolveContractType(address, chain);
         } catch (e) {
           // this going to happen frequently and be OK, we'll just catch it and ignore it
         }
         let metadata: ContractMetadata<any, any> | undefined;
         if (contractType === "custom") {
           try {
-            metadata = (await this.getContract(address)).metadata;
+            metadata = (await this.getContract(address, chain)).metadata;
           } catch (e) {
             console.log(
               `Couldn't get contract metadata for custom contract: ${address}`,
             );
           }
         } else {
-          metadata = this.getBuiltInContract(address, contractType).metadata;
+          const builtInContract = await this.getBuiltInContract(
+            address,
+            contractType,
+            chain,
+          );
+          metadata = builtInContract.metadata;
         }
         return {
           address,
@@ -408,40 +515,26 @@ export class ThirdwebSDK extends RPCConnectionHandler {
   }
 
   /**
-   * Update the active signer or provider for all contracts
-   * @param network - the new signer or provider
-   */
-  public override updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
-    super.updateSignerOrProvider(network);
-    this.updateContractSignerOrProvider();
-  }
-
-  private updateContractSignerOrProvider() {
-    this.auth.updateSignerOrProvider(this.getSignerOrProvider());
-    this.wallet.onNetworkUpdated(this.getSignerOrProvider());
-    this.deployer.updateSignerOrProvider(this.getSignerOrProvider());
-    this._publisher.updateSignerOrProvider(this.getSignerOrProvider());
-    for (const [, contract] of this.contractCache) {
-      contract.onNetworkUpdated(this.getSignerOrProvider());
-    }
-  }
-
-  /**
    * Get an instance of a Custom ThirdwebContract
    * @param address - the address of the deployed contract
+   * @param chain - optional the chain (id or name) of the contract (defaults to the SDK chainId)
    * @returns the contract
    * @beta
    */
-  public async getContract(address: string) {
-    if (this.contractCache.has(address)) {
-      return this.contractCache.get(address) as SmartContract;
+  public async getContract(
+    address: string,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ) {
+    const chainId = toChainId(chain);
+    if (this.contractCache.has({ chainId, address })) {
+      return this.contractCache.get({ chainId, address }) as SmartContract;
     }
     try {
       const publisher = this.getPublisher();
       const metadata = await publisher.fetchContractMetadataFromAddress(
         address,
       );
-      return this.getContractFromAbi(address, metadata.abi);
+      return this.getContractFromAbi(address, metadata.abi, chain);
     } catch (e) {
       throw new Error(`Error fetching ABI for this contract\n\n${e}`);
     }
@@ -451,21 +544,35 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * Get an instance of a Custom contract from a json ABI
    * @param address - the address of the deployed contract
    * @param abi - the JSON abi
+   * @param chain - optional the chain (id or name) of the contract (defaults to the SDK chainId)
    * @returns the contract
    * @beta
    */
-  public getContractFromAbi(address: string, abi: ContractInterface) {
-    if (this.contractCache.has(address)) {
-      return this.contractCache.get(address) as SmartContract;
+  public getContractFromAbi(
+    address: string,
+    abi: ContractInterface,
+    chain: ChainIdOrName = this.getConnectionInfo().chainId,
+  ) {
+    const chainId = toChainId(chain);
+    if (this.contractCache.has({ chainId, address })) {
+      return this.contractCache.get({ chainId, address }) as SmartContract;
+    }
+    let connectionInfo = this.getConnectionInfo();
+    if (chainId !== this.getConnectionInfo().chainId) {
+      connectionInfo = {
+        chainId,
+        provider: undefined,
+        signer: connectionInfo.signer,
+      };
     }
     const contract = new SmartContract(
-      this.getSignerOrProvider(),
+      connectionInfo,
       address,
       abi,
       this.storageHandler,
       this.options,
     );
-    this.contractCache.set(address, contract);
+    this.contractCache.set({ chainId, address }, contract);
     return contract;
   }
 
@@ -491,5 +598,47 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public getPublisher(): ContractPublisher {
     return this._publisher;
+  }
+
+  /**
+   * Update the active signer for all contracts
+   * @internal
+   * @param signer
+   */
+  private propagateSignerUpdated(signer: Signer | undefined) {
+    this.updateSigner(signer);
+    this.auth.updateSigner(this.getSigner());
+    this.deployer.updateSigner(this.getSigner());
+    this._publisher.updateSigner(this.getSigner());
+    for (const [, contract] of this.contractCache) {
+      contract.onSignerUpdated(this.getSigner());
+    }
+  }
+}
+
+/**
+ * @internal
+ * @param chain
+ */
+function verifyInputs(chain: ChainIdOrName) {
+  if (Signer.isSigner(chain)) {
+    throw new Error(
+      "Please use 'ThirdwebSDK.fromSigner(signer, chainId)' or 'ThirdwebSDK.fromPrivateKey(privateKey, chainId)' to create a new ThirdwebSDK that can perform transactions. Example: 'const sdk = ThirdwebSDK.fromSigner(signer, ChainId.Polygon)'",
+    );
+  }
+  if (providers.Provider.isProvider(chain)) {
+    throw new Error(
+      "Please pass in a ChainId instead of a Provider to create a new read-only ThirdwebSDK. Example: 'const sdk = new ThirdwebSDK(ChainId.Polygon)'. To initialize the SDK with a signer, use: 'ThirdwebSDK.fromSigner(signer, ChainId.Polygon)'",
+    );
+  }
+  if (typeof chain === "string" && chainNameToId[chain] === undefined) {
+    if (chain.startsWith("http") || chain.startsWith("ws")) {
+      throw new Error(
+        `Please pass in a ChainId instead of an RPC url. RPC urls for each ChainId can be configured via SDKOptions. Ex: 'const sdk = new ThirdwebSDK(ChainId.Mainnet, { chainIdToRPCUrlMap: { ChainId.Mainnet: "https://mainnet.infura.io/v3/YOUR_INFURA_KEY" });'`,
+      );
+    }
+    throw new Error(
+      `Unknown chain name: ${chain}. Please pass a valid ChainId instead. eg. 'ChainId.Rinkeby' or '80001'`,
+    );
   }
 }

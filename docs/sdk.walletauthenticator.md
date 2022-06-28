@@ -45,7 +45,7 @@ const address = sdk.auth.authenticate(domain, token);
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, wallet, options)](./sdk.walletauthenticator._constructor_.md) |  | <b><i>(BETA)</i></b> Constructs a new instance of the <code>WalletAuthenticator</code> class |
+|  [(constructor)(connection, wallet, options)](./sdk.walletauthenticator._constructor_.md) |  | <b><i>(BETA)</i></b> Constructs a new instance of the <code>WalletAuthenticator</code> class |
 
 ## Methods
 

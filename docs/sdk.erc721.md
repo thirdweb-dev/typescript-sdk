@@ -29,7 +29,7 @@ await contract.nft.transfer(walletAddress, tokenId);
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(contractWrapper, storage, options)](./sdk.erc721._constructor_.md) |  | Constructs a new instance of the <code>Erc721</code> class |
+|  [(constructor)(contractWrapper, storage)](./sdk.erc721._constructor_.md) |  | Constructs a new instance of the <code>Erc721</code> class |
 
 ## Properties
 
@@ -39,7 +39,6 @@ await contract.nft.transfer(walletAddress, tokenId);
 |  [drop](./sdk.erc721.drop.md) |  | [Erc721Dropable](./sdk.erc721dropable.md) \| undefined |  |
 |  [featureName](./sdk.erc721.featurename.md) |  | "ERC721" |  |
 |  [mint](./sdk.erc721.mint.md) |  | [Erc721Mintable](./sdk.erc721mintable.md) \| undefined |  |
-|  [options](./sdk.erc721.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [query](./sdk.erc721.query.md) |  | [Erc721Supply](./sdk.erc721supply.md) \| undefined |  |
 |  [storage](./sdk.erc721.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
 
@@ -51,6 +50,7 @@ await contract.nft.transfer(walletAddress, tokenId);
 |  [balanceOf(address)](./sdk.erc721.balanceof.md) |  | Get NFT Balance |
 |  [get(tokenId)](./sdk.erc721.get.md) |  | Get a single NFT Metadata |
 |  [getAddress()](./sdk.erc721.getaddress.md) |  |  |
+|  [getChainId()](./sdk.erc721.getchainid.md) |  |  |
 |  [isApproved(address, operator)](./sdk.erc721.isapproved.md) |  | Get whether this wallet has approved transfers from the given operator |
 |  [ownerOf(tokenId)](./sdk.erc721.ownerof.md) |  | Get the current owner of a given NFT within this Contract |
 |  [transfer(to, tokenId)](./sdk.erc721.transfer.md) |  | Transfer a single NFT |

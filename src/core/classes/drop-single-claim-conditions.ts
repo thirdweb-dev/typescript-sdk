@@ -204,7 +204,7 @@ export class DropSingleClaimConditions<TContract extends SignatureDrop> {
         }
       } else {
         const erc20 = new ContractWrapper<IERC20>(
-          provider,
+          this.contractWrapper.getConnectionInfo(),
           claimCondition.currency,
           ERC20Abi,
           {},

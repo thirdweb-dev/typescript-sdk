@@ -9,7 +9,7 @@ Deploys a new Token Drop contract
 <b>Signature:</b>
 
 ```typescript
-deployTokenDrop(metadata: TokenContractDeployMetadata): Promise<string>;
+deployTokenDrop(metadata: TokenContractDeployMetadata, chain?: ChainIdOrName): Promise<string>;
 ```
 
 ## Parameters
@@ -17,6 +17,7 @@ deployTokenDrop(metadata: TokenContractDeployMetadata): Promise<string>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  metadata | [TokenContractDeployMetadata](./sdk.tokencontractdeploymetadata.md) | the contract metadata |
+|  chain | ChainIdOrName | <i>(Optional)</i> the chain to deploy the contract to, defaults to the chain the SDK is connected to |
 
 <b>Returns:</b>
 

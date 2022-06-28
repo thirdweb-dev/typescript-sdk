@@ -1,6 +1,6 @@
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import { assert, expect } from "chai";
-import { BigNumber, ethers } from "ethers";
+import { BigNumber } from "ethers";
 import { Edition, Token } from "../src";
 import { sdk, signers, storage } from "./before-setup";
 import {
@@ -25,9 +25,9 @@ describe("Edition sig minting", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
 
-    editionContract = sdk.getEdition(
+    editionContract = await sdk.getEdition(
       await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "OUCH VOUCH",
         symbol: "VOUCH",
@@ -46,7 +46,7 @@ describe("Edition sig minting", async () => {
       to: samWallet.address,
     };
 
-    customTokenContract = sdk.getToken(
+    customTokenContract = await sdk.getToken(
       await sdk.deployer.deployBuiltInContract(Token.contractType, {
         name: "Test",
         symbol: "TEST",
@@ -159,7 +159,7 @@ describe("Edition sig minting", async () => {
       }
       const batch = await editionContract.signature.generateBatch(payloads);
 
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       const tx = await editionContract.signature.mintBatch(batch);
       expect(tx.length).to.eq(10);
       expect(tx[0].id.toNumber()).to.eq(0);
@@ -207,12 +207,12 @@ describe("Edition sig minting", async () => {
     });
 
     it("should allow a valid voucher to mint", async () => {
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       const tx = await editionContract.signature.mint(v1);
       const newId = (await editionContract.get(tx.id)).metadata.id;
       assert.equal(newId.toString(), "0");
 
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       const tx2 = await editionContract.signature.mint(v2);
       const newId2 = (await editionContract.get(tx2.id)).metadata.id;
       assert.equal(newId2.toString(), "1");
@@ -249,7 +249,7 @@ describe("Edition sig minting", async () => {
         quantity: "1",
         metadata: "",
       });
-      sdk.updateSignerOrProvider(samWallet);
+      sdk.wallet.connect(samWallet);
       await editionContract.signature.mint(payload);
       const newBalance = await editionContract.balanceOf(
         samWallet.address,
@@ -270,7 +270,7 @@ describe("Edition sig minting", async () => {
         mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
         mintStartTime: new Date(),
       });
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await editionContract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
@@ -290,7 +290,7 @@ describe("Edition sig minting", async () => {
         mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
         mintStartTime: new Date(),
       });
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await editionContract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(
@@ -310,7 +310,7 @@ describe("Edition sig minting", async () => {
         mintEndTime: new Date(Date.now() + 60 * 60 * 24 * 1000 * 1000),
         mintStartTime: new Date(),
       });
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await editionContract.signature.mint(payload);
       const newBalance = await samWallet.getBalance();
       assert(

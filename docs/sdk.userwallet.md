@@ -23,15 +23,22 @@ const balance = await sdk.wallet.balance();
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, options)](./sdk.userwallet._constructor_.md) |  | Constructs a new instance of the <code>UserWallet</code> class |
+|  [(constructor)(connection, options)](./sdk.userwallet._constructor_.md) |  | Constructs a new instance of the <code>UserWallet</code> class |
+
+## Properties
+
+|  Property | Modifiers | Type | Description |
+|  --- | --- | --- | --- |
+|  [events](./sdk.userwallet.events.md) |  | EventEmitter&lt;[UserWalletEvents](./sdk.userwalletevents.md)<!-- -->, any&gt; |  |
 
 ## Methods
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [balance(currencyAddress)](./sdk.userwallet.balance.md) |  | Fetch the native or ERC20 token balance of this wallet |
+|  [connect(signer)](./sdk.userwallet.connect.md) |  |  |
+|  [disconnect()](./sdk.userwallet.disconnect.md) |  |  |
 |  [getAddress()](./sdk.userwallet.getaddress.md) |  | Get the currently connected address |
-|  [onNetworkUpdated(network)](./sdk.userwallet.onnetworkupdated.md) |  |  |
 |  [sendRawTransaction(transactionRequest)](./sdk.userwallet.sendrawtransaction.md) |  | Send a raw transaction to the blockchain from the connected wallet |
 |  [sign(message)](./sdk.userwallet.sign.md) |  | Sign any message with the connected wallet private key |
 |  [transfer(to, amount, currencyAddress)](./sdk.userwallet.transfer.md) |  | Transfer native or ERC20 tokens from this wallet to another wallet |

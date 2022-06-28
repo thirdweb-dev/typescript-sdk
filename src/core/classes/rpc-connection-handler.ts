@@ -1,46 +1,56 @@
-import { ethers, Signer, providers } from "ethers";
+import { providers, Signer } from "ethers";
+import { ConnectionInfo } from "../types";
+import { ChainId, getProviderForChain } from "../../constants";
 import EventEmitter from "eventemitter3";
-import { getReadOnlyProvider } from "../../constants/urls";
 import {
   SDKOptions,
   SDKOptionsOutput,
   SDKOptionsSchema,
-} from "../../schema/sdk-options";
-import { NetworkOrSignerOrProvider } from "../types";
+} from "../../schema/index";
 
 /**
  * @internal
  */
 export class RPCConnectionHandler extends EventEmitter {
+  protected options: SDKOptionsOutput;
+  private chainId: number;
   private provider: providers.Provider;
   private signer: Signer | undefined;
-  protected readonly options: SDKOptionsOutput;
 
-  constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
+  constructor(connection: ConnectionInfo, options: SDKOptions = {}) {
     super();
-    const [signer, provider] = this.getSignerAndProvider(network, options);
-    this.signer = signer;
-    this.provider = provider;
-
     try {
       this.options = SDKOptionsSchema.parse(options);
     } catch (optionParseError) {
       console.error(
-        "invalid sdk options object passed, falling back to default options",
+        "invalid contract options object passed, falling back to default options",
         optionParseError,
       );
       this.options = SDKOptionsSchema.parse({});
     }
+    this.chainId = connection.chainId;
+    this.provider = connection.provider
+      ? connection.provider
+      : getProviderForChain(
+          connection.chainId,
+          this.options.chainIdToRPCUrlMap,
+        );
+    this.signer = this.maybeConnectSigner(connection.signer);
   }
+
   /**
    * The function to call whenever the network changes, such as when the users connects their wallet, disconnects their wallet, the connected chain changes, etc.
    *
-   * @param network - a network, signer or provider that ethers js can interpret
+   * @param signer
+   * @internal
    */
-  public updateSignerOrProvider(network: NetworkOrSignerOrProvider) {
-    const [signer, provider] = this.getSignerAndProvider(network, this.options);
-    this.signer = signer;
-    this.provider = provider;
+  public updateSigner(signer: Signer | undefined) {
+    // TODO (rpc) - make sure we don't need to do this for type of signers
+    if (this.chainId === ChainId.Hardhat) {
+      // For hardhat tests - the provider inside the signer is enhanced for tests, need to use it as the provider
+      this.provider = signer?.provider || this.provider;
+    }
+    this.signer = this.maybeConnectSigner(signer);
   }
   /**
    *
@@ -53,6 +63,7 @@ export class RPCConnectionHandler extends EventEmitter {
   /**
    * Explicitly get the active signer.
    * @returns the active signer, if there is one
+   * @internal
    */
   public getSigner(): Signer | undefined {
     return this.signer;
@@ -61,68 +72,36 @@ export class RPCConnectionHandler extends EventEmitter {
   /**
    * Explicitly get the active provider.
    * @returns the active provider
+   * @internal
    */
   public getProvider(): providers.Provider {
     return this.provider;
   }
 
   /**
-   *
    * @returns the current signer if there is one, otherwise the active provider
+   * @internal
    */
   public getSignerOrProvider(): Signer | providers.Provider {
     return this.getSigner() || this.getProvider();
   }
 
-  /** ********************
-   * PRIVATE FUNCTIONS
-   *********************/
+  /**
+   * @internal
+   */
+  public getConnectionInfo(): ConnectionInfo {
+    return {
+      chainId: this.chainId,
+      signer: this.getSigner(),
+      provider: this.getProvider(),
+    };
+  }
 
-  private getSignerAndProvider(
-    network: NetworkOrSignerOrProvider,
-    options: SDKOptions,
-  ): [Signer | undefined, providers.Provider] {
-    let signer: Signer | undefined;
-    let provider: providers.Provider | undefined;
-
-    if (Signer.isSigner(network)) {
-      signer = network;
-      if (network.provider) {
-        provider = network.provider;
-      }
+  private maybeConnectSigner(signer: Signer | undefined) {
+    try {
+      return signer?.connect(this.provider);
+    } catch (e) {
+      return signer;
     }
-
-    if (options?.readonlySettings) {
-      provider = getReadOnlyProvider(
-        options.readonlySettings.rpcUrl,
-        options.readonlySettings.chainId,
-      );
-    }
-
-    if (!provider) {
-      if (providers.Provider.isProvider(network)) {
-        provider = network;
-      } else if (!Signer.isSigner(network)) {
-        if (typeof network === "string") {
-          provider = getReadOnlyProvider(
-            network,
-            options?.readonlySettings?.chainId,
-          );
-        } else {
-          // no a signer, not a provider, not a string? try with default provider
-          provider = ethers.getDefaultProvider(network);
-        }
-      }
-    }
-
-    if (!provider) {
-      // we should really never hit this case!
-      provider = ethers.getDefaultProvider();
-      console.error(
-        "No provider found, using default provider on default chain!",
-      );
-    }
-
-    return [signer, provider];
   }
 }

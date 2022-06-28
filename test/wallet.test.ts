@@ -13,7 +13,7 @@ describe("Wallet", async () => {
   });
 
   it("should transfer native currencies", async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const oldBalance = await sdk.wallet.balance();
     expect(oldBalance.decimals).to.eq(18);
     await sdk.wallet.transfer(samWallet.address, 2);
@@ -24,12 +24,12 @@ describe("Wallet", async () => {
   });
 
   it("should transfer ERC20 tokens", async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const tokenAddr = await sdk.deployer.deployToken({
       name: "My Token",
       primary_sale_recipient: adminWallet.address,
     });
-    await sdk.getToken(tokenAddr).mintToSelf(100);
+    await (await sdk.getToken(tokenAddr)).mintToSelf(100);
 
     const oldBalance = await sdk.wallet.balance(tokenAddr);
     expect(oldBalance.displayValue).to.eq("100.0");
@@ -37,15 +37,15 @@ describe("Wallet", async () => {
     const newBalance = await sdk.wallet.balance(tokenAddr);
     expect(newBalance.displayValue).to.eq("80.0");
 
-    sdk.updateSignerOrProvider(samWallet);
+    sdk.wallet.connect(samWallet);
     const samBalance = await sdk.wallet.balance(tokenAddr);
     expect(samBalance.displayValue).to.eq("20.0");
   });
 
   it("should fetch addresses", async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     expect(await sdk.wallet.getAddress()).to.eq(adminWallet.address);
-    sdk.updateSignerOrProvider(samWallet);
+    sdk.wallet.connect(samWallet);
     expect(await sdk.wallet.getAddress()).to.eq(samWallet.address);
   });
 });

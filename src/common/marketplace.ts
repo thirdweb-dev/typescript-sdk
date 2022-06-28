@@ -4,7 +4,6 @@ import {
   InterfaceId_IERC721,
 } from "../constants/contract";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { SignerOrProvider } from "../core";
 import {
   NewAuctionListing,
   NewDirectListing,
@@ -17,6 +16,7 @@ import { IERC1155, IERC165, IERC721 } from "contracts";
 import ERC1155Abi from "../../abis/IERC1155.json";
 import ERC721Abi from "../../abis/IERC721.json";
 import ERC165Abi from "../../abis/IERC165.json";
+import { RPCConnectionHandler } from "../core/classes/rpc-connection-handler";
 
 /**
  * This method checks if the given token is approved for the transferrerContractAddress contract.
@@ -75,19 +75,21 @@ export async function isTokenApprovedForTransfer(
 /**
  * Checks if the marketplace is approved to make transfers on the assetContract
  * If not, it tries to set the approval.
- * @param signerOrProvider
+ * @param rpcConnectionHandler
  * @param marketplaceAddress
  * @param assetContract
  * @param tokenId
  * @param from
+ * @internal
  */
 export async function handleTokenApproval(
-  signerOrProvider: SignerOrProvider,
+  rpcConnectionHandler: RPCConnectionHandler,
   marketplaceAddress: string,
   assetContract: string,
   tokenId: BigNumberish,
   from: string,
 ): Promise<void> {
+  const signerOrProvider = rpcConnectionHandler.getSignerOrProvider();
   const erc165 = new Contract(
     assetContract,
     ERC165Abi,
@@ -98,7 +100,7 @@ export async function handleTokenApproval(
   // check for token approval
   if (isERC721) {
     const asset = new ContractWrapper<IERC721>(
-      signerOrProvider,
+      rpcConnectionHandler.getConnectionInfo(),
       assetContract,
       ERC721Abi,
       {},
@@ -121,7 +123,7 @@ export async function handleTokenApproval(
     }
   } else if (isERC1155) {
     const asset = new ContractWrapper<IERC1155>(
-      signerOrProvider,
+      rpcConnectionHandler.getConnectionInfo(),
       assetContract,
       ERC1155Abi,
       {},

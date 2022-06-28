@@ -9,7 +9,7 @@ import {
   VoteERC20__factory,
 } from "contracts";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
-import { ThirdwebSDK } from "../src";
+import { ChainId, ThirdwebSDK } from "../src";
 import { ethers } from "ethers";
 
 require("./before-setup");
@@ -30,14 +30,14 @@ describe("Custom Contracts", async () => {
 
   before(async () => {
     [adminWallet, samWallet, bobWallet] = signers;
-    sdk = new ThirdwebSDK(adminWallet);
+    sdk = ThirdwebSDK.fromSigner(adminWallet, ChainId.Hardhat);
     simpleContractUri =
       "ipfs://QmNPcYsXDAZvQZXCG73WSjdiwffZkNkoJYwrDDtcgM142A/0";
     // if we update the test data - await uploadContractMetadata("Greeter", storage);
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const publisher = sdk.getPublisher();
     customContractAddress = await publisher.deployContract(
       simpleContractUri,

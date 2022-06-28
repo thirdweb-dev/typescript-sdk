@@ -27,7 +27,7 @@ const contract = sdk.getSignatureDrop("{{contract_address}}");
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, storage, options, contractWrapper)](./sdk.signaturedrop._constructor_.md) |  | Constructs a new instance of the <code>SignatureDrop</code> class |
+|  [(constructor)(connection, address, storage, options, contractWrapper)](./sdk.signaturedrop._constructor_.md) |  | Constructs a new instance of the <code>SignatureDrop</code> class |
 
 ## Properties
 

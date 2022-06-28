@@ -245,8 +245,9 @@ before(async () => {
   process.env.contractMetadataRegistryAddress = metadataRegistry.address;
 
   storage = new MockStorage();
-  sdk = new ThirdwebSDK(
+  sdk = ThirdwebSDK.fromSigner(
     signer,
+    ChainId.Hardhat,
     {
       gasSettings: {
         maxPriceInGwei: 10000,

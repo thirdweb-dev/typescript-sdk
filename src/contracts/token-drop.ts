@@ -1,6 +1,6 @@
 import { DropERC20 } from "contracts";
 import { IStorage } from "../core/interfaces/IStorage";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
+import { ConnectionInfo, TransactionResult } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { BigNumberish, constants } from "ethers";
@@ -79,18 +79,18 @@ export class TokenDrop extends Erc20<DropERC20> {
   public interceptor: ContractInterceptor<DropERC20>;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<DropERC20>(
-      network,
+      connection,
       address,
       TokenDrop.contractAbi,
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       TokenDrop.schema,

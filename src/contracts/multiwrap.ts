@@ -1,5 +1,5 @@
 import {
-  NetworkOrSignerOrProvider,
+  ConnectionInfo,
   TransactionResult,
   TransactionResultWithId,
 } from "../core/types";
@@ -90,18 +90,18 @@ export class Multiwrap extends Erc721<MultiwrapContract> {
   private _query = this.query as Erc721Supply;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     address: string,
     storage: IStorage,
     options: SDKOptions = {},
     contractWrapper = new ContractWrapper<MultiwrapContract>(
-      network,
+      connection,
       address,
       Multiwrap.contractAbi,
       options,
     ),
   ) {
-    super(contractWrapper, storage, options);
+    super(contractWrapper, storage);
     this.metadata = new ContractMetadata(
       this.contractWrapper,
       Multiwrap.schema,

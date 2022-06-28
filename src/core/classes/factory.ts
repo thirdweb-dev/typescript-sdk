@@ -1,7 +1,6 @@
 import { TWFactory, TWFactory__factory } from "contracts";
 import { BigNumber, Contract, ethers, constants } from "ethers";
 import { z } from "zod";
-import { CONTRACTS_MAP, REMOTE_CONTRACT_NAME } from "../../contracts/maps";
 import { Edition } from "../../contracts/edition";
 import { EditionDrop } from "../../contracts/edition-drop";
 import { NFTCollection } from "../../contracts/nft-collection";
@@ -14,8 +13,9 @@ import { Vote } from "../../contracts/vote";
 import { Token } from "../../contracts/token";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces/IStorage";
-import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
+import { ConnectionInfo, ValidContractClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
+import { CONTRACTS_MAP, REMOTE_CONTRACT_NAME } from "../../contracts/maps";
 
 import {
   CONTRACT_ADDRESSES,
@@ -26,7 +26,6 @@ import {
 import { TokenDrop } from "../../contracts/token-drop";
 import { ProxyDeployedEvent } from "contracts/TWFactory";
 import { Multiwrap } from "../../contracts/multiwrap";
-import { AddressZero } from "@ethersproject/constants";
 
 /**
  * @internal
@@ -35,12 +34,16 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
   private storage: IStorage;
 
   constructor(
-    factoryAddr: string,
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     storage: IStorage,
     options?: SDKOptions,
   ) {
-    super(network, factoryAddr, TWFactory__factory.abi, options);
+    super(
+      connection,
+      getContractAddressByChainId(connection.chainId, "twFactory"),
+      TWFactory__factory.abi,
+      options,
+    );
     this.storage = storage;
   }
 
@@ -123,11 +126,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       case SignatureDrop.contractType:
         const signatureDropmetadata =
           SignatureDrop.schema.deploy.parse(metadata);
-        const chainId = await this.getChainID();
-        const signMintAddress = getContractAddressByChainId(chainId, "sigMint");
-        if (signMintAddress === AddressZero) {
-          throw new Error("SignatureDrop contract not deployable yet");
-        }
         return [
           await this.getSignerAddress(),
           signatureDropmetadata.name,

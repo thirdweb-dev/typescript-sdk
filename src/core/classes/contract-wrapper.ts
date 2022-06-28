@@ -8,13 +8,14 @@ import {
   ContractTransaction,
   ethers,
   providers,
+  Signer,
 } from "ethers";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { SDKOptions } from "../../schema/sdk-options";
 import {
+  ConnectionInfo,
   ForwardRequestMessage,
   GaslessTransaction,
-  NetworkOrSignerOrProvider,
   PermitRequestMessage,
 } from "../types";
 import { EventType } from "../../constants/events";
@@ -30,7 +31,7 @@ import { signEIP2612Permit } from "../../common/permit";
 import { signTypedDataInternal } from "../../common/sign";
 import { getPolygonGasPriorityFee } from "../../common/gas-price";
 import { ChainId } from "../../constants";
-import { convertToTWError } from "../../common";
+import { ChainMismatchError, convertToTWError } from "../../common";
 import { isBrowser } from "../../common/utils";
 
 /**
@@ -49,12 +50,12 @@ export class ContractWrapper<
   public abi;
 
   constructor(
-    network: NetworkOrSignerOrProvider,
+    connection: ConnectionInfo,
     contractAddress: string,
     contractAbi: ContractInterface,
     options: SDKOptions,
   ) {
-    super(network, options);
+    super(connection, options);
     this.abi = contractAbi;
     // set up the contract
     this.writeContract = new Contract(
@@ -68,19 +69,21 @@ export class ContractWrapper<
     ) as TContract;
   }
 
-  public override updateSignerOrProvider(
-    network: NetworkOrSignerOrProvider,
-  ): void {
+  public override updateSigner(signer: Signer | undefined): void {
     // update the underlying base class
-    super.updateSignerOrProvider(network);
+    super.updateSigner(signer);
     // re-connect the contract with the new signer / provider
     this.writeContract = this.writeContract.connect(
       this.getSignerOrProvider(),
     ) as TContract;
-    // setup the read only contract
+
     this.readContract = this.writeContract.connect(
       this.getProvider(),
     ) as TContract;
+  }
+
+  public getAddress(): string {
+    return this.readContract.address;
   }
 
   /**
@@ -263,6 +266,16 @@ export class ContractWrapper<
     args: any[],
     callOverrides?: CallOverrides,
   ): Promise<providers.TransactionReceipt> {
+    // check if the signer is present and on the expected chain
+    const signer = this.getSigner();
+    invariant(signer, "Cannot execute a transaction without valid signer");
+    const chainId = await signer.getChainId();
+    // get the expected chainId from the passed in network (network name or chainId or rpc url)
+    const expectedChainId = this.getConnectionInfo().chainId;
+    if (expectedChainId && chainId !== expectedChainId) {
+      throw new ChainMismatchError(expectedChainId, chainId);
+    }
+
     // one time verification that this is a valid contract (to avoid sending funds to wrong addresses)
     if (!this.isValidContract) {
       const code = await this.getProvider().getCode(this.readContract.address);

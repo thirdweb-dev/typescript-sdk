@@ -27,7 +27,7 @@ const contract = sdk.getTokenDrop("{{contract_address}}");
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(network, address, storage, options, contractWrapper)](./sdk.tokendrop._constructor_.md) |  | Constructs a new instance of the <code>TokenDrop</code> class |
+|  [(constructor)(connection, address, storage, options, contractWrapper)](./sdk.tokendrop._constructor_.md) |  | Constructs a new instance of the <code>TokenDrop</code> class |
 
 ## Properties
 

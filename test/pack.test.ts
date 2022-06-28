@@ -9,17 +9,15 @@ global.fetch = require("cross-fetch");
 
 describe("Pack Contract", async () => {
   let packContract: Pack;
-  let bundleContract: Edition;
+  let editionContract: Edition;
 
-  let adminWallet: SignerWithAddress,
-    samWallet: SignerWithAddress,
-    bobWallet: SignerWithAddress;
+  let adminWallet: SignerWithAddress, samWallet: SignerWithAddress;
 
   before(() => {
-    [adminWallet, samWallet, bobWallet] = signers;
+    [adminWallet, samWallet] = signers;
   });
 
-  const createBundles = async () => {
+  const mintEditions = async () => {
     const batch: EditionMetadataInput[] = [];
     for (let i = 0; i < 5; i++) {
       batch.push({
@@ -30,19 +28,19 @@ describe("Pack Contract", async () => {
       });
     }
 
-    await bundleContract.mintBatch(batch);
+    await editionContract.mintBatch(batch);
   };
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
-    packContract = sdk.getPack(
+    sdk.wallet.connect(adminWallet);
+    packContract = await sdk.getPack(
       await sdk.deployer.deployBuiltInContract(Pack.contractType, {
         name: "Pack Contract",
         seller_fee_basis_points: 1000,
       }),
     );
 
-    bundleContract = sdk.getEdition(
+    editionContract = await sdk.getEdition(
       await sdk.deployer.deployBuiltInContract(Edition.contractType, {
         name: "NFT Contract",
         seller_fee_basis_points: 1000,
@@ -50,27 +48,27 @@ describe("Pack Contract", async () => {
       }),
     );
 
-    await bundleContract.setApprovalForAll(packContract.getAddress(), true);
-    await createBundles();
+    await editionContract.setApprovalForAll(packContract.getAddress(), true);
+    await mintEditions();
   });
 
   const createPacks = async () => {
     const packOne = await packContract.create({
       erc1155Rewards: [
         {
-          contractAddress: bundleContract.getAddress(),
+          contractAddress: editionContract.getAddress(),
           tokenId: "0",
           quantityPerReward: 1,
           totalRewards: 50,
         },
         {
-          contractAddress: bundleContract.getAddress(),
+          contractAddress: editionContract.getAddress(),
           tokenId: "1",
           quantityPerReward: 1,
           totalRewards: 50,
         },
         {
-          contractAddress: bundleContract.getAddress(),
+          contractAddress: editionContract.getAddress(),
           tokenId: "2",
           quantityPerReward: 1,
           totalRewards: 50,
@@ -84,19 +82,19 @@ describe("Pack Contract", async () => {
     const packTwo = await packContract.create({
       erc1155Rewards: [
         {
-          contractAddress: bundleContract.getAddress(),
+          contractAddress: editionContract.getAddress(),
           tokenId: "0",
           quantityPerReward: 1,
           totalRewards: 50,
         },
         {
-          contractAddress: bundleContract.getAddress(),
+          contractAddress: editionContract.getAddress(),
           tokenId: "1",
           quantityPerReward: 1,
           totalRewards: 50,
         },
         {
-          contractAddress: bundleContract.getAddress(),
+          contractAddress: editionContract.getAddress(),
           tokenId: "2",
           quantityPerReward: 1,
           totalRewards: 50,

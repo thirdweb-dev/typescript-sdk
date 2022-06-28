@@ -8,6 +8,7 @@
 
 |  Class | Description |
 |  --- | --- |
+|  [ChainMismatchError](./sdk.chainmismatcherror.md) | Thrown when trying to do a transaction on a non-expected chain |
 |  [ContractDeployer](./sdk.contractdeployer.md) | Handles deploying new contracts |
 |  [ContractEncoder](./sdk.contractencoder.md) | Encodes and decodes Contract functions |
 |  [ContractEvents](./sdk.contractevents.md) | Listen to Contract events in real time |
@@ -106,6 +107,7 @@
 |  [SplitRecipientInput](./sdk.splitrecipientinput.md) |  |
 |  [TokenContractDeployMetadata](./sdk.tokencontractdeploymetadata.md) | Options for deploying a Token contract |
 |  [UploadProgressEvent](./sdk.uploadprogressevent.md) |  |
+|  [UserWalletEvents](./sdk.userwalletevents.md) | [UserWallet](./sdk.userwallet.md) events that you can subscribe to using <code>sdk.wallet.events</code>. |
 |  [VoteContractDeployMetadata](./sdk.votecontractdeploymetadata.md) | Options for deploying a Vote contract |
 |  [VoteSettings](./sdk.votesettings.md) |  |
 
@@ -130,10 +132,12 @@
 |  [AirdropInput](./sdk.airdropinput.md) | Input model to pass a list of addresses + amount to transfer to each one |
 |  [Amount](./sdk.amount.md) | Represents a currency amount already formatted. ie. "1" for 1 ether. |
 |  [BufferOrStringWithName](./sdk.bufferorstringwithname.md) |  |
+|  [ChainAndAddress](./sdk.chainandaddress.md) |  |
 |  [ClaimCondition](./sdk.claimcondition.md) | Represents a claim condition fetched from the SDK |
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
 |  [ClaimConditionsForToken](./sdk.claimconditionsfortoken.md) |  |
 |  [ClaimVerification](./sdk.claimverification.md) |  |
+|  [ConnectionInfo](./sdk.connectioninfo.md) |  |
 |  [ContractEvent](./sdk.contractevent.md) | Standardized return type for contract events that returns event arguments |
 |  [ContractForContractType](./sdk.contractforcontracttype.md) |  |
 |  [ContractType](./sdk.contracttype.md) |  |

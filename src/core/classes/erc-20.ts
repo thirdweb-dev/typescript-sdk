@@ -1,10 +1,9 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { DropERC20, IMintableERC20, TokenERC20 } from "contracts";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { BigNumber, BigNumberish, ethers, Signer } from "ethers";
 import { IStorage } from "../interfaces";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
+import { TransactionResult } from "../types";
 import { Amount, Currency, CurrencyValue } from "../../types/currency";
 import {
   fetchCurrencyMetadata,
@@ -34,44 +33,31 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
   featureName = FEATURE_TOKEN.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
-  protected options: SDKOptions;
 
   /**
    * Mint tokens
    */
   public mint: Erc20Mintable | undefined;
 
-  constructor(
-    contractWrapper: ContractWrapper<T>,
-    storage: IStorage,
-    options: SDKOptions = {},
-  ) {
+  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
-    try {
-      this.options = SDKOptionsSchema.parse(options);
-    } catch (optionParseError) {
-      console.error(
-        "invalid contract options object passed, falling back to default options",
-        optionParseError,
-      );
-      this.options = SDKOptionsSchema.parse({});
-    }
     this.mint = this.detectErc20Mintable();
   }
 
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
-  /**
-   * @internal
-   */
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainId(): number {
+    return this.contractWrapper.getConnectionInfo().chainId;
   }
 
   /** ******************************

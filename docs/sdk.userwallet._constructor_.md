@@ -9,13 +9,13 @@ Constructs a new instance of the `UserWallet` class
 <b>Signature:</b>
 
 ```typescript
-constructor(network: NetworkOrSignerOrProvider, options: SDKOptions);
+constructor(connection: ConnectionInfo, options: SDKOptions);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
+|  connection | [ConnectionInfo](./sdk.connectioninfo.md) |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) |  |
 

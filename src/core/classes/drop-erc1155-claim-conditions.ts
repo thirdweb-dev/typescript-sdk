@@ -251,7 +251,7 @@ export class DropErc1155ClaimConditions {
         }
       } else {
         const erc20 = new ContractWrapper<IERC20>(
-          provider,
+          this.contractWrapper.getConnectionInfo(),
           claimCondition.currencyAddress,
           IERC20__factory.abi,
           {},

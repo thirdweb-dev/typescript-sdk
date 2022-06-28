@@ -18,7 +18,7 @@ describe("Splits Contract", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const address = await sdk.deployer.deployBuiltInContract(
       Split.contractType,
       {
@@ -39,7 +39,7 @@ describe("Splits Contract", async () => {
         ],
       },
     );
-    splitsContract = sdk.getSplit(address);
+    splitsContract = await sdk.getSplit(address);
   });
 
   it("should fetch contract balance", async () => {

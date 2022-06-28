@@ -26,7 +26,7 @@ describe("Token Drop Contract", async () => {
 
   beforeEach(async () => {
     [adminWallet, samWallet, bobWallet, abbyWallet, w1, w2, w3, w4] = signers;
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const address = await sdk.deployer.deployBuiltInContract(
       TokenDrop.contractType,
       {
@@ -39,7 +39,7 @@ describe("Token Drop Contract", async () => {
         platform_fee_recipient: AddressZero,
       },
     );
-    dropContract = sdk.getTokenDrop(address);
+    dropContract = await sdk.getTokenDrop(address);
   });
 
   it("should allow a snapshot to be set", async () => {
@@ -143,7 +143,7 @@ describe("Token Drop Contract", async () => {
     ]);
 
     for (const member of testWallets) {
-      await sdk.updateSignerOrProvider(member);
+      await sdk.wallet.connect(member);
       await dropContract.claim(1.2);
       const balance = await dropContract.balanceOf(member.address);
       expect(balance.displayValue).to.eq("1.2");
@@ -161,12 +161,12 @@ describe("Token Drop Contract", async () => {
     ]);
 
     for (const member of testWallets) {
-      await sdk.updateSignerOrProvider(member);
+      await sdk.wallet.connect(member);
       await dropContract.claim(1);
     }
 
     try {
-      await sdk.updateSignerOrProvider(samWallet);
+      await sdk.wallet.connect(samWallet);
       await dropContract.claim(1);
       assert.fail("should have thrown");
     } catch (e) {
@@ -183,7 +183,7 @@ describe("Token Drop Contract", async () => {
       ],
       false,
     );
-    await sdk.updateSignerOrProvider(w1);
+    await sdk.wallet.connect(w1);
     try {
       await dropContract.claim(1);
     } catch (err: any) {
@@ -224,12 +224,12 @@ describe("Token Drop Contract", async () => {
         ],
       },
     ]);
-    await sdk.updateSignerOrProvider(w1);
+    await sdk.wallet.connect(w1);
     await dropContract.claim(2);
     const balance = await dropContract.balance();
     expect(balance.displayValue).to.eq("2.0");
     try {
-      await sdk.updateSignerOrProvider(w2);
+      await sdk.wallet.connect(w2);
       await dropContract.claim(2);
     } catch (e) {
       expectError(e, "invalid quantity proof");
@@ -342,6 +342,7 @@ describe("Token Drop Contract", async () => {
         },
       ]);
       const active = await dropContract.claimConditions.getActive();
+      expect(active.maxQuantity).to.eq("10.8");
     });
 
     it("should check if its been long enough since the last claim", async () => {
@@ -351,7 +352,7 @@ describe("Token Drop Contract", async () => {
           waitInSeconds: 24 * 60 * 60,
         },
       ]);
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
       await dropContract.claim(1);
 
       const reasons =
@@ -378,7 +379,7 @@ describe("Token Drop Contract", async () => {
           currencyAddress: NATIVE_TOKEN_ADDRESS,
         },
       ]);
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
 
       const reasons =
         await dropContract.claimConditions.getClaimIneligibilityReasons(
@@ -411,7 +412,7 @@ describe("Token Drop Contract", async () => {
           currencyAddress,
         },
       ]);
-      await sdk.updateSignerOrProvider(bobWallet);
+      await sdk.wallet.connect(bobWallet);
 
       const reasons =
         await dropContract.claimConditions.getClaimIneligibilityReasons(

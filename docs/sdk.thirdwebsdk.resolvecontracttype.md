@@ -7,7 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-resolveContractType(contractAddress: string): Promise<ContractType>;
+resolveContractType(contractAddress: string, chain?: ChainIdOrName): Promise<ContractType>;
 ```
 
 ## Parameters
@@ -15,6 +15,7 @@ resolveContractType(contractAddress: string): Promise<ContractType>;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractAddress | string | the address of the contract to attempt to resolve the contract type for |
+|  chain | ChainIdOrName | <i>(Optional)</i> optional the chain (id or name) of the contract (defaults to the SDK chainId) |
 
 <b>Returns:</b>
 

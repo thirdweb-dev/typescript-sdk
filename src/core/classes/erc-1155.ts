@@ -5,12 +5,11 @@ import {
   IMintableERC1155,
   TokenERC1155,
 } from "contracts";
-import { BigNumber, BigNumberish, BytesLike } from "ethers";
+import { BigNumber, BigNumberish, BytesLike, Signer } from "ethers";
 import { NFTMetadata } from "../../schema/tokens/common";
 import { IStorage } from "../interfaces";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import { TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
-import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
 import {
   EditionMetadata,
   EditionMetadataOutputSchema,
@@ -42,27 +41,13 @@ export class Erc1155<
   featureName = FEATURE_EDITION.name;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
-  protected options: SDKOptions;
 
   public query: Erc1155Enumerable | undefined;
   public mint: Erc1155Mintable | undefined;
 
-  constructor(
-    contractWrapper: ContractWrapper<T>,
-    storage: IStorage,
-    options: SDKOptions = {},
-  ) {
+  constructor(contractWrapper: ContractWrapper<T>, storage: IStorage) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
-    try {
-      this.options = SDKOptionsSchema.parse(options);
-    } catch (optionParseError) {
-      console.error(
-        "invalid contract options object passed, falling back to default options",
-        optionParseError,
-      );
-      this.options = SDKOptionsSchema.parse({});
-    }
     this.query = this.detectErc1155Enumerable();
     this.mint = this.detectErc1155Mintable();
   }
@@ -70,12 +55,16 @@ export class Erc1155<
   /**
    * @internal
    */
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
-    this.contractWrapper.updateSignerOrProvider(network);
+  onSignerUpdated(signer: Signer | undefined): void {
+    this.contractWrapper.updateSigner(signer);
   }
 
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainId(): number {
+    return this.contractWrapper.getConnectionInfo().chainId;
   }
 
   /** ******************************
@@ -242,6 +231,7 @@ export class Erc1155<
    * const addresses = [
    *  "0x...", "0x...", "0x...",
    * ]
+   *
    * await contract.airdrop(tokenId, addresses);
    * ```
    */

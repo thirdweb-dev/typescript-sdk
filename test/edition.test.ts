@@ -9,7 +9,7 @@ import { ethers } from "ethers";
 global.fetch = require("cross-fetch");
 
 describe("Edition Contract", async () => {
-  let bundleContract: Edition;
+  let editionContract: Edition;
   // let nftContract: NFTContract;
   // let currencyContract: CurrencyContract;
 
@@ -22,7 +22,7 @@ describe("Edition Contract", async () => {
   });
 
   beforeEach(async () => {
-    sdk.updateSignerOrProvider(adminWallet);
+    sdk.wallet.connect(adminWallet);
     const address = await sdk.deployer.deployEdition({
       name: `Testing bundle from SDK`,
       description: "Test contract from tests",
@@ -34,11 +34,11 @@ describe("Edition Contract", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: AddressZero,
     });
-    bundleContract = sdk.getEdition(address);
+    editionContract = await sdk.getEdition(address);
   });
 
   it("gas cost", async () => {
-    const cost = await bundleContract.estimator.gasCostOf("mintTo", [
+    const cost = await editionContract.estimator.gasCostOf("mintTo", [
       adminWallet.address,
       ethers.constants.MaxUint256,
       "mock://12398172398172389/0",
@@ -55,15 +55,15 @@ describe("Edition Contract", async () => {
         supply: 10,
       });
     }
-    await bundleContract.mintBatch(nfts);
-    const total = await bundleContract.getTotalCount();
+    await editionContract.mintBatch(nfts);
+    const total = await editionContract.getTotalCount();
     expect(total.toNumber()).to.eq(100);
-    const page1 = await bundleContract.getAll({
+    const page1 = await editionContract.getAll({
       count: 2,
       start: 0,
     });
     expect(page1).to.be.an("array").length(2);
-    const page2 = await bundleContract.getAll({
+    const page2 = await editionContract.getAll({
       count: 2,
       start: 20,
     });
@@ -73,7 +73,7 @@ describe("Edition Contract", async () => {
   });
 
   it("mint additional suply", async () => {
-    const tx = await bundleContract.mintToSelf({
+    const tx = await editionContract.mintToSelf({
       metadata: {
         name: "Bundle 1",
         description: "Bundle 1",
@@ -81,10 +81,10 @@ describe("Edition Contract", async () => {
       },
       supply: 10,
     });
-    const nft = await bundleContract.get(tx.id);
+    const nft = await editionContract.get(tx.id);
     expect(nft.supply.toNumber()).to.eq(10);
-    await bundleContract.mintAdditionalSupply(tx.id, 10);
-    const nft2 = await bundleContract.get(tx.id);
+    await editionContract.mintAdditionalSupply(tx.id, 10);
+    const nft2 = await editionContract.get(tx.id);
     expect(nft2.supply.toNumber()).to.eq(20);
   });
 
@@ -92,11 +92,11 @@ describe("Edition Contract", async () => {
     const uri = await storage.uploadMetadata({
       name: "Test1",
     });
-    const tx = await bundleContract.mintToSelf({
+    const tx = await editionContract.mintToSelf({
       metadata: uri,
       supply: 10,
     });
-    const nft = await bundleContract.get(tx.id);
+    const nft = await editionContract.get(tx.id);
     assert.isNotNull(nft);
     assert.equal(nft.metadata.name, "Test1");
   });
@@ -105,19 +105,19 @@ describe("Edition Contract", async () => {
     const uri = await storage.uploadMetadata({
       name: "Test1",
     });
-    await bundleContract.mintBatch([
+    await editionContract.mintBatch([
       {
         metadata: uri,
         supply: 10,
       },
     ]);
-    const nft = await bundleContract.get("0");
+    const nft = await editionContract.get("0");
     assert.isNotNull(nft);
     assert.equal(nft.metadata.name, "Test1");
   });
 
   it("should return all owned collection tokens", async () => {
-    await bundleContract.mintToSelf({
+    await editionContract.mintToSelf({
       metadata: {
         name: "Bundle 1",
         description: "Bundle 1",
@@ -125,29 +125,29 @@ describe("Edition Contract", async () => {
       },
       supply: 100,
     });
-    const nfts = await bundleContract.getOwned(adminWallet.address);
+    const nfts = await editionContract.getOwned(adminWallet.address);
     expect(nfts).to.be.an("array").length(1);
     expect(nfts[0].metadata.image).to.be.equal("fake://myownfakeipfs");
     expect(nfts[0].owner).to.be.equal(adminWallet.address);
     expect(nfts[0].quantityOwned.toNumber()).to.be.equal(100);
     expect(nfts[0].supply.toNumber()).to.be.equal(100);
 
-    const bobsNfts = await bundleContract.getOwned(bobWallet.address);
+    const bobsNfts = await editionContract.getOwned(bobWallet.address);
     expect(bobsNfts)
       .to.be.an("array")
       .length(0, "Bob should not have any nfts");
 
-    await bundleContract.transfer(bobWallet.address, 0, 20);
-    const adminNft = await bundleContract.getOwned(adminWallet.address);
+    await editionContract.transfer(bobWallet.address, 0, 20);
+    const adminNft = await editionContract.getOwned(adminWallet.address);
     expect(adminNft[0].quantityOwned.toNumber()).to.be.equal(80);
-    const bobsNftsAfterTransfer = await bundleContract.getOwned(
+    const bobsNftsAfterTransfer = await editionContract.getOwned(
       bobWallet.address,
     );
     expect(bobsNftsAfterTransfer[0].quantityOwned.toNumber()).to.be.equal(20);
   });
 
   it("should airdrop edition tokens to different wallets", async () => {
-    await bundleContract.mintToSelf({
+    await editionContract.mintToSelf({
       metadata: {
         name: "Bundle 1",
         description: "Bundle 1",
@@ -166,16 +166,16 @@ describe("Edition Contract", async () => {
       },
     ];
 
-    await bundleContract.airdrop(0, addresses);
+    await editionContract.airdrop(0, addresses);
 
-    const samOwned = await bundleContract.getOwned(samWallet.address);
-    const bobOwned = await bundleContract.getOwned(bobWallet.address);
+    const samOwned = await editionContract.getOwned(samWallet.address);
+    const bobOwned = await editionContract.getOwned(bobWallet.address);
     expect(samOwned[0].quantityOwned.toNumber()).to.be.equal(5);
     expect(bobOwned[0].quantityOwned.toNumber()).to.be.equal(3);
   });
 
   it("should fail airdrop because not enough NFTs owned", async () => {
-    await bundleContract.mintToSelf({
+    await editionContract.mintToSelf({
       metadata: {
         name: "Bundle 1",
         description: "Bundle 1",
@@ -195,7 +195,7 @@ describe("Edition Contract", async () => {
     ];
 
     try {
-      await bundleContract.airdrop(0, addresses);
+      await editionContract.airdrop(0, addresses);
     } catch (e) {
       expectError(e, "The caller owns");
     }
@@ -203,17 +203,17 @@ describe("Edition Contract", async () => {
 
   // TODO: This test should move to the royalty suite
   it("updates the bps in both the metadata and on-chain", async () => {
-    const currentBps = (await bundleContract.royalties.getDefaultRoyaltyInfo())
+    const currentBps = (await editionContract.royalties.getDefaultRoyaltyInfo())
       .seller_fee_basis_points;
     assert.equal(currentBps, 1000);
-    const cMetadata = await bundleContract.metadata.get();
+    const cMetadata = await editionContract.metadata.get();
     assert.equal(cMetadata.seller_fee_basis_points, 1000);
 
     const testBPS = 100;
-    await bundleContract.royalties.setDefaultRoyaltyInfo({
+    await editionContract.royalties.setDefaultRoyaltyInfo({
       seller_fee_basis_points: testBPS,
     });
-    const newMetadata = await bundleContract.metadata.get();
+    const newMetadata = await editionContract.metadata.get();
 
     assert.equal(
       newMetadata.seller_fee_basis_points,
@@ -221,14 +221,14 @@ describe("Edition Contract", async () => {
       "Fetching the BPS from the metadata should return 100",
     );
     assert.equal(
-      (await bundleContract.royalties.getDefaultRoyaltyInfo())
+      (await editionContract.royalties.getDefaultRoyaltyInfo())
         .seller_fee_basis_points,
       testBPS,
       "Fetching the BPS with the tx should return 100",
     );
   });
   it("should correctly upload nft metadata", async () => {
-    await bundleContract.mintBatch([
+    await editionContract.mintBatch([
       {
         metadata: {
           name: "Test0",
@@ -244,7 +244,7 @@ describe("Edition Contract", async () => {
         supply: 5,
       },
     ]);
-    const nfts = await bundleContract.getAll();
+    const nfts = await editionContract.getAll();
     expect(nfts).to.be.an("array").length(2);
     let i = 0;
     nfts.forEach((nft) => {

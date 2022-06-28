@@ -1,5 +1,5 @@
 import { RPCConnectionHandler } from "../classes/rpc-connection-handler";
-import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
+import { ConnectionInfo, TransactionResult } from "../types";
 import { SDKOptions } from "../../schema";
 import invariant from "tiny-invariant";
 import { Amount, CurrencyValue } from "../../types";
@@ -12,7 +12,25 @@ import { NATIVE_TOKEN_ADDRESS } from "../../constants";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { ContractWrapper } from "../classes/contract-wrapper";
 import { IERC20 } from "contracts";
-import { BigNumber, providers } from "ethers";
+import { BigNumber, providers, Signer } from "ethers";
+import EventEmitter from "eventemitter3";
+
+/**
+ *
+ * {@link UserWallet} events that you can subscribe to using `sdk.wallet.events`.
+ *
+ * @public
+ */
+export interface UserWalletEvents {
+  /**
+   * Emitted when `sdk.wallet.connect()` is called.
+   */
+  connected: [Signer];
+  /**
+   * Emitted when `sdk.wallet.disconnect()` is called.
+   */
+  disconnected: void;
+}
 
 /**
  * Connect and Interact with a user wallet
@@ -23,24 +41,29 @@ import { BigNumber, providers } from "ethers";
  * @public
  */
 export class UserWallet {
-  private connection: RPCConnectionHandler;
+  private rpc: RPCConnectionHandler;
   private options: SDKOptions;
 
-  constructor(network: NetworkOrSignerOrProvider, options: SDKOptions) {
-    this.connection = new RPCConnectionHandler(network, options);
+  public events = new EventEmitter<UserWalletEvents>();
+
+  constructor(connection: ConnectionInfo, options: SDKOptions) {
+    this.rpc = new RPCConnectionHandler(connection);
     this.options = options;
   }
 
-  // TODO connect()
-  // TODO disconnect()
   // TODO switchChain()
   // TODO event listener
   // TODO tokens()
   // TODO NFTs()
 
-  // TODO this will become the source of truth of the signer and have every contract read from it
-  onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
-    this.connection.updateSignerOrProvider(network);
+  connect(signer: Signer) {
+    this.rpc.updateSigner(signer);
+    this.events.emit("connected", signer);
+  }
+
+  disconnect() {
+    this.rpc.updateSigner(undefined);
+    this.events.emit("disconnected");
   }
 
   /**
@@ -63,7 +86,7 @@ export class UserWallet {
   ): Promise<TransactionResult> {
     const signer = this.requireWallet();
     const amountInWei = await normalizePriceValue(
-      this.connection.getProvider(),
+      this.rpc.getProvider(),
       amount,
       currencyAddress,
     );
@@ -104,7 +127,7 @@ export class UserWallet {
     currencyAddress = NATIVE_TOKEN_ADDRESS,
   ): Promise<CurrencyValue> {
     this.requireWallet();
-    const provider = this.connection.getProvider();
+    const provider = this.rpc.getProvider();
     let balance: BigNumber;
     if (isNativeToken(currencyAddress)) {
       balance = await provider.getBalance(await this.getAddress());
@@ -155,7 +178,7 @@ export class UserWallet {
    * ***********************/
 
   private requireWallet() {
-    const signer = this.connection.getSigner();
+    const signer = this.rpc.getSigner();
     invariant(
       signer,
       "This action requires a connected wallet. Please pass a valid signer to the SDK.",
@@ -165,7 +188,7 @@ export class UserWallet {
 
   private createErc20(currencyAddress: string) {
     return new ContractWrapper<IERC20>(
-      this.connection.getSignerOrProvider(),
+      this.rpc.getConnectionInfo(),
       currencyAddress,
       ERC20Abi,
       this.options,
