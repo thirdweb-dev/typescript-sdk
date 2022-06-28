@@ -1631,9 +1631,10 @@ export type ERC1155Wrappable = {
 
 // Warning: (ae-forgotten-export) The symbol "TokenERC20" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseERC20" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BaseSignatureMintERC20" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20> implements UpdateableNetwork, DetectableFeature {
+export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20 | BaseSignatureMintERC20> implements UpdateableNetwork, DetectableFeature {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     allowance(spender: string): Promise<CurrencyValue>;
     allowanceOf(owner: string, spender: string): Promise<CurrencyValue>;
@@ -1810,7 +1811,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     // (undocumented)
     featureName: "ERC721SignatureMint";
     generate(mintRequest: PayloadToSign721withQuantity): Promise<SignedPayload721WithQuantitySignature>;
-    generateBatch(payloadsToSign: PayloadToSign721withQuantity[] | PayloadToSign721[]): Promise<SignedPayload721WithQuantitySignature[]>;
+    generateBatch(payloadsToSign: PayloadToSign721withQuantity[]): Promise<SignedPayload721WithQuantitySignature[]>;
     mint(signedPayload: SignedPayload721WithQuantitySignature): Promise<TransactionResultWithId>;
     mintBatch(signedPayloads: SignedPayload721WithQuantitySignature[]): Promise<TransactionResultWithId[]>;
     verify(signedPayload: SignedPayload721WithQuantitySignature): Promise<boolean>;

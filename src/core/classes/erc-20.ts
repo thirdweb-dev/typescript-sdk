@@ -12,7 +12,7 @@ import {
 } from "../../common/currency";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { PriceSchema } from "../../schema";
-import { BaseERC20 } from "../../types/eips";
+import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
 import { detectContractFeature } from "../../common";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { FEATURE_TOKEN } from "../../constants/erc20-features";
@@ -29,8 +29,11 @@ import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
  * ```
  * @public
  */
-export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
-  implements UpdateableNetwork, DetectableFeature
+export class Erc20<
+  T extends TokenERC20 | DropERC20 | BaseERC20 =
+    | BaseERC20
+    | BaseSignatureMintERC20,
+> implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_TOKEN.name;
   /**

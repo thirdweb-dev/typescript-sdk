@@ -1,7 +1,6 @@
 import {
   MintRequest721,
   MintRequest721withQuantity,
-  PayloadToSign721,
   PayloadToSign721withQuantity,
   PayloadWithUri721withQuantity,
   Signature721PayloadInput,
@@ -30,7 +29,8 @@ import { FEATURE_NFT_SIGNATURE_MINTABLE } from "../../constants/erc721-features"
 import { hasFunction } from "../../common";
 
 /**
- * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely * @public
+ * Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely *
+ * @public
  */
 export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   featureName = FEATURE_NFT_SIGNATURE_MINTABLE.name;
@@ -260,7 +260,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
    * @returns an array of payloads and signatures
    */
   public async generateBatch(
-    payloadsToSign: PayloadToSign721withQuantity[] | PayloadToSign721[],
+    payloadsToSign: PayloadToSign721withQuantity[],
   ): Promise<SignedPayload721WithQuantitySignature[]> {
     const isLegacyNFTContract = await this.isLegacyNFTContract();
 
@@ -386,12 +386,11 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   }
 
   private async isLegacyNFTContract() {
-    let contractType;
     if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
-      contractType = ethers.utils.toUtf8String(
+      const contractType = ethers.utils.toUtf8String(
         await this.contractWrapper.readContract.contractType(),
       );
-      return !!contractType.includes("TokenERC721");
+      return contractType.includes("TokenERC721");
     } else {
       return false;
     }
