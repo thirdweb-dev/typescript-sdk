@@ -449,7 +449,7 @@
         "examples": {
           "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.erc1155signatureminting"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.erc1155signaturemintable"
       }
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.Edition"
@@ -990,7 +990,7 @@
         "examples": {
           "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.erc721signatureminting"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.erc721withquantitysignaturemintable"
       }
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.NFTCollection"
@@ -1417,7 +1417,7 @@
         "examples": {
           "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the NFT\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt\nconst mintedId = tx.id; // the id of the NFT minted"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.erc721withquantitysignatureminting"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.erc721withquantitysignaturemintable"
       }
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.SignatureDrop"
@@ -1652,7 +1652,7 @@
         "examples": {
           "javascript": "// see how to craft a payload to sign in the `contract.signature.generate()` documentation\nconst signedPayload = contract.signature.generate(payload);\n\n// now anyone can mint the tokens\nconst tx = contract.signature.mint(signedPayload);\nconst receipt = tx.receipt; // the mint transaction receipt"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.erc20signatureminting"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.erc20signaturemintable"
       }
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.Token"

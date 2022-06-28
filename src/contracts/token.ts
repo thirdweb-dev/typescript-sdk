@@ -18,11 +18,11 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { Erc20 } from "../core/classes/erc-20";
 import { Amount, CurrencyValue } from "../types";
 import { TokenERC20History } from "../core/classes/erc-20-history";
-import { Erc20SignatureMinting } from "../core/classes/erc-20-signature-minting";
 import { getRoleHash } from "../common";
 import { Erc20Mintable } from "../core/classes/erc-20-mintable";
 import { Erc20BatchMintable } from "../core/classes/erc-20-batch-mintable";
 import { constants } from "ethers";
+import { Erc20SignatureMintable } from "../core/classes/erc-20-signature-mintable";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -46,10 +46,6 @@ export class Token extends Erc20<TokenERC20> {
    * @internal
    */
   static schema = TokenErc20ContractSchema;
-
-  private _mint = this.mint as Erc20Mintable;
-  private _batchMint = this._mint.batch as Erc20BatchMintable;
-
   public metadata: ContractMetadata<TokenERC20, typeof Token.schema>;
   public roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
   public encoder: ContractEncoder<TokenERC20>;
@@ -70,11 +66,13 @@ export class Token extends Erc20<TokenERC20> {
    * const receipt = tx.receipt; // the mint transaction receipt
    * ```
    */
-  public signature: Erc20SignatureMinting;
+  override signature = super.signature as Erc20SignatureMintable;
   /**
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC20>;
+  private _mint = this.mint as Erc20Mintable;
+  private _batchMint = this._mint.batch as Erc20BatchMintable;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -101,7 +99,7 @@ export class Token extends Erc20<TokenERC20> {
     this.estimator = new GasCostEstimator(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.signature = new Erc20SignatureMinting(
+    this.signature = new Erc20SignatureMintable(
       this.contractWrapper,
       this.roles,
     );
