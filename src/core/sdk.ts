@@ -534,7 +534,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       const metadata = await publisher.fetchContractMetadataFromAddress(
         address,
       );
-      return this.getContractFromAbi(address, metadata.abi);
+      return this.getContractFromAbi(address, metadata.abi, chain);
     } catch (e) {
       throw new Error(`Error fetching ABI for this contract\n\n${e}`);
     }
