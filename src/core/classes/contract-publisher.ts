@@ -201,7 +201,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       receipt.logs,
     );
     if (events.length < 1) {
-      throw new Error("No ContractDeployed event found");
+      throw new Error("No ContractPublished event found");
     }
     return events.map((e) => {
       const contract = e.args.publishedContract;
