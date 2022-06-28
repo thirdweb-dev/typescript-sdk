@@ -52,6 +52,7 @@ const contract = sdk.getSplit("{{contract_address}}");
 |  [distributeToken(tokenAddress)](./sdk.split.distributetoken.md) |  | Distribute Funds |
 |  [getAddress()](./sdk.split.getaddress.md) |  |  |
 |  [getAllRecipients()](./sdk.split.getallrecipients.md) |  | Get Recipients of this splits contract |
+|  [getChainId()](./sdk.split.getchainid.md) |  |  |
 |  [getRecipientSplitPercentage(address)](./sdk.split.getrecipientsplitpercentage.md) |  | Get the % of funds owed to a given address |
 |  [onSignerUpdated(signer)](./sdk.split.onsignerupdated.md) |  |  |
 |  [withdraw(walletAddress)](./sdk.split.withdraw.md) |  | Withdraw Funds |

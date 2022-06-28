@@ -49,6 +49,8 @@ await contract.token.transfer(walletAddress, amount);
 |  [balance()](./sdk.erc20.balance.md) |  | Get Token Balance for the currently connected wallet |
 |  [balanceOf(address)](./sdk.erc20.balanceof.md) |  | Get Token Balance |
 |  [get()](./sdk.erc20.get.md) |  | Get the token Metadata (name, symbol, etc...) |
+|  [getAddress()](./sdk.erc20.getaddress.md) |  |  |
+|  [getChainId()](./sdk.erc20.getchainid.md) |  |  |
 |  [setAllowance(spender, amount)](./sdk.erc20.setallowance.md) |  | Allows the specified <code>spender</code> wallet to transfer the given <code>amount</code> of tokens to another wallet |
 |  [totalSupply()](./sdk.erc20.totalsupply.md) |  | The total supply for this Token |
 |  [transfer(to, amount)](./sdk.erc20.transfer.md) |  | Transfer Tokens |

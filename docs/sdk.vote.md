@@ -51,6 +51,7 @@ const contract = sdk.getVote("{{contract_address}}");
 |  [get(proposalId)](./sdk.vote.get.md) |  | Get a proposal by id. |
 |  [getAddress()](./sdk.vote.getaddress.md) |  |  |
 |  [getAll()](./sdk.vote.getall.md) |  | Get All Proposals |
+|  [getChainId()](./sdk.vote.getchainid.md) |  |  |
 |  [getProposalVotes(proposalId)](./sdk.vote.getproposalvotes.md) |  | Get the votes for a specific proposal |
 |  [hasVoted(proposalId, account)](./sdk.vote.hasvoted.md) |  | Check If Wallet Voted |
 |  [onSignerUpdated(signer)](./sdk.vote.onsignerupdated.md) |  |  |

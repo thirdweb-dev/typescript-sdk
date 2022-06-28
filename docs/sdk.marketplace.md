@@ -56,6 +56,7 @@ const contract = sdk.getMarketplace("{{contract_address}}");
 |  [getAddress()](./sdk.marketplace.getaddress.md) |  |  |
 |  [getAllListings(filter)](./sdk.marketplace.getalllistings.md) |  | Get all the listings |
 |  [getBidBufferBps()](./sdk.marketplace.getbidbufferbps.md) |  | Get the buffer in basis points between offers |
+|  [getChainId()](./sdk.marketplace.getchainid.md) |  |  |
 |  [getListing(listingId)](./sdk.marketplace.getlisting.md) |  | Convenience function to get either a direct or auction listing |
 |  [getTimeBufferInSeconds()](./sdk.marketplace.gettimebufferinseconds.md) |  | get the buffer time in seconds between offers |
 |  [getTotalCount()](./sdk.marketplace.gettotalcount.md) |  | Get the total number of Listings |

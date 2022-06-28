@@ -147,6 +147,10 @@ export class SmartContract<
     return this.contractWrapper.readContract.address;
   }
 
+  getChainId(): number {
+    return this.contractWrapper.getConnectionInfo().chainId;
+  }
+
   /**
    * Call any function on this contract
    * @example

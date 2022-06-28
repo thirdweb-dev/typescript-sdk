@@ -50,6 +50,7 @@ await contract.edition.transfer(walletAddress, tokenId, quantity);
 |  [balanceOf(address, tokenId)](./sdk.erc1155.balanceof.md) |  | Get NFT Balance |
 |  [get(tokenId)](./sdk.erc1155.get.md) |  | Get a single NFT Metadata |
 |  [getAddress()](./sdk.erc1155.getaddress.md) |  |  |
+|  [getChainId()](./sdk.erc1155.getchainid.md) |  |  |
 |  [isApproved(address, operator)](./sdk.erc1155.isapproved.md) |  | Get whether this wallet has approved transfers from the given operator |
 |  [totalSupply(tokenId)](./sdk.erc1155.totalsupply.md) |  | Returns the total supply of a specific token |
 |  [transfer(to, tokenId, amount, data)](./sdk.erc1155.transfer.md) |  | Transfer a single NFT |

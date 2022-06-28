@@ -6,4 +6,5 @@ import { Signer } from "ethers";
 export interface UpdateableNetwork {
   onSignerUpdated(signer: Signer | undefined): void;
   getAddress(): string;
+  getChainId(): number;
 }

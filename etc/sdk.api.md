@@ -1595,6 +1595,8 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseER
     get(tokenId: BigNumberish): Promise<EditionMetadata>;
     // (undocumented)
     getAddress(): string;
+    // (undocumented)
+    getChainId(): number;
     // @internal (undocumented)
     getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
@@ -1678,8 +1680,10 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20> imp
     // (undocumented)
     featureName: "ERC20";
     get(): Promise<Currency>;
-    // @internal (undocumented)
+    // (undocumented)
     getAddress(): string;
+    // (undocumented)
+    getChainId(): number;
     // @internal (undocumented)
     protected getValue(value: BigNumberish): Promise<CurrencyValue>;
     mint: Erc20Mintable | undefined;
@@ -1748,6 +1752,8 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
     // (undocumented)
     getAddress(): string;
+    // (undocumented)
+    getChainId(): number;
     // @internal (undocumented)
     getTokenMetadata(tokenId: BigNumberish): Promise<NFTMetadata>;
     isApproved(address: string, operator: string): Promise<boolean>;
@@ -2222,6 +2228,8 @@ export class Marketplace implements UpdateableNetwork {
     getAll: (filter?: MarketplaceFilter) => Promise<(AuctionListing | DirectListing)[]>;
     getAllListings(filter?: MarketplaceFilter): Promise<(AuctionListing | DirectListing)[]>;
     getBidBufferBps(): Promise<BigNumber>;
+    // (undocumented)
+    getChainId(): number;
     getListing(listingId: BigNumberish): Promise<AuctionListing | DirectListing>;
     getTimeBufferInSeconds(): Promise<BigNumber>;
     getTotalCount(): Promise<BigNumber>;
@@ -4520,6 +4528,8 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     // (undocumented)
     getAddress(): string;
     // (undocumented)
+    getChainId(): number;
+    // (undocumented)
     interceptor: ContractInterceptor<TContract>;
     // (undocumented)
     metadata: ContractMetadata<ThirdwebContract, any>;
@@ -4826,6 +4836,8 @@ export class Split implements UpdateableNetwork {
     // (undocumented)
     getAddress(): string;
     getAllRecipients(): Promise<SplitRecipient[]>;
+    // (undocumented)
+    getChainId(): number;
     getRecipientSplitPercentage(address: string): Promise<SplitRecipient>;
     // @internal (undocumented)
     interceptor: ContractInterceptor<Split_2>;
@@ -5541,6 +5553,8 @@ export class Vote implements UpdateableNetwork {
     // (undocumented)
     getAddress(): string;
     getAll(): Promise<Proposal[]>;
+    // (undocumented)
+    getChainId(): number;
     getProposalVotes(proposalId: BigNumber): Promise<ProposalVote[]>;
     hasVoted(proposalId: string, account?: string): Promise<boolean>;
     // @internal (undocumented)

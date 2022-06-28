@@ -52,11 +52,12 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20>
     this.contractWrapper.updateSigner(signer);
   }
 
-  /**
-   * @internal
-   */
   getAddress(): string {
     return this.contractWrapper.readContract.address;
+  }
+
+  getChainId(): number {
+    return this.contractWrapper.getConnectionInfo().chainId;
   }
 
   /** ******************************

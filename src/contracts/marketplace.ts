@@ -176,6 +176,10 @@ export class Marketplace implements UpdateableNetwork {
     return this.contractWrapper.readContract.address;
   }
 
+  getChainId(): number {
+    return this.contractWrapper.getConnectionInfo().chainId;
+  }
+
   /** ******************************
    * READ FUNCTIONS
    *******************************/

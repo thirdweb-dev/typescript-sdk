@@ -70,6 +70,10 @@ export class Erc721<
     return this.contractWrapper.readContract.address;
   }
 
+  getChainId(): number {
+    return this.contractWrapper.getConnectionInfo().chainId;
+  }
+
   /** ******************************
    * READ FUNCTIONS
    *******************************/
