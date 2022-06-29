@@ -196,22 +196,17 @@ export async function resolveContractUriFromAddress(
  * @param bytecode
  */
 function extractIPFSHashFromBytecode(bytecode: string): string | undefined {
-  try {
-    const numericBytecode = hexToBytes(bytecode);
+  const numericBytecode = hexToBytes(bytecode);
+  const cborLength: number =
+    numericBytecode[numericBytecode.length - 2] * 0x100 +
+    numericBytecode[numericBytecode.length - 1];
+  const bytecodeBuffer = Buffer.from(
+    numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
+  );
 
-    const cborLength: number =
-      numericBytecode[numericBytecode.length - 2] * 0x100 +
-      numericBytecode[numericBytecode.length - 1];
-    const bytecodeBuffer = Buffer.from(
-      numericBytecode.slice(numericBytecode.length - 2 - cborLength, -2),
-    );
-
-    const cborData = decodeFirstSync(bytecodeBuffer);
-    if (cborData["ipfs"]) {
-      return `ipfs://${toB58String(cborData["ipfs"])}`;
-    }
-  } catch (e) {
-    console.error("failed to extract ipfs hash from bytecode", e);
+  const cborData = decodeFirstSync(bytecodeBuffer);
+  if (cborData["ipfs"]) {
+    return `ipfs://${toB58String(cborData["ipfs"])}`;
   }
   return undefined;
 }
@@ -360,22 +355,6 @@ export async function fetchPreDeployMetadata(
     abi: parsedMeta.abi,
     bytecode: deployBytecode,
   };
-}
-
-/**
- * @internal
- * @param bytecode
- * @param storage
- */
-export async function fetchContractMetadataFromBytecode(
-  bytecode: string,
-  storage: IStorage,
-) {
-  const metadataUri = extractIPFSHashFromBytecode(bytecode);
-  if (!metadataUri) {
-    throw new Error("No metadata found in bytecode");
-  }
-  return await fetchContractMetadata(metadataUri, storage);
 }
 
 /**

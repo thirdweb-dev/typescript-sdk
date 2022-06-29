@@ -1884,11 +1884,6 @@ export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>, metadata
 // @internal (undocumented)
 export function fetchContractMetadataFromAddress(address: string, provider: ethers.providers.Provider, storage: IStorage): Promise<PublishedMetadata>;
 
-// Warning: (ae-internal-missing-underscore) The name "fetchContractMetadataFromBytecode" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export function fetchContractMetadataFromBytecode(bytecode: string, storage: IStorage): Promise<PublishedMetadata>;
-
 // Warning: (ae-internal-missing-underscore) The name "FetchError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -5038,7 +5033,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getTokenDrop(address: string): TokenDrop;
     getVote(address: string): Vote;
     // (undocumented)
-    resolveContractType(contractAddress: string): Promise<ContractType>;
+    resolveContractType(contractAddress: string): Promise<Exclude<ContractType, "custom">>;
     storage: RemoteStorage;
     updateSignerOrProvider(network: NetworkOrSignerOrProvider): void;
     wallet: UserWallet;
