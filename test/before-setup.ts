@@ -162,6 +162,9 @@ before(async () => {
     switch (contractType) {
       case Vote.contractType:
       case SignatureDrop.contractType:
+      case NFTDrop.contractType:
+      case EditionDrop.contractType:
+      case TokenDrop.contractType:
         return await contractFactory.deploy();
       case Marketplace.contractType:
         const nativeTokenWrapperAddress = getNativeTokenByChainId(

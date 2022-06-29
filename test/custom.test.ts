@@ -149,10 +149,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: roles", async () => {
-    const c = await sdk.getContractFromAbi(
-      nftContractAddress,
-      TokenERC721__factory.abi,
-    );
+    const c = await sdk.getContract(nftContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.roles, "Roles undefined");
     const admins = await c.roles.get("admin");
@@ -168,10 +165,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: royalties", async () => {
-    const c = await sdk.getContractFromAbi(
-      nftContractAddress,
-      TokenERC721__factory.abi,
-    );
+    const c = await sdk.getContract(nftContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.royalties, "Royalties undefined");
     const royalties = await c.royalties.getDefaultRoyaltyInfo();
@@ -187,10 +181,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: primary sales", async () => {
-    const c = await sdk.getContractFromAbi(
-      nftContractAddress,
-      TokenERC721__factory.abi,
-    );
+    const c = await sdk.getContract(nftContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.sales, "Primary sales undefined");
     const recipient = await c.sales.getRecipient();
@@ -201,10 +192,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: primary sales", async () => {
-    const c = await sdk.getContractFromAbi(
-      nftContractAddress,
-      TokenERC721__factory.abi,
-    );
+    const c = await sdk.getContract(nftContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.platformFees, "Platform fees undefined");
     const fees = await c.platformFees.get();
@@ -227,10 +215,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: erc20", async () => {
-    const c = await sdk.getContractFromAbi(
-      tokenContractAddress,
-      TokenERC20__factory.abi,
-    );
+    const c = await sdk.getContract(tokenContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.token, "ERC20 undefined");
     const token = await c.token.get();
@@ -248,10 +233,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: erc721", async () => {
-    const c = await sdk.getContractFromAbi(
-      nftContractAddress,
-      TokenERC721__factory.abi,
-    );
+    const c = await sdk.getContract(nftContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
     invariant(c.nft.query, "ERC721 query undefined");
@@ -265,10 +247,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: erc721 lazy mint", async () => {
-    const c = await sdk.getContractFromAbi(
-      sigDropContractAddress,
-      SignatureDrop__factory.abi,
-    );
+    const c = await sdk.getContract(sigDropContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
     invariant(c.nft.query, "ERC721 query undefined");
@@ -287,10 +266,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: erc721 delay reveal", async () => {
-    const c = await sdk.getContractFromAbi(
-      sigDropContractAddress,
-      SignatureDrop__factory.abi,
-    );
+    const c = await sdk.getContract(sigDropContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
     invariant(c.nft.drop, "ERC721 drop");
@@ -312,10 +288,7 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: erc1155", async () => {
-    const c = await sdk.getContractFromAbi(
-      editionContractAddress,
-      TokenERC1155__factory.abi,
-    );
+    const c = await sdk.getContract(editionContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.edition, "ERC1155 undefined");
     invariant(c.edition.query, "ERC1155 query undefined");
@@ -331,10 +304,7 @@ describe("Custom Contracts", async () => {
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
   it("should detect feature: erc1155 signature mintable", async () => {
-    const c = await sdk.getContractFromAbi(
-      editionContractAddress,
-      TokenERC1155__factory.abi,
-    );
+    const c = await sdk.getContract(editionContractAddress);
 
     invariant(c, "Contract undefined");
     invariant(c.edition, "ERC1155 undefined");
@@ -351,9 +321,7 @@ describe("Custom Contracts", async () => {
       quantity: "1",
     };
 
-    let goodPayload: SignedPayload1155;
-
-    goodPayload = await c.edition.signature.generate(payload);
+    const goodPayload = await c.edition.signature.generate(payload);
 
     const valid = await c.edition.signature.verify(goodPayload);
     assert.isTrue(valid, "This voucher should be valid");
@@ -369,9 +337,7 @@ describe("Custom Contracts", async () => {
       TokenERC20__factory.abi,
     );
 
-    let meta: PayloadToSign20;
-
-    meta = {
+    const meta: PayloadToSign20 = {
       currencyAddress: NATIVE_TOKEN_ADDRESS,
       quantity: 50,
       price: "0.2",
@@ -428,9 +394,8 @@ describe("Custom Contracts", async () => {
       quantity: "1",
     };
 
-    let goodPayload: SignedPayload721WithQuantitySignature;
-
-    goodPayload = await c.nft.signature.generate(payload);
+    const goodPayload: SignedPayload721WithQuantitySignature =
+      await c.nft.signature.generate(payload);
 
     const valid = await c.nft.signature.verify(goodPayload);
     assert.isTrue(valid, "This voucher should be valid");
