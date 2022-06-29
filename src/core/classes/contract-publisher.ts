@@ -155,9 +155,40 @@ export class ContractPublisher extends RPCConnectionHandler {
   }
 
   public async publish(
-    metadataUri: string,
+    predeployUri: string,
   ): Promise<TransactionResult<PublishedContract>> {
-    return (await this.publishBatch([metadataUri]))[0];
+    const signer = this.getSigner();
+    invariant(signer, "A signer is required");
+    const publisher = await signer.getAddress();
+
+    const fullMetadata = await this.fetchFullContractMetadataFromPredeployUri(
+      predeployUri,
+    );
+    const bytecode = fullMetadata.bytecode.startsWith("0x")
+      ? fullMetadata.bytecode
+      : `0x${fullMetadata.bytecode}`;
+
+    const bytecodeHash = utils.solidityKeccak256(["bytes"], [bytecode]);
+    const contractId = fullMetadata.name;
+    const receipt = await this.publisher.sendTransaction("publishContract", [
+      publisher,
+      predeployUri,
+      bytecodeHash,
+      constants.AddressZero,
+      contractId,
+    ]);
+    const events = this.publisher.parseLogs<ContractPublishedEvent>(
+      "ContractPublished",
+      receipt.logs,
+    );
+    if (events.length < 1) {
+      throw new Error("No ContractPublished event found");
+    }
+    const contract = events[0].args.publishedContract;
+    return {
+      receipt,
+      data: async () => this.toPublishedContract(contract),
+    };
   }
 
   public async publishBatch(
