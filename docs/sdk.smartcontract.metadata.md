@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-metadata: ContractMetadata<ThirdwebContract, any>;
+metadata: ContractMetadata<BaseContract, any>;
 ```

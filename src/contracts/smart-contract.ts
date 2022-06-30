@@ -17,11 +17,10 @@ import {
   IPlatformFee,
   IPrimarySale,
   IRoyalty,
-  ThirdwebContract,
 } from "contracts";
 import { AbiSchema, CustomContractSchema } from "../schema/contracts/custom";
 import { UpdateableNetwork } from "../core/interfaces/contract";
-import { CallOverrides, ContractInterface } from "ethers";
+import { BaseContract, CallOverrides, ContractInterface } from "ethers";
 import {
   ALL_ROLES,
   detectContractFeature,
@@ -58,9 +57,8 @@ import { CallOverrideSchema } from "../schema/index";
  *
  * @beta
  */
-export class SmartContract<
-  TContract extends ThirdwebContract = ThirdwebContract,
-> implements UpdateableNetwork
+export class SmartContract<TContract extends BaseContract = BaseContract>
+  implements UpdateableNetwork
 {
   static contractType = "custom" as const;
   /**
@@ -79,10 +77,8 @@ export class SmartContract<
   public publishedMetadata: ContractPublishedMetadata<TContract>;
 
   // features
-  public metadata: ContractMetadata<ThirdwebContract, any>;
-  public royalties:
-    | ContractRoyalty<IRoyalty & ThirdwebContract, any>
-    | undefined;
+  public metadata: ContractMetadata<BaseContract, any>;
+  public royalties: ContractRoyalty<IRoyalty, any> | undefined;
   public roles: ContractRoles<IPermissionsEnumerable, any> | undefined;
   public sales: ContractPrimarySale<IPrimarySale> | undefined;
   public platformFees: ContractPlatformFee<IPlatformFee> | undefined;
@@ -224,12 +220,7 @@ export class SmartContract<
    * ********************/
 
   private detectRoyalties() {
-    if (
-      detectContractFeature<IRoyalty & ThirdwebContract>(
-        this.contractWrapper,
-        "Royalty",
-      )
-    ) {
+    if (detectContractFeature<IRoyalty>(this.contractWrapper, "Royalty")) {
       // ContractMetadata is stateless, it's fine to create a new one here
       // This also makes it not order dependent in the feature detection process
       const metadata = new ContractMetadata(

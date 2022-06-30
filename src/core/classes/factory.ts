@@ -1,5 +1,5 @@
 import { TWFactory, TWFactory__factory } from "contracts";
-import { BigNumber, Contract, ethers, constants } from "ethers";
+import { BigNumber, constants, Contract, ethers } from "ethers";
 import { z } from "zod";
 import { CONTRACTS_MAP, REMOTE_CONTRACT_NAME } from "../../contracts/maps";
 import { Edition } from "../../contracts/edition";
@@ -19,14 +19,12 @@ import { ContractWrapper } from "./contract-wrapper";
 
 import {
   CONTRACT_ADDRESSES,
-  getContractAddressByChainId,
   OZ_DEFENDER_FORWARDER_ADDRESS,
   SUPPORTED_CHAIN_IDS,
 } from "../../constants";
 import { TokenDrop } from "../../contracts/token-drop";
 import { ProxyDeployedEvent } from "contracts/TWFactory";
 import { Multiwrap } from "../../contracts/multiwrap";
-import { AddressZero } from "@ethersproject/constants";
 
 /**
  * @internal
@@ -123,11 +121,6 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
       case SignatureDrop.contractType:
         const signatureDropmetadata =
           SignatureDrop.schema.deploy.parse(metadata);
-        const chainId = await this.getChainID();
-        const signMintAddress = getContractAddressByChainId(chainId, "sigMint");
-        if (signMintAddress === AddressZero) {
-          throw new Error("SignatureDrop contract not deployable yet");
-        }
         return [
           await this.getSignerAddress(),
           signatureDropmetadata.name,

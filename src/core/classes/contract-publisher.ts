@@ -18,11 +18,15 @@ import {
   fetchContractMetadataFromAddress,
   fetchPreDeployMetadata,
   fetchSourceFilesFromMetadata,
+  resolveContractUriFromAddress,
 } from "../../common/feature-detection";
 import {
   AbiFunction,
   ContractParam,
   ContractSource,
+  PreDeployMetadataFetched,
+  ProfileMetadata,
+  ProfileSchema,
   PublishedContract,
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
@@ -85,7 +89,9 @@ export class ContractPublisher extends RPCConnectionHandler {
     return extractFunctions(predeployMetadataUri, this.storage);
   }
 
-  public async fetchFullContractMetadataFromPredeployUri(predeployUri: string) {
+  public async fetchFullContractMetadataFromPredeployUri(
+    predeployUri: string,
+  ): Promise<PreDeployMetadataFetched> {
     return fetchPreDeployMetadata(predeployUri, this.storage);
   }
 
@@ -93,7 +99,7 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * @param address
    */
-  public async fetchContractMetadataFromAddress(address: string) {
+  public async fetchCompilerMetadataFromAddress(address: string) {
     return fetchContractMetadataFromAddress(
       address,
       this.getProvider(),
@@ -105,15 +111,66 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * @param address
    */
+  public async resolvePublishMetadataFromAddress(
+    address: string,
+  ): Promise<string[]> {
+    const compilerMetadataUri = await resolveContractUriFromAddress(
+      address,
+      this.getProvider(),
+    );
+    if (!compilerMetadataUri) {
+      throw Error("Could not resolve compiler metadata URI from bytecode");
+    }
+    return await this.publisher.readContract.getPublishedUriFromCompilerUri(
+      compilerMetadataUri,
+    );
+  }
+
+  /**
+   * @internal
+   * @param address
+   */
   public async fetchContractSourcesFromAddress(
     address: string,
   ): Promise<ContractSource[]> {
-    const metadata = await this.fetchContractMetadataFromAddress(address);
+    const metadata = await this.fetchCompilerMetadataFromAddress(address);
     return await fetchSourceFilesFromMetadata(metadata, this.storage);
   }
 
   /**
-   * @interface
+   * @internal
+   * @param profileMetadata
+   */
+  public async updatePublisherProfile(
+    profileMetadata: ProfileMetadata,
+  ): Promise<TransactionResult> {
+    const signer = this.getSigner();
+    invariant(signer, "A signer is required");
+    const publisher = await signer.getAddress();
+    const profileUri = await this.storage.uploadMetadata(profileMetadata);
+    return {
+      receipt: await this.publisher.sendTransaction("setPublisherProfileUri", [
+        publisher,
+        profileUri,
+      ]),
+    };
+  }
+
+  /**
+   * @internal
+   * @param publisherAddress
+   */
+  public async getPublisherProfile(
+    publisherAddress: string,
+  ): Promise<ProfileMetadata> {
+    const profileUri = await this.publisher.readContract.getPublisherProfileUri(
+      publisherAddress,
+    );
+    return ProfileSchema.parse(await this.storage.get(profileUri));
+  }
+
+  /**
+   * @internal
    * @param publisherAddress
    */
   public async getAll(publisherAddress: string): Promise<PublishedContract[]> {
@@ -172,10 +229,11 @@ export class ContractPublisher extends RPCConnectionHandler {
     const contractId = fullMetadata.name;
     const receipt = await this.publisher.sendTransaction("publishContract", [
       publisher,
+      contractId,
       predeployUri,
+      fullMetadata.compilerMetadataUri,
       bytecodeHash,
       constants.AddressZero,
-      contractId,
     ]);
     const events = this.publisher.parseLogs<ContractPublishedEvent>(
       "ContractPublished",
@@ -219,10 +277,11 @@ export class ContractPublisher extends RPCConnectionHandler {
         "publishContract",
         [
           publisher,
+          contractId,
           meta.predeployUri,
+          meta.fullMetadata.compilerMetadataUri,
           bytecodeHash,
           constants.AddressZero,
-          contractId,
         ],
       );
     });

@@ -1,4 +1,3 @@
-import { ThirdwebContract } from "contracts";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   extractFunctionsFromAbi,
@@ -10,12 +9,13 @@ import {
   AbiSchema,
   PublishedMetadata,
 } from "../../schema/contracts/custom";
+import { BaseContract } from "ethers";
 
 /**
  * Handles publish metadata for a contract
  * @internal
  */
-export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
+export class ContractPublishedMetadata<TContract extends BaseContract> {
   private contractWrapper;
   private storage: IStorage;
 

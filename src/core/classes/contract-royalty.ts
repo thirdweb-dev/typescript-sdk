@@ -1,8 +1,6 @@
 import {
   ContractMetadata as ContractMetadataContract,
   IRoyalty,
-  IThirdwebContract,
-  ThirdwebContract,
 } from "contracts";
 import { CommonRoyaltySchema } from "../../schema/contracts/common";
 import { ContractMetadata, IGenericSchemaType } from "./contract-metadata";
@@ -29,7 +27,7 @@ import { hasFunction } from "../../common";
  * @public
  */
 export class ContractRoyalty<
-  TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract),
+  TContract extends IRoyalty,
   TSchema extends IGenericSchemaType,
 > implements DetectableFeature
 {

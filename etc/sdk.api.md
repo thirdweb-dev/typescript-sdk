@@ -557,9 +557,6 @@ export const CONTRACT_ADDRESSES: Record<SUPPORTED_CHAIN_ID, {
     twFactory: string;
     twRegistry: string;
     twBYOCRegistry: string;
-    contractDeployer: string;
-    contractMetadataRegistry: string;
-    sigMint: string;
 }>;
 
 // Warning: (ae-forgotten-export) The symbol "RPCConnectionHandler" needs to be exported by the entry point index.d.ts
@@ -698,11 +695,10 @@ export class ContractPrimarySale<TContract extends IPrimarySale> implements Dete
     setRecipient(recipient: string): Promise<TransactionResult>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "ThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "ContractPublishedMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
-export class ContractPublishedMetadata<TContract extends ThirdwebContract> {
+export class ContractPublishedMetadata<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>, storage: IStorage);
     // Warning: (ae-forgotten-export) The symbol "AbiFunction" needs to be exported by the entry point index.d.ts
     //
@@ -735,11 +731,10 @@ export class ContractRoles<TContract extends IPermissionsEnumerable, TRole exten
 }
 
 // Warning: (ae-forgotten-export) The symbol "IRoyalty" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "IThirdwebContract" needs to be exported by the entry point index.d.ts
 // Warning: (ae-incompatible-release-tags) The symbol "ContractRoyalty" is marked as @public, but its signature references "IGenericSchemaType" which is marked as @internal
 //
 // @public
-export class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract), TSchema extends IGenericSchemaType> implements DetectableFeature {
+export class ContractRoyalty<TContract extends IRoyalty, TSchema extends IGenericSchemaType> implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, TSchema>);
     // (undocumented)
     featureName: "Royalty";
@@ -1844,12 +1839,12 @@ export enum EventType {
 // @internal (undocumented)
 export function extractConstructorParams(predeployMetadataUri: string, storage: IStorage): Promise<{
     [x: string]: any;
-    stateMutability?: string | undefined;
     components?: {
         [x: string]: any;
         type: string;
         name: string;
     }[] | undefined;
+    stateMutability?: string | undefined;
     type: string;
     name: string;
 }[]>;
@@ -1859,12 +1854,12 @@ export function extractConstructorParams(predeployMetadataUri: string, storage: 
 // @internal (undocumented)
 export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>): {
     [x: string]: any;
-    stateMutability?: string | undefined;
     components?: {
         [x: string]: any;
         type: string;
         name: string;
     }[] | undefined;
+    stateMutability?: string | undefined;
     type: string;
     name: string;
 }[];
@@ -2061,8 +2056,8 @@ export class InvalidAddressError extends Error {
 
 // @public
 export class IpfsStorage implements IStorage {
-    // Warning: (ae-forgotten-export) The symbol "IpfsUploader" needs to be exported by the entry point index.d.ts
-    constructor(gatewayUrl?: string, uploader?: IpfsUploader);
+    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "IStorageUpload" which is marked as @internal
+    constructor(gatewayUrl?: string, uploader?: IStorageUpload);
     // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "gatewayUrl"
     //
     // @internal (undocumented)
@@ -3531,8 +3526,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
-    royaltyRecipient: string;
     royaltyBps: number;
+    royaltyRecipient: string;
     quantity: string;
     uid: string;
     price: string;
@@ -3553,8 +3548,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    royaltyRecipient?: string | undefined;
     royaltyBps?: number | undefined;
+    royaltyRecipient?: string | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
@@ -3658,8 +3653,8 @@ export const Signature1155PayloadInputWithTokenId: z.ZodObject<z.extendShape<z.e
     to: string;
     primarySaleRecipient: string;
     tokenId: string;
-    royaltyRecipient: string;
     royaltyBps: number;
+    royaltyRecipient: string;
     quantity: string;
     uid: string;
     price: string;
@@ -3680,8 +3675,8 @@ export const Signature1155PayloadInputWithTokenId: z.ZodObject<z.extendShape<z.e
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    royaltyRecipient?: string | undefined;
     royaltyBps?: number | undefined;
+    royaltyRecipient?: string | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
@@ -3760,8 +3755,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     primarySaleRecipient: string;
     uri: string;
     tokenId: BigNumber;
-    royaltyRecipient: string;
     royaltyBps: BigNumber;
+    royaltyRecipient: string;
     quantity: BigNumber;
     uid: string;
     price: string;
@@ -3922,8 +3917,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
-    royaltyRecipient: string;
     royaltyBps: number;
+    royaltyRecipient: string;
     uid: string;
     price: string;
     currencyAddress: string;
@@ -3943,8 +3938,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    royaltyRecipient?: string | undefined;
     royaltyBps?: number | undefined;
+    royaltyRecipient?: string | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
@@ -4017,8 +4012,8 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     to: string;
     primarySaleRecipient: string;
     uri: string;
-    royaltyRecipient: string;
     royaltyBps: BigNumber;
+    royaltyRecipient: string;
     uid: string;
     price: string;
     currencyAddress: string;
@@ -4140,8 +4135,8 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
-    royaltyRecipient: string;
     royaltyBps: number;
+    royaltyRecipient: string;
     quantity: BigNumber;
     uid: string;
     price: string;
@@ -4162,8 +4157,8 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    royaltyRecipient?: string | undefined;
     royaltyBps?: number | undefined;
+    royaltyRecipient?: string | undefined;
     quantity?: string | number | bigint | BigNumber | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
@@ -4239,8 +4234,8 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
     to: string;
     primarySaleRecipient: string;
     uri: string;
-    royaltyRecipient: string;
     royaltyBps: BigNumber;
+    royaltyRecipient: string;
     quantity: BigNumber;
     uid: string;
     price: string;
@@ -4474,7 +4469,7 @@ export type SignedPayload721WithQuantitySignature = {
 export type SignerOrProvider = Signer | providers.Provider;
 
 // @beta
-export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract> implements UpdateableNetwork {
+export class SmartContract<TContract extends BaseContract = BaseContract> implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
     call(functionName: string, ...args: unknown[] | [...unknown[], CallOverrides]): Promise<any>;
     // (undocumented)
@@ -4489,7 +4484,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     // (undocumented)
     interceptor: ContractInterceptor<TContract>;
     // (undocumented)
-    metadata: ContractMetadata<ThirdwebContract, any>;
+    metadata: ContractMetadata<BaseContract, any>;
     nft: Erc721 | undefined;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
@@ -4502,7 +4497,7 @@ export class SmartContract<TContract extends ThirdwebContract = ThirdwebContract
     // (undocumented)
     roles: ContractRoles<IPermissionsEnumerable, any> | undefined;
     // (undocumented)
-    royalties: ContractRoyalty<IRoyalty & ThirdwebContract, any> | undefined;
+    royalties: ContractRoyalty<IRoyalty, any> | undefined;
     // (undocumented)
     sales: ContractPrimarySale<IPrimarySale> | undefined;
     // @internal (undocumented)
@@ -5006,9 +5001,9 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     // @internal (undocumented)
     getBuiltInContract<TContractType extends ContractType = ContractType>(address: string, contractType: TContractType): ContractForContractType<TContractType>;
     // @beta
-    getContract(address: string): Promise<SmartContract<ThirdwebContract>>;
+    getContract(address: string): Promise<SmartContract<ethers.BaseContract>>;
     // @beta
-    getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ThirdwebContract>;
+    getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ethers.BaseContract>;
     getContractList(walletAddress: string): Promise<{
         address: string;
         contractType: "custom" | "token" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";

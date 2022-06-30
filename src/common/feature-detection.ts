@@ -61,7 +61,7 @@ export async function extractConstructorParams(
 
 /**
  * @internal
- * @param predeployUri
+ * @param predeployMetadataUri
  * @param storage
  */
 export async function extractFunctions(
@@ -346,7 +346,7 @@ export async function fetchPreDeployMetadata(
   storage: IStorage,
 ): Promise<PreDeployMetadataFetched> {
   const pubMeta = PreDeployMetadata.parse(
-    await storage.get(publishMetadataUri),
+    JSON.parse(await storage.getRaw(publishMetadataUri)),
   );
   const deployBytecode = await storage.getRaw(pubMeta.bytecodeUri);
   const parsedMeta = await fetchContractMetadata(pubMeta.metadataUri, storage);
@@ -354,6 +354,7 @@ export async function fetchPreDeployMetadata(
     name: parsedMeta.name,
     abi: parsedMeta.abi,
     bytecode: deployBytecode,
+    compilerMetadataUri: pubMeta.metadataUri,
   };
 }
 

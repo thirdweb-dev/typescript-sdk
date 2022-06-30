@@ -80,6 +80,37 @@ describe("Publishing", async () => {
     );
   });
 
+  it("should update bio", async () => {
+    const address = adminWallet.address;
+    const publisher = sdk.getPublisher();
+    await publisher.updatePublisherProfile({
+      name: "John",
+      bio: "Hello",
+      github: "something",
+    });
+    const profile = await publisher.getPublisherProfile(address);
+    expect(profile.name).to.eq("John");
+    expect(profile.bio).to.eq("Hello");
+    expect(profile.github).to.eq("something");
+  });
+
+  it("should match back publish metadata", async () => {
+    const publisher = sdk.getPublisher();
+    const tx = await publisher.publish(simpleContractUri);
+    const contract = await tx.data();
+    const deployedAddr = await publisher.deployPublishedContract(
+      adminWallet.address,
+      contract.id,
+      [],
+    );
+    expect(deployedAddr.length).to.be.gt(0);
+    const publishMeta = await publisher.resolvePublishMetadataFromAddress(
+      deployedAddr,
+    );
+    const pubMeta = await sdk.storage.fetch(publishMeta[0]);
+    expect(pubMeta.name).to.eq("Greeter");
+  });
+
   it("should publish simple greeter contract", async () => {
     const publisher = sdk.getPublisher();
     const tx = await publisher.publish(simpleContractUri);
