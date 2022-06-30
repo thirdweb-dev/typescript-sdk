@@ -340,7 +340,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    */
   public async resolveContractType(
     contractAddress: string,
-  ): Promise<ContractType> {
+  ): Promise<Exclude<ContractType, "custom">> {
     const contract = IThirdwebContract__factory.connect(
       contractAddress,
       this.getSignerOrProvider(),
@@ -443,7 +443,14 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       );
       return this.getContractFromAbi(address, metadata.abi);
     } catch (e) {
-      throw new Error(`Error fetching ABI for this contract\n\n${e}`);
+      try {
+        // try built in contract instead, eventually all our contracts will have bytecode metadata
+        const contractType = await this.resolveContractType(address);
+        const abi = KNOWN_CONTRACTS_MAP[contractType].contractAbi;
+        return this.getContractFromAbi(address, abi);
+      } catch (err) {
+        throw new Error(`Error fetching ABI for this contract\n\n${err}`);
+      }
     }
   }
 

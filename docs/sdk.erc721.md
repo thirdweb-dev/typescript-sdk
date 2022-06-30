@@ -9,7 +9,7 @@ Standard ERC721 NFT functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc721<T extends Multiwrap | SignatureDrop | DropERC721 | TokenERC721 | BaseERC721 = BaseERC721> implements UpdateableNetwork, DetectableFeature 
+export declare class Erc721<T extends Multiwrap | SignatureDrop | DropERC721 | TokenERC721 | BaseERC721 = BaseERC721 | BaseSignatureMintERC721> implements UpdateableNetwork, DetectableFeature 
 ```
 <b>Implements:</b> UpdateableNetwork, DetectableFeature
 
@@ -41,6 +41,7 @@ await contract.nft.transfer(walletAddress, tokenId);
 |  [mint](./sdk.erc721.mint.md) |  | [Erc721Mintable](./sdk.erc721mintable.md) \| undefined |  |
 |  [options](./sdk.erc721.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [query](./sdk.erc721.query.md) |  | [Erc721Supply](./sdk.erc721supply.md) \| undefined |  |
+|  [signature](./sdk.erc721.signature.md) |  | [Erc721WithQuantitySignatureMintable](./sdk.erc721withquantitysignaturemintable.md) \| undefined |  |
 |  [storage](./sdk.erc721.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
 
 ## Methods

@@ -24,12 +24,12 @@ import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { BigNumber, BigNumberish, constants } from "ethers";
-import { Erc1155SignatureMinting } from "../core/classes/erc-1155-signature-minting";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { getRoleHash } from "../common";
 import { QueryAllParams } from "../types";
 import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
 import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
+import { Erc1155SignatureMintable } from "../core/classes/erc-1155-signature-mintable";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -49,15 +49,10 @@ export class Edition extends Erc1155<TokenERC1155> {
   static contractType = "edition" as const;
   static contractRoles = ["admin", "minter", "transfer"] as const;
   static contractAbi = require("../../abis/TokenERC1155.json");
-
-  private _query = this.query as Erc1155Enumerable;
-  private _mint = this.mint as Erc1155Mintable;
-  private _batchMint = this._mint.batch as Erc1155BatchMintable;
   /**
    * @internal
    */
   static schema = TokenErc1155ContractSchema;
-
   public metadata: ContractMetadata<TokenERC1155, typeof Edition.schema>;
   public roles: ContractRoles<
     TokenERC1155,
@@ -100,11 +95,14 @@ export class Edition extends Erc1155<TokenERC1155> {
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
    */
-  public signature: Erc1155SignatureMinting;
+  override signature = super.signature as Erc1155SignatureMintable;
   /**
    * @internal
    */
   public interceptor: ContractInterceptor<TokenERC1155>;
+  private _query = this.query as Erc1155Enumerable;
+  private _mint = this.mint as Erc1155Mintable;
+  private _batchMint = this._mint.batch as Erc1155BatchMintable;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -132,10 +130,10 @@ export class Edition extends Erc1155<TokenERC1155> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.signature = new Erc1155SignatureMinting(
+    this.signature = new Erc1155SignatureMintable(
       this.contractWrapper,
-      this.roles,
       this.storage,
+      this.roles,
     );
   }
 

@@ -18,7 +18,6 @@ import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import { Erc721SignatureMinting } from "../core/classes/erc-721-signature-minting";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
@@ -27,6 +26,7 @@ import { BigNumber, BigNumberish, constants } from "ethers";
 import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
 import { QueryAllParams } from "../types";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
+import { Erc721WithQuantitySignatureMintable } from "../core";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -93,7 +93,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
    */
-  public signature: Erc721SignatureMinting;
+  override signature = super.signature as Erc721WithQuantitySignatureMintable;
   /**
    * @internal
    */
@@ -130,10 +130,10 @@ export class NFTCollection extends Erc721<TokenERC721> {
     this.sales = new ContractPrimarySale(this.contractWrapper);
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
-    this.signature = new Erc721SignatureMinting(
+    this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
-      this.roles,
       this.storage,
+      this.roles,
     );
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);

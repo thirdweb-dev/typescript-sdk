@@ -36,8 +36,8 @@ import {
   TokensClaimedEvent,
   TokensLazyMintedEvent,
 } from "contracts/DropERC721";
-import { Erc721WithQuantitySignatureMinting } from "../core/classes/erc-721-with-quantity-signature-minting";
 import { DelayedReveal } from "../core/index";
+import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -164,7 +164,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
    */
-  public signature: Erc721WithQuantitySignatureMinting;
+  override signature = super.signature as Erc721WithQuantitySignatureMintable;
 
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
@@ -199,9 +199,8 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
     this.revealer = new DelayedReveal(this, this.contractWrapper, this.storage);
-    this.signature = new Erc721WithQuantitySignatureMinting(
+    this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
-      this.roles,
       this.storage,
     );
     this.claimCondition = new DropSingleClaimConditions(

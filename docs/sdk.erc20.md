@@ -9,7 +9,7 @@ Standard ERC20 Token functions
 <b>Signature:</b>
 
 ```typescript
-export declare class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20> implements UpdateableNetwork, DetectableFeature 
+export declare class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20 | BaseSignatureMintERC20> implements UpdateableNetwork, DetectableFeature 
 ```
 <b>Implements:</b> UpdateableNetwork, DetectableFeature
 
@@ -39,6 +39,7 @@ await contract.token.transfer(walletAddress, amount);
 |  [featureName](./sdk.erc20.featurename.md) |  | "ERC20" |  |
 |  [mint](./sdk.erc20.mint.md) |  | [Erc20Mintable](./sdk.erc20mintable.md) \| undefined | Mint tokens |
 |  [options](./sdk.erc20.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
+|  [signature](./sdk.erc20.signature.md) |  | [Erc20SignatureMintable](./sdk.erc20signaturemintable.md) \| undefined |  |
 |  [storage](./sdk.erc20.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
 
 ## Methods

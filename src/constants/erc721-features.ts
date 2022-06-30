@@ -7,6 +7,7 @@ import DropAbi from "../../abis/IDrop.json";
 import DelayedRevealAbi from "../../abis/DelayedReveal.json";
 import LazyMintERC721Abi from "../../abis/LazyMintERC721.json";
 import IClaimConditionsMultiPhaseAbi from "../../abis/IClaimConditionsMultiPhase.json";
+import SignatureMintERC721Abi from "../../abis/SignatureMintERC721.json";
 
 export const FEATURE_NFT_REVEALABLE = {
   name: "ERC721Revealable",
@@ -69,6 +70,17 @@ export const FEATURE_NFT_MINTABLE = {
   },
 } as const;
 
+export const FEATURE_NFT_SIGNATURE_MINTABLE = {
+  name: "ERC721SignatureMint",
+  namespace: "nft.signature",
+  docLinks: {
+    sdk: "sdk.erc721signaturemint",
+    contracts: "ISignatureMintERC721",
+  },
+  abis: [Erc721Abi, SignatureMintERC721Abi],
+  features: {},
+} as const;
+
 export const FEATURE_NFT_ENUMERABLE = {
   name: "ERC721Enumerable",
   namespace: "nft.query.owned",
@@ -105,5 +117,6 @@ export const FEATURE_NFT = {
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
     [FEATURE_NFT_DROPABLE.name]: FEATURE_NFT_DROPABLE,
+    [FEATURE_NFT_SIGNATURE_MINTABLE.name]: FEATURE_NFT_SIGNATURE_MINTABLE,
   },
 } as const;

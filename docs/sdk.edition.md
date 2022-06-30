@@ -44,7 +44,7 @@ const contract = sdk.getEdition("{{contract_address}}");
 |  [roles](./sdk.edition.roles.md) |  | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC1155, typeof [Edition.contractRoles](./sdk.edition.contractroles.md)<!-- -->\[number\]&gt; |  |
 |  [royalties](./sdk.edition.royalties.md) |  | [ContractRoyalty](./sdk.contractroyalty.md)<!-- -->&lt;TokenERC1155, typeof Edition.schema&gt; | Configure royalties |
 |  [sales](./sdk.edition.sales.md) |  | [ContractPrimarySale](./sdk.contractprimarysale.md)<!-- -->&lt;TokenERC1155&gt; |  |
-|  [signature](./sdk.edition.signature.md) |  | [Erc1155SignatureMinting](./sdk.erc1155signatureminting.md) | Signature Minting |
+|  [signature](./sdk.edition.signature.md) |  | [Erc1155SignatureMintable](./sdk.erc1155signaturemintable.md) | Signature Minting |
 
 ## Methods
 

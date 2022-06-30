@@ -15,19 +15,25 @@ import { ContractWrapper } from "./contract-wrapper";
 import { ITokenERC20, TokenERC20 } from "contracts";
 import { ContractRoles } from "./contract-roles";
 import { Token } from "../../contracts";
+import { FEATURE_TOKEN_SIGNATURE_MINTABLE } from "../../constants/erc20-features";
+import { DetectableFeature } from "../interfaces/DetectableFeature";
 
 /**
  * Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely
  * @public
  */
 // TODO consolidate into a single class
-export class Erc20SignatureMinting {
+export class Erc20SignatureMintable implements DetectableFeature {
+  featureName = FEATURE_TOKEN_SIGNATURE_MINTABLE.name;
+
   private contractWrapper: ContractWrapper<TokenERC20>;
-  private roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>;
+  private roles:
+    | ContractRoles<TokenERC20, typeof Token.contractRoles[number]>
+    | undefined;
 
   constructor(
     contractWrapper: ContractWrapper<TokenERC20>,
-    roles: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>,
+    roles?: ContractRoles<TokenERC20, typeof Token.contractRoles[number]>,
   ) {
     this.contractWrapper = contractWrapper;
     this.roles = roles;
@@ -48,7 +54,7 @@ export class Erc20SignatureMinting {
    * const receipt = tx.receipt; // the mint transaction receipt
    * const mintedId = tx.id; // the id of the NFT minted
    * ```
-   * @param signedPayload - the previously generated payload and signature with {@link Erc20SignatureMinting.generate}
+   * @param signedPayload - the previously generated payload and signature with {@link Erc20SignatureMintable.generate}
    */
   public async mint(
     signedPayload: SignedPayload20,
@@ -154,7 +160,7 @@ export class Erc20SignatureMinting {
   /**
    * Generate a batch of signatures that can be used to mint many token signatures.
    *
-   * @remarks See {@link Erc20SignatureMinting.generate}
+   * @remarks See {@link Erc20SignatureMintable.generate}
    *
    * @param payloadsToSign - the payloads to sign
    * @returns an array of payloads and signatures
@@ -162,7 +168,7 @@ export class Erc20SignatureMinting {
   public async generateBatch(
     payloadsToSign: PayloadToSign20[],
   ): Promise<SignedPayload20[]> {
-    await this.roles.verify(
+    await this.roles?.verify(
       ["minter"],
       await this.contractWrapper.getSignerAddress(),
     );

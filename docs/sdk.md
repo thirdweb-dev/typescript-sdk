@@ -27,18 +27,18 @@
 |  [Erc1155BatchMintable](./sdk.erc1155batchmintable.md) | Mint Many ERC1155 NFTs at once |
 |  [Erc1155Enumerable](./sdk.erc1155enumerable.md) | List ERC1155 NFTs |
 |  [Erc1155Mintable](./sdk.erc1155mintable.md) | Mint ERC1155 NFTs |
-|  [Erc1155SignatureMinting](./sdk.erc1155signatureminting.md) | Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely |
+|  [Erc1155SignatureMintable](./sdk.erc1155signaturemintable.md) | Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc20](./sdk.erc20.md) | Standard ERC20 Token functions |
 |  [Erc20BatchMintable](./sdk.erc20batchmintable.md) | Mint Many ERC20 Tokens at once |
 |  [Erc20Mintable](./sdk.erc20mintable.md) | Mint ERC20 Tokens |
-|  [Erc20SignatureMinting](./sdk.erc20signatureminting.md) | Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely |
+|  [Erc20SignatureMintable](./sdk.erc20signaturemintable.md) | Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 NFT functions |
 |  [Erc721BatchMintable](./sdk.erc721batchmintable.md) | Mint Many ERC721 NFTs at once |
 |  [Erc721Dropable](./sdk.erc721dropable.md) | Lazily mint and claim ERC721 NFTs |
 |  [Erc721Enumerable](./sdk.erc721enumerable.md) | List owned ERC721 NFTs |
 |  [Erc721Mintable](./sdk.erc721mintable.md) | Mint ERC721 NFTs |
-|  [Erc721SignatureMinting](./sdk.erc721signatureminting.md) | Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc721Supply](./sdk.erc721supply.md) | List ERC721 NFTs |
+|  [Erc721WithQuantitySignatureMintable](./sdk.erc721withquantitysignaturemintable.md) | Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely |
 |  [GasCostEstimator](./sdk.gascostestimator.md) | Estimates the gas cost of Contract calls |
 |  [IpfsStorage](./sdk.ipfsstorage.md) | IPFS Storage implementation, accepts custom IPFS gateways |
 |  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
