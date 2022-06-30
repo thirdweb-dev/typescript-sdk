@@ -57,6 +57,11 @@ const additionalClassesToParse = [
   "RemoteStorage",
   "GasCostEstimator",
   "ContractInterceptor",
+  "ContractRoles",
+  "DropClaimConditions",
+  "ContractPrimarySale",
+  "ContractRoyalty",
+  "ContractPlatformFee",
 ];
 
 const modules = json.members[0].members.filter(
