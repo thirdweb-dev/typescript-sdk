@@ -248,6 +248,28 @@
     "properties": [],
     "reference": "https://docs.thirdweb.com/typescript/sdk.ContractMetadata"
   },
+  "ContractPlatformFee": {
+    "name": "ContractPlatformFee",
+    "summary": "Handle platform fees and recipients\n\n",
+    "remarks": "\n\nConfigure platform fees for a contract, which can be applied on certain paid transactions\n\n",
+    "examples": {
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nconst feeInfo = await contract.platformFee.get();\nawait contract.platformFee.set({\n  platform_fee_basis_points: 100, // 1% fee\n  platform_fee_recipient: \"0x...\" // the fee recipient\n})"
+    },
+    "methods": [],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.ContractPlatformFee"
+  },
+  "ContractPrimarySale": {
+    "name": "ContractPrimarySale",
+    "summary": "Handle primary sales recipients\n\n",
+    "remarks": "\n\nConfigure primary sale recipients for an entire contract.\n\n",
+    "examples": {
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nconst salesRecipient = await contract.sales.getRecipient();\nawait contract.roles.setRecipient(recipientWalletAddress);"
+    },
+    "methods": [],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.ContractPrimarySale"
+  },
   "ContractRoles": {
     "name": "ContractRoles",
     "summary": "Handle contract permissions\n\n",
@@ -305,6 +327,17 @@
     "properties": [],
     "reference": "https://docs.thirdweb.com/typescript/sdk.ContractRoles"
   },
+  "ContractRoyalty": {
+    "name": "ContractRoyalty",
+    "summary": "Handle contract royalties\n\n",
+    "remarks": "\n\nConfigure royalties for an entire contract or a particular token.\n\n",
+    "examples": {
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nconst royaltyInfo = await contract.royalties.getDefaultRoyaltyInfo();\nawait contract.roles.setTokenRoyaltyInfo(tokenId, {\n  seller_fee_basis_points: 100, // 1% royalty fee\n  fee_recipient: \"0x...\", // the fee recipient\n});"
+    },
+    "methods": [],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.ContractRoyalty"
+  },
   "DelayedReveal": {
     "name": "DelayedReveal",
     "summary": "Handles delayed reveal logic\n\n\n",
@@ -341,6 +374,34 @@
     ],
     "properties": [],
     "reference": "https://docs.thirdweb.com/typescript/sdk.DelayedReveal"
+  },
+  "DropClaimConditions": {
+    "name": "DropClaimConditions",
+    "summary": "Manages claim conditions for NFT Drop contracts\n\n\n",
+    "remarks": null,
+    "examples": {},
+    "methods": [
+      {
+        "name": "canClaim",
+        "summary": "Can Claim\n\n",
+        "remarks": "\n\nCheck if the drop can currently be claimed.\n\n",
+        "examples": {
+          "javascript": "// Quantity of tokens to check claimability of\nconst quantity = 1;\nconst canClaim = await contract.canClaim(quantity);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.DropClaimConditions.canClaim"
+      },
+      {
+        "name": "set",
+        "summary": "Set public mint conditions\n\n",
+        "remarks": "\n\nSets the public mint conditions that need to be fullfiled by users to claim NFTs.\n\n",
+        "examples": {
+          "javascript": "const presaleStartTime = new Date();\nconst publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst claimConditions = [\n  {\n    startTime: presaleStartTime, // start the presale now\n    maxQuantity: 2, // limit how many mints for this presale\n    price: 0.01, // presale price\n    snapshot: ['0x...', '0x...'], // limit minting to only certain addresses\n  },\n  {\n    startTime: publicSaleStartTime, // 24h after presale, start public sale\n    price: 0.08, // public sale price\n  }\n]);\n\nawait dropContract.claimConditions.set(claimConditions);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.DropClaimConditions.set"
+      }
+    ],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.DropClaimConditions"
   },
   "Edition": {
     "name": "Edition",
