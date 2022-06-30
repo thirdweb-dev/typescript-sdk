@@ -191,7 +191,7 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   ): Promise<boolean> {
     const isLegacyNFTContract = await this.isLegacyNFTContract();
 
-    let mintRequest = signedPayload.payload;
+    const mintRequest = signedPayload.payload;
     const signature = signedPayload.signature;
 
     let message;
