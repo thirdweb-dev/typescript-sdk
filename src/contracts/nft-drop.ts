@@ -47,7 +47,7 @@ import { uploadOrExtractURIs } from "../common/nft";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * const sdk = new ThirdwebSDK("rinkeby");
+ * const sdk = new ThirdwebSDK("{{chain}}");
  * const contract = sdk.getNFTDrop("{{contract_address}}");
  * ```
  *
