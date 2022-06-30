@@ -22,7 +22,7 @@ export declare class Multiwrap extends Erc721<MultiwrapContract>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-const sdk = new ThirdwebSDK("rinkeby");
+const sdk = new ThirdwebSDK("{{chainName}}");
 const contract = sdk.getMultiwrap("{{contract_address}}");
 ```
 

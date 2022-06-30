@@ -39,7 +39,7 @@ import { Erc1155SignatureMintable } from "../core/classes/erc-1155-signature-min
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * const sdk = new ThirdwebSDK("rinkeby");
+ * const sdk = new ThirdwebSDK("{{chainName}}");
  * const contract = sdk.getEdition("{{contract_address}}");
  * ```
  *

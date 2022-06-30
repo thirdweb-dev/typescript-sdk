@@ -43,7 +43,7 @@ import { IStorage } from "../core/interfaces/IStorage";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * const sdk = new ThirdwebSDK("rinkeby");
+ * const sdk = new ThirdwebSDK("{{chainName}}");
  * const contract = sdk.getMultiwrap("{{contract_address}}");
  * ```
  *

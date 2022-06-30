@@ -19,7 +19,7 @@ export declare class Token extends Erc20<TokenERC20>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-const sdk = new ThirdwebSDK("rinkeby");
+const sdk = new ThirdwebSDK("{{chainName}}");
 const contract = sdk.getToken("{{contract_address}}");
 ```
 
