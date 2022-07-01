@@ -10,5 +10,5 @@
 <b>Signature:</b>
 
 ```typescript
-royalties: ContractRoyalty<IRoyalty & ThirdwebContract, any> | undefined;
+royalties: ContractRoyalty<IRoyalty, any> | undefined;
 ```

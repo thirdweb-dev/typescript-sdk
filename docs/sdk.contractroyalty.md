@@ -9,7 +9,7 @@ Handle contract royalties
 <b>Signature:</b>
 
 ```typescript
-export declare class ContractRoyalty<TContract extends IRoyalty & (IThirdwebContract | ThirdwebContract), TSchema extends IGenericSchemaType> implements DetectableFeature 
+export declare class ContractRoyalty<TContract extends IRoyalty, TSchema extends IGenericSchemaType> implements DetectableFeature 
 ```
 <b>Implements:</b> DetectableFeature
 

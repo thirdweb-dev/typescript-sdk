@@ -12,7 +12,7 @@ Get an instance of a Custom contract from a json ABI
 <b>Signature:</b>
 
 ```typescript
-getContractFromAbi(address: string, abi: ContractInterface): SmartContract<import("contracts").ThirdwebContract>;
+getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ethers.BaseContract>;
 ```
 
 ## Parameters
@@ -24,7 +24,7 @@ getContractFromAbi(address: string, abi: ContractInterface): SmartContract<impor
 
 <b>Returns:</b>
 
-[SmartContract](./sdk.smartcontract.md)<!-- -->&lt;import("contracts").ThirdwebContract&gt;
+[SmartContract](./sdk.smartcontract.md)<!-- -->&lt;ethers.BaseContract&gt;
 
 the contract
 

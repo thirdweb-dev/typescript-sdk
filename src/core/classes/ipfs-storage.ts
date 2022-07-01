@@ -15,7 +15,7 @@ import { IpfsUploader } from "../uploaders/ipfs-uploader";
 import { UploadProgressEvent } from "../../types/events";
 import { File } from "@web-std/file";
 import FormData from "form-data";
-import { UploadResult } from "../interfaces";
+import { IStorageUpload, UploadResult } from "../interfaces";
 
 /**
  * IPFS Storage implementation, accepts custom IPFS gateways
@@ -29,11 +29,11 @@ export class IpfsStorage implements IStorage {
    */
   public gatewayUrl: string;
   private failedUrls: string[] = [];
-  private uploader: IpfsUploader;
+  private uploader: IStorageUpload;
 
   constructor(
     gatewayUrl: string = DEFAULT_IPFS_GATEWAY,
-    uploader: IpfsUploader = new IpfsUploader(),
+    uploader: IStorageUpload = new IpfsUploader(),
   ) {
     this.gatewayUrl = `${gatewayUrl.replace(/\/$/, "")}/`;
     this.uploader = uploader;
@@ -296,7 +296,10 @@ export class IpfsStorage implements IStorage {
     contractAddress?: string,
     signerAddress?: string,
   ): Promise<string> {
-    const token = await this.uploader.getUploadToken(contractAddress || "");
+    // TODO move down to IStorageUpload
+    const token = await (this.uploader as IpfsUploader).getUploadToken(
+      contractAddress || "",
+    );
     const metadata = {
       name: `CONSOLE-TS-SDK-${contractAddress}`,
       keyvalues: {

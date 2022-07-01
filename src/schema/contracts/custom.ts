@@ -55,16 +55,53 @@ export const CustomContractSchema = {
 /**
  * @internal
  */
-export const PreDeployMetadata = z.object({
-  name: z.string(),
-  metadataUri: z.string(),
-  bytecodeUri: z.string(),
-});
+export const PreDeployMetadata = z
+  .object({
+    name: z.string(),
+    metadataUri: z.string(),
+    bytecodeUri: z.string(),
+  })
+  .catchall(z.any());
+
 export type PreDeployMetadataFetched = {
   name: string;
   abi: z.infer<typeof AbiSchema>;
   bytecode: string;
+  compilerMetadataUri: string;
 };
+
+export const ExtraPublishMetadataSchema = z
+  .object({
+    version: z.string(),
+    displayName: z.string().optional(),
+    description: z.string().optional(),
+    readme: z.string().optional(),
+    license: z.string().optional(),
+    changelog: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+  })
+  .catchall(z.any());
+export type ExtraPublishMetadata = z.infer<typeof ExtraPublishMetadataSchema>;
+
+export const FullPublishMetadataSchema = PreDeployMetadata.merge(
+  ExtraPublishMetadataSchema,
+);
+
+export const ProfileSchema = z.object({
+  name: z.string().optional(),
+  bio: z.string().optional(),
+  avatar: z.string().optional(),
+  website: z.string().optional(),
+  twitter: z.string().optional(),
+  telegram: z.string().optional(),
+  facebook: z.string().optional(),
+  github: z.string().optional(),
+  medium: z.string().optional(),
+  linkedin: z.string().optional(),
+  reddit: z.string().optional(),
+  discord: z.string().optional(),
+});
+export type ProfileMetadata = z.infer<typeof ProfileSchema>;
 
 /**
  * @internal
