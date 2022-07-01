@@ -49,7 +49,7 @@ import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-wit
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * const sdk = new ThirdwebSDK("rinkeby");
+ * const sdk = new ThirdwebSDK("{{chainName}}");
  * const contract = sdk.getSignatureDrop("{{contract_address}}");
  * ```
  *

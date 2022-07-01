@@ -19,7 +19,7 @@ export declare class NFTDrop extends Erc721<DropERC721>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-const sdk = new ThirdwebSDK("rinkeby");
+const sdk = new ThirdwebSDK("{{chainName}}");
 const contract = sdk.getNFTDrop("{{contract_address}}");
 ```
 

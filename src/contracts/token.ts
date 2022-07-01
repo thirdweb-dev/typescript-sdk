@@ -32,7 +32,7 @@ import { Erc20SignatureMintable } from "../core/classes/erc-20-signature-mintabl
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * const sdk = new ThirdwebSDK("rinkeby");
+ * const sdk = new ThirdwebSDK("{{chainName}}");
  * const contract = sdk.getToken("{{contract_address}}");
  * ```
  *

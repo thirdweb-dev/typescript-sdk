@@ -19,7 +19,7 @@ export declare class SignatureDrop extends Erc721<SignatureDropContract>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-const sdk = new ThirdwebSDK("rinkeby");
+const sdk = new ThirdwebSDK("{{chainName}}");
 const contract = sdk.getSignatureDrop("{{contract_address}}");
 ```
 

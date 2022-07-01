@@ -19,7 +19,7 @@ export declare class Edition extends Erc1155<TokenERC1155>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-const sdk = new ThirdwebSDK("rinkeby");
+const sdk = new ThirdwebSDK("{{chainName}}");
 const contract = sdk.getEdition("{{contract_address}}");
 ```
 

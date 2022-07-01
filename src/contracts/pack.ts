@@ -48,7 +48,7 @@ import { getRoleHash } from "../common/role";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * const sdk = new ThirdwebSDK("rinkeby");
+ * const sdk = new ThirdwebSDK("{{chainName}}");
  * const contract = sdk.getPack("{{contract_address}}");
  * ```
  *

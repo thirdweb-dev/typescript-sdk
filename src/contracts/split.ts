@@ -24,7 +24,7 @@ import ERC20Abi from "../../abis/IERC20.json";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * const sdk = new ThirdwebSDK("rinkeby");
+ * const sdk = new ThirdwebSDK("{{chainName}}");
  * const contract = sdk.getSplit("{{contract_address}}");
  * ```
  *

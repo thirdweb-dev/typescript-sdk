@@ -408,7 +408,7 @@
     "summary": "Create a collection of NFTs that lets you mint multiple copies of each NFT.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getEdition(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"{{chainName}}\");\nconst contract = sdk.getEdition(\"{{contract_address}}\");"
     },
     "methods": [
       {
@@ -520,7 +520,7 @@
     "summary": "Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getEditionDrop(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"{{chainName}}\");\nconst contract = sdk.getEditionDrop(\"{{contract_address}}\");"
     },
     "methods": [
       {
@@ -660,7 +660,7 @@
     "summary": "Create your own whitelabel marketplace that enables users to buy and sell any digital assets.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getMarketplace(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"{{chainName}}\");\nconst contract = sdk.getMarketplace(\"{{contract_address}}\");"
     },
     "methods": [
       {
@@ -873,7 +873,7 @@
     "summary": "Multiwrap lets you wrap any number of ERC20, ERC721 and ERC1155 tokens you own into a single wrapped token bundle.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getMultiwrap(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"{{chainName}}\");\nconst contract = sdk.getMultiwrap(\"{{contract_address}}\");"
     },
     "methods": [
       {
@@ -958,7 +958,7 @@
     "summary": "Create a collection of one-of-one NFTs.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getNFTCollection(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"{{chainName}}\");\nconst contract = sdk.getNFTCollection(\"{{contract_address}}\");"
     },
     "methods": [
       {
@@ -1061,7 +1061,7 @@
     "summary": "Setup a collection of one-of-one NFTs that are minted as users claim them.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getNFTDrop(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"{{chainName}}\");\nconst contract = sdk.getNFTDrop(\"{{contract_address}}\");"
     },
     "methods": [
       {
@@ -1209,7 +1209,7 @@
     "summary": "Create lootboxes of NFTs with rarity based open mechanics.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getPack(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"{{chainName}}\");\nconst contract = sdk.getPack(\"{{contract_address}}\");"
     },
     "methods": [
       {
@@ -1340,7 +1340,7 @@
     "summary": "Setup a collection of NFTs where when it comes to minting, you can authorize some external party to mint tokens on your contract, and specify what exactly will be minted by that external party..\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getSignatureDrop(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"{{chainName}}\");\nconst contract = sdk.getSignatureDrop(\"{{contract_address}}\");"
     },
     "methods": [
       {
@@ -1509,7 +1509,7 @@
     "summary": "Create custom royalty splits to distribute funds.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getSplit(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"{{chainName}}\");\nconst contract = sdk.getSplit(\"{{contract_address}}\");"
     },
     "methods": [
       {
@@ -1575,7 +1575,7 @@
     "summary": "Create a standard crypto token or cryptocurrency.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getToken(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"{{chainName}}\");\nconst contract = sdk.getToken(\"{{contract_address}}\");"
     },
     "methods": [
       {
@@ -1723,7 +1723,7 @@
     "summary": "Create a Drop contract for a standard crypto token or cryptocurrency.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getTokenDrop(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"{{chainName}}\");\nconst contract = sdk.getTokenDrop(\"{{contract_address}}\");"
     },
     "methods": [
       {
@@ -1862,7 +1862,7 @@
     "summary": "Create a decentralized organization for token holders to vote on proposals.\n\n",
     "remarks": null,
     "examples": {
-      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"rinkeby\");\nconst contract = sdk.getVote(\"{{contract_address}}\");"
+      "javascript": "import { ThirdwebSDK } from \"@thirdweb-dev/sdk\";\n\nconst sdk = new ThirdwebSDK(\"{{chainName}}\");\nconst contract = sdk.getVote(\"{{contract_address}}\");"
     },
     "methods": [
       {
