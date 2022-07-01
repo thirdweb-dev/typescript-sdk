@@ -96,7 +96,9 @@ describe("Publishing", async () => {
 
   it("should match back publish metadata", async () => {
     const publisher = sdk.getPublisher();
-    const tx = await publisher.publish(simpleContractUri);
+    const tx = await publisher.publish(simpleContractUri, {
+      version: "0.0.1",
+    });
     const contract = await tx.data();
     const deployedAddr = await publisher.deployPublishedContract(
       adminWallet.address,
@@ -109,11 +111,14 @@ describe("Publishing", async () => {
     );
     const pubMeta = await sdk.storage.fetch(publishMeta[0]);
     expect(pubMeta.name).to.eq("Greeter");
+    expect(pubMeta.version).to.eq("0.0.1");
   });
 
   it("should publish simple greeter contract", async () => {
     const publisher = sdk.getPublisher();
-    const tx = await publisher.publish(simpleContractUri);
+    const tx = await publisher.publish(simpleContractUri, {
+      version: "0.0.1",
+    });
     const contract = await tx.data();
     const deployedAddr = await publisher.deployPublishedContract(
       adminWallet.address,
@@ -134,7 +139,9 @@ describe("Publishing", async () => {
     const publisher = sdk.getPublisher();
     let id = "";
     for (let i = 0; i < 5; i++) {
-      const tx = await publisher.publish(simpleContractUri);
+      const tx = await publisher.publish(simpleContractUri, {
+        version: i.toString(),
+      });
       id = (await tx.data()).id;
     }
     const all = await publisher.getAll(samWallet.address);
@@ -142,12 +149,17 @@ describe("Publishing", async () => {
     expect(all.length).to.be.eq(1);
     expect(versions.length).to.be.eq(5);
     expect(all[all.length - 1] === versions[versions.length - 1]);
+    const last = await publisher.getLatest(samWallet.address, id);
+    const c = await publisher.fetchPublishContractInfo(last);
+    expect(c.metadata.version).to.eq("4");
   });
 
   it("should publish constructor params contract", async () => {
     sdk.updateSignerOrProvider(bobWallet);
     const publisher = sdk.getPublisher();
-    const tx = await publisher.publish(contructorParamsContractUri);
+    const tx = await publisher.publish(contructorParamsContractUri, {
+      version: "0.0.1",
+    });
     const contract = await tx.data();
     const deployedAddr = await publisher.deployPublishedContract(
       bobWallet.address,
@@ -179,7 +191,9 @@ describe("Publishing", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
     const pub = await realSDK.getPublisher();
     const ipfsUri = "ipfs://QmTKKUUEU6GnG7VEEAAXpveeirREC1JNYntVJGhHKhqcYZ/0";
-    const tx = await pub.publish(ipfsUri);
+    const tx = await pub.publish(ipfsUri, {
+      version: "0.0.1",
+    });
     const contract = await tx.data();
     const deployedAddr = await pub.deployPublishedContract(
       adminWallet.address,
@@ -196,7 +210,9 @@ describe("Publishing", async () => {
   it("AzukiWithMinting mintable", async () => {
     const pub = await sdk.getPublisher();
     const ipfsUri = "ipfs://QmPPPoKk2mwoxBVTW5qMMNwaV4Ja5qDoq7fFZNFFvr3YsW/1";
-    const tx = await pub.publish(ipfsUri);
+    const tx = await pub.publish(ipfsUri, {
+      version: "0.0.1",
+    });
     const contract = await tx.data();
     const deployedAddr = await pub.deployPublishedContract(
       adminWallet.address,

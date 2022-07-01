@@ -341,13 +341,25 @@ export async function fetchSourceFilesFromMetadata(
  * @param publishMetadataUri
  * @param storage
  */
+export async function fetchRawPredeployMetadata(
+  publishMetadataUri: string,
+  storage: IStorage,
+) {
+  return PreDeployMetadata.parse(
+    JSON.parse(await storage.getRaw(publishMetadataUri)),
+  );
+}
+
+/**
+ * @internal
+ * @param publishMetadataUri
+ * @param storage
+ */
 export async function fetchPreDeployMetadata(
   publishMetadataUri: string,
   storage: IStorage,
 ): Promise<PreDeployMetadataFetched> {
-  const pubMeta = PreDeployMetadata.parse(
-    JSON.parse(await storage.getRaw(publishMetadataUri)),
-  );
+  const pubMeta = await fetchRawPredeployMetadata(publishMetadataUri, storage);
   const deployBytecode = await storage.getRaw(pubMeta.bytecodeUri);
   const parsedMeta = await fetchContractMetadata(pubMeta.metadataUri, storage);
   return {

@@ -17,6 +17,7 @@ import {
   extractFunctions,
   fetchContractMetadataFromAddress,
   fetchPreDeployMetadata,
+  fetchRawPredeployMetadata,
   fetchSourceFilesFromMetadata,
   resolveContractUriFromAddress,
 } from "../../common/feature-detection";
@@ -24,6 +25,8 @@ import {
   AbiFunction,
   ContractParam,
   ContractSource,
+  ExtraPublishMetadata,
+  FullPublishMetadataSchema,
   PreDeployMetadataFetched,
   ProfileMetadata,
   ProfileSchema,
@@ -89,7 +92,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     return extractFunctions(predeployMetadataUri, this.storage);
   }
 
-  public async fetchFullContractMetadataFromPredeployUri(
+  public async fetchCompilerMetadataFromPredeployURI(
     predeployUri: string,
   ): Promise<PreDeployMetadataFetched> {
     return fetchPreDeployMetadata(predeployUri, this.storage);
@@ -105,6 +108,15 @@ export class ContractPublisher extends RPCConnectionHandler {
       this.getProvider(),
       this.storage,
     );
+  }
+
+  public async fetchPublishContractInfo(contract: PublishedContract) {
+    const meta = await this.storage.get(contract.metadataUri);
+    return {
+      name: contract.id,
+      publishedTimestamp: contract.timestamp,
+      metadata: FullPublishMetadataSchema.parse(meta),
+    };
   }
 
   /**
@@ -213,25 +225,36 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   public async publish(
     predeployUri: string,
+    extraMetadata: ExtraPublishMetadata,
   ): Promise<TransactionResult<PublishedContract>> {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
     const publisher = await signer.getAddress();
 
-    const fullMetadata = await this.fetchFullContractMetadataFromPredeployUri(
+    const predeployMetadata = await fetchRawPredeployMetadata(
       predeployUri,
+      this.storage,
     );
-    const bytecode = fullMetadata.bytecode.startsWith("0x")
-      ? fullMetadata.bytecode
-      : `0x${fullMetadata.bytecode}`;
+    const fetchedBytecode = await this.storage.getRaw(
+      predeployMetadata.bytecodeUri,
+    );
+    const bytecode = fetchedBytecode.startsWith("0x")
+      ? fetchedBytecode
+      : `0x${fetchedBytecode}`;
 
     const bytecodeHash = utils.solidityKeccak256(["bytes"], [bytecode]);
-    const contractId = fullMetadata.name;
+    const contractId = predeployMetadata.name;
+
+    const fullMetadata = FullPublishMetadataSchema.parse({
+      ...predeployMetadata,
+      ...extraMetadata,
+    });
+    const fullMetadataUri = await this.storage.uploadMetadata(fullMetadata);
     const receipt = await this.publisher.sendTransaction("publishContract", [
       publisher,
       contractId,
-      predeployUri,
-      fullMetadata.compilerMetadataUri,
+      fullMetadataUri,
+      predeployMetadata.metadataUri,
       bytecodeHash,
       constants.AddressZero,
     ]);
@@ -258,8 +281,9 @@ export class ContractPublisher extends RPCConnectionHandler {
 
     const fullMetadatas = await Promise.all(
       predeployUris.map(async (predeployUri) => {
-        const fullMetadata =
-          await this.fetchFullContractMetadataFromPredeployUri(predeployUri);
+        const fullMetadata = await this.fetchCompilerMetadataFromPredeployURI(
+          predeployUri,
+        );
         return {
           bytecode: fullMetadata.bytecode.startsWith("0x")
             ? fullMetadata.bytecode

@@ -9,7 +9,7 @@ export const OZ_DEFENDER_FORWARDER_ADDRESS =
 
 const TWRegistry_address = "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd";
 const TWFactory_address = "0x5DBC7B840baa9daBcBe9D2492E45D7244B54A2A0";
-const ContractPublisher_address = "0xA7D58d2bD95330C7efb2b6219759AEc359A9E270"; // Polygon only
+const ContractPublisher_address = "0x119704314Ef304EaAAE4b3c7C9ABd59272A28310"; // Polygon only
 
 /**
  * @internal

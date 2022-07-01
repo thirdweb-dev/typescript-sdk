@@ -55,17 +55,37 @@ export const CustomContractSchema = {
 /**
  * @internal
  */
-export const PreDeployMetadata = z.object({
-  name: z.string(),
-  metadataUri: z.string(),
-  bytecodeUri: z.string(),
-});
+export const PreDeployMetadata = z
+  .object({
+    name: z.string(),
+    metadataUri: z.string(),
+    bytecodeUri: z.string(),
+  })
+  .catchall(z.any());
+
 export type PreDeployMetadataFetched = {
   name: string;
   abi: z.infer<typeof AbiSchema>;
   bytecode: string;
   compilerMetadataUri: string;
 };
+
+export const ExtraPublishMetadataSchema = z
+  .object({
+    version: z.string(),
+    displayName: z.string().optional(),
+    description: z.string().optional(),
+    readme: z.string().optional(),
+    license: z.string().optional(),
+    changelog: z.string().optional(),
+    tags: z.array(z.string()).optional(),
+  })
+  .catchall(z.any());
+export type ExtraPublishMetadata = z.infer<typeof ExtraPublishMetadataSchema>;
+
+export const FullPublishMetadataSchema = PreDeployMetadata.merge(
+  ExtraPublishMetadataSchema,
+);
 
 export const ProfileSchema = z.object({
   name: z.string().optional(),
