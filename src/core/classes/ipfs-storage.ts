@@ -11,7 +11,7 @@ import {
   replaceHashWithGatewayUrl,
   resolveGatewayUrl,
 } from "../helpers/storage";
-import { IpfsUploader } from "../uploaders/ipfs-uploader";
+import { PinataUploader } from "../uploaders/pinata-uploader";
 import { UploadProgressEvent } from "../../types/events";
 import { File } from "@web-std/file";
 import FormData from "form-data";
@@ -33,7 +33,7 @@ export class IpfsStorage implements IStorage {
 
   constructor(
     gatewayUrl: string = DEFAULT_IPFS_GATEWAY,
-    uploader: IStorageUpload = new IpfsUploader(),
+    uploader: IStorageUpload = new PinataUploader(),
   ) {
     this.gatewayUrl = `${gatewayUrl.replace(/\/$/, "")}/`;
     this.uploader = uploader;
@@ -297,7 +297,7 @@ export class IpfsStorage implements IStorage {
     signerAddress?: string,
   ): Promise<string> {
     // TODO move down to IStorageUpload
-    const token = await (this.uploader as IpfsUploader).getUploadToken(
+    const token = await (this.uploader as PinataUploader).getUploadToken(
       contractAddress || "",
     );
     const metadata = {
