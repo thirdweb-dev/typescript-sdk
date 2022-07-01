@@ -1894,6 +1894,16 @@ export class FetchError extends Error {
 // @internal (undocumented)
 export function fetchPreDeployMetadata(publishMetadataUri: string, storage: IStorage): Promise<PreDeployMetadataFetched>;
 
+// Warning: (ae-internal-missing-underscore) The name "fetchRawPredeployMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function fetchRawPredeployMetadata(publishMetadataUri: string, storage: IStorage): Promise<{
+    [x: string]: any;
+    name: string;
+    metadataUri: string;
+    bytecodeUri: string;
+}>;
+
 // Warning: (ae-forgotten-export) The symbol "ContractSource" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "fetchSourceFilesFromMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
