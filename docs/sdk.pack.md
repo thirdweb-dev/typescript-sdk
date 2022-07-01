@@ -19,7 +19,7 @@ export declare class Pack extends Erc1155<PackContract>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-const sdk = new ThirdwebSDK("rinkeby");
+const sdk = new ThirdwebSDK("{{chainName}}");
 const contract = sdk.getPack("{{contract_address}}");
 ```
 

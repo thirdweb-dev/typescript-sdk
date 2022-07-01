@@ -36,7 +36,7 @@ import { Erc721WithQuantitySignatureMintable } from "../core";
  * ```javascript
  * import { ThirdwebSDK } from "@thirdweb-dev/sdk";
  *
- * const sdk = new ThirdwebSDK("rinkeby");
+ * const sdk = new ThirdwebSDK("{{chainName}}");
  * const contract = sdk.getNFTCollection("{{contract_address}}");
  * ```
  *

@@ -19,7 +19,7 @@ export declare class Split implements UpdateableNetwork
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-const sdk = new ThirdwebSDK("rinkeby");
+const sdk = new ThirdwebSDK("{{chainName}}");
 const contract = sdk.getSplit("{{contract_address}}");
 ```
 

@@ -19,7 +19,7 @@ export declare class EditionDrop extends Erc1155<DropERC1155>
 ```javascript
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-const sdk = new ThirdwebSDK("rinkeby");
+const sdk = new ThirdwebSDK("{{chainName}}");
 const contract = sdk.getEditionDrop("{{contract_address}}");
 ```
 
