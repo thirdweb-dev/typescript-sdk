@@ -320,6 +320,7 @@ export async function convertToTWError(
     return error;
   }
   const reason =
+    error.errorMessage ||
     error.reason ||
     parseMessageParts(/.*?"message[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
   const data = parseMessageParts(/.*?"data[^a-zA-Z0-9]*([^"\\]*).*?/, raw);
