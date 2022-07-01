@@ -66,6 +66,17 @@ export class Erc721Supply implements DetectableFeature {
   }
 
   /**
+   * Get the number of NFTs minted
+   * @remarks This returns the total number of NFTs minted in this contract, **not** the total supply of a given token.
+   *
+   * @returns the total number of NFTs minted in this contract
+   * @public
+   */
+  public async totalCount(): Promise<BigNumber> {
+    return await this.erc721.nextTokenIdToMint();
+  }
+
+  /**
    * Get the number of NFTs of this contract currently owned by end users
    * @returns the total number of NFTs of this contract in circulation (minted & not burned)
    * @public
