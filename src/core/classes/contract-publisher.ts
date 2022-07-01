@@ -272,60 +272,6 @@ export class ContractPublisher extends RPCConnectionHandler {
     };
   }
 
-  public async publishBatch(
-    predeployUris: string[],
-  ): Promise<TransactionResult<PublishedContract>[]> {
-    const signer = this.getSigner();
-    invariant(signer, "A signer is required");
-    const publisher = await signer.getAddress();
-
-    const fullMetadatas = await Promise.all(
-      predeployUris.map(async (predeployUri) => {
-        const fullMetadata = await this.fetchCompilerMetadataFromPredeployURI(
-          predeployUri,
-        );
-        return {
-          bytecode: fullMetadata.bytecode.startsWith("0x")
-            ? fullMetadata.bytecode
-            : `0x${fullMetadata.bytecode}`,
-          predeployUri,
-          fullMetadata,
-        };
-      }),
-    );
-
-    const encoded = fullMetadatas.map((meta) => {
-      const bytecodeHash = utils.solidityKeccak256(["bytes"], [meta.bytecode]);
-      const contractId = meta.fullMetadata.name;
-      return this.publisher.readContract.interface.encodeFunctionData(
-        "publishContract",
-        [
-          publisher,
-          contractId,
-          meta.predeployUri,
-          meta.fullMetadata.compilerMetadataUri,
-          bytecodeHash,
-          constants.AddressZero,
-        ],
-      );
-    });
-    const receipt = await this.publisher.multiCall(encoded);
-    const events = this.publisher.parseLogs<ContractPublishedEvent>(
-      "ContractPublished",
-      receipt.logs,
-    );
-    if (events.length < 1) {
-      throw new Error("No ContractPublished event found");
-    }
-    return events.map((e) => {
-      const contract = e.args.publishedContract;
-      return {
-        receipt,
-        data: async () => this.toPublishedContract(contract),
-      };
-    });
-  }
-
   public async unpublish(
     publisher: string,
     contractId: string,

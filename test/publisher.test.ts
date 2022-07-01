@@ -176,16 +176,6 @@ describe("Publishing", async () => {
     const all = await publisher.getAll(bobWallet.address);
     expect(all.length).to.be.eq(1);
   });
-  it("should publish batch contracts", async () => {
-    const publisher = sdk.getPublisher();
-    const tx = await publisher.publishBatch([
-      simpleContractUri,
-      contructorParamsContractUri,
-    ]);
-    expect(tx.length).to.eq(2);
-    expect((await tx[0].data()).id).to.eq("Greeter");
-    expect((await tx[1].data()).id).to.eq("ConstructorParams");
-  });
 
   it("SimpleAzuki enumerable", async () => {
     const realSDK = new ThirdwebSDK(adminWallet);
