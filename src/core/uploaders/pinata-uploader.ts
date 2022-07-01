@@ -13,7 +13,7 @@ import FormData from "form-data";
 /**
  * @internal
  */
-export class IpfsUploader implements IStorageUpload {
+export class PinataUploader implements IStorageUpload {
   /**
    * Fetches a one-time-use upload token that can used to upload
    * a file to storage.
