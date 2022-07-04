@@ -1797,6 +1797,7 @@ export class Erc721Supply implements DetectableFeature {
     // (undocumented)
     owned: Erc721Enumerable | undefined;
     totalCirculatingSupply(): Promise<BigNumber>;
+    totalCount(): Promise<BigNumber>;
 }
 
 // @public
@@ -4302,7 +4303,9 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     static contractRoles: readonly ["admin", "minter", "transfer"];
     // (undocumented)
     static contractType: "signature-drop";
-    createBatch(metadatas: NFTMetadataInput[]): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    createBatch(metadatas: NFTMetadataOrUri[], options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
     encoder: ContractEncoder<SignatureDrop_2>;
     // (undocumented)

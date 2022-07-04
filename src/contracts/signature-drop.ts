@@ -13,9 +13,8 @@ import {
 import { DropErc721ContractSchema } from "../schema/contracts/drop-erc721";
 import { SDKOptions } from "../schema/sdk-options";
 import {
-  CommonNFTInput,
   NFTMetadata,
-  NFTMetadataInput,
+  NFTMetadataOrUri,
   NFTMetadataOwner,
 } from "../schema/tokens/common";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
@@ -27,7 +26,7 @@ import { ContractEncoder } from "../core/classes/contract-encoder";
 import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
 import { Erc721Supply } from "../core/classes/erc-721-supply";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { ClaimVerification } from "../types";
+import { ClaimVerification, UploadProgressEvent } from "../types";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
@@ -38,6 +37,7 @@ import {
 } from "contracts/DropERC721";
 import { DelayedReveal } from "../core/index";
 import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
+import { uploadOrExtractURIs } from "../common/nft";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -422,21 +422,36 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * ```
    *
    * @param metadatas - The metadata to include in the batch.
+   * @param options - optional upload progress callback
    */
   public async createBatch(
-    metadatas: NFTMetadataInput[],
+    metadatas: NFTMetadataOrUri[],
+    options?: {
+      onProgress: (event: UploadProgressEvent) => void;
+    },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
     const startFileNumber =
       await this.contractWrapper.readContract.nextTokenIdToMint();
-    const batch = await this.storage.uploadMetadataBatch(
-      metadatas.map((m) => CommonNFTInput.parse(m)),
+    const batch = await uploadOrExtractURIs(
+      metadatas,
+      this.storage,
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
+      options,
     );
-    const baseUri = batch.baseUri;
+    // ensure baseUri is the same for the entire batch
+    const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
+    for (let i = 0; i < batch.length; i++) {
+      const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
+      if (baseUri !== uri) {
+        throw new Error(
+          `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
+        );
+      }
+    }
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.uris.length,
+      batch.length,
       baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
       ethers.utils.toUtf8Bytes(""),
     ]);

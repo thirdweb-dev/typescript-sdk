@@ -55,7 +55,7 @@ const contract = sdk.getSignatureDrop("{{contract_address}}");
 |  [burn(tokenId)](./sdk.signaturedrop.burn.md) |  | Burn a single NFT |
 |  [claim(quantity, checkERC20Allowance)](./sdk.signaturedrop.claim.md) |  | Claim NFTs to the connected wallet. |
 |  [claimTo(destinationAddress, quantity, checkERC20Allowance)](./sdk.signaturedrop.claimto.md) |  | Claim unique NFTs to a specific Wallet |
-|  [createBatch(metadatas)](./sdk.signaturedrop.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |
+|  [createBatch(metadatas, options)](./sdk.signaturedrop.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |
 |  [getAll(queryParams)](./sdk.signaturedrop.getall.md) |  | Get All Minted NFTs |
 |  [getAllClaimed(queryParams)](./sdk.signaturedrop.getallclaimed.md) |  | Get All Claimed NFTs |
 |  [getAllUnclaimed(queryParams)](./sdk.signaturedrop.getallunclaimed.md) |  | Get All Unclaimed NFTs |
