@@ -15,7 +15,6 @@ import {
   extractConstructorParams,
   extractConstructorParamsFromAbi,
   extractFunctions,
-  fetchContractMetadata,
   fetchContractMetadataFromAddress,
   fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
@@ -32,6 +31,7 @@ import {
   ProfileMetadata,
   ProfileSchema,
   PublishedContract,
+  PublishedContractFetched,
   PublishedContractSchema,
 } from "../../schema/contracts/custom";
 import { ContractWrapper } from "./contract-wrapper";
@@ -116,23 +116,15 @@ export class ContractPublisher extends RPCConnectionHandler {
    * Get the full information about a published contract
    * @param contract
    */
-  public async fetchPublishedContractInfo(contract: PublishedContract) {
+  public async fetchPublishedContractInfo(
+    contract: PublishedContract,
+  ): Promise<PublishedContractFetched> {
     const meta = await this.storage.getRaw(contract.metadataUri);
     const fullMeta = FullPublishMetadataSchema.parse(JSON.parse(meta));
-    const compilerMeta = await fetchContractMetadata(
-      fullMeta.metadataUri,
-      this.storage,
-    );
-    const metadataWithDefaults = {
-      description: compilerMeta.info.title,
-      readme: compilerMeta.info.notice,
-      license: compilerMeta.licenses[0],
-      ...fullMeta,
-    };
     return {
       name: contract.id,
       publishedTimestamp: contract.timestamp,
-      publishedMetadata: metadataWithDefaults,
+      publishedMetadata: fullMeta,
     };
   }
 
@@ -420,7 +412,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     return PublishedContractSchema.parse({
       id: contractModel.contractId,
       timestamp: contractModel.publishTimestamp,
-      metadataUri: contractModel.publishMetadataUri, // TODO download
+      metadataUri: contractModel.publishMetadataUri,
     });
   }
 }

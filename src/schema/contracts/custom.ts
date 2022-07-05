@@ -10,6 +10,7 @@ import {
 } from "./common";
 import { z } from "zod";
 import { BigNumberishSchema, JsonSchema } from "../shared";
+import { BigNumberish } from "ethers";
 
 /**
  * @internal
@@ -63,13 +64,6 @@ export const PreDeployMetadata = z
   })
   .catchall(z.any());
 
-export type PreDeployMetadataFetched = {
-  name: string;
-  abi: z.infer<typeof AbiSchema>;
-  bytecode: string;
-  compilerMetadataUri: string;
-};
-
 export const ExtraPublishMetadataSchema = z
   .object({
     version: z.string(),
@@ -86,6 +80,7 @@ export type ExtraPublishMetadata = z.infer<typeof ExtraPublishMetadataSchema>;
 export const FullPublishMetadataSchema = PreDeployMetadata.merge(
   ExtraPublishMetadataSchema,
 );
+export type FullPublishMetadata = z.infer<typeof FullPublishMetadataSchema>;
 
 export const ProfileSchema = z.object({
   name: z.string().optional(),
@@ -157,8 +152,33 @@ export const ContractInfoSchema = z.object({
   notice: z.string().optional(),
 });
 
+export const CompilerMetadataFetchedSchema = z.object({
+  name: z.string(),
+  abi: AbiSchema,
+  metadata: z.record(z.string(), z.any()),
+  info: ContractInfoSchema,
+  licenses: z.array(z.string()),
+});
+
+export const PreDeployMetadataFetchedSchema = PreDeployMetadata.omit({
+  bytecodeUri: true,
+})
+  .merge(CompilerMetadataFetchedSchema)
+  .extend({
+    bytecode: z.string(),
+  });
+
+export type PreDeployMetadataFetched = z.infer<
+  typeof PreDeployMetadataFetchedSchema
+>;
+
 export type ContractParam = z.infer<typeof AbiTypeSchema>;
 export type PublishedContract = z.infer<typeof PublishedContractSchema>;
+export type PublishedContractFetched = {
+  name: string;
+  publishedTimestamp: BigNumberish;
+  publishedMetadata: FullPublishMetadata;
+};
 export type AbiFunction = {
   name: string;
   inputs: z.infer<typeof AbiTypeSchema>[];
@@ -170,10 +190,4 @@ export type ContractSource = {
   filename: string;
   source: string;
 };
-export type PublishedMetadata = {
-  name: string;
-  abi: z.infer<typeof AbiSchema>;
-  metadata: Record<string, any>;
-  info: z.infer<typeof ContractInfoSchema>;
-  licenses: string[];
-};
+export type PublishedMetadata = z.infer<typeof CompilerMetadataFetchedSchema>;

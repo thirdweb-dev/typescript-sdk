@@ -154,6 +154,14 @@ describe("Publishing", async () => {
     expect(c.publishedMetadata.version).to.eq("4");
   });
 
+  it("should fetch metadata", async () => {
+    const publisher = sdk.getPublisher();
+    const meta = await publisher.fetchContractMetadataFromPredeployURI(
+      simpleContractUri,
+    );
+    expect(meta.licenses.join()).to.eq("MIT,Apache-2.0");
+  });
+
   it("should publish extra metadata", async () => {
     const publisher = sdk.getPublisher();
     const tx = await publisher.publish(simpleContractUri, {
