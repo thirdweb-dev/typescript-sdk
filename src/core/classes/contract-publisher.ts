@@ -42,6 +42,7 @@ import {
 import { getContractPublisherAddress } from "../../constants";
 import ContractPublisherAbi from "../../../abis/ContractPublisher.json";
 import { ContractPublishedEvent } from "contracts/ContractPublisher";
+import { isIncrementalVersion } from "../../common/version-checker";
 
 /**
  * Handles publishing contracts (EXPERIMENTAL)
@@ -276,6 +277,24 @@ export class ContractPublisher extends RPCConnectionHandler {
       predeployUri,
       this.storage,
     );
+
+    // ensure version is incremental
+    const latestContract = await this.getLatest(
+      publisher,
+      predeployMetadata.name,
+    );
+    if (latestContract && latestContract.metadataUri) {
+      const latestMetadata = await this.fetchPublishedContractInfo(
+        latestContract,
+      );
+      const latestVersion = latestMetadata.publishedMetadata.version;
+      if (!isIncrementalVersion(latestVersion, extraMetadata.version)) {
+        throw Error(
+          `Version ${extraMetadata.version} is not greater than ${latestVersion}`,
+        );
+      }
+    }
+
     const fetchedBytecode = await this.storage.getRaw(
       predeployMetadata.bytecodeUri,
     );
