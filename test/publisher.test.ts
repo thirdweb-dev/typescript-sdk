@@ -150,8 +150,9 @@ describe("Publishing", async () => {
     expect(versions.length).to.be.eq(5);
     expect(all[all.length - 1] === versions[versions.length - 1]);
     const last = await publisher.getLatest(samWallet.address, id);
-    const c = await publisher.fetchPublishContractInfo(last);
-    expect(c.metadata.version).to.eq("4");
+    const c = await publisher.fetchPublishedContractInfo(last);
+    expect(c.publishedMetadata.version).to.eq("4");
+    expect(c.publishedMetadata.license).to.eq("MIT");
   });
 
   it("should publish constructor params contract", async () => {

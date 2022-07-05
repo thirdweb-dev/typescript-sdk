@@ -15,6 +15,7 @@ import {
   extractConstructorParams,
   extractConstructorParamsFromAbi,
   extractFunctions,
+  fetchContractMetadata,
   fetchContractMetadataFromAddress,
   fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
@@ -110,12 +111,23 @@ export class ContractPublisher extends RPCConnectionHandler {
     );
   }
 
-  public async fetchPublishContractInfo(contract: PublishedContract) {
-    const meta = await this.storage.get(contract.metadataUri);
+  public async fetchPublishedContractInfo(contract: PublishedContract) {
+    const meta = await this.storage.getRaw(contract.metadataUri);
+    const fullMeta = FullPublishMetadataSchema.parse(JSON.parse(meta));
+    const compilerMeta = await fetchContractMetadata(
+      fullMeta.metadataUri,
+      this.storage,
+    );
+    const defaultExtraMetadata = {
+      description: compilerMeta.info.title,
+      readme: compilerMeta.info.notice,
+      license: compilerMeta.licenses[0],
+      ...fullMeta,
+    };
     return {
       name: contract.id,
       publishedTimestamp: contract.timestamp,
-      metadata: FullPublishMetadataSchema.parse(meta),
+      publishedMetadata: defaultExtraMetadata,
     };
   }
 
