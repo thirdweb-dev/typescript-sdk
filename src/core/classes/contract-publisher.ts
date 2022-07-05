@@ -416,7 +416,7 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   private toPublishedContract(
     contractModel: IContractPublisher.CustomContractInstanceStruct,
-  ) {
+  ): PublishedContract {
     return PublishedContractSchema.parse({
       id: contractModel.contractId,
       timestamp: contractModel.publishTimestamp,
