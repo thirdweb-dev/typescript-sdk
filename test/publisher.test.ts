@@ -152,7 +152,20 @@ describe("Publishing", async () => {
     const last = await publisher.getLatest(samWallet.address, id);
     const c = await publisher.fetchPublishedContractInfo(last);
     expect(c.publishedMetadata.version).to.eq("4");
-    expect(c.publishedMetadata.license).to.eq("MIT");
+  });
+
+  it("should publish extra metadata", async () => {
+    const publisher = sdk.getPublisher();
+    const tx = await publisher.publish(simpleContractUri, {
+      version: "0.0.1",
+      description: "description",
+      tags: ["tag1", "tag2"],
+    });
+    const contract = await tx.data();
+    const last = await publisher.getLatest(adminWallet.address, contract.id);
+    const c = await publisher.fetchPublishedContractInfo(last);
+    expect(c.publishedMetadata.version).to.eq("0.0.1");
+    expect(c.publishedMetadata.description).to.eq("description");
   });
 
   it("should publish constructor params contract", async () => {
