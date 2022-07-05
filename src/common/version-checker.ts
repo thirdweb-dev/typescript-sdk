@@ -3,6 +3,9 @@ const NUMERIC_IDENTIFIER = "0|[1-9]\\d*";
 const MAIN_VERSION_IDENTIFIER = `(${NUMERIC_IDENTIFIER})\\.(${NUMERIC_IDENTIFIER})\\.(${NUMERIC_IDENTIFIER})`;
 const REGEX_MAIN_VERSION = new RegExp(MAIN_VERSION_IDENTIFIER);
 
+/**
+ * @internal
+ */
 export type Semver = {
   major: number;
   minor: number;

@@ -2141,6 +2141,11 @@ export class IpfsStorage implements IStorage {
 // @internal
 export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: FeatureName): boolean;
 
+// Warning: (ae-internal-missing-underscore) The name "isIncrementalVersion" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function isIncrementalVersion(current: string, next: string): boolean;
+
 // @public
 export interface IStorage {
     get(hash: string): Promise<Record<string, any>>;
@@ -3497,6 +3502,16 @@ export const SDKOptionsSchema: z.ZodDefault<z.ZodObject<{
         };
     } | undefined;
 }>>;
+
+// Warning: (ae-internal-missing-underscore) The name "Semver" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export type Semver = {
+    major: number;
+    minor: number;
+    patch: number;
+    versionString: string;
+};
 
 // Warning: (ae-internal-missing-underscore) The name "Signature1155PayloadInput" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -5394,6 +5409,11 @@ export type TokensToWrap = {
     erc721Tokens?: ERC721Wrappable[];
     erc1155Tokens?: ERC1155Wrappable[];
 };
+
+// Warning: (ae-internal-missing-underscore) The name "toSemver" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function toSemver(version: string): Semver;
 
 // @public (undocumented)
 export class TransactionError extends Error {

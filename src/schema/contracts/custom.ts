@@ -11,6 +11,7 @@ import {
 import { z } from "zod";
 import { BigNumberishSchema, JsonSchema } from "../shared";
 import { BigNumberish } from "ethers";
+import { toSemver } from "../../common/index";
 
 /**
  * @internal
@@ -64,9 +65,21 @@ export const PreDeployMetadata = z
   })
   .catchall(z.any());
 
+/**
+ * @internal
+ */
 export const ExtraPublishMetadataSchema = z
   .object({
-    version: z.string(),
+    version: z.string().refine(
+      (v) => {
+        toSemver(v);
+      },
+      (out) => {
+        return {
+          message: `${out} is not a valid semantic version. Should be in the format of major.minor.patch. Ex: 0.4.1`,
+        };
+      },
+    ),
     displayName: z.string().optional(),
     description: z.string().optional(),
     readme: z.string().optional(),
@@ -77,11 +90,17 @@ export const ExtraPublishMetadataSchema = z
   .catchall(z.any());
 export type ExtraPublishMetadata = z.infer<typeof ExtraPublishMetadataSchema>;
 
+/**
+ * @internal
+ */
 export const FullPublishMetadataSchema = PreDeployMetadata.merge(
   ExtraPublishMetadataSchema,
 );
 export type FullPublishMetadata = z.infer<typeof FullPublishMetadataSchema>;
 
+/**
+ * @internal
+ */
 export const ProfileSchema = z.object({
   name: z.string().optional(),
   bio: z.string().optional(),
