@@ -111,6 +111,11 @@ export class ContractPublisher extends RPCConnectionHandler {
     );
   }
 
+  /**
+   * @internal
+   * Get the full information about a published contract
+   * @param contract
+   */
   public async fetchPublishedContractInfo(contract: PublishedContract) {
     const meta = await this.storage.getRaw(contract.metadataUri);
     const fullMeta = FullPublishMetadataSchema.parse(JSON.parse(meta));
@@ -118,7 +123,7 @@ export class ContractPublisher extends RPCConnectionHandler {
       fullMeta.metadataUri,
       this.storage,
     );
-    const defaultExtraMetadata = {
+    const metadataWithDefaults = {
       description: compilerMeta.info.title,
       readme: compilerMeta.info.notice,
       license: compilerMeta.licenses[0],
@@ -127,7 +132,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     return {
       name: contract.id,
       publishedTimestamp: contract.timestamp,
-      publishedMetadata: defaultExtraMetadata,
+      publishedMetadata: metadataWithDefaults,
     };
   }
 
