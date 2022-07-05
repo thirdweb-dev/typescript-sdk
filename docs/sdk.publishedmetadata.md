@@ -9,5 +9,3 @@
 ```typescript
 export declare type PublishedMetadata = z.infer<typeof CompilerMetadataFetchedSchema>;
 ```
-<b>References:</b> [CompilerMetadataFetchedSchema](./sdk.compilermetadatafetchedschema.md)
-

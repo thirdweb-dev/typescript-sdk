@@ -9,5 +9,3 @@
 ```typescript
 export declare type PreDeployMetadataFetched = z.infer<typeof PreDeployMetadataFetchedSchema>;
 ```
-<b>References:</b> [PreDeployMetadataFetchedSchema](./sdk.predeploymetadatafetchedschema.md)
-

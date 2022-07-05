@@ -114,14 +114,12 @@
 |  Variable | Description |
 |  --- | --- |
 |  [ALL\_ROLES](./sdk.all_roles.md) |  |
-|  [CompilerMetadataFetchedSchema](./sdk.compilermetadatafetchedschema.md) |  |
 |  [MintRequest1155](./sdk.mintrequest1155.md) |  |
 |  [MintRequest20](./sdk.mintrequest20.md) |  |
 |  [MintRequest721](./sdk.mintrequest721.md) |  |
 |  [MintRequest721withQuantity](./sdk.mintrequest721withquantity.md) |  |
 |  [NATIVE\_TOKEN\_ADDRESS](./sdk.native_token_address.md) |  |
 |  [NATIVE\_TOKENS](./sdk.native_tokens.md) |  |
-|  [PreDeployMetadataFetchedSchema](./sdk.predeploymetadatafetchedschema.md) |  |
 |  [SDKOptionsSchema](./sdk.sdkoptionsschema.md) |  |
 |  [SUPPORTED\_CHAIN\_IDS](./sdk.supported_chain_ids.md) |  |
 
@@ -144,7 +142,6 @@
 |  [ContractType](./sdk.contracttype.md) |  |
 |  [Currency](./sdk.currency.md) |  |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
-|  [CustomContractMetadata](./sdk.customcontractmetadata.md) |  |
 |  [EditionMetadata](./sdk.editionmetadata.md) |  |
 |  [EditionMetadataInput](./sdk.editionmetadatainput.md) |  |
 |  [EditionMetadataOrUri](./sdk.editionmetadataoruri.md) |  |

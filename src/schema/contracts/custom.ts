@@ -20,8 +20,6 @@ export const BYOCContractMetadataSchema = CommonContractSchema.catchall(
   z.lazy(() => JsonSchema),
 );
 
-export type CustomContractMetadata = z.input<typeof BYOCContractMetadataSchema>;
-
 /**
  * @internal
  */
@@ -73,10 +71,11 @@ export const ExtraPublishMetadataSchema = z
     version: z.string().refine(
       (v) => {
         toSemver(v);
+        return true;
       },
       (out) => {
         return {
-          message: `${out} is not a valid semantic version. Should be in the format of major.minor.patch. Ex: 0.4.1`,
+          message: `'${out}' is not a valid semantic version. Should be in the format of major.minor.patch. Ex: 0.4.1`,
         };
       },
     ),
@@ -172,6 +171,9 @@ export const ContractInfoSchema = z.object({
   notice: z.string().optional(),
 });
 
+/**
+ * @internal
+ */
 export const CompilerMetadataFetchedSchema = z.object({
   name: z.string(),
   abi: AbiSchema,
@@ -180,6 +182,9 @@ export const CompilerMetadataFetchedSchema = z.object({
   licenses: z.array(z.string()),
 });
 
+/**
+ * @internal
+ */
 export const PreDeployMetadataFetchedSchema = PreDeployMetadata.merge(
   CompilerMetadataFetchedSchema,
 ).extend({

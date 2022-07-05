@@ -895,7 +895,9 @@ export const CommonTrustedForwarderSchema: z.ZodObject<{
     trusted_forwarders?: string[] | undefined;
 }>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "CompilerMetadataFetchedSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const CompilerMetadataFetchedSchema: z.ZodObject<{
     name: z.ZodString;
     abi: z.ZodArray<z.ZodObject<{
@@ -1527,11 +1529,6 @@ export const CustomContractInput: z.ZodObject<z.extendShape<{
     fee_recipient?: string | undefined;
     name: string;
 }>;
-
-// Warning: (ae-incompatible-release-tags) The symbol "CustomContractMetadata" is marked as @public, but its signature references "BYOCContractMetadataSchema" which is marked as @internal
-//
-// @public (undocumented)
-export type CustomContractMetadata = z.input<typeof BYOCContractMetadataSchema>;
 
 // Warning: (ae-internal-missing-underscore) The name "CustomContractOutput" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -4185,10 +4182,14 @@ export const PreDeployMetadata: z.ZodObject<{
     bytecodeUri: string;
 }>;
 
+// Warning: (ae-incompatible-release-tags) The symbol "PreDeployMetadataFetched" is marked as @public, but its signature references "PreDeployMetadataFetchedSchema" which is marked as @internal
+//
 // @public (undocumented)
 export type PreDeployMetadataFetched = z.infer<typeof PreDeployMetadataFetchedSchema>;
 
-// @public (undocumented)
+// Warning: (ae-internal-missing-underscore) The name "PreDeployMetadataFetchedSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
 export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendShape<{
     name: z.ZodString;
     metadataUri: z.ZodString;
@@ -4568,6 +4569,8 @@ export const PublishedContractSchema: z.ZodObject<{
     timestamp: string | number | bigint | BigNumber;
 }>;
 
+// Warning: (ae-incompatible-release-tags) The symbol "PublishedMetadata" is marked as @public, but its signature references "CompilerMetadataFetchedSchema" which is marked as @internal
+//
 // @public (undocumented)
 export type PublishedMetadata = z.infer<typeof CompilerMetadataFetchedSchema>;
 
@@ -6976,8 +6979,8 @@ export class WrongListingTypeError extends Error {
 
 // Warnings were encountered during analysis:
 //
-// dist/src/schema/contracts/custom.d.ts:1214:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
-// dist/src/schema/contracts/custom.d.ts:1215:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1219:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1220:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 
