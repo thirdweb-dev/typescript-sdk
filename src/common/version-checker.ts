@@ -10,6 +10,10 @@ export type Semver = {
   versionString: string;
 };
 
+/**
+ * @internal
+ * @param version
+ */
 export function toSemver(version: string): Semver {
   if (version.length > MAX_LENGTH) {
     throw new Error(`version is longer than ${MAX_LENGTH} characters`);
@@ -32,6 +36,11 @@ export function toSemver(version: string): Semver {
   };
 }
 
+/**
+ * @internal
+ * @param current
+ * @param next
+ */
 export function isIncrementalVersion(current: string, next: string) {
   const currentSemver = toSemver(current);
   const nextSemver = toSemver(next);
