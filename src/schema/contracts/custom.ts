@@ -144,6 +144,7 @@ export const PublishedContractSchema = z.object({
 
 /**
  * @internal
+ * Follows https://docs.soliditylang.org/en/v0.8.15/natspec-format.html
  */
 export const ContractInfoSchema = z.object({
   title: z.string().optional(),
@@ -160,13 +161,11 @@ export const CompilerMetadataFetchedSchema = z.object({
   licenses: z.array(z.string()),
 });
 
-export const PreDeployMetadataFetchedSchema = PreDeployMetadata.omit({
-  bytecodeUri: true,
-})
-  .merge(CompilerMetadataFetchedSchema)
-  .extend({
-    bytecode: z.string(),
-  });
+export const PreDeployMetadataFetchedSchema = PreDeployMetadata.merge(
+  CompilerMetadataFetchedSchema,
+).extend({
+  bytecode: z.string(),
+});
 
 export type PreDeployMetadataFetched = z.infer<
   typeof PreDeployMetadataFetchedSchema
@@ -185,6 +184,7 @@ export type AbiFunction = {
   outputs: z.infer<typeof AbiTypeSchema>[];
   signature: string;
   stateMutability: string;
+  comment: string;
 };
 export type ContractSource = {
   filename: string;

@@ -156,10 +156,25 @@ describe("Publishing", async () => {
 
   it("should fetch metadata", async () => {
     const publisher = sdk.getPublisher();
-    const meta = await publisher.fetchContractMetadataFromPredeployURI(
+    const meta = await publisher.fetchCompilerMetadataFromPredeployURI(
       simpleContractUri,
     );
     expect(meta.licenses.join()).to.eq("MIT,Apache-2.0");
+  });
+
+  it("should fetch metadata from previously deployed version", async () => {
+    const publisher = sdk.getPublisher();
+    for (let i = 0; i < 2; i++) {
+      await publisher.publish(simpleContractUri, {
+        version: i.toString(),
+        displayName: `Greeter${i.toString()}`,
+      });
+    }
+    const meta = await publisher.fetchPrePublishMetadata(
+      simpleContractUri,
+      adminWallet.address,
+    );
+    expect(meta.preDeployMetadata.licenses.join()).to.eq("MIT,Apache-2.0");
   });
 
   it("should publish extra metadata", async () => {

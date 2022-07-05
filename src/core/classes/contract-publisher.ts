@@ -99,6 +99,29 @@ export class ContractPublisher extends RPCConnectionHandler {
     return fetchPreDeployMetadata(predeployUri, this.storage);
   }
 
+  public async fetchPrePublishMetadata(
+    prepublishUri: string,
+    publisherAddress: string,
+  ): Promise<{
+    preDeployMetadata: PreDeployMetadataFetched;
+    latestPublishedContractMetadata?: PublishedContractFetched;
+  }> {
+    const preDeployMetadataFetched = await fetchPreDeployMetadata(
+      prepublishUri,
+      this.storage,
+    );
+    const latestPublishedContract = publisherAddress
+      ? await this.getLatest(publisherAddress, preDeployMetadataFetched.name)
+      : undefined;
+    const latestPublishedContractMetadata = latestPublishedContract
+      ? await this.fetchPublishedContractInfo(latestPublishedContract)
+      : undefined;
+    return {
+      preDeployMetadata: preDeployMetadataFetched,
+      latestPublishedContractMetadata,
+    };
+  }
+
   /**
    * @internal
    * @param address

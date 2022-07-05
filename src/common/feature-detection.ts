@@ -101,7 +101,7 @@ export function extractFunctionsFromAbi(
 ): AbiFunction[] {
   const functions = abi.filter((el) => el.type === "function");
 
-  const parsed = [];
+  const parsed: AbiFunction[] = [];
   for (const f of functions) {
     const doc =
       metadata?.output?.userdoc[
