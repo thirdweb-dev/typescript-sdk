@@ -47,6 +47,330 @@ import { ZodTypeAny } from 'zod';
 import { ZodTypeDef } from 'zod';
 import { ZodUnion } from 'zod';
 
+// @public (undocumented)
+export type AbiFunction = {
+    name: string;
+    inputs: z.infer<typeof AbiTypeSchema>[];
+    outputs: z.infer<typeof AbiTypeSchema>[];
+    signature: string;
+    stateMutability: string;
+    comment: string;
+};
+
+// Warning: (ae-internal-missing-underscore) The name "AbiObjectSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const AbiObjectSchema: z.ZodObject<{
+    type: z.ZodString;
+    name: z.ZodDefault<z.ZodString>;
+    inputs: z.ZodDefault<z.ZodArray<z.ZodObject<z.extendShape<{
+        type: z.ZodString;
+        name: z.ZodString;
+    }, {
+        stateMutability: z.ZodOptional<z.ZodString>;
+        components: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            type: z.ZodString;
+            name: z.ZodString;
+        }, "strip", z.ZodAny, {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }, {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }>, "many">>;
+    }>, "strip", z.ZodAny, {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }, {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }>, "many">>;
+    outputs: z.ZodDefault<z.ZodArray<z.ZodObject<z.extendShape<{
+        type: z.ZodString;
+        name: z.ZodString;
+    }, {
+        stateMutability: z.ZodOptional<z.ZodString>;
+        components: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            type: z.ZodString;
+            name: z.ZodString;
+        }, "strip", z.ZodAny, {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }, {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }>, "many">>;
+    }>, "strip", z.ZodAny, {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }, {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }>, "many">>;
+}, "strip", z.ZodAny, {
+    [x: string]: any;
+    type: string;
+    name: string;
+    outputs: {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }[];
+    inputs: {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }[];
+}, {
+    [x: string]: any;
+    name?: string | undefined;
+    outputs?: {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }[] | undefined;
+    inputs?: {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }[] | undefined;
+    type: string;
+}>;
+
+// Warning: (ae-internal-missing-underscore) The name "AbiSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const AbiSchema: z.ZodArray<z.ZodObject<{
+    type: z.ZodString;
+    name: z.ZodDefault<z.ZodString>;
+    inputs: z.ZodDefault<z.ZodArray<z.ZodObject<z.extendShape<{
+        type: z.ZodString;
+        name: z.ZodString;
+    }, {
+        stateMutability: z.ZodOptional<z.ZodString>;
+        components: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            type: z.ZodString;
+            name: z.ZodString;
+        }, "strip", z.ZodAny, {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }, {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }>, "many">>;
+    }>, "strip", z.ZodAny, {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }, {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }>, "many">>;
+    outputs: z.ZodDefault<z.ZodArray<z.ZodObject<z.extendShape<{
+        type: z.ZodString;
+        name: z.ZodString;
+    }, {
+        stateMutability: z.ZodOptional<z.ZodString>;
+        components: z.ZodOptional<z.ZodArray<z.ZodObject<{
+            type: z.ZodString;
+            name: z.ZodString;
+        }, "strip", z.ZodAny, {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }, {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }>, "many">>;
+    }>, "strip", z.ZodAny, {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }, {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }>, "many">>;
+}, "strip", z.ZodAny, {
+    [x: string]: any;
+    type: string;
+    name: string;
+    outputs: {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }[];
+    inputs: {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }[];
+}, {
+    [x: string]: any;
+    name?: string | undefined;
+    outputs?: {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }[] | undefined;
+    inputs?: {
+        [x: string]: any;
+        components?: {
+            [x: string]: any;
+            type: string;
+            name: string;
+        }[] | undefined;
+        stateMutability?: string | undefined;
+        type: string;
+        name: string;
+    }[] | undefined;
+    type: string;
+}>, "many">;
+
+// Warning: (ae-internal-missing-underscore) The name "AbiTypeSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const AbiTypeSchema: z.ZodObject<z.extendShape<{
+    type: z.ZodString;
+    name: z.ZodString;
+}, {
+    stateMutability: z.ZodOptional<z.ZodString>;
+    components: z.ZodOptional<z.ZodArray<z.ZodObject<{
+        type: z.ZodString;
+        name: z.ZodString;
+    }, "strip", z.ZodAny, {
+        [x: string]: any;
+        type: string;
+        name: string;
+    }, {
+        [x: string]: any;
+        type: string;
+        name: string;
+    }>, "many">>;
+}>, "strip", z.ZodAny, {
+    [x: string]: any;
+    components?: {
+        [x: string]: any;
+        type: string;
+        name: string;
+    }[] | undefined;
+    stateMutability?: string | undefined;
+    type: string;
+    name: string;
+}, {
+    [x: string]: any;
+    components?: {
+        [x: string]: any;
+        type: string;
+        name: string;
+    }[] | undefined;
+    stateMutability?: string | undefined;
+    type: string;
+    name: string;
+}>;
+
 // Warning: (ae-internal-missing-underscore) The name "AdminRoleMissingError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -151,6 +475,28 @@ export type BufferOrStringWithName = {
     data: Buffer | string;
     name?: string;
 };
+
+// Warning: (ae-internal-missing-underscore) The name "BYOCContractMetadataSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const BYOCContractMetadataSchema: z.ZodObject<{
+    name: z.ZodString;
+    description: z.ZodOptional<z.ZodString>;
+    image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+    external_link: z.ZodOptional<z.ZodString>;
+}, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+    [x: string]: Json;
+    description?: string | undefined;
+    image?: any;
+    external_link?: string | undefined;
+    name: string;
+}, {
+    [x: string]: Json;
+    description?: string | undefined;
+    image?: any;
+    external_link?: string | undefined;
+    name: string;
+}>;
 
 // @public (undocumented)
 export enum ChainId {
@@ -549,6 +895,235 @@ export const CommonTrustedForwarderSchema: z.ZodObject<{
     trusted_forwarders?: string[] | undefined;
 }>;
 
+// @public (undocumented)
+export const CompilerMetadataFetchedSchema: z.ZodObject<{
+    name: z.ZodString;
+    abi: z.ZodArray<z.ZodObject<{
+        type: z.ZodString;
+        name: z.ZodDefault<z.ZodString>;
+        inputs: z.ZodDefault<z.ZodArray<z.ZodObject<z.extendShape<{
+            type: z.ZodString;
+            name: z.ZodString;
+        }, {
+            stateMutability: z.ZodOptional<z.ZodString>;
+            components: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                type: z.ZodString;
+                name: z.ZodString;
+            }, "strip", z.ZodAny, {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }, {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }>, "many">>;
+        }>, "strip", z.ZodAny, {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }, {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }>, "many">>;
+        outputs: z.ZodDefault<z.ZodArray<z.ZodObject<z.extendShape<{
+            type: z.ZodString;
+            name: z.ZodString;
+        }, {
+            stateMutability: z.ZodOptional<z.ZodString>;
+            components: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                type: z.ZodString;
+                name: z.ZodString;
+            }, "strip", z.ZodAny, {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }, {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }>, "many">>;
+        }>, "strip", z.ZodAny, {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }, {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }>, "many">>;
+    }, "strip", z.ZodAny, {
+        [x: string]: any;
+        type: string;
+        name: string;
+        outputs: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[];
+        inputs: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[];
+    }, {
+        [x: string]: any;
+        name?: string | undefined;
+        outputs?: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[] | undefined;
+        inputs?: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[] | undefined;
+        type: string;
+    }>, "many">;
+    metadata: z.ZodRecord<z.ZodString, z.ZodAny>;
+    info: z.ZodObject<{
+        title: z.ZodOptional<z.ZodString>;
+        author: z.ZodOptional<z.ZodString>;
+        details: z.ZodOptional<z.ZodString>;
+        notice: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        title?: string | undefined;
+        author?: string | undefined;
+        details?: string | undefined;
+        notice?: string | undefined;
+    }, {
+        title?: string | undefined;
+        author?: string | undefined;
+        details?: string | undefined;
+        notice?: string | undefined;
+    }>;
+    licenses: z.ZodArray<z.ZodString, "many">;
+}, "strip", z.ZodTypeAny, {
+    name: string;
+    metadata: Record<string, any>;
+    abi: {
+        [x: string]: any;
+        type: string;
+        name: string;
+        outputs: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[];
+        inputs: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[];
+    }[];
+    info: {
+        title?: string | undefined;
+        author?: string | undefined;
+        details?: string | undefined;
+        notice?: string | undefined;
+    };
+    licenses: string[];
+}, {
+    name: string;
+    metadata: Record<string, any>;
+    abi: {
+        [x: string]: any;
+        name?: string | undefined;
+        outputs?: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[] | undefined;
+        inputs?: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[] | undefined;
+        type: string;
+    }[];
+    info: {
+        title?: string | undefined;
+        author?: string | undefined;
+        details?: string | undefined;
+        notice?: string | undefined;
+    };
+    licenses: string[];
+}>;
+
 // Warning: (ae-internal-missing-underscore) The name "CONTRACT_ADDRESSES" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -632,6 +1207,26 @@ export class ContractEvents<TContract extends BaseContract> {
 // @public (undocumented)
 export type ContractForContractType<TContractType extends ContractType> = Instance<typeof CONTRACTS_MAP[TContractType]>;
 
+// Warning: (ae-internal-missing-underscore) The name "ContractInfoSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export const ContractInfoSchema: z.ZodObject<{
+    title: z.ZodOptional<z.ZodString>;
+    author: z.ZodOptional<z.ZodString>;
+    details: z.ZodOptional<z.ZodString>;
+    notice: z.ZodOptional<z.ZodString>;
+}, "strip", z.ZodTypeAny, {
+    title?: string | undefined;
+    author?: string | undefined;
+    details?: string | undefined;
+    notice?: string | undefined;
+}, {
+    title?: string | undefined;
+    author?: string | undefined;
+    details?: string | undefined;
+    notice?: string | undefined;
+}>;
+
 // @public
 export class ContractInterceptor<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
@@ -669,6 +1264,11 @@ export class ContractMetadata<TContract extends BaseContract, TSchema extends IG
     } : never : never>;
 }
 
+// Warning: (ae-incompatible-release-tags) The symbol "ContractParam" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type ContractParam = z.infer<typeof AbiTypeSchema>;
+
 // Warning: (ae-forgotten-export) The symbol "IPlatformFee" needs to be exported by the entry point index.d.ts
 //
 // @public
@@ -700,12 +1300,8 @@ export class ContractPrimarySale<TContract extends IPrimarySale> implements Dete
 // @internal
 export class ContractPublishedMetadata<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>, storage: IStorage);
-    // Warning: (ae-forgotten-export) The symbol "AbiFunction" needs to be exported by the entry point index.d.ts
-    //
     // @public (undocumented)
     extractFunctions(): Promise<AbiFunction[]>;
-    // Warning: (ae-forgotten-export) The symbol "PublishedMetadata" needs to be exported by the entry point index.d.ts
-    //
     // @public
     get(): Promise<PublishedMetadata>;
 }
@@ -777,6 +1373,12 @@ export const CONTRACTS_MAP: {
     readonly multiwrap: typeof Multiwrap;
 };
 
+// @public (undocumented)
+export type ContractSource = {
+    filename: string;
+    source: string;
+};
+
 // Warning: (ae-incompatible-release-tags) The symbol "ContractType" is marked as @public, but its signature references "CONTRACTS_MAP" which is marked as @internal
 //
 // @public (undocumented)
@@ -843,6 +1445,245 @@ export const CurrencyValueSchema: z.ZodObject<z.extendShape<{
     displayValue: string;
 }>;
 
+// Warning: (ae-internal-missing-underscore) The name "CustomContractDeploy" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const CustomContractDeploy: z.ZodObject<z.extendShape<z.extendShape<{
+    name: z.ZodString;
+    description: z.ZodOptional<z.ZodString>;
+    image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+    external_link: z.ZodOptional<z.ZodString>;
+}, {
+    merkle: z.ZodOptional<z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>>;
+    seller_fee_basis_points: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+    fee_recipient: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>>;
+    symbol: z.ZodOptional<z.ZodDefault<z.ZodOptional<z.ZodString>>>;
+}>, {
+    primary_sale_recipient: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
+    platform_fee_basis_points: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+    platform_fee_recipient: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>>;
+    trusted_forwarders: z.ZodOptional<z.ZodDefault<z.ZodArray<z.ZodEffects<z.ZodString, string, string>, "many">>>;
+}>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+    [x: string]: Json;
+    symbol?: string | undefined;
+    description?: string | undefined;
+    merkle?: Record<string, string> | undefined;
+    image?: any;
+    external_link?: string | undefined;
+    seller_fee_basis_points?: number | undefined;
+    fee_recipient?: string | undefined;
+    primary_sale_recipient?: string | undefined;
+    platform_fee_basis_points?: number | undefined;
+    platform_fee_recipient?: string | undefined;
+    trusted_forwarders?: string[] | undefined;
+    name: string;
+}, {
+    [x: string]: Json;
+    symbol?: string | undefined;
+    description?: string | undefined;
+    merkle?: Record<string, string> | undefined;
+    image?: any;
+    external_link?: string | undefined;
+    seller_fee_basis_points?: number | undefined;
+    fee_recipient?: string | undefined;
+    primary_sale_recipient?: string | undefined;
+    platform_fee_basis_points?: number | undefined;
+    platform_fee_recipient?: string | undefined;
+    trusted_forwarders?: string[] | undefined;
+    name: string;
+}>;
+
+// Warning: (ae-internal-missing-underscore) The name "CustomContractInput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const CustomContractInput: z.ZodObject<z.extendShape<{
+    name: z.ZodString;
+    description: z.ZodOptional<z.ZodString>;
+    image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+    external_link: z.ZodOptional<z.ZodString>;
+}, {
+    merkle: z.ZodOptional<z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>>;
+    seller_fee_basis_points: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+    fee_recipient: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>>;
+    symbol: z.ZodOptional<z.ZodDefault<z.ZodOptional<z.ZodString>>>;
+}>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+    [x: string]: Json;
+    symbol?: string | undefined;
+    description?: string | undefined;
+    merkle?: Record<string, string> | undefined;
+    image?: any;
+    external_link?: string | undefined;
+    seller_fee_basis_points?: number | undefined;
+    fee_recipient?: string | undefined;
+    name: string;
+}, {
+    [x: string]: Json;
+    symbol?: string | undefined;
+    description?: string | undefined;
+    merkle?: Record<string, string> | undefined;
+    image?: any;
+    external_link?: string | undefined;
+    seller_fee_basis_points?: number | undefined;
+    fee_recipient?: string | undefined;
+    name: string;
+}>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "CustomContractMetadata" is marked as @public, but its signature references "BYOCContractMetadataSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type CustomContractMetadata = z.input<typeof BYOCContractMetadataSchema>;
+
+// Warning: (ae-internal-missing-underscore) The name "CustomContractOutput" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const CustomContractOutput: z.ZodObject<z.extendShape<z.extendShape<{
+    name: z.ZodString;
+    description: z.ZodOptional<z.ZodString>;
+    image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+    external_link: z.ZodOptional<z.ZodString>;
+}, {
+    image: z.ZodOptional<z.ZodString>;
+}>, {
+    merkle: z.ZodOptional<z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>>;
+    seller_fee_basis_points: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+    fee_recipient: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>>;
+    symbol: z.ZodOptional<z.ZodDefault<z.ZodOptional<z.ZodString>>>;
+}>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+    [x: string]: Json;
+    symbol?: string | undefined;
+    description?: string | undefined;
+    merkle?: Record<string, string> | undefined;
+    image?: string | undefined;
+    external_link?: string | undefined;
+    seller_fee_basis_points?: number | undefined;
+    fee_recipient?: string | undefined;
+    name: string;
+}, {
+    [x: string]: Json;
+    symbol?: string | undefined;
+    description?: string | undefined;
+    merkle?: Record<string, string> | undefined;
+    image?: string | undefined;
+    external_link?: string | undefined;
+    seller_fee_basis_points?: number | undefined;
+    fee_recipient?: string | undefined;
+    name: string;
+}>;
+
+// Warning: (ae-internal-missing-underscore) The name "CustomContractSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const CustomContractSchema: {
+    deploy: z.ZodObject<z.extendShape<z.extendShape<{
+        name: z.ZodString;
+        description: z.ZodOptional<z.ZodString>;
+        image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_link: z.ZodOptional<z.ZodString>;
+    }, {
+        merkle: z.ZodOptional<z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>>;
+        seller_fee_basis_points: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        fee_recipient: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>>;
+        symbol: z.ZodOptional<z.ZodDefault<z.ZodOptional<z.ZodString>>>;
+    }>, {
+        primary_sale_recipient: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
+        platform_fee_basis_points: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        platform_fee_recipient: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>>;
+        trusted_forwarders: z.ZodOptional<z.ZodDefault<z.ZodArray<z.ZodEffects<z.ZodString, string, string>, "many">>>;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        symbol?: string | undefined;
+        description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        primary_sale_recipient?: string | undefined;
+        platform_fee_basis_points?: number | undefined;
+        platform_fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
+        name: string;
+    }, {
+        [x: string]: Json;
+        symbol?: string | undefined;
+        description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        primary_sale_recipient?: string | undefined;
+        platform_fee_basis_points?: number | undefined;
+        platform_fee_recipient?: string | undefined;
+        trusted_forwarders?: string[] | undefined;
+        name: string;
+    }>;
+    output: z.ZodObject<z.extendShape<z.extendShape<{
+        name: z.ZodString;
+        description: z.ZodOptional<z.ZodString>;
+        image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_link: z.ZodOptional<z.ZodString>;
+    }, {
+        image: z.ZodOptional<z.ZodString>;
+    }>, {
+        merkle: z.ZodOptional<z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>>;
+        seller_fee_basis_points: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        fee_recipient: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>>;
+        symbol: z.ZodOptional<z.ZodDefault<z.ZodOptional<z.ZodString>>>;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        symbol?: string | undefined;
+        description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+    }, {
+        [x: string]: Json;
+        symbol?: string | undefined;
+        description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        image?: string | undefined;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+    }>;
+    input: z.ZodObject<z.extendShape<{
+        name: z.ZodString;
+        description: z.ZodOptional<z.ZodString>;
+        image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+        external_link: z.ZodOptional<z.ZodString>;
+    }, {
+        merkle: z.ZodOptional<z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>>;
+        seller_fee_basis_points: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
+        fee_recipient: z.ZodOptional<z.ZodDefault<z.ZodEffects<z.ZodString, string, string>>>;
+        symbol: z.ZodOptional<z.ZodDefault<z.ZodOptional<z.ZodString>>>;
+    }>, "strip", z.ZodLazy<z.ZodType<Json, z.ZodTypeDef, Json>>, {
+        [x: string]: Json;
+        symbol?: string | undefined;
+        description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+    }, {
+        [x: string]: Json;
+        symbol?: string | undefined;
+        description?: string | undefined;
+        merkle?: Record<string, string> | undefined;
+        image?: any;
+        external_link?: string | undefined;
+        seller_fee_basis_points?: number | undefined;
+        fee_recipient?: string | undefined;
+        name: string;
+    }>;
+};
+
 // Warning: (ae-internal-missing-underscore) The name "DEFAULT_IPFS_GATEWAY" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -875,7 +1716,6 @@ export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721 | Sign
 // @internal
 export function detectContractFeature<T extends BaseContract>(contractWrapper: ContractWrapper<BaseContract>, featureName: FeatureName): contractWrapper is ContractWrapper<T>;
 
-// Warning: (ae-forgotten-export) The symbol "AbiSchema" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "Feature" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "FeatureWithEnabled" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "detectFeatures" should be prefixed with an underscore because the declaration is marked as @internal
@@ -1875,6 +2715,42 @@ export function extractFunctions(predeployMetadataUri: string, storage: IStorage
 // @internal (undocumented)
 export function extractFunctionsFromAbi(abi: z.input<typeof AbiSchema>, metadata?: Record<string, any>): AbiFunction[];
 
+// Warning: (ae-incompatible-release-tags) The symbol "ExtraPublishMetadata" is marked as @public, but its signature references "ExtraPublishMetadataSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type ExtraPublishMetadata = z.infer<typeof ExtraPublishMetadataSchema>;
+
+// Warning: (ae-internal-missing-underscore) The name "ExtraPublishMetadataSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const ExtraPublishMetadataSchema: z.ZodObject<{
+    version: z.ZodEffects<z.ZodString, string, string>;
+    displayName: z.ZodOptional<z.ZodString>;
+    description: z.ZodOptional<z.ZodString>;
+    readme: z.ZodOptional<z.ZodString>;
+    license: z.ZodOptional<z.ZodString>;
+    changelog: z.ZodOptional<z.ZodString>;
+    tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+}, "strip", z.ZodAny, {
+    [x: string]: any;
+    description?: string | undefined;
+    displayName?: string | undefined;
+    readme?: string | undefined;
+    license?: string | undefined;
+    changelog?: string | undefined;
+    tags?: string[] | undefined;
+    version: string;
+}, {
+    [x: string]: any;
+    description?: string | undefined;
+    displayName?: string | undefined;
+    readme?: string | undefined;
+    license?: string | undefined;
+    changelog?: string | undefined;
+    tags?: string[] | undefined;
+    version: string;
+}>;
+
 // Warning: (ae-internal-missing-underscore) The name "fetchContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -1931,7 +2807,6 @@ export class FetchError extends Error {
     innerError?: Error;
 }
 
-// Warning: (ae-forgotten-export) The symbol "PreDeployMetadataFetched" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "fetchPreDeployMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -1947,7 +2822,6 @@ export function fetchRawPredeployMetadata(publishMetadataUri: string, storage: I
     bytecodeUri: string;
 }>;
 
-// Warning: (ae-forgotten-export) The symbol "ContractSource" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "fetchSourceFilesFromMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -2002,6 +2876,52 @@ export type ForwardRequestMessage = {
     nonce: string;
     data: BytesLike;
 };
+
+// Warning: (ae-incompatible-release-tags) The symbol "FullPublishMetadata" is marked as @public, but its signature references "FullPublishMetadataSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type FullPublishMetadata = z.infer<typeof FullPublishMetadataSchema>;
+
+// Warning: (ae-internal-missing-underscore) The name "FullPublishMetadataSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<{
+    name: z.ZodString;
+    metadataUri: z.ZodString;
+    bytecodeUri: z.ZodString;
+}, {
+    version: z.ZodEffects<z.ZodString, string, string>;
+    displayName: z.ZodOptional<z.ZodString>;
+    description: z.ZodOptional<z.ZodString>;
+    readme: z.ZodOptional<z.ZodString>;
+    license: z.ZodOptional<z.ZodString>;
+    changelog: z.ZodOptional<z.ZodString>;
+    tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+}>, "strip", z.ZodAny, {
+    [x: string]: any;
+    description?: string | undefined;
+    displayName?: string | undefined;
+    readme?: string | undefined;
+    license?: string | undefined;
+    changelog?: string | undefined;
+    tags?: string[] | undefined;
+    name: string;
+    version: string;
+    metadataUri: string;
+    bytecodeUri: string;
+}, {
+    [x: string]: any;
+    description?: string | undefined;
+    displayName?: string | undefined;
+    readme?: string | undefined;
+    license?: string | undefined;
+    changelog?: string | undefined;
+    tags?: string[] | undefined;
+    name: string;
+    version: string;
+    metadataUri: string;
+    bytecodeUri: string;
+}>;
 
 // Warning: (ae-internal-missing-underscore) The name "FunctionDeprecatedError" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -3246,8 +4166,322 @@ export type PermitRequestMessage = {
 // @internal (undocumented)
 export const PINATA_IPFS_URL = "https://api.pinata.cloud/pinning/pinFileToIPFS";
 
+// Warning: (ae-internal-missing-underscore) The name "PreDeployMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const PreDeployMetadata: z.ZodObject<{
+    name: z.ZodString;
+    metadataUri: z.ZodString;
+    bytecodeUri: z.ZodString;
+}, "strip", z.ZodAny, {
+    [x: string]: any;
+    name: string;
+    metadataUri: string;
+    bytecodeUri: string;
+}, {
+    [x: string]: any;
+    name: string;
+    metadataUri: string;
+    bytecodeUri: string;
+}>;
+
+// @public (undocumented)
+export type PreDeployMetadataFetched = z.infer<typeof PreDeployMetadataFetchedSchema>;
+
+// @public (undocumented)
+export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendShape<{
+    name: z.ZodString;
+    metadataUri: z.ZodString;
+    bytecodeUri: z.ZodString;
+}, {
+    name: z.ZodString;
+    abi: z.ZodArray<z.ZodObject<{
+        type: z.ZodString;
+        name: z.ZodDefault<z.ZodString>;
+        inputs: z.ZodDefault<z.ZodArray<z.ZodObject<z.extendShape<{
+            type: z.ZodString;
+            name: z.ZodString;
+        }, {
+            stateMutability: z.ZodOptional<z.ZodString>;
+            components: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                type: z.ZodString;
+                name: z.ZodString;
+            }, "strip", z.ZodAny, {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }, {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }>, "many">>;
+        }>, "strip", z.ZodAny, {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }, {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }>, "many">>;
+        outputs: z.ZodDefault<z.ZodArray<z.ZodObject<z.extendShape<{
+            type: z.ZodString;
+            name: z.ZodString;
+        }, {
+            stateMutability: z.ZodOptional<z.ZodString>;
+            components: z.ZodOptional<z.ZodArray<z.ZodObject<{
+                type: z.ZodString;
+                name: z.ZodString;
+            }, "strip", z.ZodAny, {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }, {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }>, "many">>;
+        }>, "strip", z.ZodAny, {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }, {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }>, "many">>;
+    }, "strip", z.ZodAny, {
+        [x: string]: any;
+        type: string;
+        name: string;
+        outputs: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[];
+        inputs: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[];
+    }, {
+        [x: string]: any;
+        name?: string | undefined;
+        outputs?: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[] | undefined;
+        inputs?: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[] | undefined;
+        type: string;
+    }>, "many">;
+    metadata: z.ZodRecord<z.ZodString, z.ZodAny>;
+    info: z.ZodObject<{
+        title: z.ZodOptional<z.ZodString>;
+        author: z.ZodOptional<z.ZodString>;
+        details: z.ZodOptional<z.ZodString>;
+        notice: z.ZodOptional<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        title?: string | undefined;
+        author?: string | undefined;
+        details?: string | undefined;
+        notice?: string | undefined;
+    }, {
+        title?: string | undefined;
+        author?: string | undefined;
+        details?: string | undefined;
+        notice?: string | undefined;
+    }>;
+    licenses: z.ZodArray<z.ZodString, "many">;
+}>, {
+    bytecode: z.ZodString;
+}>, "strip", z.ZodAny, {
+    [x: string]: any;
+    name: string;
+    metadataUri: string;
+    metadata: Record<string, any>;
+    abi: {
+        [x: string]: any;
+        type: string;
+        name: string;
+        outputs: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[];
+        inputs: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[];
+    }[];
+    info: {
+        title?: string | undefined;
+        author?: string | undefined;
+        details?: string | undefined;
+        notice?: string | undefined;
+    };
+    licenses: string[];
+    bytecodeUri: string;
+    bytecode: string;
+}, {
+    [x: string]: any;
+    name: string;
+    metadataUri: string;
+    metadata: Record<string, any>;
+    abi: {
+        [x: string]: any;
+        name?: string | undefined;
+        outputs?: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[] | undefined;
+        inputs?: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[] | undefined;
+        type: string;
+    }[];
+    info: {
+        title?: string | undefined;
+        author?: string | undefined;
+        details?: string | undefined;
+        notice?: string | undefined;
+    };
+    licenses: string[];
+    bytecodeUri: string;
+    bytecode: string;
+}>;
+
 // @public
 export type Price = z.input<typeof PriceSchema>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "ProfileMetadata" is marked as @public, but its signature references "ProfileSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type ProfileMetadata = z.infer<typeof ProfileSchema>;
+
+// Warning: (ae-internal-missing-underscore) The name "ProfileSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const ProfileSchema: z.ZodObject<{
+    name: z.ZodOptional<z.ZodString>;
+    bio: z.ZodOptional<z.ZodString>;
+    avatar: z.ZodOptional<z.ZodString>;
+    website: z.ZodOptional<z.ZodString>;
+    twitter: z.ZodOptional<z.ZodString>;
+    telegram: z.ZodOptional<z.ZodString>;
+    facebook: z.ZodOptional<z.ZodString>;
+    github: z.ZodOptional<z.ZodString>;
+    medium: z.ZodOptional<z.ZodString>;
+    linkedin: z.ZodOptional<z.ZodString>;
+    reddit: z.ZodOptional<z.ZodString>;
+    discord: z.ZodOptional<z.ZodString>;
+}, "strip", z.ZodTypeAny, {
+    name?: string | undefined;
+    bio?: string | undefined;
+    avatar?: string | undefined;
+    website?: string | undefined;
+    twitter?: string | undefined;
+    telegram?: string | undefined;
+    facebook?: string | undefined;
+    github?: string | undefined;
+    medium?: string | undefined;
+    linkedin?: string | undefined;
+    reddit?: string | undefined;
+    discord?: string | undefined;
+}, {
+    name?: string | undefined;
+    bio?: string | undefined;
+    avatar?: string | undefined;
+    website?: string | undefined;
+    twitter?: string | undefined;
+    telegram?: string | undefined;
+    facebook?: string | undefined;
+    github?: string | undefined;
+    medium?: string | undefined;
+    linkedin?: string | undefined;
+    reddit?: string | undefined;
+    discord?: string | undefined;
+}>;
 
 // @public (undocumented)
 export interface Proposal {
@@ -3304,6 +4538,38 @@ export interface ProposalVote {
 //
 // @internal (undocumented)
 export const PUBLIC_GATEWAYS: string[];
+
+// Warning: (ae-incompatible-release-tags) The symbol "PublishedContract" is marked as @public, but its signature references "PublishedContractSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type PublishedContract = z.infer<typeof PublishedContractSchema>;
+
+// @public (undocumented)
+export type PublishedContractFetched = {
+    name: string;
+    publishedTimestamp: BigNumberish;
+    publishedMetadata: FullPublishMetadata;
+};
+
+// Warning: (ae-internal-missing-underscore) The name "PublishedContractSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const PublishedContractSchema: z.ZodObject<{
+    id: z.ZodString;
+    timestamp: z.ZodEffects<z.ZodEffects<z.ZodUnion<[z.ZodString, z.ZodNumber, z.ZodBigInt, z.ZodType<BigNumber, z.ZodTypeDef, BigNumber>]>, BigNumber, string | number | bigint | BigNumber>, string, string | number | bigint | BigNumber>;
+    metadataUri: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    id: string;
+    metadataUri: string;
+    timestamp: string;
+}, {
+    id: string;
+    metadataUri: string;
+    timestamp: string | number | bigint | BigNumber;
+}>;
+
+// @public (undocumented)
+export type PublishedMetadata = z.infer<typeof CompilerMetadataFetchedSchema>;
 
 // Warning: (ae-internal-missing-underscore) The name "QuantityAboveLimitError" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -5707,6 +6973,11 @@ export type WrappedTokens = {
 export class WrongListingTypeError extends Error {
     constructor(marketplaceContractAddress: string, listingId?: string, actualType?: string, expectedType?: string);
 }
+
+// Warnings were encountered during analysis:
+//
+// dist/src/schema/contracts/custom.d.ts:1214:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1215:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 
