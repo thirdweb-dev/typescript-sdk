@@ -93,12 +93,21 @@ export class ContractPublisher extends RPCConnectionHandler {
     return extractFunctions(predeployMetadataUri, this.storage);
   }
 
+  /**
+   * @internal
+   * @param predeployUri
+   */
   public async fetchCompilerMetadataFromPredeployURI(
     predeployUri: string,
   ): Promise<PreDeployMetadataFetched> {
     return fetchPreDeployMetadata(predeployUri, this.storage);
   }
 
+  /**
+   * @internal
+   * @param prepublishUri
+   * @param publisherAddress
+   */
   public async fetchPrePublishMetadata(
     prepublishUri: string,
     publisherAddress: string,

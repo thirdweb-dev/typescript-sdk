@@ -1883,7 +1883,44 @@ export function fetchContractMetadata(compilerMetadataUri: string, storage: ISto
 // Warning: (ae-internal-missing-underscore) The name "fetchContractMetadataFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function fetchContractMetadataFromAddress(address: string, provider: ethers.providers.Provider, storage: IStorage): Promise<PublishedMetadata>;
+export function fetchContractMetadataFromAddress(address: string, provider: ethers.providers.Provider, storage: IStorage): Promise<{
+    name: string;
+    metadata: Record<string, any>;
+    abi: {
+        [x: string]: any;
+        type: string;
+        name: string;
+        outputs: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[];
+        inputs: {
+            [x: string]: any;
+            components?: {
+                [x: string]: any;
+                type: string;
+                name: string;
+            }[] | undefined;
+            stateMutability?: string | undefined;
+            type: string;
+            name: string;
+        }[];
+    }[];
+    info: {
+        title?: string | undefined;
+        author?: string | undefined;
+        details?: string | undefined;
+        notice?: string | undefined;
+    };
+    licenses: string[];
+}>;
 
 // Warning: (ae-internal-missing-underscore) The name "FetchError" should be prefixed with an underscore because the declaration is marked as @internal
 //
