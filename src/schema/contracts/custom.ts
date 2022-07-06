@@ -104,7 +104,7 @@ export type ExtraPublishMetadata = z.infer<typeof ExtraPublishMetadataSchema>;
 export const FullPublishMetadataSchema = PreDeployMetadata.merge(
   ExtraPublishMetadataSchema,
 ).extend({
-  publisher: AddressSchema,
+  publisher: AddressSchema.optional(),
 });
 export type FullPublishMetadata = z.infer<typeof FullPublishMetadataSchema>;
 
