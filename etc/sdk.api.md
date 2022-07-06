@@ -2900,9 +2900,10 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
     changelog: z.ZodOptional<z.ZodString>;
     tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
 }>, {
-    publisher: z.ZodEffects<z.ZodString, string, string>;
+    publisher: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
 }>, "strip", z.ZodAny, {
     [x: string]: any;
+    publisher?: string | undefined;
     description?: string | undefined;
     displayName?: string | undefined;
     readme?: string | undefined;
@@ -2911,11 +2912,11 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
     tags?: string[] | undefined;
     name: string;
     version: string;
-    publisher: string;
     metadataUri: string;
     bytecodeUri: string;
 }, {
     [x: string]: any;
+    publisher?: string | undefined;
     description?: string | undefined;
     displayName?: string | undefined;
     readme?: string | undefined;
@@ -2924,7 +2925,6 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
     tags?: string[] | undefined;
     name: string;
     version: string;
-    publisher: string;
     metadataUri: string;
     bytecodeUri: string;
 }>;
