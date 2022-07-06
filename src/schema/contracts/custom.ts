@@ -20,6 +20,9 @@ export const BYOCContractMetadataSchema = CommonContractSchema.catchall(
   z.lazy(() => JsonSchema),
 );
 
+/**
+ * @internal
+ */
 export type CustomContractMetadata = z.input<typeof BYOCContractMetadataSchema>;
 
 /**

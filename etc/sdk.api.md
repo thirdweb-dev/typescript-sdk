@@ -1530,6 +1530,11 @@ export const CustomContractInput: z.ZodObject<z.extendShape<{
     name: string;
 }>;
 
+// Warning: (ae-internal-missing-underscore) The name "CustomContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export type CustomContractMetadata = z.input<typeof BYOCContractMetadataSchema>;
+
 // Warning: (ae-internal-missing-underscore) The name "CustomContractOutput" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -6979,8 +6984,8 @@ export class WrongListingTypeError extends Error {
 
 // Warnings were encountered during analysis:
 //
-// dist/src/schema/contracts/custom.d.ts:1219:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
-// dist/src/schema/contracts/custom.d.ts:1220:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1223:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1224:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 
