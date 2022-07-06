@@ -1,4 +1,5 @@
 import {
+  AddressOrEnsSchema,
   AddressSchema,
   BasisPointsSchema,
   FileBufferOrStringSchema,
@@ -55,7 +56,7 @@ export const CommonPrimarySaleSchema = z.object({
   /**
    * primary sale recipient address
    */
-  primary_sale_recipient: AddressSchema,
+  primary_sale_recipient: AddressOrEnsSchema,
 });
 
 /**
