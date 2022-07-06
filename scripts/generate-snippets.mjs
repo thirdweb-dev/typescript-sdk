@@ -62,6 +62,7 @@ const additionalClassesToParse = [
   "ContractPrimarySale",
   "ContractRoyalty",
   "ContractPlatformFee",
+  "WalletAuthenticator",
 ];
 
 const modules = json.members[0].members.filter(
