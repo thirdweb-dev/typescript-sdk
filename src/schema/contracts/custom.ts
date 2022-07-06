@@ -70,8 +70,12 @@ export const ExtraPublishMetadataSchema = z
   .object({
     version: z.string().refine(
       (v) => {
-        toSemver(v);
-        return true;
+        try {
+          toSemver(v);
+          return true;
+        } catch (e) {
+          return false;
+        }
       },
       (out) => {
         return {

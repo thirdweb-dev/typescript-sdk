@@ -22,7 +22,7 @@ export function toSemver(version: string): Semver {
     throw new Error(`version is longer than ${MAX_LENGTH} characters`);
   }
   const matches = version.trim().match(REGEX_MAIN_VERSION);
-  if (!matches || matches.length !== 4) {
+  if (!matches || matches?.length !== 4) {
     throw new Error(
       `${version} is not a valid semantic version. Should be in the format of major.minor.patch. Ex: 0.4.1`,
     );
