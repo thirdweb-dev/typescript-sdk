@@ -1,8 +1,4 @@
 import {
-  ContractDeployer,
-  ContractDeployer__factory,
-  ContractMetadataRegistry,
-  ContractMetadataRegistry__factory,
   ContractPublisher,
   ContractPublisher__factory,
   DropERC1155__factory,

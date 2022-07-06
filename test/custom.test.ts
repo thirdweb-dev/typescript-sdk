@@ -2,8 +2,6 @@ import { expectError, signers } from "./before-setup";
 import { assert, expect } from "chai";
 import invariant from "tiny-invariant";
 import {
-  SignatureDrop__factory,
-  TokenERC1155__factory,
   TokenERC20__factory,
   TokenERC721__factory,
   VoteERC20__factory,
@@ -12,7 +10,6 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import {
   NATIVE_TOKEN_ADDRESS,
   PayloadToSign20,
-  SignedPayload1155,
   SignedPayload721WithQuantitySignature,
   ThirdwebSDK,
 } from "../src";

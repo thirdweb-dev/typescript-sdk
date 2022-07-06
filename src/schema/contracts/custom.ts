@@ -9,7 +9,9 @@ import {
   MerkleSchema,
 } from "./common";
 import { z } from "zod";
-import { BigNumberishSchema, JsonSchema } from "../shared";
+import { AddressSchema, BigNumberishSchema, JsonSchema } from "../shared";
+import { BigNumberish } from "ethers";
+import { toSemver } from "../../common/index";
 
 /**
  * @internal
@@ -18,6 +20,9 @@ export const BYOCContractMetadataSchema = CommonContractSchema.catchall(
   z.lazy(() => JsonSchema),
 );
 
+/**
+ * @internal
+ */
 export type CustomContractMetadata = z.input<typeof BYOCContractMetadataSchema>;
 
 /**
@@ -63,16 +68,26 @@ export const PreDeployMetadata = z
   })
   .catchall(z.any());
 
-export type PreDeployMetadataFetched = {
-  name: string;
-  abi: z.infer<typeof AbiSchema>;
-  bytecode: string;
-  compilerMetadataUri: string;
-};
-
+/**
+ * @internal
+ */
 export const ExtraPublishMetadataSchema = z
   .object({
-    version: z.string(),
+    version: z.string().refine(
+      (v) => {
+        try {
+          toSemver(v);
+          return true;
+        } catch (e) {
+          return false;
+        }
+      },
+      (out) => {
+        return {
+          message: `'${out}' is not a valid semantic version. Should be in the format of major.minor.patch. Ex: 0.4.1`,
+        };
+      },
+    ),
     displayName: z.string().optional(),
     description: z.string().optional(),
     readme: z.string().optional(),
@@ -83,10 +98,19 @@ export const ExtraPublishMetadataSchema = z
   .catchall(z.any());
 export type ExtraPublishMetadata = z.infer<typeof ExtraPublishMetadataSchema>;
 
+/**
+ * @internal
+ */
 export const FullPublishMetadataSchema = PreDeployMetadata.merge(
   ExtraPublishMetadataSchema,
-);
+).extend({
+  publisher: AddressSchema,
+});
+export type FullPublishMetadata = z.infer<typeof FullPublishMetadataSchema>;
 
+/**
+ * @internal
+ */
 export const ProfileSchema = z.object({
   name: z.string().optional(),
   bio: z.string().optional(),
@@ -149,6 +173,7 @@ export const PublishedContractSchema = z.object({
 
 /**
  * @internal
+ * Follows https://docs.soliditylang.org/en/v0.8.15/natspec-format.html
  */
 export const ContractInfoSchema = z.object({
   title: z.string().optional(),
@@ -157,23 +182,47 @@ export const ContractInfoSchema = z.object({
   notice: z.string().optional(),
 });
 
+/**
+ * @internal
+ */
+export const CompilerMetadataFetchedSchema = z.object({
+  name: z.string(),
+  abi: AbiSchema,
+  metadata: z.record(z.string(), z.any()),
+  info: ContractInfoSchema,
+  licenses: z.array(z.string()),
+});
+
+/**
+ * @internal
+ */
+export const PreDeployMetadataFetchedSchema = PreDeployMetadata.merge(
+  CompilerMetadataFetchedSchema,
+).extend({
+  bytecode: z.string(),
+});
+
+export type PreDeployMetadataFetched = z.infer<
+  typeof PreDeployMetadataFetchedSchema
+>;
+
 export type ContractParam = z.infer<typeof AbiTypeSchema>;
 export type PublishedContract = z.infer<typeof PublishedContractSchema>;
+export type PublishedContractFetched = {
+  name: string;
+  publishedTimestamp: BigNumberish;
+  publishedMetadata: FullPublishMetadata;
+};
 export type AbiFunction = {
   name: string;
   inputs: z.infer<typeof AbiTypeSchema>[];
   outputs: z.infer<typeof AbiTypeSchema>[];
   signature: string;
   stateMutability: string;
+  comment: string;
 };
 export type ContractSource = {
   filename: string;
   source: string;
 };
-export type PublishedMetadata = {
-  name: string;
-  abi: z.infer<typeof AbiSchema>;
-  metadata: Record<string, any>;
-  info: z.infer<typeof ContractInfoSchema>;
-  licenses: string[];
-};
+export type PublishedMetadata = z.infer<typeof CompilerMetadataFetchedSchema>;

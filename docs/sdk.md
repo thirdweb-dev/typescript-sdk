@@ -127,6 +127,7 @@
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [AbiFunction](./sdk.abifunction.md) |  |
 |  [AirdropInput](./sdk.airdropinput.md) | Input model to pass a list of addresses + amount to transfer to each one |
 |  [Amount](./sdk.amount.md) | Represents a currency amount already formatted. ie. "1" for 1 ether. |
 |  [BufferOrStringWithName](./sdk.bufferorstringwithname.md) |  |
@@ -136,6 +137,8 @@
 |  [ClaimVerification](./sdk.claimverification.md) |  |
 |  [ContractEvent](./sdk.contractevent.md) | Standardized return type for contract events that returns event arguments |
 |  [ContractForContractType](./sdk.contractforcontracttype.md) |  |
+|  [ContractParam](./sdk.contractparam.md) |  |
+|  [ContractSource](./sdk.contractsource.md) |  |
 |  [ContractType](./sdk.contracttype.md) |  |
 |  [Currency](./sdk.currency.md) |  |
 |  [CurrencyValue](./sdk.currencyvalue.md) | Currency metadata &amp; value. |
@@ -146,6 +149,7 @@
 |  [ERC1155Wrappable](./sdk.erc1155wrappable.md) | Represents a certain amount of ERC1155 NFTs that can be wrapped |
 |  [ERC20Wrappable](./sdk.erc20wrappable.md) | Represents a certain amount of ERC20 tokens that can be wrapped |
 |  [ERC721Wrappable](./sdk.erc721wrappable.md) | Represents a ERC721 NFT that can be wrapped |
+|  [ExtraPublishMetadata](./sdk.extrapublishmetadata.md) |  |
 |  [FileOrBuffer](./sdk.fileorbuffer.md) |  |
 |  [FilledConditionInput](./sdk.filledconditioninput.md) |  |
 |  [FilledSignature721WithQuantity](./sdk.filledsignature721withquantity.md) |  |
@@ -154,6 +158,7 @@
 |  [FilledSignaturePayload20](./sdk.filledsignaturepayload20.md) |  |
 |  [FilledSignaturePayload721](./sdk.filledsignaturepayload721.md) |  |
 |  [ForwardRequestMessage](./sdk.forwardrequestmessage.md) | Forward Request Message that's used for gasless transaction |
+|  [FullPublishMetadata](./sdk.fullpublishmetadata.md) |  |
 |  [Json](./sdk.json.md) |  |
 |  [JsonObject](./sdk.jsonobject.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
@@ -170,7 +175,12 @@
 |  [PayloadWithUri721](./sdk.payloadwithuri721.md) |  |
 |  [PayloadWithUri721withQuantity](./sdk.payloadwithuri721withquantity.md) |  |
 |  [PermitRequestMessage](./sdk.permitrequestmessage.md) | EIP-2612 token permit message for gasless transaction |
+|  [PreDeployMetadataFetched](./sdk.predeploymetadatafetched.md) |  |
 |  [Price](./sdk.price.md) | Represents a currency price already formatted. ie. "1" for 1 ether. |
+|  [ProfileMetadata](./sdk.profilemetadata.md) |  |
+|  [PublishedContract](./sdk.publishedcontract.md) |  |
+|  [PublishedContractFetched](./sdk.publishedcontractfetched.md) |  |
+|  [PublishedMetadata](./sdk.publishedmetadata.md) |  |
 |  [Role](./sdk.role.md) |  |
 |  [SDKOptions](./sdk.sdkoptions.md) | All these configuration options are optional with sane defaults: |
 |  [SignedPayload1155](./sdk.signedpayload1155.md) |  |

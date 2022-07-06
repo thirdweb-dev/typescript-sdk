@@ -109,15 +109,15 @@ describe("Publishing", async () => {
     const publishMeta = await publisher.resolvePublishMetadataFromAddress(
       deployedAddr,
     );
-    const pubMeta = await sdk.storage.fetch(publishMeta[0]);
-    expect(pubMeta.name).to.eq("Greeter");
-    expect(pubMeta.version).to.eq("0.0.1");
+    expect(publishMeta[0].publisher).to.eq(adminWallet.address);
+    expect(publishMeta[0].name).to.eq("Greeter");
+    expect(publishMeta[0].version).to.eq("0.0.1");
   });
 
   it("should publish simple greeter contract", async () => {
     const publisher = sdk.getPublisher();
     const tx = await publisher.publish(simpleContractUri, {
-      version: "0.0.1",
+      version: "0.0.2",
     });
     const contract = await tx.data();
     const deployedAddr = await publisher.deployPublishedContract(
@@ -140,7 +140,7 @@ describe("Publishing", async () => {
     let id = "";
     for (let i = 0; i < 5; i++) {
       const tx = await publisher.publish(simpleContractUri, {
-        version: i.toString(),
+        version: `${i}.0.0`,
       });
       id = (await tx.data()).id;
     }
@@ -150,8 +150,45 @@ describe("Publishing", async () => {
     expect(versions.length).to.be.eq(5);
     expect(all[all.length - 1] === versions[versions.length - 1]);
     const last = await publisher.getLatest(samWallet.address, id);
-    const c = await publisher.fetchPublishContractInfo(last);
-    expect(c.metadata.version).to.eq("4");
+    const c = await publisher.fetchPublishedContractInfo(last);
+    expect(c.publishedMetadata.version).to.eq("4.0.0");
+  });
+
+  it("should fetch metadata", async () => {
+    const publisher = sdk.getPublisher();
+    const meta = await publisher.fetchCompilerMetadataFromPredeployURI(
+      simpleContractUri,
+    );
+    expect(meta.licenses.join()).to.eq("MIT,Apache-2.0");
+  });
+
+  it("should fetch metadata from previously deployed version", async () => {
+    const publisher = sdk.getPublisher();
+    for (let i = 1; i < 3; i++) {
+      await publisher.publish(simpleContractUri, {
+        version: `${i}.0.0`,
+        displayName: `Greeter${i.toString()}`,
+      });
+    }
+    const meta = await publisher.fetchPrePublishMetadata(
+      simpleContractUri,
+      adminWallet.address,
+    );
+    expect(meta.preDeployMetadata.licenses.join()).to.eq("MIT,Apache-2.0");
+  });
+
+  it("should publish extra metadata", async () => {
+    const publisher = sdk.getPublisher();
+    const tx = await publisher.publish(simpleContractUri, {
+      version: "3.0.1",
+      description: "description",
+      tags: ["tag1", "tag2"],
+    });
+    const contract = await tx.data();
+    const last = await publisher.getLatest(adminWallet.address, contract.id);
+    const c = await publisher.fetchPublishedContractInfo(last);
+    expect(c.publishedMetadata.version).to.eq("3.0.1");
+    expect(c.publishedMetadata.description).to.eq("description");
   });
 
   it("should publish constructor params contract", async () => {

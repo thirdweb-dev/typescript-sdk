@@ -9,6 +9,7 @@ import {
   ContractSource,
   PreDeployMetadata,
   PreDeployMetadataFetched,
+  PreDeployMetadataFetchedSchema,
   PublishedMetadata,
 } from "../schema/contracts/custom";
 import { z } from "zod";
@@ -100,7 +101,7 @@ export function extractFunctionsFromAbi(
 ): AbiFunction[] {
   const functions = abi.filter((el) => el.type === "function");
 
-  const parsed = [];
+  const parsed: AbiFunction[] = [];
   for (const f of functions) {
     const doc =
       metadata?.output?.userdoc[
@@ -268,7 +269,7 @@ export async function fetchContractMetadataFromAddress(
  * @param compilerMetadataUri
  * @param storage
  */
-async function fetchContractMetadata(
+export async function fetchContractMetadata(
   compilerMetadataUri: string,
   storage: IStorage,
 ): Promise<PublishedMetadata> {
@@ -359,15 +360,14 @@ export async function fetchPreDeployMetadata(
   publishMetadataUri: string,
   storage: IStorage,
 ): Promise<PreDeployMetadataFetched> {
-  const pubMeta = await fetchRawPredeployMetadata(publishMetadataUri, storage);
-  const deployBytecode = await storage.getRaw(pubMeta.bytecodeUri);
-  const parsedMeta = await fetchContractMetadata(pubMeta.metadataUri, storage);
-  return {
-    name: parsedMeta.name,
-    abi: parsedMeta.abi,
+  const rawMeta = await fetchRawPredeployMetadata(publishMetadataUri, storage);
+  const deployBytecode = await storage.getRaw(rawMeta.bytecodeUri);
+  const parsedMeta = await fetchContractMetadata(rawMeta.metadataUri, storage);
+  return PreDeployMetadataFetchedSchema.parse({
+    ...rawMeta,
+    ...parsedMeta,
     bytecode: deployBytecode,
-    compilerMetadataUri: pubMeta.metadataUri,
-  };
+  });
 }
 
 /**
