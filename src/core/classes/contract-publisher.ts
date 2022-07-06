@@ -26,6 +26,7 @@ import {
   ContractParam,
   ContractSource,
   ExtraPublishMetadata,
+  FullPublishMetadata,
   FullPublishMetadataSchema,
   PreDeployMetadataFetched,
   ProfileMetadata,
@@ -152,13 +153,24 @@ export class ContractPublisher extends RPCConnectionHandler {
   public async fetchPublishedContractInfo(
     contract: PublishedContract,
   ): Promise<PublishedContractFetched> {
-    const meta = await this.storage.getRaw(contract.metadataUri);
-    const fullMeta = FullPublishMetadataSchema.parse(JSON.parse(meta));
     return {
       name: contract.id,
       publishedTimestamp: contract.timestamp,
-      publishedMetadata: fullMeta,
+      publishedMetadata: await this.fetchPublishedMetadata(
+        contract.metadataUri,
+      ),
     };
+  }
+
+  /**
+   * @internal
+   * @param publishedMetadataUri
+   */
+  public async fetchPublishedMetadata(
+    publishedMetadataUri: string,
+  ): Promise<FullPublishMetadata> {
+    const meta = await this.storage.getRaw(publishedMetadataUri);
+    return FullPublishMetadataSchema.parse(JSON.parse(meta));
   }
 
   /**
@@ -167,7 +179,7 @@ export class ContractPublisher extends RPCConnectionHandler {
    */
   public async resolvePublishMetadataFromAddress(
     address: string,
-  ): Promise<string[]> {
+  ): Promise<FullPublishMetadata[]> {
     const compilerMetadataUri = await resolveContractUriFromAddress(
       address,
       this.getProvider(),
@@ -175,8 +187,15 @@ export class ContractPublisher extends RPCConnectionHandler {
     if (!compilerMetadataUri) {
       throw Error("Could not resolve compiler metadata URI from bytecode");
     }
-    return await this.publisher.readContract.getPublishedUriFromCompilerUri(
-      compilerMetadataUri,
+    const publishedMetadataUri =
+      await this.publisher.readContract.getPublishedUriFromCompilerUri(
+        compilerMetadataUri,
+      );
+    if (publishedMetadataUri.length === 0) {
+      throw Error(`Could not resolve published metadata URI from ${address}`);
+    }
+    return await Promise.all(
+      publishedMetadataUri.map((uri) => this.fetchPublishedMetadata(uri)),
     );
   }
 
@@ -308,6 +327,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     const fullMetadata = FullPublishMetadataSchema.parse({
       ...predeployMetadata,
       ...extraMetadata,
+      publisher,
     });
     const fullMetadataUri = await this.storage.uploadMetadata(fullMetadata);
     const receipt = await this.publisher.sendTransaction("publishContract", [

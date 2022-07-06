@@ -9,7 +9,7 @@ import {
   MerkleSchema,
 } from "./common";
 import { z } from "zod";
-import { BigNumberishSchema, JsonSchema } from "../shared";
+import { AddressSchema, BigNumberishSchema, JsonSchema } from "../shared";
 import { BigNumberish } from "ethers";
 import { toSemver } from "../../common/index";
 
@@ -103,7 +103,9 @@ export type ExtraPublishMetadata = z.infer<typeof ExtraPublishMetadataSchema>;
  */
 export const FullPublishMetadataSchema = PreDeployMetadata.merge(
   ExtraPublishMetadataSchema,
-);
+).extend({
+  publisher: AddressSchema,
+});
 export type FullPublishMetadata = z.infer<typeof FullPublishMetadataSchema>;
 
 /**

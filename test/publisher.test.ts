@@ -109,9 +109,9 @@ describe("Publishing", async () => {
     const publishMeta = await publisher.resolvePublishMetadataFromAddress(
       deployedAddr,
     );
-    const pubMeta = await sdk.storage.fetch(publishMeta[0]);
-    expect(pubMeta.name).to.eq("Greeter");
-    expect(pubMeta.version).to.eq("0.0.1");
+    expect(publishMeta[0].publisher).to.eq(adminWallet.address);
+    expect(publishMeta[0].name).to.eq("Greeter");
+    expect(publishMeta[0].version).to.eq("0.0.1");
   });
 
   it("should publish simple greeter contract", async () => {
