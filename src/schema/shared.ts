@@ -1,7 +1,7 @@
 import { BigNumber, CallOverrides, utils } from "ethers";
 import { z } from "zod";
 import { Json } from "../core/types";
-import { isBrowser } from "../common/utils";
+import { isBrowser, resolveAddress } from "../common/utils";
 
 export const MAX_BPS = 10_000;
 
@@ -66,6 +66,15 @@ export const HexColor = z.union([
 
 export const AddressSchema = z.string().refine(
   (arg) => utils.isAddress(arg),
+  (out) => {
+    return {
+      message: `${out} is not a valid address`,
+    };
+  },
+);
+
+export const AddressOrEnsSchema = z.string().refine(
+  (arg) => Promise.resolve(resolveAddress(arg)),
   (out) => {
     return {
       message: `${out} is not a valid address`,
