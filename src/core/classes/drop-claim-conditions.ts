@@ -9,7 +9,7 @@ import {
   IERC20Metadata,
   SignatureDrop,
 } from "contracts";
-import { BigNumber, BigNumberish, constants, ethers } from "ethers";
+import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import {
@@ -38,6 +38,7 @@ import { isNode } from "../../common/utils";
 import deepEqual from "fast-deep-equal";
 import { BaseClaimConditionERC721 } from "../../types/eips";
 import { IDropClaimCondition } from "contracts/DropERC20";
+import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 
 /**
  * Manages claim conditions for NFT Drop contracts
@@ -131,7 +132,7 @@ export class DropClaimConditions<
         ),
       );
     } else {
-      throw new Error("Contract does not support claim conditions");
+      return [await this.getActive()];
     }
   }
 
@@ -391,18 +392,31 @@ export class DropClaimConditions<
     claimConditionInputs: ClaimConditionInput[],
     resetClaimEligibilityForAll = false,
   ): Promise<TransactionResult> {
-    if (
-      this.isSinglePhaseDropContract(this.contractWrapper) &&
-      claimConditionInputs.length > 1
-    ) {
-      throw new Error(
-        "Single phase drop contract cannot have multiple claim conditions, only one is allowed",
-      );
+    let claimConditionsProcessed = claimConditionInputs;
+    if (this.isSinglePhaseDropContract(this.contractWrapper)) {
+      if (claimConditionInputs.length === 0) {
+        claimConditionsProcessed = [
+          {
+            startTime: new Date(0),
+            currencyAddress: NATIVE_TOKEN_ADDRESS,
+            price: 0,
+            maxQuantity: 0,
+            quantityLimitPerTransaction: 0,
+            waitInSeconds: 0,
+            merkleRootHash: utils.hexZeroPad([0], 32),
+            snapshot: [],
+          },
+        ];
+      } else if (claimConditionInputs.length > 1) {
+        throw new Error(
+          "Single phase drop contract cannot have multiple claim conditions, only one is allowed",
+        );
+      }
     }
     // process inputs
     const { snapshotInfos, sortedConditions } =
       await processClaimConditionInputs(
-        claimConditionInputs,
+        claimConditionsProcessed,
         await this.getTokenDecimals(),
         this.contractWrapper.getProvider(),
         this.storage,
