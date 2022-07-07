@@ -395,7 +395,7 @@
         "summary": "Set public mint conditions\n\n",
         "remarks": "\n\nSets the public mint conditions that need to be fullfiled by users to claim NFTs.\n\n",
         "examples": {
-          "javascript": "const presaleStartTime = new Date();\nconst publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\nconst claimConditions = [\n  {\n    startTime: presaleStartTime, // start the presale now\n    maxQuantity: 2, // limit how many mints for this presale\n    price: 0.01, // presale price\n    snapshot: ['0x...', '0x...'], // limit minting to only certain addresses\n  },\n  {\n    startTime: publicSaleStartTime, // 24h after presale, start public sale\n    price: 0.08, // public sale price\n  }\n]);\n\nawait dropContract.claimConditions.set(claimConditions);"
+          "javascript": "const presaleStartTime = new Date();\nconst publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);\n\n// Optionally specify addresses that can claim\nconst snapshots = ['0x...', '0x...']\n\n// Or alternatively, you can pass snapshots with the max number of NFTs each address can claim\n// const snapshots = [{ address: '0x...', maxClaimable: 1 }, { address: '0x...', maxClaimable: 2 }]\n\nconst claimConditions = [\n  {\n    startTime: presaleStartTime, // start the presale now\n    maxQuantity: 2, // limit how many mints for this presale\n    price: 0.01, // presale price\n    snapshot: snapshots, // limit minting to only certain addresses\n  },\n  {\n    startTime: publicSaleStartTime, // 24h after presale, start public sale\n    price: 0.08, // public sale price\n  }\n]);\n\nawait dropContract.claimConditions.set(claimConditions);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.DropClaimConditions.set"
       }
