@@ -279,12 +279,19 @@ export class DropErc1155ClaimConditions {
    * ```javascript
    * const presaleStartTime = new Date();
    * const publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
+   *
+   * // Optionally specify addresses that can claim
+   * const snapshots = ['0x...', '0x...']
+   *
+   * // Or alternatively, you can pass snapshots with the max number of NFTs each address can claim
+   * // const snapshots = [{ address: '0x...', maxClaimable: 1 }, { address: '0x...', maxClaimable: 2 }]
+   *
    * const claimConditions = [
    *   {
    *     startTime: presaleStartTime, // start the presale now
    *     maxQuantity: 2, // limit how many mints for this presale
    *     price: 0.01, // presale price
-   *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
+   *     snapshot: snapshots, // limit minting to only certain addresses
    *   },
    *   {
    *     startTime: publicSaleStartTime, // 24h after presale, start public sale
