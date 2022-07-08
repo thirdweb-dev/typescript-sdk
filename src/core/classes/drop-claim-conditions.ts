@@ -205,6 +205,7 @@ export class DropClaimConditions<
         reasons.push(ClaimEligibility.NoClaimConditionSet);
         return reasons;
       }
+      console.log("failed to get active claim condition", err);
       reasons.push(ClaimEligibility.Unknown);
       return reasons;
     }
