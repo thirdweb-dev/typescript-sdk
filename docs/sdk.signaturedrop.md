@@ -33,7 +33,7 @@ const contract = sdk.getSignatureDrop("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [claimCondition](./sdk.signaturedrop.claimcondition.md) |  | DropSingleClaimConditions&lt;SignatureDropContract&gt; | Configure claim conditions |
+|  [claimConditions](./sdk.signaturedrop.claimconditions.md) |  | [DropClaimConditions](./sdk.dropclaimconditions.md)<!-- -->&lt;SignatureDropContract&gt; | Configure claim conditions |
 |  [contractAbi](./sdk.signaturedrop.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.signaturedrop.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.signaturedrop.contracttype.md) | <code>static</code> | "signature-drop" |  |

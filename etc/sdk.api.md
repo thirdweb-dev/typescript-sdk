@@ -1746,7 +1746,7 @@ export interface DirectListing {
 // Warning: (ae-forgotten-export) The symbol "BaseClaimConditionERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | BaseClaimConditionERC721> {
+export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | BaseClaimConditionERC721 | SignatureDrop_2> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
     canClaim(quantity: Amount, addressToCheck?: string): Promise<boolean>;
     getActive(): Promise<ClaimCondition>;
@@ -5629,8 +5629,7 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<SignatureDrop_2>);
     burn(tokenId: BigNumberish): Promise<TransactionResult>;
     claim(quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    // Warning: (ae-forgotten-export) The symbol "DropSingleClaimConditions" needs to be exported by the entry point index.d.ts
-    claimCondition: DropSingleClaimConditions<SignatureDrop_2>;
+    claimConditions: DropClaimConditions<SignatureDrop_2>;
     claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // (undocumented)
     static contractAbi: any;

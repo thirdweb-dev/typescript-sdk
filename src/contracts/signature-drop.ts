@@ -18,7 +18,6 @@ import {
   NFTMetadataOwner,
 } from "../schema/tokens/common";
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
-import { DropSingleClaimConditions } from "../core/classes/drop-single-claim-conditions";
 import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { prepareClaim } from "../common/claim-conditions";
@@ -35,7 +34,7 @@ import {
   TokensClaimedEvent,
   TokensLazyMintedEvent,
 } from "contracts/DropERC721";
-import { DelayedReveal } from "../core/index";
+import { DelayedReveal, DropClaimConditions } from "../core/index";
 import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
 import { uploadOrExtractURIs } from "../common/nft";
 
@@ -114,10 +113,10 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    *     price: 0.01, // presale price
    *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
    * };
-   * await contract.claimCondition.set(claimCondition);
+   * await contract.claimConditions.set([claimCondition]);
    * ```
    */
-  public claimCondition: DropSingleClaimConditions<SignatureDropContract>;
+  public claimConditions: DropClaimConditions<SignatureDropContract>;
   /**
    * Delayed reveal
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
@@ -203,7 +202,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
       this.contractWrapper,
       this.storage,
     );
-    this.claimCondition = new DropSingleClaimConditions(
+    this.claimConditions = new DropClaimConditions(
       this.contractWrapper,
       this.metadata,
       this.storage,
@@ -578,7 +577,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
-      await this.claimCondition.get(),
+      await this.claimConditions.getActive(),
       async () => (await this.metadata.get()).merkle,
       0,
       this.contractWrapper,
