@@ -1445,13 +1445,13 @@
     ],
     "properties": [
       {
-        "name": "claimCondition",
+        "name": "claimConditions",
         "summary": "Configure claim conditions\n\n",
         "remarks": "\n\nDefine who can claim NFTs in the collection, when and how many.\n\n",
         "examples": {
-          "javascript": "const presaleStartTime = new Date();\nconst claimCondition = {\n    startTime: presaleStartTime, // start the presale now\n    maxQuantity: 2, // limit how many mints for this presale\n    price: 0.01, // presale price\n    snapshot: ['0x...', '0x...'], // limit minting to only certain addresses\n};\nawait contract.claimCondition.set(claimCondition);"
+          "javascript": "const presaleStartTime = new Date();\nconst claimCondition = {\n    startTime: presaleStartTime, // start the presale now\n    maxQuantity: 2, // limit how many mints for this presale\n    price: 0.01, // presale price\n    snapshot: ['0x...', '0x...'], // limit minting to only certain addresses\n};\nawait contract.claimConditions.set([claimCondition]);"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.dropsingleclaimconditions"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.dropclaimconditions"
       },
       {
         "name": "revealer",
