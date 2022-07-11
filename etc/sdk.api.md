@@ -1151,7 +1151,6 @@ export class ContractDeployer extends RPCConnectionHandler {
     deployNFTCollection(metadata: NFTContractDeployMetadata): Promise<string>;
     deployNFTDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deployPack(metadata: NFTContractDeployMetadata): Promise<string>;
-    // @internal
     deploySignatureDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deploySplit(metadata: SplitContractDeployMetadata): Promise<string>;
     deployToken(metadata: TokenContractDeployMetadata): Promise<string>;

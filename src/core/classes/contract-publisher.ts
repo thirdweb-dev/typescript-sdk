@@ -239,6 +239,9 @@ export class ContractPublisher extends RPCConnectionHandler {
     const profileUri = await this.publisher.readContract.getPublisherProfileUri(
       publisherAddress,
     );
+    if (!profileUri || profileUri.length === 0) {
+      return {};
+    }
     return ProfileSchema.parse(await this.storage.get(profileUri));
   }
 
