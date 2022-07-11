@@ -556,6 +556,10 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   /**
    * Burn a single NFT
    * @param tokenId - the token Id to burn
+   * @example
+   * ```javascript
+   * const result = await contract.burn(tokenId, amount);
+   * ```
    */
   public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
     return {
