@@ -328,7 +328,13 @@ export class ContractWrapper<
       const network = await this.getProvider().getNetwork();
       const signerAddress = await this.getSignerAddress();
       const contractAddress = await this.readContract.address;
-      throw await convertToTWError(e, network, signerAddress, contractAddress);
+      throw await convertToTWError(
+        e,
+        network,
+        signerAddress,
+        contractAddress,
+        this.readContract.interface,
+      );
     }
   }
 

@@ -7,7 +7,7 @@ import {
   SignatureDrop,
   Token,
 } from "../src";
-import { expectError, sdk, signers, storage } from "./before-setup";
+import { sdk, signers, storage } from "./before-setup";
 import { SignedPayload721WithQuantitySignature } from "../src/schema/contracts/common/signature";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import invariant from "tiny-invariant";
