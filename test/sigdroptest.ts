@@ -13,7 +13,6 @@ import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import invariant from "tiny-invariant";
 import { MerkleTree } from "merkletreejs";
 import { keccak256 } from "ethers/lib/utils";
-import { AddressZero } from "@ethersproject/constants";
 
 global.fetch = require("cross-fetch");
 
@@ -706,8 +705,7 @@ describe("Signature drop tests", async () => {
         await sdk.updateSignerOrProvider(w2);
         await signatureDropContract.claim(2);
       } catch (e) {
-        // TODO re-enable this test after the custom solidity error revert
-        // expectError(e, "invalid quantity proof");
+        expectError(e, "Invalid qty proof");
       }
     });
 
