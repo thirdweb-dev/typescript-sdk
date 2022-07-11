@@ -583,6 +583,39 @@ describe("Signature drop tests", async () => {
       }
     });
 
+    it("should query total claimed supply even after claim reset", async () => {
+      const metadatas = [];
+      for (let i = 0; i < 100; i++) {
+        metadatas.push({
+          name: `test ${i}`,
+        });
+      }
+      await signatureDropContract.createBatch(metadatas);
+      await signatureDropContract.claimConditions.set([
+        {
+          maxQuantity: 10,
+        },
+      ]);
+      await signatureDropContract.claim(5);
+      await signatureDropContract.claimConditions.set(
+        [
+          {
+            maxQuantity: 10,
+          },
+        ],
+        true,
+      );
+      await signatureDropContract.claim(10);
+      expect(
+        (await signatureDropContract.totalClaimedSupply()).toNumber(),
+      ).to.eq(15);
+      expect((await signatureDropContract.getAllClaimed()).length).to.eq(15);
+      expect(
+        (await signatureDropContract.totalUnclaimedSupply()).toNumber(),
+      ).to.eq(85);
+      expect((await signatureDropContract.getAllUnclaimed()).length).to.eq(85);
+    });
+
     it("should correctly upload metadata for each nft", async () => {
       const metadatas = [];
       for (let i = 0; i < 100; i++) {
@@ -672,8 +705,7 @@ describe("Signature drop tests", async () => {
         await sdk.updateSignerOrProvider(w2);
         await signatureDropContract.claim(2);
       } catch (e) {
-        // TODO re-enable this test after the custom solidity error revert
-        // expectError(e, "invalid quantity proof");
+        expectError(e, "Invalid qty proof");
       }
     });
 

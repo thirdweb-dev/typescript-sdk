@@ -1388,7 +1388,7 @@ export type ContractType = keyof typeof CONTRACTS_MAP;
 // Warning: (ae-internal-missing-underscore) The name "convertToTWError" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export function convertToTWError(error: any, network: providers.Network, signerAddress: string, contractAddress: string): Promise<TransactionError>;
+export function convertToTWError(error: any, network: ethers.providers.Network, signerAddress: string, contractAddress: string, contractInterface: ethers.utils.Interface): Promise<TransactionError>;
 
 // Warning: (ae-internal-missing-underscore) The name "createSnapshot" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -2934,6 +2934,15 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
 export class FunctionDeprecatedError extends Error {
     constructor(message: string);
 }
+
+// Warning: (ae-internal-missing-underscore) The name "FunctionInfo" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export type FunctionInfo = {
+    signature: string;
+    inputs: Record<string, any>;
+    value: BigNumber;
+};
 
 // @public
 export class GasCostEstimator<TContract extends BaseContract> {
@@ -4871,8 +4880,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
-    royaltyBps: number;
     royaltyRecipient: string;
+    royaltyBps: number;
     quantity: string;
     uid: string;
     price: string;
@@ -4893,8 +4902,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    royaltyBps?: number | undefined;
     royaltyRecipient?: string | undefined;
+    royaltyBps?: number | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
@@ -4998,8 +5007,8 @@ export const Signature1155PayloadInputWithTokenId: z.ZodObject<z.extendShape<z.e
     to: string;
     primarySaleRecipient: string;
     tokenId: string;
-    royaltyBps: number;
     royaltyRecipient: string;
+    royaltyBps: number;
     quantity: string;
     uid: string;
     price: string;
@@ -5020,8 +5029,8 @@ export const Signature1155PayloadInputWithTokenId: z.ZodObject<z.extendShape<z.e
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    royaltyBps?: number | undefined;
     royaltyRecipient?: string | undefined;
+    royaltyBps?: number | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
@@ -5100,8 +5109,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     primarySaleRecipient: string;
     uri: string;
     tokenId: BigNumber;
-    royaltyBps: BigNumber;
     royaltyRecipient: string;
+    royaltyBps: BigNumber;
     quantity: BigNumber;
     uid: string;
     price: string;
@@ -5262,8 +5271,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
-    royaltyBps: number;
     royaltyRecipient: string;
+    royaltyBps: number;
     uid: string;
     price: string;
     currencyAddress: string;
@@ -5283,8 +5292,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    royaltyBps?: number | undefined;
     royaltyRecipient?: string | undefined;
+    royaltyBps?: number | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
@@ -5357,8 +5366,8 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     to: string;
     primarySaleRecipient: string;
     uri: string;
-    royaltyBps: BigNumber;
     royaltyRecipient: string;
+    royaltyBps: BigNumber;
     uid: string;
     price: string;
     currencyAddress: string;
@@ -5480,8 +5489,8 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
-    royaltyBps: number;
     royaltyRecipient: string;
+    royaltyBps: number;
     quantity: BigNumber;
     uid: string;
     price: string;
@@ -5502,8 +5511,8 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    royaltyBps?: number | undefined;
     royaltyRecipient?: string | undefined;
+    royaltyBps?: number | undefined;
     quantity?: string | number | bigint | BigNumber | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
@@ -5579,8 +5588,8 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
     to: string;
     primarySaleRecipient: string;
     uri: string;
-    royaltyBps: BigNumber;
     royaltyRecipient: string;
+    royaltyBps: BigNumber;
     quantity: BigNumber;
     uid: string;
     price: string;
@@ -6693,13 +6702,18 @@ export function toSemver(version: string): Semver;
 
 // @public (undocumented)
 export class TransactionError extends Error {
-    constructor(reason: string, from: string, to: string, data: string, network: providers.Network, rpcUrl: string, raw: string);
+    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "FunctionInfo" which is marked as @internal
+    constructor(reason: string, from: string, to: string, data: string, network: providers.Network, rpcUrl: string, raw: string, functionInfo: FunctionInfo | undefined);
     // (undocumented)
     chain: providers.Network;
     // (undocumented)
     data: string;
     // (undocumented)
     from: string;
+    // Warning: (ae-incompatible-release-tags) The symbol "functionInfo" is marked as @public, but its signature references "FunctionInfo" which is marked as @internal
+    //
+    // (undocumented)
+    functionInfo: FunctionInfo | undefined;
     // (undocumented)
     reason: string;
     // (undocumented)
