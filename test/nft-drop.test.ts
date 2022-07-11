@@ -231,6 +231,35 @@ describe("NFT Drop Contract", async () => {
     expect(unclaimed[unclaimed.length - 1].name).to.eq("test 30");
   });
 
+  it("should query total claimed supply even after claim reset", async () => {
+    const metadatas = [];
+    for (let i = 0; i < 100; i++) {
+      metadatas.push({
+        name: `test ${i}`,
+      });
+    }
+    await dropContract.createBatch(metadatas);
+    await dropContract.claimConditions.set([
+      {
+        maxQuantity: 10,
+      },
+    ]);
+    await dropContract.claim(5);
+    await dropContract.claimConditions.set(
+      [
+        {
+          maxQuantity: 10,
+        },
+      ],
+      true,
+    );
+    await dropContract.claim(10);
+    expect((await dropContract.totalClaimedSupply()).toNumber()).to.eq(15);
+    expect((await dropContract.getAllClaimed()).length).to.eq(15);
+    expect((await dropContract.totalUnclaimedSupply()).toNumber()).to.eq(85);
+    expect((await dropContract.getAllUnclaimed()).length).to.eq(85);
+  });
+
   it("should correctly update total supply after burning", async () => {
     const metadatas = [];
     for (let i = 0; i < 20; i++) {

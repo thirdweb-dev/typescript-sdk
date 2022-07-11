@@ -291,7 +291,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
     const maxId = Math.min(
-      (await this.contractWrapper.readContract.nextTokenIdToMint()).toNumber(),
+      (await this.totalClaimedSupply()).toNumber(),
       start + count,
     );
     return await Promise.all(
@@ -321,12 +321,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
       queryParams?.count || DEFAULT_QUERY_ALL_COUNT,
     ).toNumber();
     const firstTokenId = BigNumber.from(
-      Math.max(
-        (
-          await this.contractWrapper.readContract.nextTokenIdToMint()
-        ).toNumber(),
-        start,
-      ),
+      Math.max((await this.totalClaimedSupply()).toNumber(), start),
     );
     const maxId = BigNumber.from(
       Math.min(
@@ -357,10 +352,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * @returns the claimed supply
    */
   public async totalClaimedSupply(): Promise<BigNumber> {
-    const claimCondition =
-      await this.contractWrapper.readContract.claimCondition();
-
-    return claimCondition.supplyClaimed;
+    return await this.contractWrapper.readContract.totalMinted();
   }
 
   /**

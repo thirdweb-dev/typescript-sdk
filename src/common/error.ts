@@ -1,4 +1,5 @@
-import { BigNumberish, providers } from "ethers";
+import { BigNumber, BigNumberish, ethers, providers } from "ethers";
+import { NATIVE_TOKENS, SUPPORTED_CHAIN_ID } from "../constants/index";
 
 /**
  * Error that may get thrown if IPFS returns nothing for a given uri.
@@ -242,6 +243,15 @@ export class AuctionHasNotEndedError extends Error {
 }
 
 /**
+ * @internal
+ */
+export type FunctionInfo = {
+  signature: string;
+  inputs: Record<string, any>;
+  value: BigNumber;
+};
+
+/**
  * @public
  */
 export class TransactionError extends Error {
@@ -251,6 +261,7 @@ export class TransactionError extends Error {
   public data: string;
   public chain: providers.Network;
   public rpcUrl: string;
+  public functionInfo: FunctionInfo | undefined;
 
   constructor(
     reason: string,
@@ -260,17 +271,35 @@ export class TransactionError extends Error {
     network: providers.Network,
     rpcUrl: string,
     raw: string,
+    functionInfo: FunctionInfo | undefined,
   ) {
     let builtErrorMsg = "Contract transaction failed\n\n";
     builtErrorMsg += `Message: ${reason}`;
     builtErrorMsg += "\n\n| Transaction info |\n";
     builtErrorMsg += withSpaces("from", from);
     builtErrorMsg += withSpaces("to", to);
-    builtErrorMsg += withSpaces("data", data);
     builtErrorMsg += withSpaces(
       `chain`,
       `${network.name} (${network.chainId})`,
     );
+
+    if (functionInfo) {
+      builtErrorMsg += "\n\n| Failed contract call info |\n";
+      builtErrorMsg += withSpaces("function", functionInfo.signature);
+      builtErrorMsg += withSpaces(
+        `arguments`,
+        JSON.stringify(functionInfo.inputs, null, 2),
+      );
+      if (functionInfo.value.gt(0)) {
+        builtErrorMsg += withSpaces(
+          "value",
+          `${ethers.utils.formatEther(functionInfo.value)} ${
+            NATIVE_TOKENS[network.chainId as SUPPORTED_CHAIN_ID]?.symbol
+          }`,
+        );
+      }
+    }
+
     try {
       const url = new URL(rpcUrl);
       builtErrorMsg += withSpaces(`RPC`, url.hostname);
@@ -291,6 +320,48 @@ export class TransactionError extends Error {
     this.data = data;
     this.chain = network;
     this.rpcUrl = rpcUrl;
+    this.functionInfo = functionInfo;
+  }
+}
+
+/**
+ * @internal
+ * @param data
+ * @param contractInterface
+ */
+function parseFunctionInfo(
+  data: string,
+  contractInterface: ethers.utils.Interface,
+): FunctionInfo | undefined {
+  try {
+    const fnFragment = contractInterface.parseTransaction({
+      data,
+    });
+    const results: Record<string, any> = {};
+    const args = fnFragment.args;
+    fnFragment.functionFragment.inputs.forEach((param, index) => {
+      if (Array.isArray(args[index])) {
+        const obj: Record<string, unknown> = {};
+        const components = param.components;
+        if (components) {
+          const arr = args[index];
+          for (let i = 0; i < components.length; i++) {
+            const name = components[i].name;
+            obj[name] = arr[i];
+          }
+          results[param.name] = obj;
+        }
+      } else {
+        results[param.name] = args[index];
+      }
+    });
+    return {
+      signature: fnFragment.signature,
+      inputs: results,
+      value: fnFragment.value,
+    };
+  } catch (e) {
+    return undefined;
   }
 }
 
@@ -300,12 +371,14 @@ export class TransactionError extends Error {
  * @param network
  * @param signerAddress
  * @param contractAddress
+ * @param contractInterface
  */
 export async function convertToTWError(
   error: any,
-  network: providers.Network,
+  network: ethers.providers.Network,
   signerAddress: string,
   contractAddress: string,
+  contractInterface: ethers.utils.Interface,
 ): Promise<TransactionError> {
   let raw: string;
   if (error.data) {
@@ -317,7 +390,7 @@ export async function convertToTWError(
     raw = error.message;
   } else {
     // not sure what this is, just throw it back
-    return error;
+    raw = error.toString();
   }
   const reason =
     error.reason ||
@@ -334,7 +407,18 @@ export async function convertToTWError(
     // fallback to signerAddress
     from = signerAddress;
   }
-  return new TransactionError(reason, from, to, data, network, rpcUrl, raw);
+  const functionInfo =
+    data.length > 0 ? parseFunctionInfo(data, contractInterface) : undefined;
+  return new TransactionError(
+    reason,
+    from,
+    to,
+    data,
+    network,
+    rpcUrl,
+    raw,
+    functionInfo,
+  );
 }
 
 function withSpaces(label: string, content: string) {
