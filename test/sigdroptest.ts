@@ -7,12 +7,13 @@ import {
   SignatureDrop,
   Token,
 } from "../src";
-import { sdk, signers, storage } from "./before-setup";
+import { expectError, sdk, signers, storage } from "./before-setup";
 import { SignedPayload721WithQuantitySignature } from "../src/schema/contracts/common/signature";
 import { NATIVE_TOKEN_ADDRESS } from "../src/constants/currency";
 import invariant from "tiny-invariant";
 import { MerkleTree } from "merkletreejs";
 import { keccak256 } from "ethers/lib/utils";
+import { AddressZero } from "@ethersproject/constants";
 
 global.fetch = require("cross-fetch");
 
@@ -581,6 +582,39 @@ describe("Signature drop tests", async () => {
       } catch (e) {
         // expected
       }
+    });
+
+    it("should query total claimed supply even after claim reset", async () => {
+      const metadatas = [];
+      for (let i = 0; i < 100; i++) {
+        metadatas.push({
+          name: `test ${i}`,
+        });
+      }
+      await signatureDropContract.createBatch(metadatas);
+      await signatureDropContract.claimConditions.set([
+        {
+          maxQuantity: 10,
+        },
+      ]);
+      await signatureDropContract.claim(5);
+      await signatureDropContract.claimConditions.set(
+        [
+          {
+            maxQuantity: 10,
+          },
+        ],
+        true,
+      );
+      await signatureDropContract.claim(10);
+      expect(
+        (await signatureDropContract.totalClaimedSupply()).toNumber(),
+      ).to.eq(15);
+      expect((await signatureDropContract.getAllClaimed()).length).to.eq(15);
+      expect(
+        (await signatureDropContract.totalUnclaimedSupply()).toNumber(),
+      ).to.eq(85);
+      expect((await signatureDropContract.getAllUnclaimed()).length).to.eq(85);
     });
 
     it("should correctly upload metadata for each nft", async () => {

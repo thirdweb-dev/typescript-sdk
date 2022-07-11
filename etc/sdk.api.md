@@ -4881,8 +4881,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
-    royaltyBps: number;
     royaltyRecipient: string;
+    royaltyBps: number;
     quantity: string;
     uid: string;
     price: string;
@@ -4903,8 +4903,8 @@ export const Signature1155PayloadInput: z.ZodObject<z.extendShape<z.extendShape<
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    royaltyBps?: number | undefined;
     royaltyRecipient?: string | undefined;
+    royaltyBps?: number | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
@@ -5008,8 +5008,8 @@ export const Signature1155PayloadInputWithTokenId: z.ZodObject<z.extendShape<z.e
     to: string;
     primarySaleRecipient: string;
     tokenId: string;
-    royaltyBps: number;
     royaltyRecipient: string;
+    royaltyBps: number;
     quantity: string;
     uid: string;
     price: string;
@@ -5030,8 +5030,8 @@ export const Signature1155PayloadInputWithTokenId: z.ZodObject<z.extendShape<z.e
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    royaltyBps?: number | undefined;
     royaltyRecipient?: string | undefined;
+    royaltyBps?: number | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
@@ -5110,8 +5110,8 @@ export const Signature1155PayloadOutput: z.ZodObject<z.extendShape<z.extendShape
     primarySaleRecipient: string;
     uri: string;
     tokenId: BigNumber;
-    royaltyBps: BigNumber;
     royaltyRecipient: string;
+    royaltyBps: BigNumber;
     quantity: BigNumber;
     uid: string;
     price: string;
@@ -5272,8 +5272,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
-    royaltyBps: number;
     royaltyRecipient: string;
+    royaltyBps: number;
     uid: string;
     price: string;
     currencyAddress: string;
@@ -5293,8 +5293,8 @@ export const Signature721PayloadInput: z.ZodObject<z.extendShape<{
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    royaltyBps?: number | undefined;
     royaltyRecipient?: string | undefined;
+    royaltyBps?: number | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
     currencyAddress?: string | undefined;
@@ -5367,8 +5367,8 @@ export const Signature721PayloadOutput: z.ZodObject<z.extendShape<z.extendShape<
     to: string;
     primarySaleRecipient: string;
     uri: string;
-    royaltyBps: BigNumber;
     royaltyRecipient: string;
+    royaltyBps: BigNumber;
     uid: string;
     price: string;
     currencyAddress: string;
@@ -5490,8 +5490,8 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
 }>, "strip", z.ZodTypeAny, {
     to: string;
     primarySaleRecipient: string;
-    royaltyBps: number;
     royaltyRecipient: string;
+    royaltyBps: number;
     quantity: BigNumber;
     uid: string;
     price: string;
@@ -5512,8 +5512,8 @@ export const Signature721WithQuantityInput: z.ZodObject<z.extendShape<z.extendSh
 }, {
     to?: string | undefined;
     primarySaleRecipient?: string | undefined;
-    royaltyBps?: number | undefined;
     royaltyRecipient?: string | undefined;
+    royaltyBps?: number | undefined;
     quantity?: string | number | bigint | BigNumber | undefined;
     uid?: string | undefined;
     price?: string | number | undefined;
@@ -5589,8 +5589,8 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
     to: string;
     primarySaleRecipient: string;
     uri: string;
-    royaltyBps: BigNumber;
     royaltyRecipient: string;
+    royaltyBps: BigNumber;
     quantity: BigNumber;
     uid: string;
     price: string;
