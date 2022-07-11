@@ -14,10 +14,18 @@ export class GasCostEstimator<TContract extends BaseContract> {
 
   /**
    * Estimates the cost of gas in native token of the current chain
+   * Pass in the same parameters as the contract's function.
    * @remarks Estimate the cost of gas in native token of the current chain
    * @example
    * ```javascript
-   * const costOfBurn = await contract?.estimator.gasCostOf("burn", [0]);
+   * const costOfClaim = await nftDrop?.estimator.gasCostOf("claim", [
+   *   "0x...", // receiver
+   *   1, // quantity
+   *   "0x...", // currency
+   *   1, // price per token
+   *   [], // proofs
+   *   1, // proof max quantity per transaction
+   * ]);
    * ```
    * @returns the estimated price in native currency (ETH, MATIC, etc) of calling this function
    * @public
