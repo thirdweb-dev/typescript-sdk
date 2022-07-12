@@ -1,4 +1,3 @@
-import { ethers } from "ethers";
 import { isBrowser } from "../../common/utils";
 import { SDKOptions } from "../../schema";
 import {
@@ -150,7 +149,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
 
     // Check that the signing address is the claimed wallet address
     const message = this.generateMessage(payload.payload);
-    const userAddress = this.recoverAddress(message, payload.signature);
+    const userAddress = this.wallet.recoverAddress(message, payload.signature);
     if (userAddress.toLowerCase() !== payload.payload.address.toLowerCase()) {
       throw new Error(
         `Signer address '${userAddress.toLowerCase()}' does not match payload address '${payload.payload.address.toLowerCase()}'`,
@@ -293,7 +292,7 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     }
 
     // Check that the connected wallet signed the token
-    const adminAddress = this.recoverAddress(
+    const adminAddress = this.wallet.recoverAddress(
       JSON.stringify(payload),
       signature,
     );
@@ -327,14 +326,5 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     message += `Expiration Time: ${payload.expirationTime}\n`;
 
     return message;
-  }
-
-  /**
-   * Recover the signing address from a signed message
-   */
-  private recoverAddress(message: string, signature: string): string {
-    const messageHash = ethers.utils.hashMessage(message);
-    const messageHashBytes = ethers.utils.arrayify(messageHash);
-    return ethers.utils.recoverAddress(messageHashBytes, signature);
   }
 }

@@ -6770,6 +6770,7 @@ export class UserWallet {
     getAddress(): Promise<string>;
     // (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
+    recoverAddress(message: string, signature: string): string;
     sendRawTransaction(transactionRequest: providers.TransactionRequest): Promise<TransactionResult>;
     sign(message: string): Promise<string>;
     transfer(to: string, amount: Amount, currencyAddress?: string): Promise<TransactionResult>;
