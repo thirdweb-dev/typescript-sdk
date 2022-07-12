@@ -104,14 +104,14 @@ export function extractFunctionsFromAbi(
   const parsed: AbiFunction[] = [];
   for (const f of functions) {
     const doc =
-      metadata?.output?.userdoc[
-        Object.keys(metadata?.output?.userdoc.methods || {}).find(
-          (fn) => fn.substring(0, fn.indexOf("(")) === f.name,
+      metadata?.output?.userdoc.methods[
+        Object.keys(metadata?.output?.userdoc.methods || {}).find((fn) =>
+          fn.includes(f.name || "unknown"),
         ) || ""
       ]?.notice ||
       metadata?.output?.devdoc.methods[
-        Object.keys(metadata?.output?.devdoc.methods || {}).find(
-          (fn) => fn.substring(0, fn.indexOf("(")) === f.name,
+        Object.keys(metadata?.output?.devdoc.methods || {}).find((fn) =>
+          fn.includes(f.name || "unknown"),
         ) || ""
       ]?.details;
 
