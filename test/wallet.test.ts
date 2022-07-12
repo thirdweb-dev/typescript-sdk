@@ -48,4 +48,12 @@ describe("Wallet", async () => {
     sdk.updateSignerOrProvider(samWallet);
     expect(await sdk.wallet.getAddress()).to.eq(samWallet.address);
   });
+
+  it("should sign and recover address", async () => {
+    sdk.updateSignerOrProvider(adminWallet);
+    const message = "This is the message to sign.";
+    const signature = await sdk.wallet.sign(message);
+    const address = sdk.wallet.recoverAddress(message, signature);
+    expect(address).to.eq(adminWallet.address);
+  });
 });
