@@ -70,7 +70,7 @@ export async function extractFunctions(
   storage: IStorage,
 ): Promise<AbiFunction[]> {
   const metadata = await fetchPreDeployMetadata(predeployMetadataUri, storage);
-  return extractFunctionsFromAbi(metadata.abi);
+  return extractFunctionsFromAbi(metadata.abi, metadata.metadata);
 }
 
 /**
