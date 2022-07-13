@@ -22,11 +22,7 @@ import {
 } from "contracts";
 import { Erc721Supply } from "./erc-721-supply";
 import { Erc721Mintable } from "./erc-721-mintable";
-import {
-  BaseDropERC721,
-  BaseERC721,
-  BaseSignatureMintERC721,
-} from "../../types/eips";
+import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { Erc721Dropable } from "./erc-721-dropable";
@@ -43,9 +39,12 @@ import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-sig
  * @public
  */
 export class Erc721<
-  T extends Multiwrap | SignatureDrop | DropERC721 | TokenERC721 | BaseERC721 =
-    | BaseERC721
-    | BaseSignatureMintERC721,
+  T extends
+    | Multiwrap
+    | SignatureDrop
+    | DropERC721
+    | TokenERC721
+    | BaseERC721 = BaseERC721,
 > implements UpdateableNetwork, DetectableFeature
 {
   featureName = FEATURE_NFT.name;

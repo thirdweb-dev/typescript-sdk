@@ -7,9 +7,12 @@ import {
   NFTMetadataInput,
   NFTMetadataOwner,
 } from "../../schema";
-import { TokensLazyMintedEvent } from "contracts/LazyMintERC721";
 import { ClaimVerification, UploadProgressEvent } from "../../types";
-import { BaseDelayedRevealERC721, BaseDropERC721 } from "../../types/eips";
+import {
+  BaseClaimConditionERC721,
+  BaseDelayedRevealERC721,
+  BaseDropERC721,
+} from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResultWithId } from "../types";
@@ -20,6 +23,7 @@ import { Erc721 } from "./erc-721";
 import { DelayedReveal } from "./delayed-reveal";
 import { detectContractFeature } from "../../common/feature-detection";
 import { CustomContractSchema } from "../../schema/contracts/custom";
+import { TokensLazyMintedEvent } from "contracts/LazyMint";
 
 /**
  * Lazily mint and claim ERC721 NFTs
@@ -57,7 +61,9 @@ export class Erc721Dropable implements DetectableFeature {
    * await contract.claimConditions.set(claimConditions);
    * ```
    */
-  public claimConditions: DropClaimConditions<BaseDropERC721> | undefined;
+  public claimConditions:
+    | DropClaimConditions<BaseClaimConditionERC721>
+    | undefined;
   // TODO: Make claim conditions optional optional after contract interface changes
 
   private contractWrapper: ContractWrapper<BaseDropERC721>;
@@ -178,7 +184,7 @@ export class Erc721Dropable implements DetectableFeature {
 
     if (!claimVerification) {
       throw new Error(
-        "Claim verification Data is required - either pass it in as 'claimData' or set claim conditions via 'setClaimConditions'",
+        "Claim verification Data is required - either pass it in as 'claimData' or set claim conditions via 'claimConditions.set()'",
       );
     }
 
@@ -250,10 +256,10 @@ export class Erc721Dropable implements DetectableFeature {
   }
 
   private detectClaimConditions():
-    | DropClaimConditions<BaseDropERC721>
+    | DropClaimConditions<BaseClaimConditionERC721>
     | undefined {
     if (
-      detectContractFeature<BaseDropERC721>(
+      detectContractFeature<BaseClaimConditionERC721>(
         this.contractWrapper,
         "ERC721ClaimConditions",
       )
