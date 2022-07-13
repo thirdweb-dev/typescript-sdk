@@ -7,5 +7,7 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type ProfileMetadata = z.infer<typeof ProfileSchema>;
+export declare type ProfileMetadata = z.infer<typeof ProfileSchemaOutput>;
 ```
+<b>References:</b> [ProfileSchemaOutput](./sdk.profileschemaoutput.md)
+

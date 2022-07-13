@@ -9,7 +9,12 @@ import {
   MerkleSchema,
 } from "./common";
 import { z } from "zod";
-import { AddressSchema, BigNumberishSchema, JsonSchema } from "../shared";
+import {
+  AddressSchema,
+  BigNumberishSchema,
+  FileBufferOrStringSchema,
+  JsonSchema,
+} from "../shared";
 import { BigNumberish } from "ethers";
 import { toSemver } from "../../common/index";
 
@@ -111,10 +116,10 @@ export type FullPublishMetadata = z.infer<typeof FullPublishMetadataSchema>;
 /**
  * @internal
  */
-export const ProfileSchema = z.object({
+export const ProfileSchemaInput = z.object({
   name: z.string().optional(),
   bio: z.string().optional(),
-  avatar: z.string().optional(),
+  avatar: FileBufferOrStringSchema.nullable().optional(),
   website: z.string().optional(),
   twitter: z.string().optional(),
   telegram: z.string().optional(),
@@ -125,7 +130,11 @@ export const ProfileSchema = z.object({
   reddit: z.string().optional(),
   discord: z.string().optional(),
 });
-export type ProfileMetadata = z.infer<typeof ProfileSchema>;
+export const ProfileSchemaOutput = ProfileSchemaInput.extend({
+  avatar: z.string().nullable().optional(),
+});
+export type ProfileMetadataInput = z.infer<typeof ProfileSchemaInput>;
+export type ProfileMetadata = z.infer<typeof ProfileSchemaOutput>;
 
 /**
  * @internal
