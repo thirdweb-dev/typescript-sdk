@@ -2,31 +2,25 @@
 
 [Home](./index.md) &gt; [@thirdweb-dev/sdk](./sdk.md) &gt; [Erc721Dropable](./sdk.erc721dropable.md) &gt; [claim](./sdk.erc721dropable.claim.md)
 
-## Erc721Dropable.claim() method
+## Erc721Dropable.claim property
 
-Claim NFTs to the connected wallet.
+Claim tokens and configure claim conditions
 
 <b>Signature:</b>
 
 ```typescript
-claim(quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+claim: Erc721Claimable | undefined;
 ```
-
-## Parameters
-
-|  Parameter | Type | Description |
-|  --- | --- | --- |
-|  quantity | BigNumberish |  |
-|  checkERC20Allowance | boolean | <i>(Optional)</i> |
-|  claimData | [ClaimVerification](./sdk.claimverification.md) | <i>(Optional)</i> |
-
-<b>Returns:</b>
-
-Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&lt;[NFTMetadataOwner](./sdk.nftmetadataowner.md)<!-- -->&gt;\[\]&gt;
-
-- an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
 
 ## Remarks
 
-See [NFTDrop.claimTo()](./sdk.nftdrop.claimto.md)
+Let users claim NFTs. Define who can claim NFTs in the collection, when and how many.
+
+## Example
+
+
+```javascript
+const quantity = 10;
+await contract.nft.drop.claim.to("0x...", quantity);
+```
 

@@ -1,13 +1,7 @@
-import { TokensClaimedEvent } from "contracts/Drop";
-import { BigNumber, BigNumberish, ethers } from "ethers";
+import { ethers } from "ethers";
 import { FEATURE_NFT_DROPABLE } from "../../constants/erc721-features";
-import {
-  CommonNFTInput,
-  NFTMetadata,
-  NFTMetadataInput,
-  NFTMetadataOwner,
-} from "../../schema";
-import { ClaimVerification, UploadProgressEvent } from "../../types";
+import { CommonNFTInput, NFTMetadata, NFTMetadataInput } from "../../schema";
+import { UploadProgressEvent } from "../../types";
 import {
   BaseClaimConditionERC721,
   BaseDelayedRevealERC721,
@@ -16,14 +10,12 @@ import {
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResultWithId } from "../types";
-import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
-import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
 import { DelayedReveal } from "./delayed-reveal";
 import { detectContractFeature } from "../../common/feature-detection";
-import { CustomContractSchema } from "../../schema/contracts/custom";
 import { TokensLazyMintedEvent } from "contracts/LazyMint";
+import { Erc721Claimable } from "./erc-721-claimable";
 
 /**
  * Lazily mint and claim ERC721 NFTs
@@ -40,31 +32,15 @@ export class Erc721Dropable implements DetectableFeature {
   public revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
 
   /**
-   * Configure claim conditions
-   * @remarks Define who can claim NFTs in the collection, when and how many.
+   * Claim tokens and configure claim conditions
+   * @remarks Let users claim NFTs. Define who can claim NFTs in the collection, when and how many.
    * @example
    * ```javascript
-   * const presaleStartTime = new Date();
-   * const publicSaleStartTime = new Date(Date.now() + 60 * 60 * 24 * 1000);
-   * const claimConditions = [
-   *   {
-   *     startTime: presaleStartTime, // start the presale now
-   *     maxQuantity: 2, // limit how many mints for this presale
-   *     price: 0.01, // presale price
-   *     snapshot: ['0x...', '0x...'], // limit minting to only certain addresses
-   *   },
-   *   {
-   *     startTime: publicSaleStartTime, // 24h after presale, start public sale
-   *     price: 0.08, // public sale price
-   *   }
-   * ]);
-   * await contract.claimConditions.set(claimConditions);
+   * const quantity = 10;
+   * await contract.nft.drop.claim.to("0x...", quantity);
    * ```
    */
-  public claimConditions:
-    | DropClaimConditions<BaseClaimConditionERC721>
-    | undefined;
-  // TODO: Make claim conditions optional optional after contract interface changes
+  public claim: Erc721Claimable | undefined;
 
   private contractWrapper: ContractWrapper<BaseDropERC721>;
   private erc721: Erc721;
@@ -80,7 +56,7 @@ export class Erc721Dropable implements DetectableFeature {
 
     this.storage = storage;
     this.revealer = this.detectErc721Revealable();
-    this.claimConditions = this.detectClaimConditions();
+    this.claim = this.detectErc721Claimable();
   }
 
   /**
@@ -146,97 +122,6 @@ export class Erc721Dropable implements DetectableFeature {
     return results;
   }
 
-  /**
-   * Claim unique NFTs to a specific Wallet
-   *
-   * @remarks Let the specified wallet claim NFTs.
-   *
-   * @example
-   * ```javascript
-   * const address = "{{wallet_address}}"; // address of the wallet you want to claim the NFTs
-   * const quantity = 1; // how many unique NFTs you want to claim
-   *
-   * const tx = await contract.claimTo(address, quantity);
-   * const receipt = tx[0].receipt; // the transaction receipt
-   * const claimedTokenId = tx[0].id; // the id of the first NFT claimed
-   * const claimedNFT = await tx[0].data(); // (optional) get the first claimed NFT metadata
-   * ```
-   *
-   * @param destinationAddress - Address you want to send the token to
-   * @param quantity - Quantity of the tokens you want to claim
-   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
-   */
-  public async claimTo(
-    destinationAddress: string,
-    quantity: BigNumberish,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    let claimVerification = claimData;
-    if (this.claimConditions && !claimData) {
-      claimVerification = await this.claimConditions.prepareClaim(
-        quantity,
-        checkERC20Allowance,
-      );
-    }
-
-    if (!claimVerification) {
-      throw new Error(
-        "Claim verification Data is required - either pass it in as 'claimData' or set claim conditions via 'claimConditions.set()'",
-      );
-    }
-
-    const receipt = await this.contractWrapper.sendTransaction(
-      "claim",
-      [
-        destinationAddress,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
-      ],
-      claimVerification.overrides,
-    );
-    const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
-      "TokensClaimed",
-      receipt?.logs,
-    );
-    const startingIndex: BigNumber = event[0].args.startTokenId;
-    const endingIndex = startingIndex.add(quantity);
-    const results = [];
-    for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
-      results.push({
-        id,
-        receipt,
-        data: () => this.erc721.get(id),
-      });
-    }
-    return results;
-  }
-
-  /**
-   * Claim NFTs to the connected wallet.
-   *
-   * @remarks See {@link NFTDrop.claimTo}
-   *
-   * @returns - an array of results containing the id of the token claimed, the transaction receipt and a promise to optionally fetch the nft metadata
-   */
-  public async claim(
-    quantity: BigNumberish,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
-  ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    return this.claimTo(
-      await this.contractWrapper.getSignerAddress(),
-      quantity,
-      checkERC20Allowance,
-      claimData,
-    );
-  }
-
   /** ******************************
    * PRIVATE FUNCTIONS
    *******************************/
@@ -255,23 +140,16 @@ export class Erc721Dropable implements DetectableFeature {
     return undefined;
   }
 
-  private detectClaimConditions():
-    | DropClaimConditions<BaseClaimConditionERC721>
-    | undefined {
+  private detectErc721Claimable(): Erc721Claimable | undefined {
     if (
       detectContractFeature<BaseClaimConditionERC721>(
         this.contractWrapper,
         "ERC721ClaimConditions",
       )
     ) {
-      const metadata = new ContractMetadata(
+      return new Erc721Claimable(
+        this.erc721,
         this.contractWrapper,
-        CustomContractSchema,
-        this.storage,
-      );
-      return new DropClaimConditions(
-        this.contractWrapper,
-        metadata,
         this.storage,
       );
     }

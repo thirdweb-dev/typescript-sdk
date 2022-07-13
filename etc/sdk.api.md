@@ -2595,9 +2595,8 @@ export class Erc721BatchMintable implements DetectableFeature {
 export class Erc721Dropable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "BaseDropERC721" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseDropERC721>, storage: IStorage);
-    claim(quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
-    claimConditions: DropClaimConditions<BaseClaimConditionERC721> | undefined;
-    claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    // Warning: (ae-forgotten-export) The symbol "Erc721Claimable" needs to be exported by the entry point index.d.ts
+    claim: Erc721Claimable | undefined;
     // (undocumented)
     featureName: "ERC721Dropable";
     lazyMint(metadatas: NFTMetadataInput[], options?: {
