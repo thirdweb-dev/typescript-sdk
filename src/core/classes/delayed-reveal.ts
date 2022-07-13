@@ -77,6 +77,7 @@ export class DelayedReveal<
    * @param placeholder - the placeholder NFT to show before the reveal
    * @param metadatas - the final NFTs that will be hidden
    * @param password - the password that will be used to reveal these NFTs
+   * @param options - additional options like upload progress
    */
   public async createDelayedRevealBatch(
     placeholder: NFTMetadataInput,

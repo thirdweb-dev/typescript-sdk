@@ -2542,10 +2542,9 @@ export type ERC20Wrappable = {
 // Warning: (ae-forgotten-export) The symbol "Multiwrap" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "TokenERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseERC721" needs to be exported by the entry point index.d.ts
-// Warning: (ae-forgotten-export) The symbol "BaseSignatureMintERC721" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | TokenERC721 | BaseERC721 = BaseERC721 | BaseSignatureMintERC721> implements UpdateableNetwork, DetectableFeature {
+export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | TokenERC721 | BaseERC721 = BaseERC721> implements UpdateableNetwork, DetectableFeature {
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     balance(): Promise<BigNumber>;
     balanceOf(address: string): Promise<BigNumber>;
@@ -2594,11 +2593,10 @@ export class Erc721BatchMintable implements DetectableFeature {
 
 // @public
 export class Erc721Dropable implements DetectableFeature {
-    constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseDropERC721>, storage: IStorage);
-    claim(quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     // Warning: (ae-forgotten-export) The symbol "BaseDropERC721" needs to be exported by the entry point index.d.ts
-    claimConditions: DropClaimConditions<BaseDropERC721> | undefined;
-    claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+    constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseDropERC721>, storage: IStorage);
+    // Warning: (ae-forgotten-export) The symbol "Erc721Claimable" needs to be exported by the entry point index.d.ts
+    claim: Erc721Claimable | undefined;
     // (undocumented)
     featureName: "ERC721Dropable";
     lazyMint(metadatas: NFTMetadataInput[], options?: {
@@ -4452,18 +4450,21 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
 // @public
 export type Price = z.input<typeof PriceSchema>;
 
-// Warning: (ae-incompatible-release-tags) The symbol "ProfileMetadata" is marked as @public, but its signature references "ProfileSchema" which is marked as @internal
+// @public (undocumented)
+export type ProfileMetadata = z.infer<typeof ProfileSchemaOutput>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "ProfileMetadataInput" is marked as @public, but its signature references "ProfileSchemaInput" which is marked as @internal
 //
 // @public (undocumented)
-export type ProfileMetadata = z.infer<typeof ProfileSchema>;
+export type ProfileMetadataInput = z.infer<typeof ProfileSchemaInput>;
 
-// Warning: (ae-internal-missing-underscore) The name "ProfileSchema" should be prefixed with an underscore because the declaration is marked as @internal
+// Warning: (ae-internal-missing-underscore) The name "ProfileSchemaInput" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export const ProfileSchema: z.ZodObject<{
+export const ProfileSchemaInput: z.ZodObject<{
     name: z.ZodOptional<z.ZodString>;
     bio: z.ZodOptional<z.ZodString>;
-    avatar: z.ZodOptional<z.ZodString>;
+    avatar: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
     website: z.ZodOptional<z.ZodString>;
     twitter: z.ZodOptional<z.ZodString>;
     telegram: z.ZodOptional<z.ZodString>;
@@ -4476,7 +4477,7 @@ export const ProfileSchema: z.ZodObject<{
 }, "strip", z.ZodTypeAny, {
     name?: string | undefined;
     bio?: string | undefined;
-    avatar?: string | undefined;
+    avatar?: any;
     website?: string | undefined;
     twitter?: string | undefined;
     telegram?: string | undefined;
@@ -4489,7 +4490,51 @@ export const ProfileSchema: z.ZodObject<{
 }, {
     name?: string | undefined;
     bio?: string | undefined;
-    avatar?: string | undefined;
+    avatar?: any;
+    website?: string | undefined;
+    twitter?: string | undefined;
+    telegram?: string | undefined;
+    facebook?: string | undefined;
+    github?: string | undefined;
+    medium?: string | undefined;
+    linkedin?: string | undefined;
+    reddit?: string | undefined;
+    discord?: string | undefined;
+}>;
+
+// @public (undocumented)
+export const ProfileSchemaOutput: z.ZodObject<z.extendShape<{
+    name: z.ZodOptional<z.ZodString>;
+    bio: z.ZodOptional<z.ZodString>;
+    avatar: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+    website: z.ZodOptional<z.ZodString>;
+    twitter: z.ZodOptional<z.ZodString>;
+    telegram: z.ZodOptional<z.ZodString>;
+    facebook: z.ZodOptional<z.ZodString>;
+    github: z.ZodOptional<z.ZodString>;
+    medium: z.ZodOptional<z.ZodString>;
+    linkedin: z.ZodOptional<z.ZodString>;
+    reddit: z.ZodOptional<z.ZodString>;
+    discord: z.ZodOptional<z.ZodString>;
+}, {
+    avatar: z.ZodOptional<z.ZodNullable<z.ZodString>>;
+}>, "strip", z.ZodTypeAny, {
+    name?: string | undefined;
+    bio?: string | undefined;
+    avatar?: string | null | undefined;
+    website?: string | undefined;
+    twitter?: string | undefined;
+    telegram?: string | undefined;
+    facebook?: string | undefined;
+    github?: string | undefined;
+    medium?: string | undefined;
+    linkedin?: string | undefined;
+    reddit?: string | undefined;
+    discord?: string | undefined;
+}, {
+    name?: string | undefined;
+    bio?: string | undefined;
+    avatar?: string | null | undefined;
     website?: string | undefined;
     twitter?: string | undefined;
     telegram?: string | undefined;
@@ -7001,8 +7046,8 @@ export class WrongListingTypeError extends Error {
 
 // Warnings were encountered during analysis:
 //
-// dist/src/schema/contracts/custom.d.ts:1227:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
-// dist/src/schema/contracts/custom.d.ts:1228:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1270:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1271:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 

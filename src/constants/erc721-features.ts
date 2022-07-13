@@ -3,10 +3,9 @@ import Erc721EnumerableAbi from "../../abis/IERC721Enumerable.json";
 import Erc721SupplyAbi from "../../abis/IERC721Supply.json";
 import IMintableERC721Abi from "../../abis/IMintableERC721.json";
 import MulticallAbi from "../../abis/IMulticall.json";
-import DropAbi from "../../abis/IDrop.json";
 import DelayedRevealAbi from "../../abis/DelayedReveal.json";
-import LazyMintERC721Abi from "../../abis/LazyMintERC721.json";
-import IClaimConditionsMultiPhaseAbi from "../../abis/IClaimConditionsMultiPhase.json";
+import LazyMintAbi from "../../abis/ILazyMint.json";
+import IDropSinglePhase from "../../abis/IDropSinglePhase.json";
 import SignatureMintERC721Abi from "../../abis/SignatureMintERC721.json";
 
 export const FEATURE_NFT_REVEALABLE = {
@@ -14,21 +13,21 @@ export const FEATURE_NFT_REVEALABLE = {
   namespace: "nft.drop.revealer",
   docLinks: {
     sdk: "sdk.drop.delayedreveal",
-    contracts: "IDelayedReveal",
+    contracts: "DelayedReveal",
   },
-  abis: [Erc721Abi, DropAbi, LazyMintERC721Abi, DelayedRevealAbi],
+  abis: [Erc721Abi, LazyMintAbi, DelayedRevealAbi],
   features: {},
 } as const;
 
 // Update ABI dependencies
-export const FEATURE_NFT_CLAIM_CONDITIONS = {
+export const FEATURE_NFT_CLAIMABLE = {
   name: "ERC721ClaimConditions",
-  namespace: "nft.drop.claimConditions",
+  namespace: "nft.drop.claim",
   docLinks: {
     sdk: "sdk.dropClaimConditions",
-    contracts: "IClaimConditions",
+    contracts: "DropSinglePhase",
   },
-  abis: [Erc721Abi, DropAbi, IClaimConditionsMultiPhaseAbi],
+  abis: [Erc721Abi, LazyMintAbi, IDropSinglePhase],
   features: {},
 } as const;
 
@@ -37,12 +36,12 @@ export const FEATURE_NFT_DROPABLE = {
   namespace: "nft.drop",
   docLinks: {
     sdk: "sdk.erc721dropable",
-    contracts: "Drop",
+    contracts: "LazyMint",
   },
-  abis: [Erc721Abi, DropAbi],
+  abis: [Erc721Abi, LazyMintAbi],
   features: {
     [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
-    [FEATURE_NFT_CLAIM_CONDITIONS.name]: FEATURE_NFT_CLAIM_CONDITIONS,
+    [FEATURE_NFT_CLAIMABLE.name]: FEATURE_NFT_CLAIMABLE,
   },
 } as const;
 

@@ -30,7 +30,8 @@ import {
   FullPublishMetadataSchema,
   PreDeployMetadataFetched,
   ProfileMetadata,
-  ProfileSchema,
+  ProfileMetadataInput,
+  ProfileSchemaOutput,
   PublishedContract,
   PublishedContractFetched,
   PublishedContractSchema,
@@ -215,7 +216,7 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @param profileMetadata
    */
   public async updatePublisherProfile(
-    profileMetadata: ProfileMetadata,
+    profileMetadata: ProfileMetadataInput,
   ): Promise<TransactionResult> {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
@@ -242,7 +243,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     if (!profileUri || profileUri.length === 0) {
       return {};
     }
-    return ProfileSchema.parse(await this.storage.get(profileUri));
+    return ProfileSchemaOutput.parse(await this.storage.get(profileUri));
   }
 
   /**

@@ -81,7 +81,7 @@ export class DropClaimConditions<
       cc,
       await this.getTokenDecimals(),
       this.contractWrapper.getProvider(),
-      metadata.merkle,
+      metadata.merkle || {},
       this.storage,
     );
   }
@@ -241,34 +241,15 @@ export class DropClaimConditions<
         if (this.isMultiPhaseDropContract(this.contractWrapper)) {
           activeConditionIndex =
             await this.contractWrapper.readContract.getActiveClaimConditionId();
-          if (
-            hasFunction<DropERC721 | DropERC20>(
-              "contractType",
-              this.contractWrapper,
-            )
-          ) {
-            // legacy verifyClaimerMerkleProofs function
-            [validMerkleProof] =
-              await this.contractWrapper.readContract.verifyClaimMerkleProof(
-                activeConditionIndex,
-                addressToCheck,
-                quantity,
-                proofs.proof,
-                proofs.maxClaimable,
-              );
-          } else {
-            const wrapper = this.contractWrapper
-              .readContract as BaseClaimConditionERC721;
-            [validMerkleProof] = await wrapper.verifyClaimMerkleProof(
+          // legacy verifyClaimerMerkleProofs function
+          [validMerkleProof] =
+            await this.contractWrapper.readContract.verifyClaimMerkleProof(
               activeConditionIndex,
               addressToCheck,
               quantity,
-              {
-                proof: proofs.proof,
-                maxQuantityInAllowlist: proofs.maxClaimable,
-              },
+              proofs.proof,
+              proofs.maxClaimable,
             );
-          }
         } else if (this.isSinglePhaseDropContract(this.contractWrapper)) {
           [validMerkleProof] =
             await this.contractWrapper.readContract.verifyClaimMerkleProof(
@@ -547,10 +528,7 @@ export class DropClaimConditions<
 
   private isMultiPhaseDropContract(
     contractWrapper: ContractWrapper<any>,
-  ): contractWrapper is ContractWrapper<BaseClaimConditionERC721> {
-    return hasFunction<BaseClaimConditionERC721>(
-      "getClaimConditionById",
-      contractWrapper,
-    );
+  ): contractWrapper is ContractWrapper<DropERC721 | DropERC20> {
+    return hasFunction<DropERC721>("getClaimConditionById", contractWrapper);
   }
 }

@@ -120,6 +120,7 @@
 |  [MintRequest721withQuantity](./sdk.mintrequest721withquantity.md) |  |
 |  [NATIVE\_TOKEN\_ADDRESS](./sdk.native_token_address.md) |  |
 |  [NATIVE\_TOKENS](./sdk.native_tokens.md) |  |
+|  [ProfileSchemaOutput](./sdk.profileschemaoutput.md) |  |
 |  [SDKOptionsSchema](./sdk.sdkoptionsschema.md) |  |
 |  [SUPPORTED\_CHAIN\_IDS](./sdk.supported_chain_ids.md) |  |
 
@@ -178,6 +179,7 @@
 |  [PreDeployMetadataFetched](./sdk.predeploymetadatafetched.md) |  |
 |  [Price](./sdk.price.md) | Represents a currency price already formatted. ie. "1" for 1 ether. |
 |  [ProfileMetadata](./sdk.profilemetadata.md) |  |
+|  [ProfileMetadataInput](./sdk.profilemetadatainput.md) |  |
 |  [PublishedContract](./sdk.publishedcontract.md) |  |
 |  [PublishedContractFetched](./sdk.publishedcontractfetched.md) |  |
 |  [PublishedMetadata](./sdk.publishedmetadata.md) |  |
