@@ -12,7 +12,7 @@ import { NATIVE_TOKEN_ADDRESS } from "../../constants";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { ContractWrapper } from "../classes/contract-wrapper";
 import { IERC20 } from "contracts";
-import { BigNumber, providers } from "ethers";
+import { ethers, BigNumber, providers } from "ethers";
 
 /**
  * Connect and Interact with a user wallet
@@ -130,10 +130,41 @@ export class UserWallet {
   /**
    * Sign any message with the connected wallet private key
    * @param message - the message to sign
+   * @returns the signed message
+   *
+   * @example
+   * ```javascript
+   * // This is the message to be signed
+   * const message = "Sign this message...";
+   *
+   * // Now we can sign the message with the connected wallet
+   * const signature = await sdk.wallet.sign(message);
+   * ```
    */
   async sign(message: string): Promise<string> {
     const signer = this.requireWallet();
     return await signer.signMessage(message);
+  }
+
+  /**
+   * Recover the signing address from a signed message
+   * @param message - the original message that was signed
+   * @param signature - the signature to recover the address from
+   * @returns the address that signed the message
+   *
+   * @example
+   * ```javascript
+   * const message = "Sign this message...";
+   * const signature = await sdk.wallet.sign(message);
+   *
+   * // Now we can recover the signing address
+   * const address = sdk.wallet.recoverAddress(message, signature);
+   * ```
+   */
+  public recoverAddress(message: string, signature: string): string {
+    const messageHash = ethers.utils.hashMessage(message);
+    const messageHashBytes = ethers.utils.arrayify(messageHash);
+    return ethers.utils.recoverAddress(messageHashBytes, signature);
   }
 
   /**
