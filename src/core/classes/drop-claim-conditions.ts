@@ -81,7 +81,7 @@ export class DropClaimConditions<
       cc,
       await this.getTokenDecimals(),
       this.contractWrapper.getProvider(),
-      metadata.merkle,
+      metadata.merkle || {},
       this.storage,
     );
   }

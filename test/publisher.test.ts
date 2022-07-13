@@ -6,6 +6,7 @@ import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../typechain";
 import { ethers } from "ethers";
+import { AddressZero } from "@ethersproject/constants";
 
 global.fetch = require("cross-fetch");
 
@@ -271,7 +272,7 @@ describe("Publishing", async () => {
     expect(meta.name).to.eq("Hello");
   });
 
-  it("ERC721Dropable feature detection", async () => {
+  it("ERC721Dropable multiphase feature detection", async () => {
     const pub = sdk.getPublisher();
     const ipfsUri = "ipfs://QmWaidQMSYHPzYYZCxMc2nSk2vrD28mS43Xc9k7QFyAGja/0";
     const addr = await pub.deployContract(ipfsUri, []);
@@ -279,12 +280,12 @@ describe("Publishing", async () => {
 
     invariant(c.nft, "nft must be defined");
     invariant(c.nft.drop, "drop must be defined");
-    invariant(c.nft.drop.claimConditions, "claim conditions must be defined");
+    invariant(c.nft.drop.claim, "claim conditions must be defined");
 
-    let claimConditions = await c.nft.drop.claimConditions.getAll();
+    let claimConditions = await c.nft.drop.claim.conditions.getAll();
     expect(claimConditions.length).to.equal(0);
 
-    await c.nft.drop.claimConditions.set([
+    await c.nft.drop.claim.conditions.set([
       {
         price: "0",
         startTime: new Date(0),
@@ -295,8 +296,49 @@ describe("Publishing", async () => {
       },
     ]);
 
-    claimConditions = await c.nft.drop.claimConditions.getAll();
+    claimConditions = await c.nft.drop.claim.conditions.getAll();
     expect(claimConditions.length).to.equal(2);
+  });
+
+  it("ERC721Drop base feature detection", async () => {
+    const pub = sdk.getPublisher();
+    const ipfsUri = "ipfs://QmfQwWiMbKaSmng5GN1P5bgCfdEy4Uyg7BznwbaP1bvj7f/0";
+    const addr = await pub.deployContract(ipfsUri, []);
+    const c = await sdk.getContract(addr);
+
+    invariant(c.nft, "nft must be defined");
+    invariant(c.nft.query, "query must be defined");
+    invariant(c.nft.drop, "drop must be defined");
+    invariant(c.nft.drop.claim, "claim conditions must be defined");
+
+    const nftsBefore = await c.nft.query.all();
+    expect(nftsBefore.length).to.equal(0);
+
+    const tx = await c.nft.drop.lazyMint([
+      {
+        name: "cool nft 1",
+      },
+      {
+        name: "cool nft 2",
+      },
+    ]);
+    expect(tx.length).to.eq(2);
+
+    await c.nft.drop.claim.conditions.set([
+      {
+        price: "0",
+        maxQuantity: 2,
+        startTime: new Date(0),
+      },
+    ]);
+    await c.nft.drop.claim.to(adminWallet.address, 1);
+
+    const nftsAfter = await c.nft.query.all();
+    expect(nftsAfter.length).to.equal(2);
+    expect(nftsAfter[0].metadata.name).to.equal("cool nft 1");
+    expect(nftsAfter[0].owner).to.equal(adminWallet.address);
+    expect(nftsAfter[1].metadata.name).to.equal("cool nft 2");
+    expect(nftsAfter[1].owner).to.equal(AddressZero);
   });
 
   it("Constructor params with tuples", async () => {
