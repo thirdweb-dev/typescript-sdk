@@ -34,6 +34,7 @@
 |  [Erc20SignatureMintable](./sdk.erc20signaturemintable.md) | Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 NFT functions |
 |  [Erc721BatchMintable](./sdk.erc721batchmintable.md) | Mint Many ERC721 NFTs at once |
+|  [Erc721Claimable](./sdk.erc721claimable.md) | Lazily mint and claim ERC721 NFTs |
 |  [Erc721Dropable](./sdk.erc721dropable.md) | Lazily mint and claim ERC721 NFTs |
 |  [Erc721Enumerable](./sdk.erc721enumerable.md) | List owned ERC721 NFTs |
 |  [Erc721Mintable](./sdk.erc721mintable.md) | Mint ERC721 NFTs |

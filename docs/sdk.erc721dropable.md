@@ -35,7 +35,7 @@ await contract.drop.claim(quantity);
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [claim](./sdk.erc721dropable.claim.md) |  | Erc721Claimable \| undefined | Claim tokens and configure claim conditions |
+|  [claim](./sdk.erc721dropable.claim.md) |  | [Erc721Claimable](./sdk.erc721claimable.md) \| undefined | Claim tokens and configure claim conditions |
 |  [featureName](./sdk.erc721dropable.featurename.md) |  | "ERC721Dropable" |  |
 |  [revealer](./sdk.erc721dropable.revealer.md) |  | [DelayedReveal](./sdk.delayedreveal.md)<!-- -->&lt;BaseDelayedRevealERC721&gt; \| undefined |  |
 
