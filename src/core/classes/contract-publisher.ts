@@ -19,7 +19,6 @@ import {
   fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
   fetchSourceFilesFromMetadata,
-  resolveContractUriFromAddress,
 } from "../../common/feature-detection";
 import {
   AbiFunction,
@@ -41,11 +40,7 @@ import {
   ContractPublisher as OnChainContractPublisher,
   IContractPublisher,
 } from "contracts";
-import {
-  ChainOrRpc,
-  getContractPublisherAddress,
-  getProviderForNetwork,
-} from "../../constants";
+import { getContractPublisherAddress } from "../../constants";
 import ContractPublisherAbi from "../../../abis/ContractPublisher.json";
 import { ContractPublishedEvent } from "contracts/ContractPublisher";
 import { isIncrementalVersion } from "../../common/version-checker";
