@@ -1,7 +1,12 @@
 import { signers } from "./before-setup";
 import { readFileSync } from "fs";
 import { expect } from "chai";
-import { IpfsStorage, isFeatureEnabled, ThirdwebSDK } from "../src";
+import {
+  IpfsStorage,
+  isFeatureEnabled,
+  resolveContractUriFromAddress,
+  ThirdwebSDK,
+} from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../typechain";
@@ -107,9 +112,15 @@ describe("Publishing", async () => {
       [],
     );
     expect(deployedAddr.length).to.be.gt(0);
-    const publishMeta = await publisher.resolvePublishMetadataFromAddress(
+    const compilerMetaUri = await resolveContractUriFromAddress(
       deployedAddr,
+      sdk.getProvider(),
     );
+    invariant(compilerMetaUri, "compilerMetaUri not found");
+    const publishMeta =
+      await publisher.resolvePublishMetadataFromCompilerMetadata(
+        compilerMetaUri,
+      );
     expect(publishMeta[0].publisher).to.eq(adminWallet.address);
     expect(publishMeta[0].name).to.eq("Greeter");
     expect(publishMeta[0].version).to.eq("0.0.1");
