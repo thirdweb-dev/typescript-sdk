@@ -19,7 +19,6 @@ import {
   fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
   fetchSourceFilesFromMetadata,
-  resolveContractUriFromAddress,
 } from "../../common/feature-detection";
 import {
   AbiFunction,
@@ -176,24 +175,21 @@ export class ContractPublisher extends RPCConnectionHandler {
 
   /**
    * @internal
-   * @param address
+   * // TODO expose a resolvePublishMetadata(contractAddress, chainId) that handles the dual chain case
+   * // TODO will be easy to do with the multichain pattern of 3.0
+   * @param compilerMetadataUri
    */
-  public async resolvePublishMetadataFromAddress(
-    address: string,
+  public async resolvePublishMetadataFromCompilerMetadata(
+    compilerMetadataUri: string,
   ): Promise<FullPublishMetadata[]> {
-    const compilerMetadataUri = await resolveContractUriFromAddress(
-      address,
-      this.getProvider(),
-    );
-    if (!compilerMetadataUri) {
-      throw Error("Could not resolve compiler metadata URI from bytecode");
-    }
     const publishedMetadataUri =
       await this.publisher.readContract.getPublishedUriFromCompilerUri(
         compilerMetadataUri,
       );
     if (publishedMetadataUri.length === 0) {
-      throw Error(`Could not resolve published metadata URI from ${address}`);
+      throw Error(
+        `Could not resolve published metadata URI from ${compilerMetadataUri}`,
+      );
     }
     return await Promise.all(
       publishedMetadataUri.map((uri) => this.fetchPublishedMetadata(uri)),

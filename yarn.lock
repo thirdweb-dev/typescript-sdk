@@ -815,10 +815,10 @@
     "@swc/core-win32-ia32-msvc" "1.2.196"
     "@swc/core-win32-x64-msvc" "1.2.196"
 
-"@thirdweb-dev/contracts@^3.0.0-10":
-  version "3.0.0-10"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.0.0-10.tgz#452522e80961c86372a172a9871a39e44d611964"
-  integrity sha512-YpBHS1NVvm1mVhNohqZENf4LTdfdtCNPbZYbyK2dA6hzRryxKvkSl1MPZGrT/XFjr0yd2xCOMZr0yaWqpXB0LQ==
+"@thirdweb-dev/contracts@^3.0.0":
+  version "3.0.0"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.0.0.tgz#0849f9bc961d654e07bca78c85a4ce1e5294e039"
+  integrity sha512-9LCjLLE+JXuwMfxis77GtHawMOaUhUutTm/h2y7F7K95GRMVydCGHQ4r7hL3cXnYQCLxLdTzUtwBqjqWH2nOlw==
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.8"
