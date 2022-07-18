@@ -42,7 +42,9 @@ const pack = {
   erc20Rewards: [
     {
       assetContract: "0x...",
+      quantityPerReward: 5,
       quantity: 100,
+      totalRewards: 20,
     }
   ],
   // ERC721 rewards to be included in the pack
@@ -57,7 +59,8 @@ const pack = {
     {
       assetContract: "0x...",
       tokenId: 0,
-      quantity: 100,
+      quantityPerReward: 1,
+      totalRewards: 100,
     }
   ],
   openStartTime: new Date(), // the date that packs can start to be opened, defaults to now

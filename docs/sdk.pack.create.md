@@ -38,3 +38,46 @@ Promise&lt;[TransactionResultWithId](./sdk.transactionresultwithid.md)<!-- -->&l
 
 See [Pack.createTo()](./sdk.pack.createto.md)
 
+## Example
+
+
+```javascript
+const pack = {
+  // The metadata for the pack NFT itself
+  packMetadata: {
+    name: "My Pack",
+    description: "This is a new pack",
+    image: "ipfs://...",
+  },
+  // ERC20 rewards to be included in the pack
+  erc20Rewards: [
+    {
+      assetContract: "0x...",
+      quantityPerReward: 5,
+      quantity: 100,
+      totalRewards: 20,
+    }
+  ],
+  // ERC721 rewards to be included in the pack
+  erc721Rewards: [
+    {
+      assetContract: "0x...",
+      tokenId: 0,
+    }
+  ],
+  // ERC1155 rewards to be included in the pack
+  erc1155Rewards: [
+    {
+      assetContract: "0x...",
+      tokenId: 0,
+      quantityPerReward: 1,
+      totalRewards: 100,
+    }
+  ],
+  openStartTime: new Date(), // the date that packs can start to be opened, defaults to now
+  rewardsPerPack: 1, // the number of rewards in each pack, defaults to 1
+}
+
+const tx = await contract.create(pack);
+```
+
