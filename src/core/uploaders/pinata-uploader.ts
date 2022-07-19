@@ -77,7 +77,7 @@ export class PinataUploader implements IStorageUpload {
       }
 
       return {
-        cid: body.IpfsHash,
+        cid,
         fileNames,
       };
     } else {
@@ -97,7 +97,7 @@ export class PinataUploader implements IStorageUpload {
           }
 
           resolve({
-            cid: JSON.parse(xhr.responseText).IpfsHash,
+            cid,
             fileNames,
           });
         };
