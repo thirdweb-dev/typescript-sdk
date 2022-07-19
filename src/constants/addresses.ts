@@ -85,7 +85,7 @@ export const CONTRACT_ADDRESSES: Record<
   },
   [ChainId.ArbitrumTestnet]: {
     biconomyForwarder: constants.AddressZero,
-    twFactory: "0xb0435b47ad26115A39c59735b814f3769F07C2c1",
+    twFactory: "0xd24b3de085CFd8c54b94feAD08a7962D343E6DE0",
     twRegistry: "0xcF4c511551aE4dab1F997866FC3900cd2aaeC40D",
     twBYOCRegistry: constants.AddressZero,
   },
