@@ -70,8 +70,14 @@ export class PinataUploader implements IStorageUpload {
       if (!res.ok) {
         throw new UploadError("Failed to upload files to IPFS");
       }
+
+      const cid = body.IpfsHash;
+      if (!cid) {
+        throw new UploadError("Failed to upload files to IPFS");
+      }
+
       return {
-        cid: body.IpfsHash,
+        cid,
         fileNames,
       };
     } else {
@@ -81,8 +87,17 @@ export class PinataUploader implements IStorageUpload {
         xhr.setRequestHeader("Authorization", `Bearer ${token}`);
 
         xhr.onloadend = () => {
+          if (xhr.status !== 200) {
+            throw new UploadError("Failed to upload files to IPFS");
+          }
+
+          const cid = JSON.parse(xhr.responseText).IpfsHash;
+          if (!cid) {
+            throw new UploadError("Failed to upload files to IPFS");
+          }
+
           resolve({
-            cid: JSON.parse(xhr.responseText).IpfsHash,
+            cid,
             fileNames,
           });
         };
