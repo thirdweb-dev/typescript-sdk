@@ -35,6 +35,7 @@ export type ChainOrRpc =
   // common alias for `mainnet`
   | "ethereum"
   | "fantom"
+  | "fantom-testnet"
   | "avalanche"
   | "avalanche-testnet"
   | "optimism"
@@ -86,6 +87,8 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
       return `https://arb-rinkeby.g.alchemy.com/v2/${DEFAULT_API_KEY}`;
     case "fantom":
       return "https://rpc.ftm.tools";
+    case "fantom-testnet":
+      return "https://rpc.testnet.fantom.network/";
     case "avalanche":
       return "https://api.avax.network/ext/bc/C/rpc";
     case "avalanche-testnet":
