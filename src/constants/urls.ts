@@ -9,7 +9,7 @@ export const DEFAULT_IPFS_GATEWAY = "https://gateway.ipfscdn.io/ipfs/";
  */
 export const PUBLIC_GATEWAYS = [
   "https://gateway.ipfscdn.io/ipfs/",
-  "https://gateway2.ipfscdn.io/ipfs/",
+  "https://cloudflare-ipfs.com/ipfs/",
 ];
 
 /**
