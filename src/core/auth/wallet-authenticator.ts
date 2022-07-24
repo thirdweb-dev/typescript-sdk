@@ -84,10 +84,10 @@ export class WalletAuthenticator extends RPCConnectionHandler {
       parsedOptions?.expirationTime || new Date(Date.now() + 1000 * 60 * 5);
     const payloadData = LoginPayloadDataSchema.parse({
       domain,
-      expirationTime,
       address: signerAddress,
       nonce: parsedOptions?.nonce,
-      chainId: parsedOptions?.chainId,
+      expiration_time: expirationTime,
+      chain_id: parsedOptions?.chainId,
     });
 
     const message = this.generateMessage(payloadData);
@@ -133,17 +133,17 @@ export class WalletAuthenticator extends RPCConnectionHandler {
 
     // Check that the payload hasn't expired
     const currentTime = new Date();
-    if (currentTime > new Date(payload.payload.expirationTime)) {
+    if (currentTime > new Date(payload.payload.expiration_time)) {
       throw new Error(`Login request has expired`);
     }
 
     // If chain ID is specified, check that it matches the chain ID of the signature
     if (
       parsedOptions?.chainId !== undefined &&
-      parsedOptions.chainId !== payload.payload.chainId
+      parsedOptions.chainId !== payload.payload.chain_id
     ) {
       throw new Error(
-        `Chain ID '${parsedOptions.chainId}' does not match payload chain ID '${payload.payload.chainId}'`,
+        `Chain ID '${parsedOptions.chainId}' does not match payload chain ID '${payload.payload.chain_id}'`,
       );
     }
 
@@ -318,12 +318,12 @@ export class WalletAuthenticator extends RPCConnectionHandler {
     message += `Make sure that the requesting domain above matches the URL of the current website.\n\n`;
 
     // Add data fields in compliance with the EIP-4361 standard
-    if (payload.chainId) {
-      message += `Chain ID: ${payload.chainId}\n`;
+    if (payload.chain_id) {
+      message += `Chain ID: ${payload.chain_id}\n`;
     }
 
     message += `Nonce: ${payload.nonce}\n`;
-    message += `Expiration Time: ${payload.expirationTime}\n`;
+    message += `Expiration Time: ${payload.expiration_time}\n`;
 
     return message;
   }

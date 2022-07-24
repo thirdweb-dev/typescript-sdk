@@ -41,11 +41,11 @@ export const LoginPayloadDataSchema = z.object({
   /**
    * The time after which the login payload will be invalid, defaults to 5 minutes from now
    */
-  expirationTime: z.date().transform((d) => d.toISOString()),
+  expiration_time: z.date().transform((d) => d.toISOString()),
   /**
    * The chain ID that the login request was intended for, defaults to none
    */
-  chainId: z.number().optional(),
+  chain_id: z.number().optional(),
 });
 
 /**
