@@ -39,6 +39,8 @@ export type ChainOrRpc =
   | "fantom-testnet"
   | "avalanche"
   | "avalanche-testnet"
+  // actual name
+  | "avalanche-fuji"
   | "optimism"
   | "optimism-testnet"
   | "arbitrum"
@@ -93,6 +95,7 @@ export function getProviderForNetwork(network: ChainOrRpc | SignerOrProvider) {
     case "avalanche":
       return "https://api.avax.network/ext/bc/C/rpc";
     case "avalanche-testnet":
+    case "avalanche-fuji":
       return "https://api.avax-test.network/ext/bc/C/rpc";
     default:
       if (network.startsWith("http") || network.startsWith("ws")) {
