@@ -245,22 +245,25 @@ export class Erc721<
    * @internal
    */
   public async nextTokenIdToMint(): Promise<BigNumber> {
+    if (hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)) {
+      return await this.contractWrapper.readContract.nextTokenIdToMint();
+    } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
+      return await this.contractWrapper.readContract.totalSupply();
+    }
     // this case catches custom contracts that extend BatchMintMetadata but may not implement the nextTokenIdToMint function
-    if (
+    else if (
+      detectContractFeature<BatchMintMetadata>(
+        this.contractWrapper,
+        "ERC721BatchMintable",
+      ) &&
       hasFunction<BatchMintMetadata>("getBaseURICount", this.contractWrapper) &&
       hasFunction<BatchMintMetadata>("getBatchIdAtIndex", this.contractWrapper)
     ) {
       const baseUriCount =
         await this.contractWrapper.readContract.getBaseURICount();
       return await this.contractWrapper.readContract.getBatchIdAtIndex(
-        baseUriCount.sub(1),
+        baseUriCount,
       );
-    } else if (
-      hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)
-    ) {
-      return await this.contractWrapper.readContract.nextTokenIdToMint();
-    } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
-      return await this.contractWrapper.readContract.totalSupply();
     } else {
       throw new Error(
         "Contract requires either `nextTokenIdToMint`, `totalSupply` or `getBaseURICount` and `getBatchIdAtIndex` functions to be available to determine the next token ID to mint",
