@@ -319,6 +319,7 @@ export class ContractWrapper<
     const func: ethers.ContractFunction = (this.writeContract.functions as any)[
       fn
     ];
+
     if (!func) {
       throw new Error(`invalid function: "${fn.toString()}"`);
     }
