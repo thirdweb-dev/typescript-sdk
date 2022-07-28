@@ -13,10 +13,12 @@ import {
 } from "../../common";
 import {
   BatchMintMetadata,
+  Drop,
   DropERC721,
   IERC721Supply,
   IMintableERC721,
   ISignatureMintERC721,
+  LazyMint,
   Multiwrap,
   SignatureDrop,
   TokenERC721,
@@ -245,25 +247,29 @@ export class Erc721<
    * @internal
    */
   public async nextTokenIdToMint(): Promise<BigNumber> {
-    if (hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)) {
-      return await this.contractWrapper.readContract.nextTokenIdToMint();
-    } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
-      return await this.contractWrapper.readContract.totalSupply();
-    }
     // this case catches custom contracts that extend BatchMintMetadata but may not implement the nextTokenIdToMint function
-    else if (
-      detectContractFeature<BatchMintMetadata>(
-        this.contractWrapper,
-        "ERC721BatchMintable",
-      ) &&
+    if (
+      detectContractFeature<LazyMint>(this.contractWrapper, "ERC721Dropable") &&
       hasFunction<BatchMintMetadata>("getBaseURICount", this.contractWrapper) &&
-      hasFunction<BatchMintMetadata>("getBatchIdAtIndex", this.contractWrapper)
+      hasFunction<BatchMintMetadata>(
+        "getBatchIdAtIndex",
+        this.contractWrapper,
+      ) &&
+      // makes sure it's not a pre-built contract (which would have this function)
+      !hasFunction<Drop>("nextTokenIdToClaim", this.contractWrapper)
     ) {
       const baseUriCount =
         await this.contractWrapper.readContract.getBaseURICount();
+      const idx = baseUriCount.sub(1);
       return await this.contractWrapper.readContract.getBatchIdAtIndex(
-        baseUriCount,
+        idx.isNegative() ? 0 : idx,
       );
+    } else if (hasFunction<TokenERC721>("totalSupply", this.contractWrapper)) {
+      return await this.contractWrapper.readContract.totalSupply();
+    } else if (
+      hasFunction<TokenERC721>("nextTokenIdToMint", this.contractWrapper)
+    ) {
+      return await this.contractWrapper.readContract.nextTokenIdToMint();
     } else {
       throw new Error(
         "Contract requires either `nextTokenIdToMint`, `totalSupply` or `getBaseURICount` and `getBatchIdAtIndex` functions to be available to determine the next token ID to mint",
