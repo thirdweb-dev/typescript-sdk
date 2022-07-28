@@ -84,6 +84,13 @@ export const RawDateSchema = z.date().transform((i) => {
   return BigNumber.from(Math.floor(i.getTime() / 1000));
 });
 
+export const AirdropQuantitySchema = z
+  .union([
+    z.string().regex(/^([0-9]+\.?[0-9]*|\.[0-9]+)$/, "Invalid quantity"),
+    z.number().min(0, "Quantity cannot be negative"),
+  ])
+  .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
+
 /**
  * Default to now
  */
