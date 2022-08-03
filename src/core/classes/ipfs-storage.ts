@@ -322,8 +322,9 @@ export class IpfsStorage implements IStorage {
       method: "POST",
       headers: {
         Authorization: `Bearer ${token}`,
+        ...formData.getHeaders(),
       },
-      body: formData as any,
+      body: formData.getBuffer(),
     });
     if (!res.ok) {
       throw new Error(`Failed to upload to IPFS [status code = ${res.status}]`);

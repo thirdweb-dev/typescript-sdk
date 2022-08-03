@@ -63,8 +63,9 @@ export class PinataUploader implements IStorageUpload {
         method: "POST",
         headers: {
           Authorization: `Bearer ${token}`,
+          ...data.getHeaders(),
         },
-        body: data as any,
+        body: data.getBuffer(),
       });
       const body = await res.json();
       if (!res.ok) {
