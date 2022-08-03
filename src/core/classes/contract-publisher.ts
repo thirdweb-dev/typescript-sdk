@@ -192,7 +192,9 @@ export class ContractPublisher extends RPCConnectionHandler {
       );
     }
     return await Promise.all(
-      publishedMetadataUri.map((uri) => this.fetchPublishedMetadata(uri)),
+      publishedMetadataUri
+        .filter((uri) => uri.length > 0)
+        .map((uri) => this.fetchPublishedMetadata(uri)),
     );
   }
 
