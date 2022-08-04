@@ -537,7 +537,7 @@ export enum ChainId {
 // Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "fantom-testnet" | "avalanche" | "avalanche-testnet" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | (string & {});
+export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "fantom-testnet" | "avalanche" | "avalanche-testnet" | "avalanche-fuji" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | (string & {});
 
 // Warning: (ae-internal-missing-underscore) The name "CidWithFileName" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -2650,7 +2650,7 @@ export class Erc721Supply implements DetectableFeature {
 // @public
 export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "SignatureMintERC721" needs to be exported by the entry point index.d.ts
-    constructor(contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>, storage: IStorage, roles?: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>);
+    constructor(contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>, storage: IStorage);
     // (undocumented)
     featureName: "ERC721SignatureMint";
     generate(mintRequest: PayloadToSign721withQuantity): Promise<SignedPayload721WithQuantitySignature>;
