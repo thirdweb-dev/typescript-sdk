@@ -2955,6 +2955,7 @@ export class GasCostEstimator<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>);
     currentGasPriceInGwei(): Promise<string>;
     gasCostOf(fn: keyof TContract["functions"] | (string & {}), args: Parameters<TContract["functions"][typeof fn]> | any[]): Promise<string>;
+    gasLimitOf(fn: keyof TContract["functions"] | (string & {}), args: Parameters<TContract["functions"][typeof fn]> | any[]): Promise<BigNumber>;
 }
 
 // @public

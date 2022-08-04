@@ -659,6 +659,15 @@
           "javascript": "const costOfClaim = await nftDrop?.estimator.gasCostOf(\"claim\", [\n  \"0x...\", // receiver\n  1, // quantity\n  \"0x...\", // currency\n  1, // price per token\n  [], // proofs\n  1, // proof max quantity per transaction\n]);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.GasCostEstimator.gasCostOf"
+      },
+      {
+        "name": "gasLimitOf",
+        "summary": "Estimates the gas limit of a transaction Pass in the same parameters as the contract's function.\n\n",
+        "remarks": "\n\nEstimates the gas limit of a transaction\n\n",
+        "examples": {
+          "javascript": "const gasLimitOfClaim = await nftDrop?.estimator.gasLimitOf(\"claim\", [\n  \"0x...\", // receiver\n  1, // quantity\n  \"0x...\", // currency\n  1, // price per token\n  [], // proofs\n  1, // proof max quantity per transaction\n]);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.GasCostEstimator.gasLimitOf"
       }
     ],
     "properties": [],

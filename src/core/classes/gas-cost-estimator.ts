@@ -1,5 +1,5 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { BaseContract, ethers } from "ethers";
+import { BaseContract, BigNumber, ethers } from "ethers";
 
 /**
  * Estimates the gas cost of Contract calls
@@ -37,6 +37,31 @@ export class GasCostEstimator<TContract extends BaseContract> {
     const price = await this.contractWrapper.getPreferredGasPrice();
     const gasUnits = await this.contractWrapper.estimateGas(fn, args);
     return ethers.utils.formatEther(gasUnits.mul(price));
+  }
+
+  /**
+   * Estimates the gas limit of a transaction
+   * Pass in the same parameters as the contract's function.
+   * @remarks Estimates the gas limit of a transaction
+   * @example
+   * ```javascript
+   * const gasLimitOfClaim = await nftDrop?.estimator.gasLimitOf("claim", [
+   *   "0x...", // receiver
+   *   1, // quantity
+   *   "0x...", // currency
+   *   1, // price per token
+   *   [], // proofs
+   *   1, // proof max quantity per transaction
+   * ]);
+   * ```
+   * @returns the estimated gas limit in GWEI
+   * @public
+   */
+  public async gasLimitOf(
+    fn: keyof TContract["functions"] | (string & {}),
+    args: Parameters<TContract["functions"][typeof fn]> | any[],
+  ): Promise<BigNumber> {
+    return this.contractWrapper.estimateGas(fn, args);
   }
 
   /**
