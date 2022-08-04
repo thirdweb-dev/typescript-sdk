@@ -2650,7 +2650,7 @@ export class Erc721Supply implements DetectableFeature {
 // @public
 export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "SignatureMintERC721" needs to be exported by the entry point index.d.ts
-    constructor(contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>, storage: IStorage, roles?: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>);
+    constructor(contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>, storage: IStorage);
     // (undocumented)
     featureName: "ERC721SignatureMint";
     generate(mintRequest: PayloadToSign721withQuantity): Promise<SignedPayload721WithQuantitySignature>;
