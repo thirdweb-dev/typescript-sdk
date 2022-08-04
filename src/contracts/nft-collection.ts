@@ -133,7 +133,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
     this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
       this.storage,
-      this.roles,
     );
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
