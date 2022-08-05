@@ -38,6 +38,7 @@ import {
 } from "contracts/DropERC721";
 import { UploadProgressEvent } from "../types/events";
 import { uploadOrExtractURIs } from "../common/nft";
+import { TransactionTask } from "../core/classes/TransactionTask";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -474,22 +475,12 @@ export class NFTDrop extends Erc721<DropERC721> {
     quantity: BigNumberish,
     checkERC20Allowance = true,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const claimVerification = await this.prepareClaim(
+    const task = await this.getClaimTransaction(
+      destinationAddress,
       quantity,
       checkERC20Allowance,
     );
-    const receipt = await this.contractWrapper.sendTransaction(
-      "claim",
-      [
-        destinationAddress,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
-      ],
-      claimVerification.overrides,
-    );
+    const { receipt } = await task.execute();
     const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
       "TokensClaimed",
       receipt?.logs,
@@ -505,6 +496,27 @@ export class NFTDrop extends Erc721<DropERC721> {
       });
     }
     return results;
+  }
+
+  public async getClaimTransaction(
+    destinationAddress: string,
+    quantity: BigNumberish,
+    checkERC20Allowance = true, // TODO split up allowance checks
+  ) {
+    const claimVerification = await this.prepareClaim(
+      quantity,
+      checkERC20Allowance,
+    );
+    return TransactionTask.make(this.contractWrapper, "claim")
+      .withArgs(
+        destinationAddress,
+        quantity,
+        claimVerification.currencyAddress,
+        claimVerification.price,
+        claimVerification.proofs,
+        claimVerification.maxQuantityPerTransaction,
+      )
+      .withOverrides(claimVerification.overrides);
   }
 
   /**

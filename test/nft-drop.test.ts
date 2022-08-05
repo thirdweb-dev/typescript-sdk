@@ -50,6 +50,21 @@ describe("NFT Drop Contract", async () => {
     assert.equal(nft.metadata.name, "Test1");
   });
 
+  it("should get and execute transaction task", async () => {
+    await dropContract.createBatch([
+      {
+        name: "Test1",
+      },
+    ]);
+    await dropContract.claimConditions.set([{}]);
+    const task = await dropContract.getClaimTransaction(adminWallet.address, 1);
+    expect((await task.estimateGasLimit()).toNumber()).gt(0);
+    const tx = await task.submit();
+    await tx.wait();
+    const nft = await dropContract.get(0);
+    expect(nft.owner).to.eq(adminWallet.address);
+  });
+
   it("should allow a snapshot to be set", async () => {
     await dropContract.claimConditions.set([
       {
