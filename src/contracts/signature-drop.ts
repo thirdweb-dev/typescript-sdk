@@ -480,8 +480,10 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
       quantity,
       checkERC20Allowance,
     );
-    return TransactionTask.builder(this.contractWrapper, "claim")
-      .withArgs(
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "claim",
+      args: [
         destinationAddress,
         quantity,
         claimVerification.currencyAddress,
@@ -491,9 +493,9 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
           maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
         },
         ethers.utils.toUtf8Bytes(""),
-      )
-      .withOverrides(claimVerification.overrides)
-      .build();
+      ],
+      overrides: claimVerification.overrides,
+    });
   }
 
   /**

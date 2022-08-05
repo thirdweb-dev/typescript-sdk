@@ -464,17 +464,19 @@ export class NFTDrop extends Erc721<DropERC721> {
       quantity,
       checkERC20Allowance,
     );
-    return TransactionTask.builder(this.contractWrapper, "claim")
-      .withArgs(
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "claim",
+      args: [
         destinationAddress,
         quantity,
         claimVerification.currencyAddress,
         claimVerification.price,
         claimVerification.proofs,
         claimVerification.maxQuantityPerTransaction,
-      )
-      .withOverrides(claimVerification.overrides)
-      .build();
+      ],
+      overrides: claimVerification.overrides,
+    });
   }
 
   /**

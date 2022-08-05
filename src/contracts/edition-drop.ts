@@ -319,8 +319,10 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       quantity,
       checkERC20Allowance,
     );
-    return TransactionTask.builder(this.contractWrapper, "claim")
-      .withArgs(
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "claim",
+      args: [
         destinationAddress,
         tokenId,
         quantity,
@@ -328,9 +330,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
         claimVerification.price,
         claimVerification.proofs,
         claimVerification.maxQuantityPerTransaction,
-      )
-      .withOverrides(claimVerification.overrides)
-      .build();
+      ],
+      overrides: claimVerification.overrides,
+    });
   }
 
   /**

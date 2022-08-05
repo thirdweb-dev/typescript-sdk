@@ -4,57 +4,50 @@ import { ContractEncoder } from "./contract-encoder";
 import { GasCostEstimator } from "./gas-cost-estimator";
 import { TransactionResult } from "../types";
 
-class TransactionTaskBuilder {
-  public contractWrapper: ContractWrapper<any>;
-  public functionName: string;
-  public args: any[] = [];
-  public overrides: CallOverrides | undefined;
-
-  constructor(contractWrapper: ContractWrapper<any>, functionName: string) {
-    this.contractWrapper = contractWrapper;
-    this.functionName = functionName;
-  }
-
-  public withArgs(...args: any[]): TransactionTaskBuilder {
-    this.args = args;
-    return this;
-  }
-
-  public withOverrides(overrides: CallOverrides): TransactionTaskBuilder {
-    this.overrides = overrides;
-    return this;
-  }
-
-  public build(): TransactionTask {
-    return new TransactionTask(this);
-  }
-
-  // TODO gasless
+/**
+ * Arguments for creating a transaction task.
+ * @internal
+ */
+interface TransactionTaskArgs {
+  // required
+  contractWrapper: ContractWrapper<any>;
+  functionName: string;
+  // options
+  args?: any[];
+  overrides?: CallOverrides;
 }
 
+/**
+ * @internal
+ * Represents a transaction to be executed and can be customized.
+ */
 export class TransactionTask {
-  static builder(contractWrapper: ContractWrapper<any>, functionName: string) {
-    return new TransactionTaskBuilder(contractWrapper, functionName);
+  static make(taskArgs: TransactionTaskArgs) {
+    return new TransactionTask(taskArgs);
   }
 
   private contractWrapper: ContractWrapper<any>;
   private functionName: string;
-  private args: any[] = [];
+  private args: any[];
   private overrides: CallOverrides | undefined;
   private encoder: ContractEncoder<any>;
   private estimator: GasCostEstimator<any>;
 
-  constructor(builder: TransactionTaskBuilder) {
-    this.contractWrapper = builder.contractWrapper;
-    this.functionName = builder.functionName;
-    this.args = builder.args;
-    this.overrides = builder.overrides;
+  private constructor(taskArgs: TransactionTaskArgs) {
+    this.contractWrapper = taskArgs.contractWrapper;
+    this.functionName = taskArgs.functionName;
+    this.args = taskArgs.args || [];
+    this.overrides = taskArgs.overrides;
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
   }
 
   // ////////////// Overrides ////////////////
 
+  /**
+   * Override the gas limit for this transaction.
+   * @param gasLimit
+   */
   public overrideGasLimit(gasLimit: BigNumber): TransactionTask {
     this.overrides = {
       ...this.overrides,
@@ -63,6 +56,10 @@ export class TransactionTask {
     return this;
   }
 
+  /**
+   * Override the gas price for this transaction.
+   * @param gasPrice
+   */
   public overrideGasPrice(gasPrice: BigNumber): TransactionTask {
     this.overrides = {
       ...this.overrides,
@@ -71,6 +68,10 @@ export class TransactionTask {
     return this;
   }
 
+  /**
+   * Override the nonce for this transaction.
+   * @param nonce
+   */
   public overrideNonce(nonce: BigNumber): TransactionTask {
     this.overrides = {
       ...this.overrides,
@@ -79,6 +80,10 @@ export class TransactionTask {
     return this;
   }
 
+  /**
+   * Override the value sent with this transaction.
+   * @param value
+   */
   public overrideValue(value: BigNumber): TransactionTask {
     this.overrides = {
       ...this.overrides,
@@ -89,20 +94,35 @@ export class TransactionTask {
 
   // ////////////// Estimates ////////////////
 
+  /**
+   * Returns the gas limit that this transaction would consume if executed.
+   * @returns the gas limit in gas units
+   */
   public async estimateGasLimit(): Promise<BigNumber> {
     return await this.estimator.gasLimitOf(this.functionName, this.args);
   }
 
+  /**
+   * Returns the total gas cost of this transaction if executed.
+   * @returns the gas cost in ether
+   */
   public async estimateGasCostInEther(): Promise<string> {
     return await this.estimator.gasCostOf(this.functionName, this.args);
   }
 
   // ////////////// Actions ////////////////
 
-  public async encode(): Promise<string> {
+  /**
+   * Returns the encoded function data of this transaction if executed.
+   */
+  public async encodeFunctionData(): Promise<string> {
     return this.encoder.encode(this.functionName, this.args);
   }
 
+  /**
+   * Submits this transaction to the network. Does not wait for the transaction to be mined.
+   * To wait for the transaction to be mined, you can call `.wait()` on the result of this function.
+   */
   public async submit(): Promise<ContractTransaction> {
     return await this.contractWrapper.sendTransactionByFunction(
       this.functionName,
@@ -111,6 +131,9 @@ export class TransactionTask {
     );
   }
 
+  /**
+   * Submits this transaction to the network and waits for it to be mined.
+   */
   public async execute(): Promise<TransactionResult> {
     const receipt = await this.contractWrapper.sendTransaction(
       this.functionName,
