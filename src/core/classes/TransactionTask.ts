@@ -4,9 +4,37 @@ import { ContractEncoder } from "./contract-encoder";
 import { GasCostEstimator } from "./gas-cost-estimator";
 import { TransactionResult } from "../types";
 
+class TransactionTaskBuilder {
+  public contractWrapper: ContractWrapper<any>;
+  public functionName: string;
+  public args: any[] = [];
+  public overrides: CallOverrides | undefined;
+
+  constructor(contractWrapper: ContractWrapper<any>, functionName: string) {
+    this.contractWrapper = contractWrapper;
+    this.functionName = functionName;
+  }
+
+  public withArgs(...args: any[]): TransactionTaskBuilder {
+    this.args = args;
+    return this;
+  }
+
+  public withOverrides(overrides: CallOverrides): TransactionTaskBuilder {
+    this.overrides = overrides;
+    return this;
+  }
+
+  public build(): TransactionTask {
+    return new TransactionTask(this);
+  }
+
+  // TODO gasless
+}
+
 export class TransactionTask {
-  static make(contractWrapper: ContractWrapper<any>, functionName: string) {
-    return new TransactionTask(contractWrapper, functionName);
+  static builder(contractWrapper: ContractWrapper<any>, functionName: string) {
+    return new TransactionTaskBuilder(contractWrapper, functionName);
   }
 
   private contractWrapper: ContractWrapper<any>;
@@ -15,57 +43,70 @@ export class TransactionTask {
   private overrides: CallOverrides | undefined;
   private encoder: ContractEncoder<any>;
   private estimator: GasCostEstimator<any>;
-  private hasComputedArgs = false;
 
-  private preProcessor: (() => Promise<any[]>) | undefined;
-
-  private constructor(
-    contractWrapper: ContractWrapper<any>,
-    functionName: string,
-  ) {
-    this.contractWrapper = contractWrapper;
-    this.functionName = functionName;
+  constructor(builder: TransactionTaskBuilder) {
+    this.contractWrapper = builder.contractWrapper;
+    this.functionName = builder.functionName;
+    this.args = builder.args;
+    this.overrides = builder.overrides;
     this.encoder = new ContractEncoder(this.contractWrapper);
     this.estimator = new GasCostEstimator(this.contractWrapper);
   }
 
-  public withArgs(...args: any[]): TransactionTask {
-    this.args = args;
+  // ////////////// Overrides ////////////////
+
+  public overrideGasLimit(gasLimit: BigNumber): TransactionTask {
+    this.overrides = {
+      ...this.overrides,
+      gasLimit,
+    };
     return this;
   }
 
-  public withArgsAsync(fn: () => Promise<any[]>): TransactionTask {
-    this.preProcessor = fn;
+  public overrideGasPrice(gasPrice: BigNumber): TransactionTask {
+    this.overrides = {
+      ...this.overrides,
+      gasPrice,
+    };
     return this;
   }
 
-  public withOverrides(overrides: CallOverrides): TransactionTask {
-    this.overrides = overrides;
+  public overrideNonce(nonce: BigNumber): TransactionTask {
+    this.overrides = {
+      ...this.overrides,
+      nonce,
+    };
     return this;
   }
 
-  public async encode(): Promise<string> {
-    return this.encoder.encode(this.functionName, await this.computeArgs());
+  public overrideValue(value: BigNumber): TransactionTask {
+    this.overrides = {
+      ...this.overrides,
+      value,
+    };
+    return this;
   }
+
+  // ////////////// Estimates ////////////////
 
   public async estimateGasLimit(): Promise<BigNumber> {
-    return await this.estimator.gasLimitOf(
-      this.functionName,
-      await this.computeArgs(),
-    );
+    return await this.estimator.gasLimitOf(this.functionName, this.args);
   }
 
   public async estimateGasCostInEther(): Promise<string> {
-    return await this.estimator.gasCostOf(
-      this.functionName,
-      await this.computeArgs(),
-    );
+    return await this.estimator.gasCostOf(this.functionName, this.args);
+  }
+
+  // ////////////// Actions ////////////////
+
+  public async encode(): Promise<string> {
+    return this.encoder.encode(this.functionName, this.args);
   }
 
   public async submit(): Promise<ContractTransaction> {
     return await this.contractWrapper.sendTransactionByFunction(
       this.functionName,
-      await this.computeArgs(),
+      this.args,
       this.overrides || {},
     );
   }
@@ -79,14 +120,5 @@ export class TransactionTask {
     return {
       receipt,
     };
-  }
-
-  private async computeArgs(): Promise<any[]> {
-    const args =
-      this.preProcessor && !this.hasComputedArgs
-        ? await this.preProcessor()
-        : this.args;
-    this.hasComputedArgs = true;
-    return args;
   }
 }
