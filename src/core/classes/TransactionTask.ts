@@ -84,7 +84,7 @@ export class TransactionTask {
     };
     return this;
   }
-  2;
+
   /**
    * Override the value sent with this transaction.
    * @param value
