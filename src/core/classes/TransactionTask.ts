@@ -1,5 +1,10 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { BigNumber, CallOverrides, ContractTransaction } from "ethers";
+import {
+  BigNumber,
+  BigNumberish,
+  CallOverrides,
+  ContractTransaction,
+} from "ethers";
 import { ContractEncoder } from "./contract-encoder";
 import { GasCostEstimator } from "./gas-cost-estimator";
 import { TransactionResult } from "../types";
@@ -48,7 +53,7 @@ export class TransactionTask {
    * Override the gas limit for this transaction.
    * @param gasLimit
    */
-  public overrideGasLimit(gasLimit: BigNumber): TransactionTask {
+  public overrideGasLimit(gasLimit: BigNumberish): TransactionTask {
     this.overrides = {
       ...this.overrides,
       gasLimit,
@@ -60,7 +65,7 @@ export class TransactionTask {
    * Override the gas price for this transaction.
    * @param gasPrice
    */
-  public overrideGasPrice(gasPrice: BigNumber): TransactionTask {
+  public overrideGasPrice(gasPrice: BigNumberish): TransactionTask {
     this.overrides = {
       ...this.overrides,
       gasPrice,
@@ -72,19 +77,19 @@ export class TransactionTask {
    * Override the nonce for this transaction.
    * @param nonce
    */
-  public overrideNonce(nonce: BigNumber): TransactionTask {
+  public overrideNonce(nonce: BigNumberish): TransactionTask {
     this.overrides = {
       ...this.overrides,
       nonce,
     };
     return this;
   }
-
+  2;
   /**
    * Override the value sent with this transaction.
    * @param value
    */
-  public overrideValue(value: BigNumber): TransactionTask {
+  public overrideValue(value: BigNumberish): TransactionTask {
     this.overrides = {
       ...this.overrides,
       value,
