@@ -56,6 +56,7 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 |  [claimTo(destinationAddress, tokenId, quantity, checkERC20Allowance)](./sdk.editiondrop.claimto.md) |  | Claim NFTs to a specific Wallet |
 |  [createBatch(metadatas, options)](./sdk.editiondrop.createbatch.md) |  | Create a batch of NFTs to be claimed in the future |
 |  [getAll(queryParams)](./sdk.editiondrop.getall.md) |  | Get All Minted NFTs |
+|  [getClaimTransaction(destinationAddress, tokenId, quantity, checkERC20Allowance)](./sdk.editiondrop.getclaimtransaction.md) |  | Construct a claim transaction without executing it. This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution. |
 |  [getOwned(walletAddress)](./sdk.editiondrop.getowned.md) |  | Get Owned NFTs |
 |  [getTotalCount()](./sdk.editiondrop.gettotalcount.md) |  | Get the number of NFTs minted |
 |  [isTransferRestricted()](./sdk.editiondrop.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |

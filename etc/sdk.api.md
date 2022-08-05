@@ -1962,6 +1962,8 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     // (undocumented)
     events: ContractEvents<DropERC1155>;
     getAll(queryParams?: QueryAllParams): Promise<EditionMetadata[]>;
+    // Warning: (ae-forgotten-export) The symbol "TransactionTask" needs to be exported by the entry point index.d.ts
+    getClaimTransaction(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionTask>;
     getOwned(walletAddress?: string): Promise<EditionMetadataOwner[]>;
     getTotalCount(): Promise<BigNumber>;
     // (undocumented)
@@ -3741,9 +3743,6 @@ export class NFTDrop extends Erc721<DropERC721> {
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
-    // Warning: (ae-forgotten-export) The symbol "TransactionTask" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
     getClaimTransaction(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionTask>;
     getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
     getOwnedTokenIds(walletAddress?: string): Promise<BigNumber[]>;
@@ -5715,6 +5714,7 @@ export class SignatureDrop extends Erc721<SignatureDrop_2> {
     getAll(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllClaimed(queryParams?: QueryAllParams): Promise<NFTMetadataOwner[]>;
     getAllUnclaimed(queryParams?: QueryAllParams): Promise<NFTMetadata[]>;
+    getClaimTransaction(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionTask>;
     getOwned(walletAddress?: string): Promise<NFTMetadataOwner[]>;
     // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "tokendIds"
     //
