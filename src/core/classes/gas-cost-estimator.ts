@@ -54,7 +54,7 @@ export class GasCostEstimator<TContract extends BaseContract> {
    *   1, // proof max quantity per transaction
    * ]);
    * ```
-   * @returns the estimated gas limit in GWEI
+   * @returns the estimated gas limit of the transaction
    * @public
    */
   public async gasLimitOf(

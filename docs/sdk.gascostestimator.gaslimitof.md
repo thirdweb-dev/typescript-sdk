@@ -23,7 +23,7 @@ gasLimitOf(fn: keyof TContract["functions"] | (string & {}), args: Parameters<TC
 
 Promise&lt;BigNumber&gt;
 
-the estimated gas limit in GWEI
+the estimated gas limit of the transaction
 
 ## Remarks
 
