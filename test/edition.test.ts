@@ -47,6 +47,16 @@ describe("Edition Contract", async () => {
     expect(parseFloat(cost)).gt(0);
   });
 
+  it("gas limit", async () => {
+    const limit = await bundleContract.estimator.gasLimitOf("mintTo", [
+      adminWallet.address,
+      ethers.constants.MaxUint256,
+      "mock://12398172398172389/0",
+      1,
+    ]);
+    expect(limit.toNumber()).gt(0);
+  });
+
   it("should respect pagination", async () => {
     const nfts = [];
     for (let i = 0; i < 100; i++) {
