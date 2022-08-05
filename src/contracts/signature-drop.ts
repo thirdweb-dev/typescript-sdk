@@ -37,6 +37,7 @@ import {
 import { DelayedReveal, DropClaimConditions } from "../core/index";
 import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
 import { uploadOrExtractURIs } from "../common/nft";
+import { TransactionTask } from "../core/classes/TransactionTask";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -464,6 +465,38 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
   }
 
   /**
+   * Construct a claim transaction without executing it.
+   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param destinationAddress
+   * @param quantity
+   * @param checkERC20Allowance
+   */
+  public async getClaimTransaction(
+    destinationAddress: string,
+    quantity: BigNumberish,
+    checkERC20Allowance = true, // TODO split up allowance checks
+  ): Promise<TransactionTask> {
+    const claimVerification = await this.prepareClaim(
+      quantity,
+      checkERC20Allowance,
+    );
+    return TransactionTask.builder(this.contractWrapper, "claim")
+      .withArgs(
+        destinationAddress,
+        quantity,
+        claimVerification.currencyAddress,
+        claimVerification.price,
+        {
+          proof: claimVerification.proofs,
+          maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
+        },
+        ethers.utils.toUtf8Bytes(""),
+      )
+      .withOverrides(claimVerification.overrides)
+      .build();
+  }
+
+  /**
    * Claim unique NFTs to a specific Wallet
    *
    * @remarks Let the specified wallet claim NFTs.
@@ -490,25 +523,12 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     quantity: BigNumberish,
     checkERC20Allowance = true,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const claimVerification = await this.prepareClaim(
+    const task = await this.getClaimTransaction(
+      destinationAddress,
       quantity,
       checkERC20Allowance,
     );
-    const receipt = await this.contractWrapper.sendTransaction(
-      "claim",
-      [
-        destinationAddress,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        {
-          proof: claimVerification.proofs,
-          maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
-        },
-        ethers.utils.toUtf8Bytes(""),
-      ],
-      claimVerification.overrides,
-    );
+    const { receipt } = await task.execute();
     const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
       "TokensClaimed",
       receipt?.logs,
