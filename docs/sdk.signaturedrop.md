@@ -59,6 +59,7 @@ const contract = sdk.getSignatureDrop("{{contract_address}}");
 |  [getAll(queryParams)](./sdk.signaturedrop.getall.md) |  | Get All Minted NFTs |
 |  [getAllClaimed(queryParams)](./sdk.signaturedrop.getallclaimed.md) |  | Get All Claimed NFTs |
 |  [getAllUnclaimed(queryParams)](./sdk.signaturedrop.getallunclaimed.md) |  | Get All Unclaimed NFTs |
+|  [getClaimTransaction(destinationAddress, quantity, checkERC20Allowance)](./sdk.signaturedrop.getclaimtransaction.md) |  | Construct a claim transaction without executing it. This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution. |
 |  [getOwned(walletAddress)](./sdk.signaturedrop.getowned.md) |  | Get Owned NFTs |
 |  [getOwnedTokenIds(walletAddress)](./sdk.signaturedrop.getownedtokenids.md) |  |  |
 |  [isTransferRestricted()](./sdk.signaturedrop.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |

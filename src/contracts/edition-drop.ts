@@ -34,6 +34,7 @@ import { getRoleHash } from "../common";
 
 import { EditionMetadata, EditionMetadataOwner } from "../schema";
 import { uploadOrExtractURIs } from "../common/nft";
+import { TransactionTask } from "../core/classes/TransactionTask";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -300,6 +301,41 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   }
 
   /**
+   * Construct a claim transaction without executing it.
+   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param destinationAddress
+   * @param tokenId
+   * @param quantity
+   * @param checkERC20Allowance
+   */
+  public async getClaimTransaction(
+    destinationAddress: string,
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    checkERC20Allowance = true, // TODO split up allowance checks
+  ): Promise<TransactionTask> {
+    const claimVerification = await this.prepareClaim(
+      tokenId,
+      quantity,
+      checkERC20Allowance,
+    );
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "claim",
+      args: [
+        destinationAddress,
+        tokenId,
+        quantity,
+        claimVerification.currencyAddress,
+        claimVerification.price,
+        claimVerification.proofs,
+        claimVerification.maxQuantityPerTransaction,
+      ],
+      overrides: claimVerification.overrides,
+    });
+  }
+
+  /**
    * Claim NFTs to a specific Wallet
    *
    * @remarks Let the specified wallet claim NFTs.
@@ -328,26 +364,13 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     quantity: BigNumberish,
     checkERC20Allowance = true,
   ): Promise<TransactionResult> {
-    const claimVerification = await this.prepareClaim(
+    const task = await this.getClaimTransaction(
+      destinationAddress,
       tokenId,
       quantity,
       checkERC20Allowance,
     );
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "claim",
-        [
-          destinationAddress,
-          tokenId,
-          quantity,
-          claimVerification.currencyAddress,
-          claimVerification.price,
-          claimVerification.proofs,
-          claimVerification.maxQuantityPerTransaction,
-        ],
-        claimVerification.overrides,
-      ),
-    };
+    return await task.execute();
   }
 
   /**
