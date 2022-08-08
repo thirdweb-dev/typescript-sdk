@@ -2,6 +2,7 @@ import { BaseContract, ethers } from "ethers";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { IStorage } from "../core";
 import {
+  AbiEvent,
   AbiFunction,
   AbiSchema,
   AbiTypeSchema,
@@ -74,6 +75,32 @@ export async function extractFunctions(
 }
 
 /**
+ * @internal
+ * @param name
+ * @param metadata
+ * @param type
+ */
+function extractCommentFromMetadata(
+  name: string | undefined,
+  metadata: Record<string, any> | undefined,
+  type: "methods" | "events",
+) {
+  // console.log(metadata?.output?.userdoc);
+  return (
+    metadata?.output?.userdoc?.[type]?.[
+      Object.keys(metadata?.output?.userdoc[type] || {}).find((fn) =>
+        fn.includes(name || "unknown"),
+      ) || ""
+    ]?.notice ||
+    metadata?.output?.devdoc?.[type]?.[
+      Object.keys(metadata?.output?.devdoc[type] || {}).find((fn) =>
+        fn.includes(name || "unknown"),
+      ) || ""
+    ]?.details
+  );
+}
+
+/**
  *
  * @param abi
  * @returns
@@ -103,18 +130,7 @@ export function extractFunctionsFromAbi(
 
   const parsed: AbiFunction[] = [];
   for (const f of functions) {
-    const doc =
-      metadata?.output?.userdoc.methods[
-        Object.keys(metadata?.output?.userdoc.methods || {}).find((fn) =>
-          fn.includes(f.name || "unknown"),
-        ) || ""
-      ]?.notice ||
-      metadata?.output?.devdoc.methods[
-        Object.keys(metadata?.output?.devdoc.methods || {}).find((fn) =>
-          fn.includes(f.name || "unknown"),
-        ) || ""
-      ]?.details;
-
+    const doc = extractCommentFromMetadata(f.name, metadata, "methods");
     const args =
       f.inputs?.map((i) => `${i.name || "key"}: ${toJSType(i)}`)?.join(", ") ||
       "";
@@ -128,6 +144,29 @@ export function extractFunctionsFromAbi(
       name: f.name ?? "unknown",
       signature,
       stateMutability: f.stateMutability ?? "",
+      comment: doc,
+    });
+  }
+  return parsed;
+}
+
+/**
+ * @internal
+ * @param abi
+ * @param metadata
+ */
+export function extractEventsFromAbi(
+  abi: z.input<typeof AbiSchema>,
+  metadata?: Record<string, any>,
+): AbiEvent[] {
+  const events = abi.filter((el) => el.type === "event");
+  const parsed: AbiEvent[] = [];
+  for (const e of events) {
+    const doc = extractCommentFromMetadata(e.name, metadata, "events");
+    parsed.push({
+      inputs: e.inputs ?? [],
+      outputs: e.outputs ?? [],
+      name: e.name ?? "unknown",
       comment: doc,
     });
   }

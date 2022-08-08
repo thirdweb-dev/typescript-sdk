@@ -129,6 +129,7 @@
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [AbiEvent](./sdk.abievent.md) |  |
 |  [AbiFunction](./sdk.abifunction.md) |  |
 |  [AirdropInput](./sdk.airdropinput.md) | Input model to pass a list of addresses + amount to transfer to each one |
 |  [Amount](./sdk.amount.md) | Represents a currency amount already formatted. ie. "1" for 1 ether. |

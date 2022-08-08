@@ -137,6 +137,13 @@ describe("Custom Contracts", async () => {
     expect(functions.length).gt(0);
   });
 
+  it("should extract events", async () => {
+    const c = await sdk.getContract(customContractAddress);
+    invariant(c, "Contract undefined");
+    const events = await c.publishedMetadata.extractEvents();
+    expect(events.length).gt(0);
+  });
+
   it("should detect feature: metadata", async () => {
     const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");

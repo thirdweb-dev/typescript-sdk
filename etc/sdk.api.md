@@ -48,6 +48,14 @@ import { ZodTypeDef } from 'zod';
 import { ZodUnion } from 'zod';
 
 // @public (undocumented)
+export type AbiEvent = {
+    name: string;
+    inputs: z.infer<typeof AbiTypeSchema>[];
+    outputs: z.infer<typeof AbiTypeSchema>[];
+    comment: string;
+};
+
+// @public (undocumented)
 export type AbiFunction = {
     name: string;
     inputs: z.infer<typeof AbiTypeSchema>[];
@@ -1301,6 +1309,8 @@ export class ContractPrimarySale<TContract extends IPrimarySale> implements Dete
 // @internal
 export class ContractPublishedMetadata<TContract extends BaseContract> {
     constructor(contractWrapper: ContractWrapper<TContract>, storage: IStorage);
+    // @public (undocumented)
+    extractEvents(): Promise<AbiEvent[]>;
     // @public (undocumented)
     extractFunctions(): Promise<AbiFunction[]>;
     // @public
@@ -2713,6 +2723,11 @@ export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>):
     type: string;
     name: string;
 }[];
+
+// Warning: (ae-internal-missing-underscore) The name "extractEventsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function extractEventsFromAbi(abi: z.input<typeof AbiSchema>, metadata?: Record<string, any>): AbiEvent[];
 
 // Warning: (ae-internal-missing-underscore) The name "extractFunctions" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -7061,6 +7076,8 @@ export class WrongListingTypeError extends Error {
 //
 // dist/src/schema/contracts/custom.d.ts:1270:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
 // dist/src/schema/contracts/custom.d.ts:1271:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1278:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1279:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 
