@@ -4,18 +4,6 @@ import MulticallAbi from "../../abis/IMulticall.json";
 import IMintableERC1155Abi from "../../abis/IMintableERC1155.json";
 import ISignatureMintERC1155Abi from "../../abis/ISignatureMintERC1155.json";
 import ILazyMintAbi from "../../abis/ILazyMint.json";
-import IDropSinglePhaseAbi from "../../abis/IDropSinglePhase.json";
-
-export const FEATURE_EDITION_CLAIMABLE = {
-  name: "ERC1155Claimable",
-  namespace: "edition.drop.claim",
-  docLinks: {
-    sdk: "sdk.erc1155claimable",
-    contracts: "DropSinglePhase",
-  },
-  abis: [Erc1155Abi, ILazyMintAbi, IDropSinglePhaseAbi],
-  features: {},
-} as const;
 
 export const FEATURE_EDITION_DROPABLE = {
   name: "ERC1155Dropable",
@@ -25,9 +13,7 @@ export const FEATURE_EDITION_DROPABLE = {
     contracts: "LazyMint",
   },
   abis: [Erc1155Abi, ILazyMintAbi],
-  features: {
-    [FEATURE_EDITION_CLAIMABLE.name]: FEATURE_EDITION_CLAIMABLE,
-  },
+  features: {},
 } as const;
 
 export const FEATURE_EDITION_SIGNATURE_MINTABLE = {

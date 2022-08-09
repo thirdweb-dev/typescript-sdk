@@ -1,31 +1,17 @@
 import { TokensLazyMintedEvent } from "contracts/LazyMint";
-import { detectContractFeature } from "../../common/feature-detection";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_EDITION_DROPABLE } from "../../constants/erc1155-features";
 import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
-import { BaseClaimConditionERC1155, BaseDropERC1155 } from "../../types/eips";
+import { BaseDropERC1155 } from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
-import { Erc1155Claimable } from "./erc-1155-claimable";
 
 export class Erc1155Dropable implements DetectableFeature {
   featureName = FEATURE_EDITION_DROPABLE.name;
-
-  /**
-   * Claim tokens and configure claim conditions
-   * @remarks Let users claim NFTs. Define who can claim NFTs in the collection, when and how many.
-   * @example
-   * ```javascript
-   * const tokenId = 0;
-   * const quantity = 10;
-   * await contract.edition.drop.claim.to("0x...", tokenId, quantity);
-   * ```
-   */
-  public claim: Erc1155Claimable | undefined;
 
   private contractWrapper: ContractWrapper<BaseDropERC1155>;
   private erc1155: Erc1155;
@@ -40,7 +26,6 @@ export class Erc1155Dropable implements DetectableFeature {
     this.contractWrapper = contractWrapper;
 
     this.storage = storage;
-    this.claim = this.detectErc1155Claimable();
   }
 
   /**
@@ -113,21 +98,5 @@ export class Erc1155Dropable implements DetectableFeature {
       });
     }
     return results;
-  }
-
-  private detectErc1155Claimable(): Erc1155Claimable | undefined {
-    if (
-      detectContractFeature<BaseClaimConditionERC1155>(
-        this.contractWrapper,
-        "ERC1155Claimable",
-      )
-    ) {
-      return new Erc1155Claimable(
-        this.erc1155,
-        this.contractWrapper,
-        this.storage,
-      );
-    }
-    return undefined;
   }
 }
