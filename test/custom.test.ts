@@ -24,6 +24,7 @@ describe("Custom Contracts", async () => {
   let nftContractAddress: string;
   let tokenContractAddress: string;
   let editionContractAddress: string;
+  let editionDropContractAddress: string;
   let sigDropContractAddress: string;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -76,6 +77,10 @@ describe("Custom Contracts", async () => {
       primary_sale_recipient: samWallet.address,
       platform_fee_basis_points: 10,
       platform_fee_recipient: adminWallet.address,
+    });
+    editionDropContractAddress = await sdk.deployer.deployEditionDrop({
+      name: "EditionDrop",
+      primary_sale_recipient: samWallet.address,
     });
     sigDropContractAddress = await sdk.deployer.deploySignatureDrop({
       name: "sigdrop",
@@ -307,6 +312,28 @@ describe("Custom Contracts", async () => {
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
+
+  it("should detect feature: erc1155 lazy mint", async () => {
+    const c = await sdk.getContract(editionDropContractAddress);
+
+    invariant(c, "Contract undefined");
+    invariant(c.edition, "ERC1155 undefined");
+    invariant(c.edition.query, "ERC1155 query undefined");
+    invariant(c.edition.drop, "ERC1155 drop undefined");
+
+    await c.edition.drop.lazyMint([
+      {
+        name: "Custom NFT",
+      },
+      {
+        name: "Another one",
+      },
+    ]);
+    const nfts = await c.edition.query.all();
+    expect(nfts.length).to.eq(2);
+    expect(nfts[0].metadata.name).to.eq("Custom NFT");
+  });
+
   it("should detect feature: erc1155 signature mintable", async () => {
     const c = await sdk.getContract(editionContractAddress);
 

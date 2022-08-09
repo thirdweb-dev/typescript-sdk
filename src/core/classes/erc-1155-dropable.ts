@@ -46,7 +46,7 @@ export class Erc1155Dropable implements DetectableFeature {
    *   image: fs.readFileSync("path/to/image.png"),
    * }];
    *
-   * const results = await contract.createBatch(metadatas); // uploads and creates the NFTs on chain
+   * const results = await contract.edition.drop.lazyMint(metadatas); // uploads and creates the NFTs on chain
    * const firstTokenId = results[0].id; // token id of the first created NFT
    * const firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT
    * ```
@@ -54,7 +54,7 @@ export class Erc1155Dropable implements DetectableFeature {
    * @param metadatas - The metadata to include in the batch.
    * @param options - optional upload progress callback
    */
-  public async createBatch(
+  public async lazyMint(
     metadatas: NFTMetadataOrUri[],
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
