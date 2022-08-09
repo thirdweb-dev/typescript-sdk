@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-featureName: "ERC721ClaimConditions";
+featureName: "ERC721Claimable";
 ```

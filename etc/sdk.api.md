@@ -2398,6 +2398,10 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseER
     balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
+    // Warning: (ae-forgotten-export) The symbol "Erc1155Dropable" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    drop: Erc1155Dropable | undefined;
     // (undocumented)
     featureName: "ERC1155";
     get(tokenId: BigNumberish): Promise<EditionMetadata>;
@@ -2408,6 +2412,8 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseER
     isApproved(address: string, operator: string): Promise<boolean>;
     // (undocumented)
     mint: Erc1155Mintable | undefined;
+    // @internal
+    nextTokenIdToMint(): Promise<BigNumber>;
     // @internal (undocumented)
     onNetworkUpdated(network: NetworkOrSignerOrProvider): void;
     // (undocumented)
@@ -2608,7 +2614,7 @@ export class Erc721Claimable implements DetectableFeature {
     constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseClaimConditionERC721>, storage: IStorage);
     conditions: DropClaimConditions<BaseClaimConditionERC721>;
     // (undocumented)
-    featureName: "ERC721ClaimConditions";
+    featureName: "ERC721Claimable";
     to(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 }
 

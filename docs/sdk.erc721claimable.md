@@ -36,7 +36,7 @@ await contract.drop.claim.to("0x...", quantity);
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [conditions](./sdk.erc721claimable.conditions.md) |  | [DropClaimConditions](./sdk.dropclaimconditions.md)<!-- -->&lt;BaseClaimConditionERC721&gt; | Configure claim conditions |
-|  [featureName](./sdk.erc721claimable.featurename.md) |  | "ERC721ClaimConditions" |  |
+|  [featureName](./sdk.erc721claimable.featurename.md) |  | "ERC721Claimable" |  |
 
 ## Methods
 

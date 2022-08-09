@@ -623,7 +623,7 @@
       "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721BatchMintable"
     }
   },
-  "ERC721ClaimConditions": {
+  "ERC721Claimable": {
     "name": "Erc721Claimable",
     "summary": "Lazily mint and claim ERC721 NFTs\n\n",
     "remarks": "\n\nManage claim phases and claim ERC721 NFTs that have been lazily minted.\n\n",
