@@ -3,6 +3,18 @@ import Erc1155Abi from "../../abis/IERC1155.json";
 import MulticallAbi from "../../abis/IMulticall.json";
 import IMintableERC1155Abi from "../../abis/IMintableERC1155.json";
 import ISignatureMintERC1155Abi from "../../abis/ISignatureMintERC1155.json";
+import ILazyMintAbi from "../../abis/ILazyMint.json";
+
+export const FEATURE_EDITION_DROPPABLE = {
+  name: "ERC1155Droppable",
+  namespace: "edition.drop",
+  docLinks: {
+    sdk: "sdk.erc1155droppable",
+    contracts: "LazyMint",
+  },
+  abis: [Erc1155Abi, ILazyMintAbi],
+  features: {},
+} as const;
 
 export const FEATURE_EDITION_SIGNATURE_MINTABLE = {
   name: "ERC1155SignatureMintable",
@@ -61,6 +73,7 @@ export const FEATURE_EDITION = {
   features: {
     [FEATURE_EDITION_ENUMERABLE.name]: FEATURE_EDITION_ENUMERABLE,
     [FEATURE_EDITION_MINTABLE.name]: FEATURE_EDITION_MINTABLE,
+    [FEATURE_EDITION_DROPPABLE.name]: FEATURE_EDITION_DROPPABLE,
     [FEATURE_EDITION_SIGNATURE_MINTABLE.name]:
       FEATURE_EDITION_SIGNATURE_MINTABLE,
   },

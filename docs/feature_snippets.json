@@ -623,7 +623,7 @@
       "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721BatchMintable"
     }
   },
-  "ERC721ClaimConditions": {
+  "ERC721Claimable": {
     "name": "Erc721Claimable",
     "summary": "Lazily mint and claim ERC721 NFTs\n\n",
     "remarks": "\n\nManage claim phases and claim ERC721 NFTs that have been lazily minted.\n\n",
@@ -660,8 +660,8 @@
       "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Claimable"
     }
   },
-  "ERC721Dropable": {
-    "name": "Erc721Dropable",
+  "ERC721Droppable": {
+    "name": "Erc721Droppable",
     "summary": "Lazily mint and claim ERC721 NFTs\n\n",
     "remarks": "\n\nManage claim phases and claim ERC721 NFTs that have been lazily minted.\n\n",
     "examples": {
@@ -676,7 +676,7 @@
           "javascript": "// Custom metadata of the NFTs to create\nconst metadatas = [{\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}];\n\nconst results = await contract.nft.lazy.mint(metadatas); // uploads and creates the NFTs on chain\nconst firstTokenId = results[0].id; // token id of the first created NFT\nconst firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT"
         },
         "reference": {
-          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Dropable.lazyMint"
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Droppable.lazyMint"
         }
       }
     ],
@@ -694,7 +694,7 @@
       }
     ],
     "reference": {
-      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Dropable"
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Droppable"
     }
   },
   "ERC721Enumerable": {

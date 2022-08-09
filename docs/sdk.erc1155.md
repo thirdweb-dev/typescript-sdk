@@ -36,6 +36,7 @@ await contract.edition.transfer(walletAddress, tokenId, quantity);
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [contractWrapper](./sdk.erc1155.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
+|  [drop](./sdk.erc1155.drop.md) |  | Erc1155Droppable \| undefined |  |
 |  [featureName](./sdk.erc1155.featurename.md) |  | "ERC1155" |  |
 |  [mint](./sdk.erc1155.mint.md) |  | [Erc1155Mintable](./sdk.erc1155mintable.md) \| undefined |  |
 |  [options](./sdk.erc1155.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |

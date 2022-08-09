@@ -1,5 +1,5 @@
 import { ethers } from "ethers";
-import { FEATURE_NFT_DROPABLE } from "../../constants/erc721-features";
+import { FEATURE_NFT_DROPPABLE } from "../../constants/erc721-features";
 import { CommonNFTInput, NFTMetadata, NFTMetadataInput } from "../../schema";
 import { UploadProgressEvent } from "../../types";
 import {
@@ -26,8 +26,8 @@ import { Erc721Claimable } from "./erc-721-claimable";
  * await contract.drop.claim(quantity);
  * ```
  */
-export class Erc721Dropable implements DetectableFeature {
-  featureName = FEATURE_NFT_DROPABLE.name;
+export class Erc721Droppable implements DetectableFeature {
+  featureName = FEATURE_NFT_DROPPABLE.name;
 
   public revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
 
@@ -144,7 +144,7 @@ export class Erc721Dropable implements DetectableFeature {
     if (
       detectContractFeature<BaseClaimConditionERC721>(
         this.contractWrapper,
-        "ERC721ClaimConditions",
+        "ERC721Claimable",
       )
     ) {
       return new Erc721Claimable(
