@@ -2398,10 +2398,10 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseER
     balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
-    // Warning: (ae-forgotten-export) The symbol "Erc1155Dropable" needs to be exported by the entry point index.d.ts
+    // Warning: (ae-forgotten-export) The symbol "Erc1155Droppable" needs to be exported by the entry point index.d.ts
     //
     // (undocumented)
-    drop: Erc1155Dropable | undefined;
+    drop: Erc1155Droppable | undefined;
     // (undocumented)
     featureName: "ERC1155";
     get(tokenId: BigNumberish): Promise<EditionMetadata>;
@@ -2569,7 +2569,7 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
     // (undocumented)
-    drop: Erc721Dropable | undefined;
+    drop: Erc721Droppable | undefined;
     // (undocumented)
     featureName: "ERC721";
     get(tokenId: BigNumberish): Promise<NFTMetadataOwner>;
@@ -2619,12 +2619,12 @@ export class Erc721Claimable implements DetectableFeature {
 }
 
 // @public
-export class Erc721Dropable implements DetectableFeature {
+export class Erc721Droppable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "BaseDropERC721" needs to be exported by the entry point index.d.ts
     constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseDropERC721>, storage: IStorage);
     claim: Erc721Claimable | undefined;
     // (undocumented)
-    featureName: "ERC721Dropable";
+    featureName: "ERC721Droppable";
     lazyMint(metadatas: NFTMetadataInput[], options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<TransactionResultWithId<NFTMetadata>[]>;

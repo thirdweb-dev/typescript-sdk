@@ -33,7 +33,7 @@ import { Erc1155Mintable } from "./erc-1155-mintable";
 import { FEATURE_EDITION } from "../../constants/erc1155-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
-import { Erc1155Dropable } from "./erc-1155-dropable";
+import { Erc1155Droppable } from "./erc-1155-droppable";
 
 /**
  * Standard ERC1155 NFT functions
@@ -54,7 +54,7 @@ export class Erc1155<
   featureName = FEATURE_EDITION.name;
   public query: Erc1155Enumerable | undefined;
   public mint: Erc1155Mintable | undefined;
-  public drop: Erc1155Dropable | undefined;
+  public drop: Erc1155Droppable | undefined;
   public signature: Erc1155SignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
@@ -78,7 +78,7 @@ export class Erc1155<
     }
     this.query = this.detectErc1155Enumerable();
     this.mint = this.detectErc1155Mintable();
-    this.drop = this.detectErc1155Dropable();
+    this.drop = this.detectErc1155Droppable();
     this.signature = this.detectErc1155SignatureMintable();
   }
 
@@ -347,14 +347,14 @@ export class Erc1155<
     return undefined;
   }
 
-  private detectErc1155Dropable(): Erc1155Dropable | undefined {
+  private detectErc1155Droppable(): Erc1155Droppable | undefined {
     if (
       detectContractFeature<BaseDropERC1155>(
         this.contractWrapper,
-        "ERC1155Dropable",
+        "ERC1155Droppable",
       )
     ) {
-      return new Erc1155Dropable(this, this.contractWrapper, this.storage);
+      return new Erc1155Droppable(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }

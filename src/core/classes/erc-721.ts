@@ -25,7 +25,7 @@ import { Erc721Mintable } from "./erc-721-mintable";
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { Erc721Dropable } from "./erc-721-dropable";
+import { Erc721Droppable } from "./erc-721-droppable";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
 
 /**
@@ -50,7 +50,7 @@ export class Erc721<
   featureName = FEATURE_NFT.name;
   public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
-  public drop: Erc721Dropable | undefined;
+  public drop: Erc721Droppable | undefined;
   public signature: Erc721WithQuantitySignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
@@ -74,7 +74,7 @@ export class Erc721<
     }
     this.query = this.detectErc721Enumerable();
     this.mint = this.detectErc721Mintable();
-    this.drop = this.detectErc721Dropable();
+    this.drop = this.detectErc721Droppable();
     this.signature = this.detectErc721SignatureMintable();
   }
 
@@ -280,14 +280,14 @@ export class Erc721<
     return undefined;
   }
 
-  private detectErc721Dropable(): Erc721Dropable | undefined {
+  private detectErc721Droppable(): Erc721Droppable | undefined {
     if (
       detectContractFeature<BaseDropERC721>(
         this.contractWrapper,
-        "ERC721Dropable",
+        "ERC721Droppable",
       )
     ) {
-      return new Erc721Dropable(this, this.contractWrapper, this.storage);
+      return new Erc721Droppable(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }

@@ -1,6 +1,6 @@
 import { TokensLazyMintedEvent } from "contracts/LazyMint";
 import { uploadOrExtractURIs } from "../../common/nft";
-import { FEATURE_EDITION_DROPABLE } from "../../constants/erc1155-features";
+import { FEATURE_EDITION_DROPPABLE } from "../../constants/erc1155-features";
 import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
 import { BaseDropERC1155 } from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
@@ -10,8 +10,8 @@ import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
 
-export class Erc1155Dropable implements DetectableFeature {
-  featureName = FEATURE_EDITION_DROPABLE.name;
+export class Erc1155Droppable implements DetectableFeature {
+  featureName = FEATURE_EDITION_DROPPABLE.name;
 
   private contractWrapper: ContractWrapper<BaseDropERC1155>;
   private erc1155: Erc1155;

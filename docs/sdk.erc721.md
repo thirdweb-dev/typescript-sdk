@@ -36,7 +36,7 @@ await contract.nft.transfer(walletAddress, tokenId);
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
 |  [contractWrapper](./sdk.erc721.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
-|  [drop](./sdk.erc721.drop.md) |  | [Erc721Dropable](./sdk.erc721dropable.md) \| undefined |  |
+|  [drop](./sdk.erc721.drop.md) |  | [Erc721Droppable](./sdk.erc721droppable.md) \| undefined |  |
 |  [featureName](./sdk.erc721.featurename.md) |  | "ERC721" |  |
 |  [mint](./sdk.erc721.mint.md) |  | [Erc721Mintable](./sdk.erc721mintable.md) \| undefined |  |
 |  [options](./sdk.erc721.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |

@@ -31,11 +31,11 @@ export const FEATURE_NFT_CLAIMABLE = {
   features: {},
 } as const;
 
-export const FEATURE_NFT_DROPABLE = {
-  name: "ERC721Dropable",
+export const FEATURE_NFT_DROPPABLE = {
+  name: "ERC721Droppable",
   namespace: "nft.drop",
   docLinks: {
-    sdk: "sdk.erc721dropable",
+    sdk: "sdk.erc721droppable",
     contracts: "LazyMint",
   },
   abis: [Erc721Abi, LazyMintAbi],
@@ -115,7 +115,7 @@ export const FEATURE_NFT = {
   features: {
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
-    [FEATURE_NFT_DROPABLE.name]: FEATURE_NFT_DROPABLE,
+    [FEATURE_NFT_DROPPABLE.name]: FEATURE_NFT_DROPPABLE,
     [FEATURE_NFT_SIGNATURE_MINTABLE.name]: FEATURE_NFT_SIGNATURE_MINTABLE,
   },
 } as const;
