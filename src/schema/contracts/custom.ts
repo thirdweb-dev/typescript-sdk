@@ -230,6 +230,12 @@ export type AbiFunction = {
   stateMutability: string;
   comment: string;
 };
+export type AbiEvent = {
+  name: string;
+  inputs: z.infer<typeof AbiTypeSchema>[];
+  outputs: z.infer<typeof AbiTypeSchema>[];
+  comment: string;
+};
 export type ContractSource = {
   filename: string;
   source: string;
