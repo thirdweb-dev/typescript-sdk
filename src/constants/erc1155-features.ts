@@ -3,6 +3,32 @@ import Erc1155Abi from "../../abis/IERC1155.json";
 import MulticallAbi from "../../abis/IMulticall.json";
 import IMintableERC1155Abi from "../../abis/IMintableERC1155.json";
 import ISignatureMintERC1155Abi from "../../abis/ISignatureMintERC1155.json";
+import ILazyMintAbi from "../../abis/ILazyMint.json";
+import IDropSinglePhaseAbi from "../../abis/IDropSinglePhase.json";
+
+export const FEATURE_EDITION_CLAIMABLE = {
+  name: "ERC1155Claimable",
+  namespace: "edition.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc1155claimable",
+    contracts: "DropSinglePhase",
+  },
+  abis: [Erc1155Abi, ILazyMintAbi, IDropSinglePhaseAbi],
+  features: {},
+} as const;
+
+export const FEATURE_EDITION_DROPABLE = {
+  name: "ERC1155Dropable",
+  namespace: "edition.drop",
+  docLinks: {
+    sdk: "sdk.erc1155dropable",
+    contracts: "LazyMint",
+  },
+  abis: [Erc1155Abi, ILazyMintAbi],
+  features: {
+    [FEATURE_EDITION_CLAIMABLE.name]: FEATURE_EDITION_CLAIMABLE,
+  },
+} as const;
 
 export const FEATURE_EDITION_SIGNATURE_MINTABLE = {
   name: "ERC1155SignatureMintable",
@@ -61,6 +87,7 @@ export const FEATURE_EDITION = {
   features: {
     [FEATURE_EDITION_ENUMERABLE.name]: FEATURE_EDITION_ENUMERABLE,
     [FEATURE_EDITION_MINTABLE.name]: FEATURE_EDITION_MINTABLE,
+    [FEATURE_EDITION_DROPABLE.name]: FEATURE_EDITION_DROPABLE,
     [FEATURE_EDITION_SIGNATURE_MINTABLE.name]:
       FEATURE_EDITION_SIGNATURE_MINTABLE,
   },

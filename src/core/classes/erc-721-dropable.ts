@@ -144,7 +144,7 @@ export class Erc721Dropable implements DetectableFeature {
     if (
       detectContractFeature<BaseClaimConditionERC721>(
         this.contractWrapper,
-        "ERC721ClaimConditions",
+        "ERC721Claimable",
       )
     ) {
       return new Erc721Claimable(

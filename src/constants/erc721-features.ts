@@ -21,10 +21,10 @@ export const FEATURE_NFT_REVEALABLE = {
 
 // Update ABI dependencies
 export const FEATURE_NFT_CLAIMABLE = {
-  name: "ERC721ClaimConditions",
+  name: "ERC721Claimable",
   namespace: "nft.drop.claim",
   docLinks: {
-    sdk: "sdk.dropClaimConditions",
+    sdk: "sdk.erc721claimable",
     contracts: "DropSinglePhase",
   },
   abis: [Erc721Abi, LazyMintAbi, IDropSinglePhase],
