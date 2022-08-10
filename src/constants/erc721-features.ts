@@ -7,6 +7,18 @@ import DelayedRevealAbi from "../../abis/DelayedReveal.json";
 import LazyMintAbi from "../../abis/ILazyMint.json";
 import IDropSinglePhase from "../../abis/IDropSinglePhase.json";
 import SignatureMintERC721Abi from "../../abis/SignatureMintERC721.json";
+import IBurnableERC721Abi from "../../abis/IBurnableERC721.json";
+
+export const FEATURE_NFT_BURNABLE = {
+  name: "ERC721Burnable",
+  namespace: "nft.burn",
+  docLinks: {
+    sdk: "sdk.erc721burnable",
+    contracts: "IBurnableERC721",
+  },
+  abis: [Erc721Abi, IBurnableERC721Abi],
+  features: {},
+} as const;
 
 export const FEATURE_NFT_REVEALABLE = {
   name: "ERC721Revealable",
@@ -113,6 +125,7 @@ export const FEATURE_NFT = {
   },
   abis: [Erc721Abi],
   features: {
+    [FEATURE_NFT_BURNABLE.name]: FEATURE_NFT_BURNABLE,
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
     [FEATURE_NFT_DROPPABLE.name]: FEATURE_NFT_DROPPABLE,
