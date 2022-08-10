@@ -3338,7 +3338,10 @@ export class MarketplaceDirect {
     getAddress(): string;
     getListing(listingId: BigNumberish): Promise<DirectListing>;
     // @internal
-    isStillValidListing(listing: DirectListing, quantity?: BigNumberish): Promise<boolean>;
+    isStillValidListing(listing: DirectListing, quantity?: BigNumberish): Promise<{
+        valid: boolean;
+        error?: string;
+    }>;
     makeOffer(listingId: BigNumberish, quantityDesired: BigNumberish, currencyContractAddress: string, pricePerToken: Price, expirationDate?: Date): Promise<TransactionResult>;
     // @internal
     mapListing(listing: IMarketplace_2.ListingStruct): Promise<DirectListing>;

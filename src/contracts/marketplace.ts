@@ -227,7 +227,7 @@ export class Marketplace implements UpdateableNetwork {
   public async getActiveListings(
     filter?: MarketplaceFilter,
   ): Promise<(AuctionListing | DirectListing)[]> {
-    const rawListings = await this.getAllListingsNoFilter();
+    const rawListings = await this.getAllListingsNoFilter(true);
     const filtered = this.applyFilter(rawListings, filter);
     const now = BigNumber.from(Math.floor(Date.now() / 1000));
     return filtered.filter((l) => {
@@ -255,7 +255,7 @@ export class Marketplace implements UpdateableNetwork {
   public async getAllListings(
     filter?: MarketplaceFilter,
   ): Promise<(AuctionListing | DirectListing)[]> {
-    const rawListings = await this.getAllListingsNoFilter();
+    const rawListings = await this.getAllListingsNoFilter(false);
     return this.applyFilter(rawListings, filter);
   }
 
@@ -444,9 +444,9 @@ export class Marketplace implements UpdateableNetwork {
    * PRIVATE FUNCTIONS
    *******************************/
 
-  private async getAllListingsNoFilter(): Promise<
-    (AuctionListing | DirectListing)[]
-  > {
+  private async getAllListingsNoFilter(
+    filterInvalidListings: boolean,
+  ): Promise<(AuctionListing | DirectListing)[]> {
     const listings = await Promise.all(
       Array.from(
         Array(
@@ -465,9 +465,11 @@ export class Marketplace implements UpdateableNetwork {
           return listing;
         }
 
-        const valid = await this.direct.isStillValidListing(listing);
-        if (!valid) {
-          return undefined;
+        if (filterInvalidListings) {
+          const { valid } = await this.direct.isStillValidListing(listing);
+          if (!valid) {
+            return undefined;
+          }
         }
 
         return listing;
