@@ -35,7 +35,7 @@ import { FEATURE_EDITION } from "../../constants/erc1155-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { Erc1155SignatureMintable } from "./erc-1155-signature-mintable";
 import { Erc1155Droppable } from "./erc-1155-droppable";
-import { Erc1155Burnable } from "../..";
+import { Erc1155Burnable } from "./erc-1155-burnable";
 
 /**
  * Standard ERC1155 NFT functions

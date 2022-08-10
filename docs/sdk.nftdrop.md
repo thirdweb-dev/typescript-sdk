@@ -51,7 +51,7 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [burn(tokenId)](./sdk.nftdrop.burn.md) |  | Burn a single NFT |
+|  [burnFromSelf(tokenId)](./sdk.nftdrop.burnfromself.md) |  | Burn a single NFT |
 |  [claim(quantity, checkERC20Allowance)](./sdk.nftdrop.claim.md) |  | Claim NFTs to the connected wallet. |
 |  [claimTo(destinationAddress, quantity, checkERC20Allowance)](./sdk.nftdrop.claimto.md) |  | Claim unique NFTs to a specific Wallet |
 |  [createBatch(metadatas, options)](./sdk.nftdrop.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |

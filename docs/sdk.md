@@ -25,15 +25,19 @@
 |  [EditionDrop](./sdk.editiondrop.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [Erc1155](./sdk.erc1155.md) | Standard ERC1155 NFT functions |
 |  [Erc1155BatchMintable](./sdk.erc1155batchmintable.md) | Mint Many ERC1155 NFTs at once |
+|  [Erc1155Burnable](./sdk.erc1155burnable.md) |  |
+|  [Erc1155Droppable](./sdk.erc1155droppable.md) |  |
 |  [Erc1155Enumerable](./sdk.erc1155enumerable.md) | List ERC1155 NFTs |
 |  [Erc1155Mintable](./sdk.erc1155mintable.md) | Mint ERC1155 NFTs |
 |  [Erc1155SignatureMintable](./sdk.erc1155signaturemintable.md) | Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc20](./sdk.erc20.md) | Standard ERC20 Token functions |
 |  [Erc20BatchMintable](./sdk.erc20batchmintable.md) | Mint Many ERC20 Tokens at once |
+|  [Erc20Burnable](./sdk.erc20burnable.md) |  |
 |  [Erc20Mintable](./sdk.erc20mintable.md) | Mint ERC20 Tokens |
 |  [Erc20SignatureMintable](./sdk.erc20signaturemintable.md) | Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 NFT functions |
 |  [Erc721BatchMintable](./sdk.erc721batchmintable.md) | Mint Many ERC721 NFTs at once |
+|  [Erc721Burnable](./sdk.erc721burnable.md) |  |
 |  [Erc721Claimable](./sdk.erc721claimable.md) | Lazily mint and claim ERC721 NFTs |
 |  [Erc721Droppable](./sdk.erc721droppable.md) | Lazily mint and claim ERC721 NFTs |
 |  [Erc721Enumerable](./sdk.erc721enumerable.md) | List owned ERC721 NFTs |

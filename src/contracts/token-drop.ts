@@ -18,6 +18,7 @@ import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 
 import { prepareClaim } from "../common/claim-conditions";
 import { getRoleHash } from "../common";
+import { Erc20Burnable } from "../core/classes/erc-20-burnable";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -40,6 +41,8 @@ export class TokenDrop extends Erc20<DropERC20> {
    * @internal
    */
   static schema = DropErc20ContractSchema;
+
+  private _burn = this.burn as Erc20Burnable;
 
   public metadata: ContractMetadata<DropERC20, typeof TokenDrop.schema>;
   public roles: ContractRoles<
@@ -256,15 +259,11 @@ export class TokenDrop extends Erc20<DropERC20> {
    * // The amount of this token you want to burn
    * const amount = 1.2;
    *
-   * await contract.burn(amount);
+   * await contract.burnFromSelf(amount);
    * ```
    */
-  public async burn(amount: Amount): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [
-        await this.normalizeAmount(amount),
-      ]),
-    };
+  public async burnFromSelf(amount: Amount): Promise<TransactionResult> {
+    return this._burn.fromSelf(amount);
   }
 
   /**
@@ -287,12 +286,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     holder: string,
     amount: Amount,
   ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burnFrom", [
-        holder,
-        await this.normalizeAmount(amount),
-      ]),
-    };
+    return this._burn.from(holder, amount);
   }
 
   /** ******************************

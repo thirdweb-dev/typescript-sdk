@@ -28,7 +28,7 @@ import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { Erc721Droppable } from "./erc-721-droppable";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
-import { Erc721Burnable } from "../..";
+import { Erc721Burnable } from "./erc-721-burnable";
 
 /**
  * Standard ERC721 NFT functions

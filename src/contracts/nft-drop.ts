@@ -39,6 +39,7 @@ import {
 import { UploadProgressEvent } from "../types/events";
 import { uploadOrExtractURIs } from "../common/nft";
 import { TransactionTask } from "../core/classes/TransactionTask";
+import { Erc721Burnable } from "../core/classes/erc-721-burnable";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -150,6 +151,7 @@ export class NFTDrop extends Erc721<DropERC721> {
 
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
+  private _burn = this.burn as Erc721Burnable;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -554,14 +556,12 @@ export class NFTDrop extends Erc721<DropERC721> {
    *
    * @example
    * ```javascript
-   * const result = await contract.burn(tokenId);
+   * const result = await contract.burnFromSelf(tokenId);
    * ```
    *
    */
-  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
-    };
+  public async burnFromSelf(tokenId: BigNumberish): Promise<TransactionResult> {
+    return this._burn.fromSelf(tokenId);
   }
 
   /** ******************************

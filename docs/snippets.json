@@ -421,13 +421,13 @@
     },
     "methods": [
       {
-        "name": "burn",
+        "name": "burnFromSelf",
         "summary": "Burn a specified amount of a NFT\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const result = await contract.burn(tokenId, amount);"
+          "javascript": "const result = await contract.burnFromSelf(tokenId, amount);"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.Edition.burn"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Edition.burnFromSelf"
       },
       {
         "name": "getAll",
@@ -533,13 +533,13 @@
     },
     "methods": [
       {
-        "name": "burn",
+        "name": "burnFromSelf",
         "summary": "Burn a specified amount of a NFT\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const result = await contract.burn(tokenId, amount);"
+          "javascript": "const result = await contract.burnFromSelf(tokenId, amount);"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.EditionDrop.burn"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.EditionDrop.burnFromSelf"
       },
       {
         "name": "claimTo",
@@ -980,13 +980,13 @@
     },
     "methods": [
       {
-        "name": "burn",
+        "name": "burnFromSelf",
         "summary": "Burn a single NFT\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const result = await contract.burn(tokenId);"
+          "javascript": "const result = await contract.burnFromSelf(tokenId);"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTCollection.burn"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTCollection.burnFromSelf"
       },
       {
         "name": "getAll",
@@ -1083,13 +1083,13 @@
     },
     "methods": [
       {
-        "name": "burn",
+        "name": "burnFromSelf",
         "summary": "Burn a single NFT\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const result = await contract.burn(tokenId);"
+          "javascript": "const result = await contract.burnFromSelf(tokenId);"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop.burn"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop.burnFromSelf"
       },
       {
         "name": "claimTo",
@@ -1371,13 +1371,13 @@
     },
     "methods": [
       {
-        "name": "burn",
+        "name": "burnFromSelf",
         "summary": "Burn a single NFT\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const result = await contract.burn(tokenId, amount);"
+          "javascript": "const result = await contract.burnFromSelf(tokenId, amount);"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.SignatureDrop.burn"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.SignatureDrop.burnFromSelf"
       },
       {
         "name": "claimTo",
@@ -1615,15 +1615,6 @@
     },
     "methods": [
       {
-        "name": "burn",
-        "summary": "Burn Tokens\n\n",
-        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
-        "examples": {
-          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burn(amount);"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.Token.burn"
-      },
-      {
         "name": "burnFrom",
         "summary": "Burn Tokens\n\n",
         "remarks": "\n\nBurn tokens held by the specified wallet\n\n",
@@ -1631,6 +1622,15 @@
           "javascript": "// Address of the wallet sending the tokens\nconst holderAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burnFrom(holderAddress, amount);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Token.burnFrom"
+      },
+      {
+        "name": "burnFromSelf",
+        "summary": "Burn Tokens\n\n",
+        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
+        "examples": {
+          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burnFromSelf(amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Token.burnFromSelf"
       },
       {
         "name": "mintBatchTo",
@@ -1763,15 +1763,6 @@
     },
     "methods": [
       {
-        "name": "burn",
-        "summary": "Burn Tokens\n\n",
-        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
-        "examples": {
-          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burn(amount);"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.TokenDrop.burn"
-      },
-      {
         "name": "burnFrom",
         "summary": "Burn Tokens\n\n",
         "remarks": "\n\nBurn tokens held by the specified wallet\n\n",
@@ -1779,6 +1770,15 @@
           "javascript": "// Address of the wallet sending the tokens\nconst holderAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burnFrom(holderAddress, amount);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.TokenDrop.burnFrom"
+      },
+      {
+        "name": "burnFromSelf",
+        "summary": "Burn Tokens\n\n",
+        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
+        "examples": {
+          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burnFromSelf(amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.TokenDrop.burnFromSelf"
       },
       {
         "name": "claimTo",

@@ -30,6 +30,7 @@ import { QueryAllParams } from "../types";
 import { Erc1155Mintable } from "../core/classes/erc-1155-mintable";
 import { Erc1155BatchMintable } from "../core/classes/erc-1155-batch-mintable";
 import { Erc1155SignatureMintable } from "../core/classes/erc-1155-signature-mintable";
+import { Erc1155Burnable } from "../core/classes/erc-1155-burnable";
 
 /**
  * Create a collection of NFTs that lets you mint multiple copies of each NFT.
@@ -102,6 +103,7 @@ export class Edition extends Erc1155<TokenERC1155> {
   public interceptor: ContractInterceptor<TokenERC1155>;
   private _query = this.query as Erc1155Enumerable;
   private _mint = this.mint as Erc1155Mintable;
+  private _burn = this.burn as Erc1155Burnable;
   private _batchMint = this._mint.batch as Erc1155BatchMintable;
 
   constructor(
@@ -348,20 +350,13 @@ export class Edition extends Erc1155<TokenERC1155> {
    *
    * @example
    * ```javascript
-   * const result = await contract.burn(tokenId, amount);
+   * const result = await contract.burnFromSelf(tokenId, amount);
    * ```
    */
-  public async burn(
+  public async burnFromSelf(
     tokenId: BigNumberish,
     amount: BigNumberish,
   ): Promise<TransactionResult> {
-    const account = await this.contractWrapper.getSignerAddress();
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [
-        account,
-        tokenId,
-        amount,
-      ]),
-    };
+    return this._burn.fromSelf(tokenId, amount);
   }
 }
