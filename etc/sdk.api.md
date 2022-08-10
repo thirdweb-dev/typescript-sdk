@@ -1057,7 +1057,7 @@ export const CompilerMetadataFetchedSchema: z.ZodObject<{
         details?: string | undefined;
         notice?: string | undefined;
     }>;
-    licenses: z.ZodArray<z.ZodString, "many">;
+    licenses: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
 }, "strip", z.ZodTypeAny, {
     name: string;
     metadata: Record<string, any>;
@@ -1096,6 +1096,7 @@ export const CompilerMetadataFetchedSchema: z.ZodObject<{
     };
     licenses: string[];
 }, {
+    licenses?: string[] | undefined;
     name: string;
     metadata: Record<string, any>;
     abi: {
@@ -1131,7 +1132,6 @@ export const CompilerMetadataFetchedSchema: z.ZodObject<{
         details?: string | undefined;
         notice?: string | undefined;
     };
-    licenses: string[];
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "CONTRACT_ADDRESSES" should be prefixed with an underscore because the declaration is marked as @internal
@@ -4439,7 +4439,7 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
         details?: string | undefined;
         notice?: string | undefined;
     }>;
-    licenses: z.ZodArray<z.ZodString, "many">;
+    licenses: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
 }>, {
     bytecode: z.ZodString;
 }>, "strip", z.ZodAny, {
@@ -4485,6 +4485,7 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
     bytecode: string;
 }, {
     [x: string]: any;
+    licenses?: string[] | undefined;
     name: string;
     metadataUri: string;
     metadata: Record<string, any>;
@@ -4521,7 +4522,6 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
         details?: string | undefined;
         notice?: string | undefined;
     };
-    licenses: string[];
     bytecodeUri: string;
     bytecode: string;
 }>;
