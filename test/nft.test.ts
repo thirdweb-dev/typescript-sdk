@@ -43,7 +43,7 @@ describe("NFT Contract", async () => {
     const token = await nftContract.mintToSelf({
       name: "Test2",
     });
-    await nftContract.burn(token.id);
+    await nftContract.burnFromSelf(token.id);
     const nfts = await nftContract.getAll();
     expect(nfts).to.be.an("array").length(2);
   });
@@ -126,7 +126,7 @@ describe("NFT Contract", async () => {
     const token = await nftContract.mintToSelf({
       name: "Test2",
     });
-    await nftContract.burn(token.id);
+    await nftContract.burnFromSelf(token.id);
     const nft = await nftContract.get("0");
     assert.equal(nft.owner, AddressZero);
   });
