@@ -2,18 +2,10 @@ import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { SDKOptions } from "../../schema/sdk-options";
 import { IStorage } from "../interfaces";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
-import {
-  BigNumber,
-  BytesLike,
-  constants,
-  ContractInterface,
-  ethers,
-  utils,
-} from "ethers";
+import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
 import {
   extractConstructorParams,
-  extractConstructorParamsFromAbi,
   extractFunctions,
   fetchContractMetadataFromAddress,
   fetchPreDeployMetadata,
@@ -374,119 +366,6 @@ export class ContractPublisher extends RPCConnectionHandler {
         contractId,
       ]),
     };
-  }
-
-  /**
-   * @internal
-   * @param publisherAddress
-   * @param contractId
-   * @param constructorParamValues
-   * @param contractMetadata
-   */
-  public async deployPublishedContract(
-    publisherAddress: string,
-    contractId: string,
-    constructorParamValues: any[],
-  ): Promise<string> {
-    // TODO this gets the latest version, should we allow deploying a certain version?
-    const contract = await this.publisher.readContract.getPublishedContract(
-      publisherAddress,
-      contractId,
-    );
-    return this.deployContract(
-      contract.publishMetadataUri,
-      constructorParamValues,
-    );
-  }
-
-  /**
-   * @internal
-   * @param publishMetadataUri
-   * @param constructorParamValues
-   */
-  public async deployContract(
-    publishMetadataUri: string,
-    constructorParamValues: any[],
-  ) {
-    const signer = this.getSigner();
-    invariant(signer, "A signer is required");
-    const metadata = await fetchPreDeployMetadata(
-      publishMetadataUri,
-      this.storage,
-    );
-    const bytecode = metadata.bytecode.startsWith("0x")
-      ? metadata.bytecode
-      : `0x${metadata.bytecode}`;
-    if (!ethers.utils.isHexString(bytecode)) {
-      throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
-    }
-    const constructorParamTypes = extractConstructorParamsFromAbi(
-      metadata.abi,
-    ).map((p) => p.type);
-    const paramValues = this.convertParamValues(
-      constructorParamTypes,
-      constructorParamValues,
-    );
-
-    return this.deployContractWithAbi(metadata.abi, bytecode, paramValues);
-  }
-
-  private convertParamValues(
-    constructorParamTypes: string[],
-    constructorParamValues: any[],
-  ) {
-    // check that both arrays are same length
-    if (constructorParamTypes.length !== constructorParamValues.length) {
-      throw Error("Passed the wrong number of constructor arguments");
-    }
-    return constructorParamTypes.map((p, index) => {
-      if (p === "tuple" || p.endsWith("[]")) {
-        if (typeof constructorParamValues[index] === "string") {
-          return JSON.parse(constructorParamValues[index]);
-        } else {
-          return constructorParamValues[index];
-        }
-      }
-      if (p === "bytes32") {
-        invariant(
-          ethers.utils.isHexString(constructorParamValues[index]),
-          `Could not parse bytes32 value. Expected valid hex string but got "${constructorParamValues[index]}".`,
-        );
-        return ethers.utils.hexZeroPad(constructorParamValues[index], 32);
-      }
-      if (p.startsWith("bytes")) {
-        invariant(
-          ethers.utils.isHexString(constructorParamValues[index]),
-          `Could not parse bytes value. Expected valid hex string but got "${constructorParamValues[index]}".`,
-        );
-        return ethers.utils.toUtf8Bytes(constructorParamValues[index]);
-      }
-      if (p.startsWith("uint") || p.startsWith("int")) {
-        return BigNumber.from(constructorParamValues[index].toString());
-      }
-      return constructorParamValues[index];
-    });
-  }
-
-  /**
-   * @internal
-   * @param abi
-   * @param bytecode
-   * @param constructorParams
-   */
-  public async deployContractWithAbi(
-    abi: ContractInterface,
-    bytecode: BytesLike | { object: string },
-    constructorParams: Array<any>,
-  ): Promise<string> {
-    const signer = this.getSigner();
-    invariant(signer, "Signer is required to deploy contracts");
-    const deployer = await new ethers.ContractFactory(abi, bytecode)
-      .connect(signer)
-      .deploy(...constructorParams);
-    const deployedContract = await deployer.deployed();
-    // TODO parse transaction receipt
-    return deployedContract.address;
   }
 
   private toPublishedContract(
