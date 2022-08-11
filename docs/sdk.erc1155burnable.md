@@ -27,8 +27,8 @@ export declare class Erc1155Burnable implements DetectableFeature
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
+|  [batch(tokenIds, amounts)](./sdk.erc1155burnable.batch.md) |  | Burn a batch of NFTs |
 |  [batchFrom(account, tokenIds, amounts)](./sdk.erc1155burnable.batchfrom.md) |  | Burn a batch of NFTs |
-|  [batchFromSelf(tokenIds, amounts)](./sdk.erc1155burnable.batchfromself.md) |  | Burn a batch of NFTs |
 |  [from(account, tokenId, amount)](./sdk.erc1155burnable.from.md) |  | Burn a specified amount of a NFTs |
-|  [fromSelf(tokenId, amount)](./sdk.erc1155burnable.fromself.md) |  | Burn a specified amount of a NFTs |
+|  [tokens(tokenId, amount)](./sdk.erc1155burnable.tokens.md) |  | Burn a specified amount of a NFTs |
 

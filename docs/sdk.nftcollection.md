@@ -50,7 +50,7 @@ const contract = sdk.getNFTCollection("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [burnFromSelf(tokenId)](./sdk.nftcollection.burnfromself.md) |  | Burn a single NFT |
+|  [burnToken(tokenId)](./sdk.nftcollection.burntoken.md) |  | Burn a single NFT |
 |  [getAll(queryParams)](./sdk.nftcollection.getall.md) |  | Get All Minted NFTs |
 |  [getOwned(walletAddress)](./sdk.nftcollection.getowned.md) |  | Get Owned NFTs |
 |  [getOwnedTokenIds(walletAddress)](./sdk.nftcollection.getownedtokenids.md) |  | Get all token ids of NFTs owned by a specific wallet. |

@@ -411,7 +411,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     tokenId: BigNumberish,
     amount: BigNumberish,
   ): Promise<TransactionResult> {
-    return this._burn.fromSelf(tokenId, amount);
+    return this._burn.tokens(tokenId, amount);
   }
 
   /** ******************************

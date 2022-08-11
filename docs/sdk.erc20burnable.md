@@ -28,5 +28,5 @@ export declare class Erc20Burnable implements DetectableFeature
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [from(holder, amount)](./sdk.erc20burnable.from.md) |  | Burn Tokens |
-|  [fromSelf(amount)](./sdk.erc20burnable.fromself.md) |  | Burn Tokens |
+|  [tokens(amount)](./sdk.erc20burnable.tokens.md) |  | Burn Tokens |
 

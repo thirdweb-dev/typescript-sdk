@@ -27,10 +27,10 @@ export class Erc20Burnable implements DetectableFeature {
    * // The amount of this token you want to burn
    * const amount = 1.2;
    *
-   * await contract.token.burn.fromSelf(amount);
+   * await contract.token.burn.tokens(amount);
    * ```
    */
-  public async fromSelf(amount: Amount): Promise<TransactionResult> {
+  public async tokens(amount: Amount): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("burn", [
         await this.erc20.normalizeAmount(amount),

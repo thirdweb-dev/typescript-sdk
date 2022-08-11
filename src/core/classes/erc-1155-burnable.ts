@@ -29,10 +29,10 @@ export class Erc1155Burnable implements DetectableFeature {
    * // The amount of the NFT you want to burn
    * const amount = 2;
    *
-   * const result = await contract.edition.burn.fromSelf(tokenId, amount);
+   * const result = await contract.edition.burn.tokens(tokenId, amount);
    * ```
    */
-  public async fromSelf(
+  public async tokens(
     tokenId: BigNumberish,
     amount: BigNumberish,
   ): Promise<TransactionResult> {
@@ -90,10 +90,10 @@ export class Erc1155Burnable implements DetectableFeature {
    * // The amounts of each NFT you want to burn
    * const amounts = [2, 2];
    *
-   * const result = await contract.edition.burn.batchFromSelf(tokenIds, amounts);
+   * const result = await contract.edition.burn.batch(tokenIds, amounts);
    * ```
    */
-  public async batchFromSelf(
+  public async batch(
     tokenIds: BigNumberish[],
     amounts: BigNumberish[],
   ): Promise<TransactionResult> {

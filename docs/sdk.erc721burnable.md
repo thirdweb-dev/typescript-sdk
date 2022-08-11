@@ -27,5 +27,5 @@ export declare class Erc721Burnable implements DetectableFeature
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [fromSelf(tokenId)](./sdk.erc721burnable.fromself.md) |  | Burn NFTs |
+|  [token(tokenId)](./sdk.erc721burnable.token.md) |  | Burn NFTs |
 

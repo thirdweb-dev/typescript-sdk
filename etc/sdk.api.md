@@ -1808,7 +1808,7 @@ export class DuplicateLeafsError extends Error {
 // @public
 export class Edition extends Erc1155<TokenERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
-    burnFromSelf(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
+    burnTokens(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -1951,7 +1951,7 @@ export class Edition extends Erc1155<TokenERC1155> {
 // @public
 export class EditionDrop extends Erc1155<DropERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
-    burnFromSelf(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
+    burnTokens(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
     claim(tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     claimConditions: DropErc1155ClaimConditions;
     claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResult>;
@@ -2444,12 +2444,12 @@ export class Erc1155BatchMintable implements DetectableFeature {
 export class Erc1155Burnable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "IBurnableERC1155" needs to be exported by the entry point index.d.ts
     constructor(contractWrapper: ContractWrapper<IBurnableERC1155>);
+    batch(tokenIds: BigNumberish[], amounts: BigNumberish[]): Promise<TransactionResult>;
     batchFrom(account: string, tokenIds: BigNumberish[], amounts: BigNumberish[]): Promise<TransactionResult>;
-    batchFromSelf(tokenIds: BigNumberish[], amounts: BigNumberish[]): Promise<TransactionResult>;
     // (undocumented)
     featureName: "ERC1155Burnable";
     from(account: string, tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
-    fromSelf(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
+    tokens(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
 }
 
 // @public (undocumented)
@@ -2562,7 +2562,7 @@ export class Erc20Burnable implements DetectableFeature {
     // (undocumented)
     featureName: "ERC20Burnable";
     from(holder: string, amount: Amount): Promise<TransactionResult>;
-    fromSelf(amount: Amount): Promise<TransactionResult>;
+    tokens(amount: Amount): Promise<TransactionResult>;
 }
 
 // @public
@@ -2652,7 +2652,7 @@ export class Erc721Burnable implements DetectableFeature {
     constructor(contractWrapper: ContractWrapper<IBurnableERC721>);
     // (undocumented)
     featureName: "ERC721Burnable";
-    fromSelf(tokenId: BigNumberish): Promise<TransactionResult>;
+    token(tokenId: BigNumberish): Promise<TransactionResult>;
 }
 
 // @public
@@ -3631,7 +3631,7 @@ export interface NewDirectListing {
 // @public
 export class NFTCollection extends Erc721<TokenERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
-    burnFromSelf(tokenId: BigNumberish): Promise<TransactionResult>;
+    burnToken(tokenId: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -3788,7 +3788,7 @@ export interface NFTContractDeployMetadata {
 // @public
 export class NFTDrop extends Erc721<DropERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
-    burnFromSelf(tokenId: BigNumberish): Promise<TransactionResult>;
+    burnToken(tokenId: BigNumberish): Promise<TransactionResult>;
     claim(quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     claimConditions: DropClaimConditions<DropERC721>;
     claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
@@ -5759,7 +5759,7 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
 // @public
 export class SignatureDrop extends Erc721<SignatureDrop_2> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<SignatureDrop_2>);
-    burnFromSelf(tokenId: BigNumberish): Promise<TransactionResult>;
+    burnToken(tokenId: BigNumberish): Promise<TransactionResult>;
     claim(quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     claimConditions: DropClaimConditions<SignatureDrop_2>;
     claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
@@ -6518,7 +6518,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 export class Token extends Erc20<TokenERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC20>);
     burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
-    burnFromSelf(amount: Amount): Promise<TransactionResult>;
+    burnTokens(amount: Amount): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -6654,7 +6654,7 @@ export interface TokenContractDeployMetadata {
 export class TokenDrop extends Erc20<DropERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC20>);
     burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
-    burnFromSelf(amount: Amount): Promise<TransactionResult>;
+    burnTokens(amount: Amount): Promise<TransactionResult>;
     claim(amount: Amount, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     claimConditions: DropClaimConditions<DropERC20>;
     claimTo(destinationAddress: string, amount: Amount, checkERC20Allowance?: boolean): Promise<TransactionResult>;

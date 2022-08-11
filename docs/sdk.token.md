@@ -50,7 +50,7 @@ const contract = sdk.getToken("{{contract_address}}");
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
 |  [burnFrom(holder, amount)](./sdk.token.burnfrom.md) |  | Burn Tokens |
-|  [burnFromSelf(amount)](./sdk.token.burnfromself.md) |  | Burn Tokens |
+|  [burnTokens(amount)](./sdk.token.burntokens.md) |  | Burn Tokens |
 |  [getDelegation()](./sdk.token.getdelegation.md) |  | Get your voting delegatee address |
 |  [getDelegationOf(account)](./sdk.token.getdelegationof.md) |  | Get a specific address voting delegatee address |
 |  [getVoteBalance()](./sdk.token.getvotebalance.md) |  | Get your wallet voting power for the current checkpoints |

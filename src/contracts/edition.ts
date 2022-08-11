@@ -357,6 +357,6 @@ export class Edition extends Erc1155<TokenERC1155> {
     tokenId: BigNumberish,
     amount: BigNumberish,
   ): Promise<TransactionResult> {
-    return this._burn.fromSelf(tokenId, amount);
+    return this._burn.tokens(tokenId, amount);
   }
 }

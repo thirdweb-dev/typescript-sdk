@@ -248,7 +248,7 @@ describe("Custom Contracts", async () => {
     invariant(c.token.burn, "ERC20Burnable undefined");
     await c.token.mint?.to(adminWallet.address, 2);
     expect((await c.token.balance()).displayValue).to.eq("2.0");
-    await c.token.burn.fromSelf(1);
+    await c.token.burn.tokens(1);
     expect((await c.token.balance()).displayValue).to.eq("1.0");
   });
 
@@ -366,11 +366,11 @@ describe("Custom Contracts", async () => {
 
     let balance = await c.edition.balance(0);
     expect(balance.toString()).to.eq("100");
-    await c.edition.burn.fromSelf(0, 10);
+    await c.edition.burn.tokens(0, 10);
     balance = await c.edition.balance(0);
     expect(balance.toString()).to.eq("90");
 
-    await c.edition.burn.batchFromSelf([0, 1], [10, 10]);
+    await c.edition.burn.batch([0, 1], [10, 10]);
     balance = await c.edition.balance(0);
     expect(balance.toString()).to.eq("80");
     balance = await c.edition.balance(1);

@@ -52,7 +52,7 @@ const contract = sdk.getSignatureDrop("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [burnFromSelf(tokenId)](./sdk.signaturedrop.burnfromself.md) |  | Burn a single NFT |
+|  [burnToken(tokenId)](./sdk.signaturedrop.burntoken.md) |  | Burn a single NFT |
 |  [claim(quantity, checkERC20Allowance)](./sdk.signaturedrop.claim.md) |  | Claim NFTs to the connected wallet. |
 |  [claimTo(destinationAddress, quantity, checkERC20Allowance)](./sdk.signaturedrop.claimto.md) |  | Claim unique NFTs to a specific Wallet |
 |  [createBatch(metadatas, options)](./sdk.signaturedrop.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |
