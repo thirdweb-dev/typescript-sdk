@@ -70,6 +70,7 @@ export const PreDeployMetadata = z
     name: z.string(),
     metadataUri: z.string(),
     bytecodeUri: z.string(),
+    analytics: z.any().optional(),
   })
   .catchall(z.any());
 
