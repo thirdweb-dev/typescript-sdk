@@ -5,6 +5,7 @@ import IMintableERC1155Abi from "../../abis/IMintableERC1155.json";
 import ISignatureMintERC1155Abi from "../../abis/ISignatureMintERC1155.json";
 import ILazyMintAbi from "../../abis/ILazyMint.json";
 import IBurnableERC1155Abi from "../../abis/IBurnableERC1155.json";
+import DropSinglePhase1155 from "../../abis/DropSinglePhase1155.json";
 
 export const FEATURE_EDITION_BURNABLE = {
   name: "ERC1155Burnable",
@@ -17,6 +18,17 @@ export const FEATURE_EDITION_BURNABLE = {
   features: {},
 } as const;
 
+export const FEATURE_EDITION_CLAIMABLE = {
+  name: "ERC1155Claimable",
+  namespace: "edition.drop.claim",
+  docLinks: {
+    sdk: "sdk.erc1155claimable",
+    contracts: "",
+  },
+  abis: [Erc1155Abi, ILazyMintAbi, DropSinglePhase1155],
+  features: {},
+} as const;
+
 export const FEATURE_EDITION_DROPPABLE = {
   name: "ERC1155Droppable",
   namespace: "edition.drop",
@@ -25,7 +37,9 @@ export const FEATURE_EDITION_DROPPABLE = {
     contracts: "LazyMint",
   },
   abis: [Erc1155Abi, ILazyMintAbi],
-  features: {},
+  features: {
+    [FEATURE_EDITION_CLAIMABLE.name]: FEATURE_EDITION_CLAIMABLE,
+  },
 } as const;
 
 export const FEATURE_EDITION_SIGNATURE_MINTABLE = {

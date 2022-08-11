@@ -9,31 +9,36 @@ import {
   ClaimCondition,
   ClaimConditionInput,
   ClaimConditionsForToken,
+  ClaimVerification,
 } from "../../types";
 import deepEqual from "fast-deep-equal";
 import { ClaimEligibility } from "../../enums";
 import { TransactionResult } from "../index";
 import {
   getClaimerProofs,
+  prepareClaim,
   processClaimConditionInputs,
   transformResultToClaimCondition,
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
 import { includesErrorMessage } from "../../common";
 import { isNode } from "../../common/utils";
+import { BaseClaimConditionERC1155 } from "../../types/eips";
 
 /**
  * Manages claim conditions for Edition Drop contracts
  * @public
  */
-export class DropErc1155ClaimConditions {
+export class DropErc1155ClaimConditions<
+  TContract extends DropERC1155 | BaseClaimConditionERC1155,
+> {
   private contractWrapper;
   private metadata;
   private storage: IStorage;
 
   constructor(
-    contractWrapper: ContractWrapper<DropERC1155>,
-    metadata: ContractMetadata<DropERC1155, typeof DropErc721ContractSchema>,
+    contractWrapper: ContractWrapper<TContract>,
+    metadata: ContractMetadata<TContract, any>,
     storage: IStorage,
   ) {
     this.storage = storage;
@@ -438,5 +443,26 @@ export class DropErc1155ClaimConditions {
       existingConditions,
     );
     return await this.set(tokenId, newConditionInputs);
+  }
+
+  /**
+   * Returns proofs and the overrides required for the transaction.
+   *
+   * @returns - `overrides` and `proofs` as an object.
+   */
+  public async prepareClaim(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    checkERC20Allowance: boolean,
+  ): Promise<ClaimVerification> {
+    return prepareClaim(
+      quantity,
+      await this.getActive(tokenId),
+      async () => (await this.metadata.get()).merkle,
+      0,
+      this.contractWrapper,
+      this.storage,
+      checkERC20Allowance,
+    );
   }
 }

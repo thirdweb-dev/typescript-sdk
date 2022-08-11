@@ -12,6 +12,7 @@ import {
   ISignatureMintERC20,
   ISignatureMintERC721,
   LazyMint,
+  DropSinglePhase1155,
 } from "contracts";
 
 export type BaseERC20 = IERC20 & IERC20Metadata;
@@ -21,6 +22,7 @@ export type BaseDropERC721 = BaseERC721 & LazyMint;
 export type BaseDropERC1155 = BaseERC1155 & LazyMint;
 export type BaseDelayedRevealERC721 = BaseDropERC721 & DelayedReveal;
 export type BaseClaimConditionERC721 = BaseDropERC721 & IDropSinglePhase;
+export type BaseClaimConditionERC1155 = BaseDropERC1155 & DropSinglePhase1155;
 export type BaseSignatureMintERC721 = BaseERC721 & ISignatureMintERC721;
 export type BaseSignatureMintERC20 = BaseERC20 & ISignatureMintERC20;
 export type BaseSignatureMintERC1155 = BaseERC1155 & ISignatureMintERC1155;

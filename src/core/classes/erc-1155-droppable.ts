@@ -1,17 +1,31 @@
 import { TokensLazyMintedEvent } from "contracts/LazyMint";
+import { detectContractFeature } from "../../common/feature-detection";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { FEATURE_EDITION_DROPPABLE } from "../../constants/erc1155-features";
 import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
-import { BaseDropERC1155 } from "../../types/eips";
+import { BaseClaimConditionERC1155, BaseDropERC1155 } from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { IStorage } from "../interfaces/IStorage";
 import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
+import { Erc1155Claimable } from "./erc-1155-claimable";
 
 export class Erc1155Droppable implements DetectableFeature {
   featureName = FEATURE_EDITION_DROPPABLE.name;
+
+  /**
+   * Claim tokens and configure claim conditions
+   * @remarks Let users claim NFTs. Define who can claim NFTs in the collection, when and how many.
+   * @example
+   * ```javascript
+   * const quantity = 10;
+   * const tokenId = 0;
+   * await contract.edition.drop.claim.to("0x...", 0, quantity);
+   * ```
+   */
+  public claim: Erc1155Claimable | undefined;
 
   private contractWrapper: ContractWrapper<BaseDropERC1155>;
   private erc1155: Erc1155;
@@ -26,6 +40,7 @@ export class Erc1155Droppable implements DetectableFeature {
     this.contractWrapper = contractWrapper;
 
     this.storage = storage;
+    this.claim = this.detectErc1155Claimable();
   }
 
   /**
@@ -98,5 +113,21 @@ export class Erc1155Droppable implements DetectableFeature {
       });
     }
     return results;
+  }
+
+  /** ******************************
+   * PRIVATE FUNCTIONS
+   *******************************/
+
+  private detectErc1155Claimable(): Erc1155Claimable | undefined {
+    if (
+      detectContractFeature<BaseClaimConditionERC1155>(
+        this.contractWrapper,
+        "ERC1155Claimable",
+      )
+    ) {
+      return new Erc1155Claimable(this.contractWrapper, this.storage);
+    }
+    return undefined;
   }
 }

@@ -115,7 +115,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * await contract.claimConditions.set(tokenId, claimConditions);
    * ```
    */
-  public claimConditions: DropErc1155ClaimConditions;
+  public claimConditions: DropErc1155ClaimConditions<DropERC1155>;
   public history: DropErc1155History;
   /**
    * @internal
@@ -316,7 +316,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     quantity: BigNumberish,
     checkERC20Allowance = true, // TODO split up allowance checks
   ): Promise<TransactionTask> {
-    const claimVerification = await this.prepareClaim(
+    const claimVerification = await this.claimConditions.prepareClaim(
       tokenId,
       quantity,
       checkERC20Allowance,
@@ -412,30 +412,5 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     amount: BigNumberish,
   ): Promise<TransactionResult> {
     return this._burn.tokens(tokenId, amount);
-  }
-
-  /** ******************************
-   * PRIVATE FUNCTIONS
-   *******************************/
-
-  /**
-   * Returns proofs and the overrides required for the transaction.
-   *
-   * @returns - `overrides` and `proofs` as an object.
-   */
-  private async prepareClaim(
-    tokenId: BigNumberish,
-    quantity: BigNumberish,
-    checkERC20Allowance: boolean,
-  ): Promise<ClaimVerification> {
-    return prepareClaim(
-      quantity,
-      await this.claimConditions.getActive(tokenId),
-      async () => (await this.metadata.get()).merkle,
-      0,
-      this.contractWrapper,
-      this.storage,
-      checkERC20Allowance,
-    );
   }
 }
