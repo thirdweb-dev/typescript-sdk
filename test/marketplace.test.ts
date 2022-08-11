@@ -1096,13 +1096,13 @@ describe("Marketplace Contract", async () => {
       await sdk.updateSignerOrProvider(adminWallet);
       await dummyNftContract.transfer(samWallet.address, "0");
 
-      const allListings = await marketplaceContract.getAllListings();
+      const allListings = await marketplaceContract.getActiveListings();
       const found = allListings.find(
         (l) => l.id.toString() === directListingId.toString(),
       );
       assert.isUndefined(
         found,
-        "should not have found the listing becuase it is invalid",
+        "should not have found the listing because it is invalid",
       );
     });
   });

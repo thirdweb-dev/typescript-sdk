@@ -143,7 +143,7 @@ describe("Publishing", async () => {
     // fetch metadata back
     const c = await sdk.getContract(deployedAddr);
     const meta = await c.metadata.get();
-    expect(meta.name).to.eq("Greeter");
+    expect(meta.name).to.eq("MyToken");
   });
 
   it("should publish multiple versions", async () => {
@@ -272,7 +272,7 @@ describe("Publishing", async () => {
     expect(all.length).to.eq(1);
     invariant(c.royalties, "no royalties detected");
     const prevMeta = await c.metadata.get();
-    expect(prevMeta.name).to.eq("CustomAzukiContract");
+    expect(prevMeta.name).to.eq("AzukiMint");
     expect(prevMeta.description).to.eq(
       "Azuki contract that can be fully used in the thirdweb dashboard",
     );

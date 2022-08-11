@@ -154,7 +154,7 @@ describe("Custom Contracts", async () => {
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Contract undefined");
     const meta = await c.metadata.get();
-    expect(meta.name).to.eq("Greeter");
+    expect(meta.name).to.eq("MyToken");
   });
 
   it("should detect feature: roles", async () => {
