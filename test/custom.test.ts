@@ -240,6 +240,17 @@ describe("Custom Contracts", async () => {
     );
   });
 
+  it("should detect feature: erc20 burnable", async () => {
+    const c = await sdk.getContract(tokenContractAddress);
+    invariant(c, "Contract undefined");
+    invariant(c.token, "ERC20 undefined");
+    invariant(c.token.burn, "ERC20Burnable undefined");
+    await c.token.mint?.to(adminWallet.address, 2);
+    expect((await c.token.balance()).displayValue).to.eq("2.0");
+    await c.token.burn.tokens(1);
+    expect((await c.token.balance()).displayValue).to.eq("1.0");
+  });
+
   it("should detect feature: erc721", async () => {
     const c = await sdk.getContract(nftContractAddress);
     invariant(c, "Contract undefined");
@@ -252,6 +263,22 @@ describe("Custom Contracts", async () => {
     const nfts = await c.nft.query.all();
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
+  });
+
+  it("should detect feature: erc721 burnable", async () => {
+    const c = await sdk.getContract(nftContractAddress);
+    invariant(c, "Contract undefined");
+    invariant(c.nft, "ERC721 undefined");
+    invariant(c.nft.burn, "ERC721Burnable undefined");
+    invariant(c.nft.query, "ERC721 query undefined");
+    await c.nft.mint?.to(adminWallet.address, {
+      name: "Custom NFT",
+    });
+    let balance = await c.nft.balance();
+    expect(balance.toString()).to.eq("1");
+    await c.nft.burn.token(0);
+    balance = await c.nft.balance();
+    expect(balance.toString()).to.eq("0");
   });
 
   it("should detect feature: erc721 lazy mint", async () => {
@@ -310,6 +337,43 @@ describe("Custom Contracts", async () => {
     const nfts = await c.edition.query.all();
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
+  });
+
+  it("should detect feature: erc1155 burnable", async () => {
+    const c = await sdk.getContract(editionContractAddress);
+    invariant(c, "Contract undefined");
+    invariant(c.edition, "ERC1155 undefined");
+    invariant(c.edition.mint, "ERC1155 mintable undefined");
+    invariant(c.edition.mint.batch, "ERC1155 batch undefined");
+    invariant(c.edition.burn, "ERC1155 burnable undefined");
+    invariant(c.edition.query, "ERC1155 query undefined");
+
+    await c.edition.mint.batch.to(adminWallet.address, [
+      {
+        metadata: {
+          name: "Custom NFT",
+        },
+        supply: 100,
+      },
+      {
+        metadata: {
+          name: "Custom NFT",
+        },
+        supply: 100,
+      },
+    ]);
+
+    let balance = await c.edition.balance(0);
+    expect(balance.toString()).to.eq("100");
+    await c.edition.burn.tokens(0, 10);
+    balance = await c.edition.balance(0);
+    expect(balance.toString()).to.eq("90");
+
+    await c.edition.burn.batch([0, 1], [10, 10]);
+    balance = await c.edition.balance(0);
+    expect(balance.toString()).to.eq("80");
+    balance = await c.edition.balance(1);
+    expect(balance.toString()).to.eq("90");
   });
 
   it("should detect feature: erc1155 lazy mint", async () => {

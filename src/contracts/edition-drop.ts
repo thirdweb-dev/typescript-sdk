@@ -35,6 +35,7 @@ import { getRoleHash } from "../common";
 import { EditionMetadata, EditionMetadataOwner } from "../schema";
 import { uploadOrExtractURIs } from "../common/nft";
 import { TransactionTask } from "../core/classes/TransactionTask";
+import { Erc1155Burnable } from "../core/classes/erc-1155-burnable";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -60,6 +61,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   static schema = DropErc1155ContractSchema;
 
   private _query = this.query as Erc1155Enumerable;
+  private _burn = this.burn as Erc1155Burnable;
 
   public sales: ContractPrimarySale<DropERC1155>;
   public platformFees: ContractPlatformFee<DropERC1155>;
@@ -402,21 +404,14 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    *
    * @example
    * ```javascript
-   * const result = await contract.burn(tokenId, amount);
+   * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  public async burn(
+  public async burnTokens(
     tokenId: BigNumberish,
     amount: BigNumberish,
   ): Promise<TransactionResult> {
-    const account = await this.contractWrapper.getSignerAddress();
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [
-        account,
-        tokenId,
-        amount,
-      ]),
-    };
+    return this._burn.tokens(tokenId, amount);
   }
 
   /** ******************************

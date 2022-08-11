@@ -1815,7 +1815,7 @@ export class DuplicateLeafsError extends Error {
 // @public
 export class Edition extends Erc1155<TokenERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC1155>);
-    burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
+    burnTokens(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -1958,7 +1958,7 @@ export class Edition extends Erc1155<TokenERC1155> {
 // @public
 export class EditionDrop extends Erc1155<DropERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
-    burn(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
+    burnTokens(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
     claim(tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     claimConditions: DropErc1155ClaimConditions;
     claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResult>;
@@ -2404,9 +2404,9 @@ export class Erc1155<T extends DropERC1155 | TokenERC1155 | BaseERC1155 = BaseER
     balance(tokenId: BigNumberish): Promise<BigNumber>;
     balanceOf(address: string, tokenId: BigNumberish): Promise<BigNumber>;
     // (undocumented)
+    burn: Erc1155Burnable | undefined;
+    // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
-    // Warning: (ae-forgotten-export) The symbol "Erc1155Droppable" needs to be exported by the entry point index.d.ts
-    //
     // (undocumented)
     drop: Erc1155Droppable | undefined;
     // (undocumented)
@@ -2445,6 +2445,29 @@ export class Erc1155BatchMintable implements DetectableFeature {
     // (undocumented)
     featureName: "ERC1155BatchMintable";
     to(to: string, metadataWithSupply: EditionMetadataOrUri[]): Promise<TransactionResultWithId<EditionMetadata>[]>;
+}
+
+// @public (undocumented)
+export class Erc1155Burnable implements DetectableFeature {
+    // Warning: (ae-forgotten-export) The symbol "IBurnableERC1155" needs to be exported by the entry point index.d.ts
+    constructor(contractWrapper: ContractWrapper<IBurnableERC1155>);
+    batch(tokenIds: BigNumberish[], amounts: BigNumberish[]): Promise<TransactionResult>;
+    batchFrom(account: string, tokenIds: BigNumberish[], amounts: BigNumberish[]): Promise<TransactionResult>;
+    // (undocumented)
+    featureName: "ERC1155Burnable";
+    from(account: string, tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
+    tokens(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
+}
+
+// @public (undocumented)
+export class Erc1155Droppable implements DetectableFeature {
+    // Warning: (ae-forgotten-export) The symbol "BaseDropERC1155" needs to be exported by the entry point index.d.ts
+    constructor(erc1155: Erc1155, contractWrapper: ContractWrapper<BaseDropERC1155>, storage: IStorage);
+    // (undocumented)
+    featureName: "ERC1155Droppable";
+    lazyMint(metadatas: NFTMetadataOrUri[], options?: {
+        onProgress: (event: UploadProgressEvent) => void;
+    }): Promise<TransactionResultWithId<NFTMetadata>[]>;
 }
 
 // @public
@@ -2502,6 +2525,8 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20 | Ba
     balance(): Promise<CurrencyValue>;
     balanceOf(address: string): Promise<CurrencyValue>;
     // (undocumented)
+    burn: Erc20Burnable | undefined;
+    // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
     // (undocumented)
     featureName: "ERC20";
@@ -2535,6 +2560,16 @@ export class Erc20BatchMintable implements DetectableFeature {
     // (undocumented)
     featureName: "ERC20BatchMintable";
     to(args: TokenMintInput[]): Promise<TransactionResult>;
+}
+
+// @public (undocumented)
+export class Erc20Burnable implements DetectableFeature {
+    // Warning: (ae-forgotten-export) The symbol "IBurnableERC20" needs to be exported by the entry point index.d.ts
+    constructor(erc20: Erc20, contractWrapper: ContractWrapper<IBurnableERC20>);
+    // (undocumented)
+    featureName: "ERC20Burnable";
+    from(holder: string, amount: Amount): Promise<TransactionResult>;
+    tokens(amount: Amount): Promise<TransactionResult>;
 }
 
 // @public
@@ -2573,6 +2608,8 @@ export class Erc721<T extends Multiwrap_2 | SignatureDrop_2 | DropERC721 | Token
     constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, options?: SDKOptions);
     balance(): Promise<BigNumber>;
     balanceOf(address: string): Promise<BigNumber>;
+    // (undocumented)
+    burn: Erc721Burnable | undefined;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
     // (undocumented)
@@ -2614,6 +2651,15 @@ export class Erc721BatchMintable implements DetectableFeature {
     // (undocumented)
     featureName: "ERC721BatchMintable";
     to(to: string, metadatas: NFTMetadataOrUri[]): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
+}
+
+// @public (undocumented)
+export class Erc721Burnable implements DetectableFeature {
+    // Warning: (ae-forgotten-export) The symbol "IBurnableERC721" needs to be exported by the entry point index.d.ts
+    constructor(contractWrapper: ContractWrapper<IBurnableERC721>);
+    // (undocumented)
+    featureName: "ERC721Burnable";
+    token(tokenId: BigNumberish): Promise<TransactionResult>;
 }
 
 // @public
@@ -3599,7 +3645,7 @@ export interface NewDirectListing {
 // @public
 export class NFTCollection extends Erc721<TokenERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC721>);
-    burn(tokenId: BigNumberish): Promise<TransactionResult>;
+    burnToken(tokenId: BigNumberish): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -3756,7 +3802,7 @@ export interface NFTContractDeployMetadata {
 // @public
 export class NFTDrop extends Erc721<DropERC721> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC721>);
-    burn(tokenId: BigNumberish): Promise<TransactionResult>;
+    burnToken(tokenId: BigNumberish): Promise<TransactionResult>;
     claim(quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     claimConditions: DropClaimConditions<DropERC721>;
     claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
@@ -5733,7 +5779,7 @@ export const Signature721WithQuantityOutput: z.ZodObject<z.extendShape<z.extendS
 // @public
 export class SignatureDrop extends Erc721<SignatureDrop_2> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<SignatureDrop_2>);
-    burn(tokenId: BigNumberish): Promise<TransactionResult>;
+    burnToken(tokenId: BigNumberish): Promise<TransactionResult>;
     claim(quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
     claimConditions: DropClaimConditions<SignatureDrop_2>;
     claimTo(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
@@ -6491,8 +6537,8 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 // @public
 export class Token extends Erc20<TokenERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TokenERC20>);
-    burn(amount: Amount): Promise<TransactionResult>;
     burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
+    burnTokens(amount: Amount): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
     // (undocumented)
@@ -6627,8 +6673,8 @@ export interface TokenContractDeployMetadata {
 // @public
 export class TokenDrop extends Erc20<DropERC20> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC20>);
-    burn(amount: Amount): Promise<TransactionResult>;
     burnFrom(holder: string, amount: Amount): Promise<TransactionResult>;
+    burnTokens(amount: Amount): Promise<TransactionResult>;
     claim(amount: Amount, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     claimConditions: DropClaimConditions<DropERC20>;
     claimTo(destinationAddress: string, amount: Amount, checkERC20Allowance?: boolean): Promise<TransactionResult>;

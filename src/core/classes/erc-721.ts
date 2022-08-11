@@ -13,6 +13,7 @@ import {
 } from "../../common";
 import {
   DropERC721,
+  IBurnableERC721,
   IERC721Supply,
   IMintableERC721,
   ISignatureMintERC721,
@@ -27,6 +28,7 @@ import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { Erc721Droppable } from "./erc-721-droppable";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
+import { Erc721Burnable } from "./erc-721-burnable";
 
 /**
  * Standard ERC721 NFT functions
@@ -50,6 +52,7 @@ export class Erc721<
   featureName = FEATURE_NFT.name;
   public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
+  public burn: Erc721Burnable | undefined;
   public drop: Erc721Droppable | undefined;
   public signature: Erc721WithQuantitySignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
@@ -74,6 +77,7 @@ export class Erc721<
     }
     this.query = this.detectErc721Enumerable();
     this.mint = this.detectErc721Mintable();
+    this.burn = this.detectErc721Burnable();
     this.drop = this.detectErc721Droppable();
     this.signature = this.detectErc721SignatureMintable();
   }
@@ -276,6 +280,18 @@ export class Erc721<
       )
     ) {
       return new Erc721Mintable(this, this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectErc721Burnable(): Erc721Burnable | undefined {
+    if (
+      detectContractFeature<IBurnableERC721>(
+        this.contractWrapper,
+        "ERC721Burnable",
+      )
+    ) {
+      return new Erc721Burnable(this.contractWrapper);
     }
     return undefined;
   }
