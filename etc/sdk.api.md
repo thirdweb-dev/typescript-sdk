@@ -2847,6 +2847,7 @@ export function fetchPreDeployMetadata(publishMetadataUri: string, storage: ISto
 // @internal (undocumented)
 export function fetchRawPredeployMetadata(publishMetadataUri: string, storage: IStorage): Promise<{
     [x: string]: any;
+    analytics?: any;
     name: string;
     metadataUri: string;
     bytecodeUri: string;
@@ -2919,6 +2920,7 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
     name: z.ZodString;
     metadataUri: z.ZodString;
     bytecodeUri: z.ZodString;
+    analytics: z.ZodOptional<z.ZodAny>;
 }, {
     version: z.ZodEffects<z.ZodString, string, string>;
     displayName: z.ZodOptional<z.ZodString>;
@@ -2933,6 +2935,7 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
     [x: string]: any;
     publisher?: string | undefined;
     description?: string | undefined;
+    analytics?: any;
     displayName?: string | undefined;
     readme?: string | undefined;
     license?: string | undefined;
@@ -2946,6 +2949,7 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
     [x: string]: any;
     publisher?: string | undefined;
     description?: string | undefined;
+    analytics?: any;
     displayName?: string | undefined;
     readme?: string | undefined;
     license?: string | undefined;
@@ -4221,13 +4225,16 @@ export const PreDeployMetadata: z.ZodObject<{
     name: z.ZodString;
     metadataUri: z.ZodString;
     bytecodeUri: z.ZodString;
+    analytics: z.ZodOptional<z.ZodAny>;
 }, "strip", z.ZodAny, {
     [x: string]: any;
+    analytics?: any;
     name: string;
     metadataUri: string;
     bytecodeUri: string;
 }, {
     [x: string]: any;
+    analytics?: any;
     name: string;
     metadataUri: string;
     bytecodeUri: string;
@@ -4245,6 +4252,7 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
     name: z.ZodString;
     metadataUri: z.ZodString;
     bytecodeUri: z.ZodString;
+    analytics: z.ZodOptional<z.ZodAny>;
 }, {
     name: z.ZodString;
     abi: z.ZodArray<z.ZodObject<{
@@ -4401,6 +4409,7 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
     bytecode: z.ZodString;
 }>, "strip", z.ZodAny, {
     [x: string]: any;
+    analytics?: any;
     name: string;
     metadataUri: string;
     metadata: Record<string, any>;
@@ -4443,6 +4452,7 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
 }, {
     [x: string]: any;
     licenses?: string[] | undefined;
+    analytics?: any;
     name: string;
     metadataUri: string;
     metadata: Record<string, any>;
@@ -7083,10 +7093,10 @@ export class WrongListingTypeError extends Error {
 
 // Warnings were encountered during analysis:
 //
-// dist/src/schema/contracts/custom.d.ts:1270:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
-// dist/src/schema/contracts/custom.d.ts:1271:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
-// dist/src/schema/contracts/custom.d.ts:1278:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
-// dist/src/schema/contracts/custom.d.ts:1279:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1279:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1280:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1287:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1288:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 
