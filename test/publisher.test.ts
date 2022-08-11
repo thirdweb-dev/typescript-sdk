@@ -106,9 +106,8 @@ describe("Publishing", async () => {
       version: "0.0.1",
     });
     const contract = await tx.data();
-    const deployedAddr = await publisher.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
+    const deployedAddr = await sdk.deployer.deployContractFromUri(
+      contract.metadataUri,
       [],
     );
     expect(deployedAddr.length).to.be.gt(0);
@@ -132,9 +131,8 @@ describe("Publishing", async () => {
       version: "0.0.2",
     });
     const contract = await tx.data();
-    const deployedAddr = await publisher.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
+    const deployedAddr = await sdk.deployer.deployContractFromUri(
+      contract.metadataUri,
       [],
     );
     expect(deployedAddr.length).to.be.gt(0);
@@ -210,9 +208,8 @@ describe("Publishing", async () => {
       version: "0.0.1",
     });
     const contract = await tx.data();
-    const deployedAddr = await publisher.deployPublishedContract(
-      bobWallet.address,
-      contract.id,
+    const deployedAddr = await sdk.deployer.deployContractFromUri(
+      contract.metadataUri,
       [
         adminWallet.address,
         "0x1234",
@@ -234,9 +231,8 @@ describe("Publishing", async () => {
       version: "0.0.1",
     });
     const contract = await tx.data();
-    const deployedAddr = await pub.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
+    const deployedAddr = await sdk.deployer.deployContractFromUri(
+      contract.metadataUri,
       [],
     );
     const c = await realSDK.getContract(deployedAddr);
@@ -253,9 +249,8 @@ describe("Publishing", async () => {
       version: "0.0.1",
     });
     const contract = await tx.data();
-    const deployedAddr = await pub.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
+    const deployedAddr = await sdk.deployer.deployContractFromUri(
+      contract.metadataUri,
       [10, "bar"],
     );
     const c = await sdk.getContract(deployedAddr);
@@ -284,9 +279,8 @@ describe("Publishing", async () => {
   });
 
   it("ERC721Dropable multiphase feature detection", async () => {
-    const pub = sdk.getPublisher();
     const ipfsUri = "ipfs://QmWaidQMSYHPzYYZCxMc2nSk2vrD28mS43Xc9k7QFyAGja/0";
-    const addr = await pub.deployContract(ipfsUri, []);
+    const addr = await sdk.deployer.deployContractFromUri(ipfsUri, []);
     const c = await sdk.getContract(addr);
 
     invariant(c.nft, "nft must be defined");
@@ -312,9 +306,8 @@ describe("Publishing", async () => {
   });
 
   it("ERC721Drop base feature detection", async () => {
-    const pub = sdk.getPublisher();
     const ipfsUri = "ipfs://QmfQwWiMbKaSmng5GN1P5bgCfdEy4Uyg7BznwbaP1bvj7f/0";
-    const addr = await pub.deployContract(ipfsUri, []);
+    const addr = await sdk.deployer.deployContractFromUri(ipfsUri, []);
     const c = await sdk.getContract(addr);
 
     invariant(c.nft, "nft must be defined");
@@ -353,9 +346,8 @@ describe("Publishing", async () => {
   });
 
   it("Constructor params with tuples", async () => {
-    const pub = await sdk.getPublisher();
     const ipfsUri = "ipfs://QmZQa56Cj1gFnZgKSkvGE5uzhaQrQV3nU6upDWDusCaCwY/0";
-    const addr = await pub.deployContract(ipfsUri, [
+    const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
       "0x1234",
       "123",
       JSON.stringify(["0x1234", "0x4567"]),

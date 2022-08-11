@@ -1151,6 +1151,12 @@ export class ContractDeployer extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, options: SDKOptions, storage: IStorage);
     // @internal
     deployBuiltInContract<TContract extends ValidContractClass>(contractType: TContract["contractType"], contractMetadata: z.input<TContract["schema"]["deploy"]>): Promise<string>;
+    // @internal (undocumented)
+    deployContractFromUri(publishMetadataUri: string, constructorParamValues: any[]): Promise<string>;
+    // @internal (undocumented)
+    deployContractWithAbi(abi: ContractInterface, bytecode: BytesLike | {
+        object: string;
+    }, constructorParams: Array<any>): Promise<string>;
     deployEdition(metadata: NFTContractDeployMetadata): Promise<string>;
     deployEditionDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deployMarketplace(metadata: MarketplaceContractDeployMetadata): Promise<string>;
@@ -1159,6 +1165,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     deployNFTCollection(metadata: NFTContractDeployMetadata): Promise<string>;
     deployNFTDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deployPack(metadata: NFTContractDeployMetadata): Promise<string>;
+    deployReleasedContract(releaserAddress: string, contractName: string, constructorParams: any[]): Promise<string>;
     deploySignatureDrop(metadata: NFTContractDeployMetadata): Promise<string>;
     deploySplit(metadata: SplitContractDeployMetadata): Promise<string>;
     deployToken(metadata: TokenContractDeployMetadata): Promise<string>;

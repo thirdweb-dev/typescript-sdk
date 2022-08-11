@@ -42,8 +42,7 @@ describe("Custom Contracts", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const publisher = sdk.getPublisher();
-    customContractAddress = await publisher.deployContract(
+    customContractAddress = await sdk.deployer.deployContractFromUri(
       simpleContractUri,
       [],
     );
