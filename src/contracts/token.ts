@@ -241,33 +241,10 @@ export class Token extends Erc20<TokenERC20> {
    * // The amount of this token you want to burn
    * const amount = 1.2;
    *
-   * await contract.burnFromSelf(amount);
+   * await contract.burnTokens(amount);
    * ```
    */
-  public async burnFromSelf(amount: Amount): Promise<TransactionResult> {
+  public async burnTokens(amount: Amount): Promise<TransactionResult> {
     return this._burn.fromSelf(amount);
-  }
-
-  /**
-   * Burn Tokens
-   *
-   * @remarks Burn tokens held by the specified wallet
-   *
-   * @example
-   * ```javascript
-   * // Address of the wallet sending the tokens
-   * const holderAddress = "{{wallet_address}}";
-   *
-   * // The amount of this token you want to burn
-   * const amount = 1.2;
-   *
-   * await contract.burnFrom(holderAddress, amount);
-   * ```
-   */
-  public async burnFrom(
-    holder: string,
-    amount: Amount,
-  ): Promise<TransactionResult> {
-    return this._burn.from(holder, amount);
   }
 }

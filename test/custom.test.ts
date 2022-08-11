@@ -277,7 +277,7 @@ describe("Custom Contracts", async () => {
     });
     let balance = await c.nft.balance();
     expect(balance.toString()).to.eq("1");
-    await c.nft.burn.fromSelf(0);
+    await c.nft.burn.token(0);
     balance = await c.nft.balance();
     expect(balance.toString()).to.eq("0");
   });

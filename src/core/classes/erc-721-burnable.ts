@@ -24,10 +24,10 @@ export class Erc721Burnable implements DetectableFeature {
    * // The token ID of the NFT you want to burn
    * const tokenId = 0;
    *
-   * await contract.nft.burn.fromSelf(tokenId);
+   * await contract.nft.burn.token(tokenId);
    * ```
    */
-  public async fromSelf(tokenId: BigNumberish): Promise<TransactionResult> {
+  public async token(tokenId: BigNumberish): Promise<TransactionResult> {
     return {
       receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
     };

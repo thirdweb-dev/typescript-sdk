@@ -350,10 +350,10 @@ export class Edition extends Erc1155<TokenERC1155> {
    *
    * @example
    * ```javascript
-   * const result = await contract.burnFromSelf(tokenId, amount);
+   * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  public async burnFromSelf(
+  public async burnTokens(
     tokenId: BigNumberish,
     amount: BigNumberish,
   ): Promise<TransactionResult> {

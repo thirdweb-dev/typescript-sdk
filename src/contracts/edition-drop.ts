@@ -404,10 +404,10 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    *
    * @example
    * ```javascript
-   * const result = await contract.burnFromSelf(tokenId, amount);
+   * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  public async burnFromSelf(
+  public async burnTokens(
     tokenId: BigNumberish,
     amount: BigNumberish,
   ): Promise<TransactionResult> {

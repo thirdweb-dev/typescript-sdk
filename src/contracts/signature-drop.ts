@@ -573,11 +573,11 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * @param tokenId - the token Id to burn
    * @example
    * ```javascript
-   * const result = await contract.burnFromSelf(tokenId, amount);
+   * const result = await contract.burnToken(tokenId);
    * ```
    */
-  public async burnFromSelf(tokenId: BigNumberish): Promise<TransactionResult> {
-    return this._burn.fromSelf(tokenId);
+  public async burnToken(tokenId: BigNumberish): Promise<TransactionResult> {
+    return this._burn.token(tokenId);
   }
 
   /** ******************************
