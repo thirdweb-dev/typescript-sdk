@@ -237,6 +237,85 @@
       "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155BatchMintable"
     }
   },
+  "ERC1155Burnable": {
+    "name": "Erc1155Burnable",
+    "summary": "",
+    "remarks": null,
+    "examples": {},
+    "methods": [
+      {
+        "name": "batch",
+        "summary": "Burn a batch of NFTs\n\n",
+        "remarks": "\n\nBurn the batch NFTs from the connected wallet\n\n",
+        "examples": {
+          "javascript": "// The token IDs to burn NFTs of\nconst tokenIds = [0, 1];\n// The amounts of each NFT you want to burn\nconst amounts = [2, 2];\n\nconst result = await contract.edition.burn.batch(tokenIds, amounts);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Burnable.batch"
+        }
+      },
+      {
+        "name": "batchFrom",
+        "summary": "Burn a batch of NFTs\n\n",
+        "remarks": "\n\nBurn the batch NFTs from the specified wallet\n\n",
+        "examples": {
+          "javascript": "// The address of the wallet to burn NFTS from\nconst account = \"0x...\";\n// The token IDs to burn NFTs of\nconst tokenIds = [0, 1];\n// The amounts of each NFT you want to burn\nconst amounts = [2, 2];\n\nconst result = await contract.edition.burn.batchFrom(account, tokenIds, amounts);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Burnable.batchFrom"
+        }
+      },
+      {
+        "name": "from",
+        "summary": "Burn a specified amount of a NFTs\n\n",
+        "remarks": "\n\nBurn the specified NFTs from a specified wallet\n\n",
+        "examples": {
+          "javascript": "// The address of the wallet to burn NFTS from\nconst account = \"0x...\";\n// The token ID to burn NFTs of\nconst tokenId = 0;\n// The amount of this NFT you want to burn\nconst amount = 2;\n\nconst result = await contract.edition.burn.from(account, tokenId, amount);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Burnable.from"
+        }
+      },
+      {
+        "name": "tokens",
+        "summary": "Burn a specified amount of a NFTs\n\n",
+        "remarks": "\n\nBurn the specified NFTs from the connected wallet\n\n",
+        "examples": {
+          "javascript": "// The token ID to burn NFTs of\nconst tokenId = 0;\n// The amount of the NFT you want to burn\nconst amount = 2;\n\nconst result = await contract.edition.burn.tokens(tokenId, amount);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Burnable.tokens"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Burnable"
+    }
+  },
+  "ERC1155Droppable": {
+    "name": "Erc1155Droppable",
+    "summary": "",
+    "remarks": null,
+    "examples": {},
+    "methods": [
+      {
+        "name": "lazyMint",
+        "summary": "Create a batch of NFTs to be claimed in the future\n\n",
+        "remarks": "\n\nCreate batch allows you to create a batch of many NFTs in one transaction.\n\n",
+        "examples": {
+          "javascript": "// Custom metadata of the NFTs to create\nconst metadatas = [{\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"), // This can be an image url or file\n}, {\n  name: \"Cool NFT\",\n  description: \"This is a cool NFT\",\n  image: fs.readFileSync(\"path/to/image.png\"),\n}];\n\nconst results = await contract.edition.drop.lazyMint(metadatas); // uploads and creates the NFTs on chain\nconst firstTokenId = results[0].id; // token id of the first created NFT\nconst firstNFT = await results[0].data(); // (optional) fetch details of the first created NFT"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Droppable.lazyMint"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Droppable"
+    }
+  },
   "ERC1155Enumerable": {
     "name": "Erc1155Enumerable",
     "summary": "List ERC1155 NFTs\n\n",
@@ -492,6 +571,40 @@
       "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20BatchMintable"
     }
   },
+  "ERC20Burnable": {
+    "name": "Erc20Burnable",
+    "summary": "",
+    "remarks": null,
+    "examples": {},
+    "methods": [
+      {
+        "name": "from",
+        "summary": "Burn Tokens\n\n",
+        "remarks": "\n\nBurn tokens held by the specified wallet\n\n",
+        "examples": {
+          "javascript": "// Address of the wallet sending the tokens\nconst holderAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.token.burn.from(holderAddress, amount);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20Burnable.from"
+        }
+      },
+      {
+        "name": "tokens",
+        "summary": "Burn Tokens\n\n",
+        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
+        "examples": {
+          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.token.burn.tokens(amount);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20Burnable.tokens"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc20Burnable"
+    }
+  },
   "ERC20Mintable": {
     "name": "Erc20Mintable",
     "summary": "Mint ERC20 Tokens\n\n",
@@ -621,6 +734,29 @@
     "properties": [],
     "reference": {
       "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721BatchMintable"
+    }
+  },
+  "ERC721Burnable": {
+    "name": "Erc721Burnable",
+    "summary": "",
+    "remarks": null,
+    "examples": {},
+    "methods": [
+      {
+        "name": "token",
+        "summary": "Burn NFTs\n\n",
+        "remarks": "\n\nBurn NFTs held by the connected wallet\n\n",
+        "examples": {
+          "javascript": "// The token ID of the NFT you want to burn\nconst tokenId = 0;\n\nawait contract.nft.burn.token(tokenId);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Burnable.token"
+        }
+      }
+    ],
+    "properties": [],
+    "reference": {
+      "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc721Burnable"
     }
   },
   "ERC721Claimable": {

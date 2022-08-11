@@ -38,6 +38,7 @@ import { DelayedReveal, DropClaimConditions } from "../core/index";
 import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
 import { uploadOrExtractURIs } from "../common/nft";
 import { TransactionTask } from "../core/classes/TransactionTask";
+import { Erc721Burnable } from "../core/classes/erc-721-burnable";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -168,6 +169,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
 
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
+  private _burn = this.burn as Erc721Burnable;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -571,13 +573,11 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * @param tokenId - the token Id to burn
    * @example
    * ```javascript
-   * const result = await contract.burn(tokenId, amount);
+   * const result = await contract.burnToken(tokenId);
    * ```
    */
-  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
-    };
+  public async burnToken(tokenId: BigNumberish): Promise<TransactionResult> {
+    return this._burn.token(tokenId);
   }
 
   /** ******************************
