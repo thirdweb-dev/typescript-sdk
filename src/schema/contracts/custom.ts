@@ -199,7 +199,7 @@ export const CompilerMetadataFetchedSchema = z.object({
   abi: AbiSchema,
   metadata: z.record(z.string(), z.any()),
   info: ContractInfoSchema,
-  licenses: z.array(z.string()),
+  licenses: z.array(z.string()).default([]),
 });
 
 /**
