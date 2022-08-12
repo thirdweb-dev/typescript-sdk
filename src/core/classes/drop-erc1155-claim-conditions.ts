@@ -103,7 +103,10 @@ export class DropErc1155ClaimConditions<
   public async getAll(tokenId: BigNumberish): Promise<ClaimCondition[]> {
     if (this.isMultiPhaseDropContract(this.contractWrapper)) {
       const claimCondition =
-        await this.contractWrapper.readContract.claimCondition(tokenId);
+        (await this.contractWrapper.readContract.claimCondition(tokenId)) as {
+          currentStartId: BigNumber;
+          count: BigNumber;
+        };
       const startId = claimCondition.currentStartId.toNumber();
       const count = claimCondition.count.toNumber();
       const conditions = [];

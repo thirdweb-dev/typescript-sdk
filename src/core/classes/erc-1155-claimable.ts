@@ -9,6 +9,7 @@ import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimVerification } from "../../types/claim-conditions/claim-conditions";
 import { BigNumberish } from "ethers";
 import { TransactionResult } from "../types";
+import { TransactionTask } from "./TransactionTask";
 
 export class Erc1155Claimable implements DetectableFeature {
   featureName = FEATURE_NFT_CLAIMABLE.name;
@@ -34,6 +35,51 @@ export class Erc1155Claimable implements DetectableFeature {
       metadata,
       this.storage,
     );
+  }
+
+  /**
+   * Construct a claim transaction without executing it.
+   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param destinationAddress - Address you want to send the token to
+   * @param tokenId - Id of the token you want to claim
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
+   * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
+   */
+  public async getClaimTransaction(
+    destinationAddress: string,
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    checkERC20Allowance = true, // TODO split up allowance checks
+    claimData?: ClaimVerification,
+  ): Promise<TransactionTask> {
+    let claimVerification = claimData;
+    if (this.conditions && !claimData) {
+      claimVerification = await this.conditions.prepareClaim(
+        tokenId,
+        quantity,
+        checkERC20Allowance,
+      );
+    }
+    if (!claimVerification) {
+      throw new Error(
+        "Claim verification Data is required - either pass it in as 'claimData' or set claim conditions via 'conditions.set()'",
+      );
+    }
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "claim",
+      args: [
+        destinationAddress,
+        tokenId,
+        quantity,
+        claimVerification.currencyAddress,
+        claimVerification.price,
+        claimVerification.proofs,
+        claimVerification.maxQuantityPerTransaction,
+      ],
+      overrides: claimVerification.overrides,
+    });
   }
 
   /**
@@ -81,20 +127,13 @@ export class Erc1155Claimable implements DetectableFeature {
       );
     }
 
-    const receipt = await this.contractWrapper.sendTransaction(
-      "claim",
-      [
-        destinationAddress,
-        tokenId,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
-      ],
-      claimVerification.overrides,
+    const tx = await this.getClaimTransaction(
+      destinationAddress,
+      tokenId,
+      quantity,
+      checkERC20Allowance,
+      claimData,
     );
-
-    return { receipt };
+    return await tx.execute();
   }
 }
