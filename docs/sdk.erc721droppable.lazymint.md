@@ -9,7 +9,7 @@ Create a batch of unique NFTs to be claimed in the future
 <b>Signature:</b>
 
 ```typescript
-lazyMint(metadatas: NFTMetadataInput[], options?: {
+lazyMint(metadatas: NFTMetadataOrUri[], options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<TransactionResultWithId<NFTMetadata>[]>;
 ```
@@ -18,7 +18,7 @@ lazyMint(metadatas: NFTMetadataInput[], options?: {
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  metadatas | [NFTMetadataInput](./sdk.nftmetadatainput.md)<!-- -->\[\] | The metadata to include in the batch. |
+|  metadatas | NFTMetadataOrUri\[\] | The metadata to include in the batch. |
 |  options | { onProgress: (event: [UploadProgressEvent](./sdk.uploadprogressevent.md)<!-- -->) =&gt; void; } | <i>(Optional)</i> optional upload progress callback |
 
 <b>Returns:</b>

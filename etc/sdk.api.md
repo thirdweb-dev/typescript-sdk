@@ -2668,6 +2668,8 @@ export class Erc721Claimable implements DetectableFeature {
     conditions: DropClaimConditions<BaseClaimConditionERC721>;
     // (undocumented)
     featureName: "ERC721Claimable";
+    getClaimTransaction(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean, // TODO split up allowance checks
+    claimData?: ClaimVerification): Promise<TransactionTask>;
     to(destinationAddress: string, quantity: BigNumberish, checkERC20Allowance?: boolean, claimData?: ClaimVerification): Promise<TransactionResultWithId<NFTMetadataOwner>[]>;
 }
 
@@ -2678,7 +2680,7 @@ export class Erc721Droppable implements DetectableFeature {
     claim: Erc721Claimable | undefined;
     // (undocumented)
     featureName: "ERC721Droppable";
-    lazyMint(metadatas: NFTMetadataInput[], options?: {
+    lazyMint(metadatas: NFTMetadataOrUri[], options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<TransactionResultWithId<NFTMetadata>[]>;
     // (undocumented)
