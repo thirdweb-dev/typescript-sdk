@@ -466,8 +466,8 @@ describe("Signature drop tests", async () => {
   describe("Claim Conditions", () => {
     it("should allow a snapshot to be set", async () => {
       await signatureDropContract.createBatch([
-        { name: "test", description: "test" },
-        { name: "test", description: "test" },
+        { name: "test1", description: "test" },
+        { name: "test2", description: "test" },
       ]);
 
       await signatureDropContract.claimConditions.set([

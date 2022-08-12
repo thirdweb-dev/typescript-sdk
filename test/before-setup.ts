@@ -44,6 +44,7 @@ import {
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";
 import { ChainId } from "../src/constants/chains";
+import { AddressZero } from "@ethersproject/constants";
 
 const RPC_URL = "http://localhost:8545";
 
@@ -118,7 +119,7 @@ before(async () => {
     ContractPublisher__factory.bytecode,
   )
     .connect(signer)
-    .deploy(trustedForwarderAddress)) as ContractPublisher;
+    .deploy(trustedForwarderAddress, AddressZero)) as ContractPublisher; // TODO needs MockPublisher here
   await contractPublisher.deployed();
 
   async function deployContract(

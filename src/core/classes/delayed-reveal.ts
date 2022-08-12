@@ -1,6 +1,11 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721, IThirdwebContract, SignatureDrop } from "contracts";
+import {
+  DropERC721,
+  IDelayedRevealDeprecated,
+  IThirdwebContract,
+  SignatureDrop,
+} from "contracts";
 import {
   CommonNFTInput,
   NFTMetadata,
@@ -122,22 +127,20 @@ export class DelayedReveal<
         hashedPassword,
       );
 
-    let data = encryptedBaseUri;
-    if (
-      hasFunction<IThirdwebContract>("contractVersion", this.contractWrapper)
-    ) {
-      const version = await this.contractWrapper.readContract.contractVersion();
-      if (version > 2) {
-        const chainId = await this.contractWrapper.getChainID();
-        const provenanceHash = ethers.utils.solidityKeccak256(
-          ["bytes", "bytes", "uint256"],
-          [ethers.utils.toUtf8Bytes(baseUri), hashedPassword, chainId],
-        );
-        data = ethers.utils.defaultAbiCoder.encode(
-          ["bytes", "bytes32"],
-          [encryptedBaseUri, provenanceHash],
-        );
-      }
+    let data: string;
+    const legacyContract = await this.isLegacyContract();
+    if (legacyContract) {
+      data = encryptedBaseUri;
+    } else {
+      const chainId = await this.contractWrapper.getChainID();
+      const provenanceHash = ethers.utils.solidityKeccak256(
+        ["bytes", "bytes", "uint256"],
+        [ethers.utils.toUtf8Bytes(baseUri), hashedPassword, chainId],
+      );
+      data = ethers.utils.defaultAbiCoder.encode(
+        ["bytes", "bytes32"],
+        [encryptedBaseUri, provenanceHash],
+      );
     }
 
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
@@ -263,9 +266,12 @@ export class DelayedReveal<
     );
 
     // index is the uri indices, which is end token id. different from uris
+    const legacyContract = await this.isLegacyContract();
     const encryptedUriData = await Promise.all(
       Array.from([...uriIndices]).map((i) =>
-        this.contractWrapper.readContract.encryptedData(i),
+        this.castToDeprecatedContract(this.contractWrapper, legacyContract)
+          ? this.contractWrapper.readContract.encryptedBaseURI(i) // this.contractWrapper.readContract.encryptedBaseUri(i)
+          : this.contractWrapper.readContract.encryptedData(i),
       ),
     );
     const encryptedBaseUris = encryptedUriData.map((data) => {
@@ -311,5 +317,27 @@ export class DelayedReveal<
   private async getNftMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
     const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
     return fetchTokenMetadata(tokenId, tokenUri, this.storage);
+  }
+
+  private async isLegacyContract(): Promise<boolean> {
+    if (
+      hasFunction<IThirdwebContract>("contractVersion", this.contractWrapper)
+    ) {
+      try {
+        const version =
+          await this.contractWrapper.readContract.contractVersion();
+        return version <= 2;
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  private castToDeprecatedContract(
+    contractWrapper: ContractWrapper<any>,
+    legacyContract: boolean,
+  ): contractWrapper is ContractWrapper<IDelayedRevealDeprecated> {
+    return contractWrapper && legacyContract;
   }
 }

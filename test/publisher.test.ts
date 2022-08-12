@@ -306,7 +306,7 @@ describe("Publishing", async () => {
   });
 
   it("ERC721Drop base feature detection", async () => {
-    const ipfsUri = "ipfs://QmfQwWiMbKaSmng5GN1P5bgCfdEy4Uyg7BznwbaP1bvj7f/0";
+    const ipfsUri = "ipfs://QmXQ2f6qA7FD8uks1hKK1soTn6sbEGBSfDpzN9buYXkGxZ";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, []);
     const c = await sdk.getContract(addr);
 
