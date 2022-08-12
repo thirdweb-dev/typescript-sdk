@@ -1,6 +1,6 @@
 import { ethers } from "ethers";
 import { FEATURE_NFT_DROPPABLE } from "../../constants/erc721-features";
-import { CommonNFTInput, NFTMetadata, NFTMetadataInput } from "../../schema";
+import { NFTMetadata, NFTMetadataOrUri } from "../../schema";
 import { UploadProgressEvent } from "../../types";
 import {
   BaseClaimConditionERC721,
@@ -16,6 +16,7 @@ import { DelayedReveal } from "./delayed-reveal";
 import { detectContractFeature } from "../../common/feature-detection";
 import { TokensLazyMintedEvent } from "contracts/LazyMint";
 import { Erc721Claimable } from "./erc-721-claimable";
+import { uploadOrExtractURIs } from "../../common/nft";
 
 /**
  * Lazily mint and claim ERC721 NFTs
@@ -86,24 +87,38 @@ export class Erc721Droppable implements DetectableFeature {
    * @param options - optional upload progress callback
    */
   public async lazyMint(
-    metadatas: NFTMetadataInput[],
+    metadatas: NFTMetadataOrUri[],
     options?: {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
     const startFileNumber = await this.erc721.nextTokenIdToMint();
-    const batch = await this.storage.uploadMetadataBatch(
-      metadatas.map((m) => CommonNFTInput.parse(m)),
+    const batch = await uploadOrExtractURIs(
+      metadatas,
+      this.storage,
       startFileNumber.toNumber(),
       this.contractWrapper.readContract.address,
       await this.contractWrapper.getSigner()?.getAddress(),
       options,
     );
-    const baseUri = batch.baseUri;
+    // ensure baseUri is the same for the entire batch
+    const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
+    for (let i = 0; i < batch.length; i++) {
+      const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
+      if (baseUri !== uri) {
+        throw new Error(
+          `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
+        );
+      }
+    }
+    const data = ethers.utils.defaultAbiCoder.encode(
+      ["bytes", "bytes32"],
+      [ethers.utils.toUtf8Bytes(""), ethers.utils.formatBytes32String("")],
+    );
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.uris.length,
+      batch.length,
       baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
-      ethers.utils.toUtf8Bytes(""),
+      data,
     ]);
     const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
       "TokensLazyMinted",

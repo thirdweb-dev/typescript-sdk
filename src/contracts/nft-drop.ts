@@ -428,10 +428,14 @@ export class NFTDrop extends Erc721<DropERC721> {
         );
       }
     }
+    const data = ethers.utils.defaultAbiCoder.encode(
+      ["bytes", "bytes32"],
+      [ethers.utils.toUtf8Bytes(""), ethers.utils.formatBytes32String("")],
+    );
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
       batch.length,
       baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
-      ethers.utils.toUtf8Bytes(""),
+      data,
     ]);
     const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
       "TokensLazyMinted",
