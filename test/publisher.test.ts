@@ -137,7 +137,7 @@ describe("Publishing", async () => {
     );
     expect(deployedAddr.length).to.be.gt(0);
     const all = await publisher.getAll(adminWallet.address);
-    expect(all.length).to.be.eq(1);
+    expect(all.length).to.be.eq(2); // mock publisher always returns a mock contract
     // fetch metadata back
     const c = await sdk.getContract(deployedAddr);
     const meta = await c.metadata.get();
@@ -156,7 +156,7 @@ describe("Publishing", async () => {
     }
     const all = await publisher.getAll(samWallet.address);
     const versions = await publisher.getAllVersions(samWallet.address, id);
-    expect(all.length).to.be.eq(1);
+    expect(all.length).to.be.eq(2);
     expect(versions.length).to.be.eq(5);
     expect(all[all.length - 1] === versions[versions.length - 1]);
     const last = await publisher.getLatest(samWallet.address, id);
@@ -220,7 +220,7 @@ describe("Publishing", async () => {
     );
     expect(deployedAddr.length).to.be.gt(0);
     const all = await publisher.getAll(bobWallet.address);
-    expect(all.length).to.be.eq(1);
+    expect(all.length).to.be.eq(2); // mock publisher always returns a mock contract
   });
 
   it("SimpleAzuki enumerable", async () => {

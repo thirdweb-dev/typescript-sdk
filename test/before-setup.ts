@@ -5,6 +5,8 @@ import {
   DropERC20__factory,
   DropERC721__factory,
   Marketplace__factory,
+  MockContractPublisher,
+  MockContractPublisher__factory,
   Multiwrap__factory,
   Pack__factory,
   SignatureDrop__factory,
@@ -114,12 +116,22 @@ before(async () => {
     .deploy(trustedForwarderAddress, thirdwebFactoryDeployer.address);
   await thirdwebFactoryDeployer.deployed();
 
+  // Mock publisher for tests
+  const mockPublisher = (await new ethers.ContractFactory(
+    MockContractPublisher__factory.abi,
+    MockContractPublisher__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy()) as MockContractPublisher;
   const contractPublisher = (await new ethers.ContractFactory(
     ContractPublisher__factory.abi,
     ContractPublisher__factory.bytecode,
   )
     .connect(signer)
-    .deploy(trustedForwarderAddress, AddressZero)) as ContractPublisher; // TODO needs MockPublisher here
+    .deploy(
+      trustedForwarderAddress,
+      mockPublisher.address,
+    )) as ContractPublisher; // TODO needs MockPublisher here
   await contractPublisher.deployed();
 
   async function deployContract(
