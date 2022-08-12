@@ -24,11 +24,9 @@ import { DropErc1155History } from "../core/classes/drop-erc1155-history";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { TokensLazyMintedEvent } from "contracts/DropERC1155";
 import { getRoleHash } from "../common";
 
 import { EditionMetadata, EditionMetadataOwner } from "../schema";
-import { uploadOrExtractURIs } from "../common/nft";
 import { TransactionTask } from "../core/classes/TransactionTask";
 import { Erc1155Burnable } from "../core/classes/erc-1155-burnable";
 import { Erc1155Droppable } from "../core/index";
