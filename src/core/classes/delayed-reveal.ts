@@ -1,11 +1,6 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ContractWrapper } from "./contract-wrapper";
-import {
-  DropERC721,
-  IDelayedRevealDeprecated,
-  IThirdwebContract,
-  SignatureDrop,
-} from "contracts";
+import { DropERC721, IThirdwebContract, SignatureDrop } from "contracts";
 import {
   CommonNFTInput,
   NFTMetadata,
@@ -24,6 +19,7 @@ import { UploadProgressEvent } from "../../types/events";
 import { BaseDelayedRevealERC721 } from "../../types/eips";
 import { hasFunction } from "../../common";
 import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
+import DeprecatedAbi from "../../../abis/IDelayedRevealDeprecated.json";
 
 /**
  * Handles delayed reveal logic
@@ -226,7 +222,6 @@ export class DelayedReveal<
     }
 
     const countRangeArray = Array.from(Array(count.toNumber()).keys());
-
     // map over to get the base uri indices, which should be the end token id of every batch
     const uriIndices = await Promise.all(
       countRangeArray.map((i) => {
@@ -269,13 +264,16 @@ export class DelayedReveal<
     const legacyContract = await this.isLegacyContract();
     const encryptedUriData = await Promise.all(
       Array.from([...uriIndices]).map((i) =>
-        this.castToDeprecatedContract(this.contractWrapper, legacyContract)
-          ? this.contractWrapper.readContract.encryptedBaseURI(i) // this.contractWrapper.readContract.encryptedBaseUri(i)
+        legacyContract
+          ? this.getLegacyEncryptedData(i)
           : this.contractWrapper.readContract.encryptedData(i),
       ),
     );
     const encryptedBaseUris = encryptedUriData.map((data) => {
       if (ethers.utils.hexDataLength(data) > 0) {
+        if (legacyContract) {
+          return data;
+        }
         const result = ethers.utils.defaultAbiCoder.decode(
           ["bytes", "bytes32"],
           data,
@@ -334,10 +332,17 @@ export class DelayedReveal<
     return false;
   }
 
-  private castToDeprecatedContract(
-    contractWrapper: ContractWrapper<any>,
-    legacyContract: boolean,
-  ): contractWrapper is ContractWrapper<IDelayedRevealDeprecated> {
-    return contractWrapper && legacyContract;
+  private async getLegacyEncryptedData(index: BigNumber) {
+    const legacy = new ethers.Contract(
+      this.contractWrapper.readContract.address,
+      DeprecatedAbi,
+      this.contractWrapper.getProvider(),
+    );
+    const result = await legacy.functions["encryptedBaseURI"](index);
+    if (result.length > 0) {
+      return result[0];
+    } else {
+      return "0x";
+    }
   }
 }
