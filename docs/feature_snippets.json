@@ -311,7 +311,19 @@
         }
       }
     ],
-    "properties": [],
+    "properties": [
+      {
+        "name": "claim",
+        "summary": "Claim tokens and configure claim conditions\n\n",
+        "remarks": "\n\nLet users claim NFTs. Define who can claim NFTs in the collection, when and how many.\n\n",
+        "examples": {
+          "javascript": "const quantity = 10;\nconst tokenId = 0;\nawait contract.edition.drop.claim.to(\"0x...\", 0, quantity);"
+        },
+        "reference": {
+          "javascript": "https://docs.thirdweb.com/typescript/sdk.erc1155claimable"
+        }
+      }
+    ],
     "reference": {
       "javascript": "https://docs.thirdweb.com/typescript/sdk.Erc1155Droppable"
     }

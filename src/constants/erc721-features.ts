@@ -4,7 +4,7 @@ import Erc721SupplyAbi from "../../abis/IERC721Supply.json";
 import IMintableERC721Abi from "../../abis/IMintableERC721.json";
 import MulticallAbi from "../../abis/IMulticall.json";
 import DelayedRevealAbi from "../../abis/DelayedReveal.json";
-import LazyMintAbi from "../../abis/ILazyMint.json";
+import ILazyMintAbi from "../../abis/ILazyMint.json";
 import IDropSinglePhase from "../../abis/IDropSinglePhase.json";
 import SignatureMintERC721Abi from "../../abis/SignatureMintERC721.json";
 import IBurnableERC721Abi from "../../abis/IBurnableERC721.json";
@@ -27,7 +27,7 @@ export const FEATURE_NFT_REVEALABLE = {
     sdk: "sdk.drop.delayedreveal",
     contracts: "DelayedReveal",
   },
-  abis: [Erc721Abi, LazyMintAbi, DelayedRevealAbi],
+  abis: [Erc721Abi, ILazyMintAbi, DelayedRevealAbi],
   features: {},
 } as const;
 
@@ -39,7 +39,7 @@ export const FEATURE_NFT_CLAIMABLE = {
     sdk: "sdk.erc721claimable",
     contracts: "DropSinglePhase",
   },
-  abis: [Erc721Abi, LazyMintAbi, IDropSinglePhase],
+  abis: [Erc721Abi, ILazyMintAbi, IDropSinglePhase],
   features: {},
 } as const;
 
@@ -50,7 +50,7 @@ export const FEATURE_NFT_DROPPABLE = {
     sdk: "sdk.erc721droppable",
     contracts: "LazyMint",
   },
-  abis: [Erc721Abi, LazyMintAbi],
+  abis: [Erc721Abi, ILazyMintAbi],
   features: {
     [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
     [FEATURE_NFT_CLAIMABLE.name]: FEATURE_NFT_CLAIMABLE,

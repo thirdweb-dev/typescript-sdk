@@ -9,14 +9,14 @@ Constructs a new instance of the `DropErc1155ClaimConditions` class
 <b>Signature:</b>
 
 ```typescript
-constructor(contractWrapper: ContractWrapper<DropERC1155>, metadata: ContractMetadata<DropERC1155, typeof DropErc721ContractSchema>, storage: IStorage);
+constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  contractWrapper | ContractWrapper&lt;DropERC1155&gt; |  |
-|  metadata | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;DropERC1155, typeof DropErc721ContractSchema&gt; |  |
+|  contractWrapper | ContractWrapper&lt;TContract&gt; |  |
+|  metadata | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TContract, any&gt; |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |
 

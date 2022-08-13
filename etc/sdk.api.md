@@ -1774,15 +1774,17 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | Base
     update(index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
 }
 
+// Warning: (ae-forgotten-export) The symbol "DropERC1155" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BaseClaimConditionERC1155" needs to be exported by the entry point index.d.ts
+//
 // @public
-export class DropErc1155ClaimConditions {
-    // Warning: (ae-forgotten-export) The symbol "DropERC1155" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "DropErc721ContractSchema" needs to be exported by the entry point index.d.ts
-    constructor(contractWrapper: ContractWrapper<DropERC1155>, metadata: ContractMetadata<DropERC1155, typeof DropErc721ContractSchema>, storage: IStorage);
+export class DropErc1155ClaimConditions<TContract extends DropERC1155 | BaseClaimConditionERC1155> {
+    constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
     canClaim(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<boolean>;
     getActive(tokenId: BigNumberish): Promise<ClaimCondition>;
     getAll(tokenId: BigNumberish): Promise<ClaimCondition[]>;
     getClaimIneligibilityReasons(tokenId: BigNumberish, quantity: BigNumberish, addressToCheck?: string): Promise<ClaimEligibility[]>;
+    prepareClaim(tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance: boolean): Promise<ClaimVerification>;
     set(tokenId: BigNumberish, claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
     setBatch(claimConditionsForToken: ClaimConditionsForToken[], resetClaimEligibilityForAll?: boolean): Promise<{
         receipt: ethers.providers.TransactionReceipt;
@@ -1960,7 +1962,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<DropERC1155>);
     burnTokens(tokenId: BigNumberish, amount: BigNumberish): Promise<TransactionResult>;
     claim(tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResult>;
-    claimConditions: DropErc1155ClaimConditions;
+    claimConditions: DropErc1155ClaimConditions<DropERC1155>;
     claimTo(destinationAddress: string, tokenId: BigNumberish, quantity: BigNumberish, checkERC20Allowance?: boolean): Promise<TransactionResult>;
     // (undocumented)
     static contractAbi: any;
@@ -2463,6 +2465,8 @@ export class Erc1155Burnable implements DetectableFeature {
 export class Erc1155Droppable implements DetectableFeature {
     // Warning: (ae-forgotten-export) The symbol "BaseDropERC1155" needs to be exported by the entry point index.d.ts
     constructor(erc1155: Erc1155, contractWrapper: ContractWrapper<BaseDropERC1155>, storage: IStorage);
+    // Warning: (ae-forgotten-export) The symbol "Erc1155Claimable" needs to be exported by the entry point index.d.ts
+    claim: Erc1155Claimable | undefined;
     // (undocumented)
     featureName: "ERC1155Droppable";
     lazyMint(metadatas: NFTMetadataOrUri[], options?: {
