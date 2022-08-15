@@ -33,6 +33,7 @@ import {
   FEATURE_PLATFORM_FEE,
   FEATURE_PRIMARY_SALE,
   FEATURE_ROYALTY,
+  FEATURE_APP_URI,
 } from "./thirdweb-features";
 
 /**
@@ -66,7 +67,8 @@ export type Feature =
   | typeof FEATURE_PLATFORM_FEE
   | typeof FEATURE_PRIMARY_SALE
   | typeof FEATURE_PERMISSIONS
-  | typeof FEATURE_METADATA;
+  | typeof FEATURE_METADATA
+  | typeof FEATURE_APP_URI;
 
 /**
  * @internal
@@ -92,4 +94,5 @@ export const SUPPORTED_FEATURES: Record<string, Feature> = {
   [FEATURE_PRIMARY_SALE.name]: FEATURE_PRIMARY_SALE,
   [FEATURE_PERMISSIONS.name]: FEATURE_PERMISSIONS,
   [FEATURE_METADATA.name]: FEATURE_METADATA,
+  [FEATURE_APP_URI.name]: FEATURE_APP_URI,
 };
