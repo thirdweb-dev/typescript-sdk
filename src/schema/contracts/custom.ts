@@ -65,6 +65,41 @@ export const CustomContractSchema = {
 /**
  * @internal
  */
+const AbiTypeBaseSchema = z
+  .object({
+    type: z.string(),
+    name: z.string(),
+  })
+  .catchall(z.any());
+
+/**
+ * @internal
+ */
+export const AbiTypeSchema = AbiTypeBaseSchema.extend({
+  stateMutability: z.string().optional(),
+  components: z.array(AbiTypeBaseSchema).optional(),
+}).catchall(z.any());
+
+/**
+ * @internal
+ */
+export const AbiObjectSchema = z
+  .object({
+    type: z.string(),
+    name: z.string().default(""),
+    inputs: z.array(AbiTypeSchema).default([]),
+    outputs: z.array(AbiTypeSchema).default([]),
+  })
+  .catchall(z.any());
+
+/**
+ * @internal
+ */
+export const AbiSchema = z.array(AbiObjectSchema);
+
+/**
+ * @internal
+ */
 export const PreDeployMetadata = z
   .object({
     name: z.string(),
@@ -73,6 +108,8 @@ export const PreDeployMetadata = z
     analytics: z.any().optional(),
   })
   .catchall(z.any());
+
+export const ChainIdToAddressSchema = z.record(z.number(), z.string());
 
 /**
  * @internal
@@ -100,6 +137,11 @@ export const ExtraPublishMetadataSchema = z
     license: z.string().optional(),
     changelog: z.string().optional(),
     tags: z.array(z.string()).optional(),
+    logo: FileBufferOrStringSchema.nullable().optional(),
+    factoryAddresses: ChainIdToAddressSchema.optional(),
+    factoryAbi: AbiSchema.optional(),
+    deployFunction: z.string().optional(),
+    deployArgs: z.array(z.any()).optional(),
   })
   .catchall(z.any());
 export type ExtraPublishMetadata = z.infer<typeof ExtraPublishMetadataSchema>;
@@ -136,41 +178,6 @@ export const ProfileSchemaOutput = ProfileSchemaInput.extend({
 });
 export type ProfileMetadataInput = z.infer<typeof ProfileSchemaInput>;
 export type ProfileMetadata = z.infer<typeof ProfileSchemaOutput>;
-
-/**
- * @internal
- */
-const AbiTypeBaseSchema = z
-  .object({
-    type: z.string(),
-    name: z.string(),
-  })
-  .catchall(z.any());
-
-/**
- * @internal
- */
-export const AbiTypeSchema = AbiTypeBaseSchema.extend({
-  stateMutability: z.string().optional(),
-  components: z.array(AbiTypeBaseSchema).optional(),
-}).catchall(z.any());
-
-/**
- * @internal
- */
-export const AbiObjectSchema = z
-  .object({
-    type: z.string(),
-    name: z.string().default(""),
-    inputs: z.array(AbiTypeSchema).default([]),
-    outputs: z.array(AbiTypeSchema).default([]),
-  })
-  .catchall(z.any());
-
-/**
- * @internal
- */
-export const AbiSchema = z.array(AbiObjectSchema);
 
 /**
  * @internal

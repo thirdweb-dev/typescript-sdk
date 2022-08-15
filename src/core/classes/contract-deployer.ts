@@ -35,6 +35,7 @@ import {
   fetchPreDeployMetadata,
 } from "../../common/index";
 import { BigNumber, BytesLike, ContractInterface, ethers } from "ethers";
+import { ExtraPublishMetadataSchema } from "../../schema/contracts/custom";
 
 /**
  * Handles deploying new contracts
@@ -368,6 +369,23 @@ export class ContractDeployer extends RPCConnectionHandler {
     );
   }
 
+  // TODO IFactory interface + wrapper that makes sense
+  public async deployViaFactory(
+    factoryAddress: string,
+    factoryAbi: ContractInterface,
+    deployFunctionNAme: string,
+    args: any[],
+  ) {
+    const signer = this.getSigner();
+    invariant(signer, "signer is required");
+    const factory = new ethers.Contract(factoryAddress, factoryAbi, signer);
+    const tx = await factory.functions[deployFunctionNAme](...args);
+    const receipt = await tx.wait();
+    return {
+      receipt,
+    };
+  }
+
   /**
    * @internal
    */
@@ -453,6 +471,27 @@ export class ContractDeployer extends RPCConnectionHandler {
       publishMetadataUri,
       this.storage,
     );
+
+    try {
+      const extra = ExtraPublishMetadataSchema.parse(metadata);
+      const factoryAbi = extra.factoryAbi;
+      const factoryAddresses = extra.factoryAddresses;
+      const deployFunctionName = extra.deployFunction;
+      const deployArgs = extra.deployArgs || [];
+      if (factoryAbi && factoryAddresses && deployFunctionName) {
+        const chainId = (await this.getProvider().getNetwork()).chainId;
+        const factoryAddress = factoryAddresses[chainId];
+        return await this.deployViaFactory(
+          factoryAddress,
+          factoryAbi,
+          deployFunctionName,
+          deployArgs,
+        );
+      }
+    } catch (e) {
+      // no extra metadata, proceed with normal deploy
+    }
+
     const bytecode = metadata.bytecode.startsWith("0x")
       ? metadata.bytecode
       : `0x${metadata.bytecode}`;
