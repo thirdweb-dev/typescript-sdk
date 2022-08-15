@@ -7,7 +7,7 @@ import {
   IERC20,
   IERC20__factory,
 } from "contracts";
-import { BigNumber, BigNumberish, constants, ethers } from "ethers";
+import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import {
@@ -31,6 +31,7 @@ import { hasFunction } from "../../common/feature-detection";
 import { isNode } from "../../common/utils";
 import { BaseClaimConditionERC1155 } from "../../types/eips";
 import { IDropClaimCondition } from "contracts/DropERC1155";
+import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 
 /**
  * Manages claim conditions for Edition Drop contracts
@@ -427,10 +428,33 @@ export class DropErc1155ClaimConditions<
     const merkleInfo: { [key: string]: string } = {};
     const processedClaimConditions = await Promise.all(
       claimConditionsForToken.map(async ({ tokenId, claimConditions }) => {
+        // sanitize for single phase deletions
+        let claimConditionsProcessed = claimConditions;
+        if (this.isSinglePhaseDropContract(this.contractWrapper)) {
+          resetClaimEligibilityForAll = true;
+          if (claimConditions.length === 0) {
+            claimConditionsProcessed = [
+              {
+                startTime: new Date(0),
+                currencyAddress: NATIVE_TOKEN_ADDRESS,
+                price: 0,
+                maxQuantity: 0,
+                quantityLimitPerTransaction: 0,
+                waitInSeconds: 0,
+                merkleRootHash: utils.hexZeroPad([0], 32),
+                snapshot: [],
+              },
+            ];
+          } else if (claimConditions.length > 1) {
+            throw new Error(
+              "Single phase drop contract cannot have multiple claim conditions, only one is allowed",
+            );
+          }
+        }
         // process inputs
         const { snapshotInfos, sortedConditions } =
           await processClaimConditionInputs(
-            claimConditions,
+            claimConditionsProcessed,
             0,
             this.contractWrapper.getProvider(),
             this.storage,
