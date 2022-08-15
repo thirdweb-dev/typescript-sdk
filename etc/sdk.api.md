@@ -1057,7 +1057,7 @@ export const CompilerMetadataFetchedSchema: z.ZodObject<{
         details?: string | undefined;
         notice?: string | undefined;
     }>;
-    licenses: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+    licenses: z.ZodEffects<z.ZodDefault<z.ZodArray<z.ZodOptional<z.ZodString>, "many">>, string[], (string | undefined)[] | undefined>;
 }, "strip", z.ZodTypeAny, {
     name: string;
     metadata: Record<string, any>;
@@ -1096,7 +1096,7 @@ export const CompilerMetadataFetchedSchema: z.ZodObject<{
     };
     licenses: string[];
 }, {
-    licenses?: string[] | undefined;
+    licenses?: (string | undefined)[] | undefined;
     name: string;
     metadata: Record<string, any>;
     abi: {
@@ -4463,7 +4463,7 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
         details?: string | undefined;
         notice?: string | undefined;
     }>;
-    licenses: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+    licenses: z.ZodEffects<z.ZodDefault<z.ZodArray<z.ZodOptional<z.ZodString>, "many">>, string[], (string | undefined)[] | undefined>;
 }>, {
     bytecode: z.ZodString;
 }>, "strip", z.ZodAny, {
@@ -4510,7 +4510,7 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
     bytecode: string;
 }, {
     [x: string]: any;
-    licenses?: string[] | undefined;
+    licenses?: (string | undefined)[] | undefined;
     analytics?: any;
     name: string;
     metadataUri: string;
