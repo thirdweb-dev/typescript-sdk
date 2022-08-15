@@ -5977,11 +5977,6 @@ export type SignerOrProvider = Signer | providers.Provider;
 // @beta
 export class SmartContract<TContract extends BaseContract = BaseContract> implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
-    // Warning: (ae-forgotten-export) The symbol "ContractAppURI" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "IAppURI" needs to be exported by the entry point index.d.ts
-    //
-    // (undocumented)
-    appURI: ContractAppURI<IAppURI> | undefined;
     call(functionName: string, ...args: unknown[] | [...unknown[], CallOverrides]): Promise<any>;
     // (undocumented)
     static contractType: "custom";

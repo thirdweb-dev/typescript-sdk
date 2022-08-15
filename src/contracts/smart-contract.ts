@@ -13,8 +13,6 @@ import { Erc721 } from "../core/classes/erc-721";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import {
-  AppURI,
-  IAppURI,
   IPermissionsEnumerable,
   IPlatformFee,
   IPrimarySale,
@@ -32,8 +30,6 @@ import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractPublishedMetadata } from "../core/classes/contract-published-metadata";
 import { BaseERC1155, BaseERC20, BaseERC721 } from "../types/eips";
 import { CallOverrideSchema } from "../schema/index";
-
-import { ContractAppURI } from "../core/classes/app-uri";
 
 /**
  * Custom contract dynamic class with feature detection
@@ -98,7 +94,6 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
    * Auto-detects ERC1155 standard functions.
    */
   public edition: Erc1155 | undefined;
-  public appURI: ContractAppURI<IAppURI> | undefined;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -140,8 +135,6 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     this.token = this.detectErc20();
     this.nft = this.detectErc721();
     this.edition = this.detectErc1155();
-
-    this.appURI = this.detectAppURI();
   }
 
   onNetworkUpdated(network: NetworkOrSignerOrProvider): void {
@@ -287,13 +280,6 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   private detectErc1155() {
     if (detectContractFeature<BaseERC1155>(this.contractWrapper, "ERC1155")) {
       return new Erc1155(this.contractWrapper, this.storage, this.options);
-    }
-    return undefined;
-  }
-
-  private detectAppURI() {
-    if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
-      return new ContractAppURI(this.contractWrapper);
     }
     return undefined;
   }
