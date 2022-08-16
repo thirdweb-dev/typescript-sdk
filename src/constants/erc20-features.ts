@@ -3,6 +3,18 @@ import IMintableERC20Abi from "../../abis/IMintableERC20.json";
 import MulticallAbi from "../../abis/IMulticall.json";
 import ISignatureMintERC20Abi from "../../abis/ISignatureMintERC20.json";
 import IBurnableERC20Abi from "../../abis/IBurnableERC20.json";
+import IDropSinglePhase from "../../abis/IDropSinglePhase.json";
+
+export const FEATURE_TOKEN_DROPPABLE = {
+  name: "ERC20Droppable",
+  namespace: "token.drop",
+  docLinks: {
+    sdk: "sdk.erc20droppable",
+    contracts: "DropSinglePhase",
+  },
+  abis: [ERC20Abi, IDropSinglePhase],
+  features: {},
+} as const;
 
 export const FEATURE_TOKEN_BURNABLE = {
   name: "ERC20Burnable",
@@ -61,6 +73,7 @@ export const FEATURE_TOKEN = {
   features: {
     [FEATURE_TOKEN_BURNABLE.name]: FEATURE_TOKEN_BURNABLE,
     [FEATURE_TOKEN_MINTABLE.name]: FEATURE_TOKEN_MINTABLE,
+    [FEATURE_TOKEN_DROPPABLE.name]: FEATURE_TOKEN_DROPPABLE,
     [FEATURE_TOKEN_SIGNATURE_MINTABLE.name]: FEATURE_TOKEN_SIGNATURE_MINTABLE,
   },
 } as const;
