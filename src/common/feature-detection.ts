@@ -118,6 +118,25 @@ export function extractConstructorParamsFromAbi(
 }
 
 /**
+ *
+ * @param abi
+ * @param functionName
+ * @returns
+ * @internal
+ */
+export function extractFunctionParamsFromAbi(
+  abi: z.input<typeof AbiSchema>,
+  functionName: string,
+) {
+  for (const input of abi) {
+    if (input.type === "function" && input.name === functionName) {
+      return input.inputs ?? [];
+    }
+  }
+  return [];
+}
+
+/**
  * @internal
  * @param abi
  * @param metadata
@@ -228,6 +247,15 @@ export async function resolveContractUriFromAddress(
       `Contract at ${address} does not exist on chain '${chain.name}' (chainId: ${chain.chainId})`,
     );
   }
+  // EIP-1167 clone proxy - https://eips.ethereum.org/EIPS/eip-1167
+  if (bytecode.startsWith("0x363d3d373d3d3d363d")) {
+    const implementationAddress = bytecode.slice(22, 62);
+    return resolveContractUriFromAddress(
+      `0x${implementationAddress}`,
+      provider,
+    );
+  }
+  // TODO support other types of proxies like erc1967
   return extractIPFSHashFromBytecode(bytecode);
 }
 

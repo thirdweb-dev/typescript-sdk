@@ -46,7 +46,6 @@ import {
 } from "../src";
 import { MockStorage } from "./mock/MockStorage";
 import { ChainId } from "../src/constants/chains";
-import { AddressZero } from "@ethersproject/constants";
 
 const RPC_URL = "http://localhost:8545";
 
@@ -59,6 +58,7 @@ const ipfsGatewayUrl = DEFAULT_IPFS_GATEWAY;
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: IStorage;
+let implementations: { [key in ContractType]?: string };
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -77,6 +77,7 @@ export const expectError = (e: unknown, message: string) => {
 
 before(async () => {
   signers = await hardhatEthers.getSigners();
+  implementations = {};
 
   [signer] = signers;
 
@@ -219,6 +220,7 @@ before(async () => {
       deployedContract.address,
     );
     await tx.wait();
+    implementations[contractType as ContractType] = deployedContract.address;
   }
 
   process.env.registryAddress = thirdwebRegistryAddress;
@@ -245,4 +247,5 @@ export {
   registryAddress,
   fastForwardTime,
   storage,
+  implementations,
 };

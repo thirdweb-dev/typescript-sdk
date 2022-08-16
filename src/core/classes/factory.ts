@@ -1,5 +1,11 @@
 import { TWFactory, TWFactory__factory } from "contracts";
-import { BigNumber, constants, Contract, ethers } from "ethers";
+import {
+  BigNumber,
+  constants,
+  Contract,
+  ContractInterface,
+  ethers,
+} from "ethers";
 import { z } from "zod";
 import { CONTRACTS_MAP, REMOTE_CONTRACT_NAME } from "../../contracts/maps";
 import { Edition } from "../../contracts/edition";
@@ -80,6 +86,35 @@ export class ContractFactory extends ContractWrapper<TWFactory> {
         ethers.utils.formatBytes32String(blockNumber.toString()),
       ]);
     }
+
+    const events = this.parseLogs<ProxyDeployedEvent>(
+      "ProxyDeployed",
+      receipt.logs,
+    );
+    if (events.length < 1) {
+      throw new Error("No ProxyDeployed event found");
+    }
+
+    return events[0].args.proxy;
+  }
+
+  // TODO once IContractFactory is implemented, this can be probably be moved to its own class
+  public async deployProxyByImplementation(
+    implementationAddress: string,
+    implementationAbi: ContractInterface,
+    initializerFunction: string,
+    initializerArgs: any[],
+  ): Promise<string> {
+    const encodedFunc = Contract.getInterface(
+      implementationAbi,
+    ).encodeFunctionData(initializerFunction, initializerArgs);
+
+    const blockNumber = await this.getProvider().getBlockNumber();
+    const receipt = await this.sendTransaction("deployProxyByImplementation", [
+      implementationAddress,
+      encodedFunc,
+      ethers.utils.formatBytes32String(blockNumber.toString()),
+    ]);
 
     const events = this.parseLogs<ProxyDeployedEvent>(
       "ProxyDeployed",

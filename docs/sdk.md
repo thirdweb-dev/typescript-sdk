@@ -119,6 +119,8 @@
 |  Variable | Description |
 |  --- | --- |
 |  [ALL\_ROLES](./sdk.all_roles.md) |  |
+|  [ChainIdToAddressSchema](./sdk.chainidtoaddressschema.md) |  |
+|  [FactoryDeploymentSchema](./sdk.factorydeploymentschema.md) |  |
 |  [MintRequest1155](./sdk.mintrequest1155.md) |  |
 |  [MintRequest20](./sdk.mintrequest20.md) |  |
 |  [MintRequest721](./sdk.mintrequest721.md) |  |

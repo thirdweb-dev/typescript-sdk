@@ -81,7 +81,7 @@ export class ContractMetadata<
     let data;
     if (this.supportsContractMetadata(this.contractWrapper)) {
       const uri = await this.contractWrapper.readContract.contractURI();
-      if (uri) {
+      if (uri && uri.length > 0) {
         data = await this.storage.get(uri);
       }
     }
