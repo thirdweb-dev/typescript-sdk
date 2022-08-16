@@ -110,8 +110,15 @@ export const PreDeployMetadata = z
   })
   .catchall(z.any());
 
+/**
+ * @internal
+ */
 export const ChainIdToAddressSchema = z.record(z.string(), z.string());
 
+/**
+ * @internal
+ */
+// TODO should have an input and ouput version of this schema
 export const FactoryDeploymentSchema = z.object({
   implementationAddresses: ChainIdToAddressSchema,
   implementationInitializerFunction: z.string().default("initialize"),
@@ -160,7 +167,8 @@ export const ExtraPublishMetadataSchema = z
     changelog: z.string().optional(),
     tags: z.array(z.string()).optional(),
     logo: FileBufferOrStringSchema.nullable().optional(),
-    factoryDeployment: FactoryDeploymentSchema.partial().optional(),
+    isDeployableViaFactory: z.boolean().optional(),
+    factoryDeploymentData: FactoryDeploymentSchema.partial().optional(),
   })
   .catchall(z.any());
 export type ExtraPublishMetadata = z.infer<typeof ExtraPublishMetadataSchema>;

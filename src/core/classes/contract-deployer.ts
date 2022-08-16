@@ -33,13 +33,11 @@ import invariant from "tiny-invariant";
 import {
   extractConstructorParamsFromAbi,
   extractFunctionParamsFromAbi,
+  fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
 } from "../../common/index";
 import { BigNumber, BytesLike, ContractInterface, ethers } from "ethers";
-import {
-  FactoryDeploymentSchema,
-  FullPublishMetadataSchema,
-} from "../../schema/contracts/custom";
+import { FactoryDeploymentSchema } from "../../schema/contracts/custom";
 
 /**
  * Handles deploying new contracts
@@ -490,31 +488,34 @@ export class ContractDeployer extends RPCConnectionHandler {
       publishMetadataUri,
       this.storage,
     );
-
-    let factoryDeployment;
+    let isDeployableViaFactory;
+    let factoryDeploymentData;
     try {
-      const meta = await this.storage.getRaw(publishMetadataUri);
-      const publishMetadata = FullPublishMetadataSchema.parse(JSON.parse(meta));
-      factoryDeployment = FactoryDeploymentSchema.parse(
-        publishMetadata.factoryDeployment,
+      const extendedMetadata = await fetchExtendedReleaseMetadata(
+        publishMetadataUri,
+        this.storage,
+      );
+      isDeployableViaFactory = extendedMetadata.isDeployableViaFactory;
+      factoryDeploymentData = FactoryDeploymentSchema.parse(
+        extendedMetadata.factoryDeploymentData,
       );
     } catch (e) {
       // not a factory deployment, ignore
     }
 
-    if (factoryDeployment) {
+    if (isDeployableViaFactory && factoryDeploymentData) {
       const chainId = (await this.getProvider().getNetwork()).chainId;
       invariant(
-        factoryDeployment.factoryAddresses,
+        factoryDeploymentData.factoryAddresses,
         "factoryAddresses is required",
       );
       invariant(
-        factoryDeployment.implementationAddresses,
+        factoryDeploymentData.implementationAddresses,
         "implementationAddresses is required",
       );
-      const factoryAddress = factoryDeployment.factoryAddresses[chainId];
+      const factoryAddress = factoryDeploymentData.factoryAddresses[chainId];
       const implementationAddress =
-        factoryDeployment.implementationAddresses[chainId];
+        factoryDeploymentData.implementationAddresses[chainId];
       invariant(
         factoryAddress,
         `factoryAddress not found for chainId '${chainId}'`,
@@ -523,9 +524,13 @@ export class ContractDeployer extends RPCConnectionHandler {
         implementationAddress,
         `implementationAddress not found for chainId '${chainId}'`,
       );
+      invariant(
+        factoryDeploymentData.implementationInitializerFunction,
+        `implementationInitializerFunction not set'`,
+      );
       const initializerParamTypes = extractFunctionParamsFromAbi(
         compilerMetadata.abi,
-        factoryDeployment.implementationInitializerFunction,
+        factoryDeploymentData.implementationInitializerFunction,
       ).map((p) => p.type);
       const paramValues = this.convertParamValues(
         initializerParamTypes,
@@ -535,7 +540,7 @@ export class ContractDeployer extends RPCConnectionHandler {
         factoryAddress,
         implementationAddress,
         compilerMetadata.abi,
-        factoryDeployment.implementationInitializerFunction,
+        factoryDeploymentData.implementationInitializerFunction,
         paramValues,
       );
     }

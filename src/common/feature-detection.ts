@@ -8,6 +8,8 @@ import {
   AbiTypeSchema,
   ContractInfoSchema,
   ContractSource,
+  FullPublishMetadata,
+  FullPublishMetadataSchema,
   PreDeployMetadata,
   PreDeployMetadataFetched,
   PreDeployMetadataFetchedSchema,
@@ -420,6 +422,7 @@ export async function fetchRawPredeployMetadata(
 }
 
 /**
+ * Fetch the metadata coming from CLI, this is before deploying or releasing the contract.
  * @internal
  * @param publishMetadataUri
  * @param storage
@@ -436,6 +439,20 @@ export async function fetchPreDeployMetadata(
     ...parsedMeta,
     bytecode: deployBytecode,
   });
+}
+
+/**
+ * Fetch and parse the full metadata AFTER creating a release, with all the extra information (version, readme, etc)
+ * @internal
+ * @param publishMetadataUri
+ * @param storage
+ */
+export async function fetchExtendedReleaseMetadata(
+  publishMetadataUri: string,
+  storage: IStorage,
+): Promise<FullPublishMetadata> {
+  const meta = await storage.getRaw(publishMetadataUri);
+  return FullPublishMetadataSchema.parse(JSON.parse(meta));
 }
 
 /**

@@ -10,13 +10,8 @@ import {
 } from "../src";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
-import {
-  DropERC721__factory,
-  IContractFactory__factory,
-  TokenERC721__factory,
-  TWFactory__factory,
-} from "../typechain";
-import { Contract, ethers } from "ethers";
+import { DropERC721__factory, TokenERC721__factory } from "../typechain";
+import { ethers } from "ethers";
 import { AddressZero } from "@ethersproject/constants";
 
 global.fetch = require("cross-fetch");
@@ -236,7 +231,8 @@ describe("Publishing", async () => {
       "ipfs://QmfGqbJKvrVDhw747YPXKf26GiuXXo4GkwUg3FcjgYzx8r",
       {
         version: "0.0.1",
-        factoryDeployment: {
+        isDeployableViaFactory: true,
+        factoryDeploymentData: {
           implementationAddresses: {
             [ChainId.Hardhat]: implementations["nft-collection"] || "",
           },
