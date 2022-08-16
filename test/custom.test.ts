@@ -25,6 +25,7 @@ describe("Custom Contracts", async () => {
   let tokenContractAddress: string;
   let editionContractAddress: string;
   let editionDropContractAddress: string;
+  let tokenDropContractAddress: string;
   let sigDropContractAddress: string;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
@@ -79,6 +80,10 @@ describe("Custom Contracts", async () => {
     });
     editionDropContractAddress = await sdk.deployer.deployEditionDrop({
       name: "EditionDrop",
+      primary_sale_recipient: samWallet.address,
+    });
+    tokenDropContractAddress = await sdk.deployer.deployTokenDrop({
+      name: "TokenDrop",
       primary_sale_recipient: samWallet.address,
     });
     sigDropContractAddress = await sdk.deployer.deploySignatureDrop({
@@ -249,6 +254,30 @@ describe("Custom Contracts", async () => {
     expect((await c.token.balance()).displayValue).to.eq("2.0");
     await c.token.burn.tokens(1);
     expect((await c.token.balance()).displayValue).to.eq("1.0");
+  });
+
+  it("should detect feature: erc20 droppable", async () => {
+    const c = await sdk.getContract(tokenDropContractAddress);
+
+    invariant(c, "Contract undefined");
+    invariant(c.token, "ERC20 undefined");
+    invariant(c.token.drop, "ERC20 drop undefined");
+
+    await c.token.drop.claimConditions.set([
+      {
+        startTime: new Date(new Date().getTime() - 1000 * 60 * 60),
+        price: 0,
+        maxQuantity: 10,
+      },
+    ]);
+
+    let b = await c.token.balance();
+    expect(b.displayValue).to.equal("0.0");
+
+    await c.token.drop.claimTo(adminWallet.address, 5);
+
+    b = await c.token.balance();
+    expect(b.displayValue).to.equal("5.0");
   });
 
   it("should detect feature: erc721", async () => {
