@@ -72,6 +72,13 @@ export const CommonPlatformFeeSchema = z.object({
   platform_fee_recipient: AddressSchema.default(constants.AddressZero),
 });
 
+export const CommonAppURISchema = z.object({
+  /**
+   * platform fee basis points
+   */
+  app_uri: FileBufferOrStringSchema.default(""),
+});
+
 /**
  * @internal
  */

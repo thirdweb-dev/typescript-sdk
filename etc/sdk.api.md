@@ -798,6 +798,15 @@ export type ClaimVerification = {
     currencyAddress: string;
 };
 
+// @public (undocumented)
+export const CommonAppURISchema: z.ZodObject<{
+    app_uri: z.ZodDefault<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
+}, "strip", z.ZodTypeAny, {
+    app_uri?: any;
+}, {
+    app_uri?: any;
+}>;
+
 // Warning: (ae-internal-missing-underscore) The name "CommonContractOutputSchema" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
