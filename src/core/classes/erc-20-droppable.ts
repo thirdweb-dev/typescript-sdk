@@ -104,6 +104,7 @@ export class Erc20Droppable implements DetectableFeature {
       claimVerification = await this.claimConditions.prepareClaim(
         quantity,
         checkERC20Allowance,
+        await this.contractWrapper.readContract.decimals(),
       );
     }
     if (!claimVerification) {

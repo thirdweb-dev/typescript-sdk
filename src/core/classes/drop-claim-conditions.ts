@@ -507,12 +507,13 @@ export class DropClaimConditions<
   public async prepareClaim(
     quantity: BigNumberish,
     checkERC20Allowance: boolean,
+    decimals = 0,
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
       await this.getActive(),
       async () => (await this.metadata.get()).merkle,
-      0,
+      decimals,
       this.contractWrapper,
       this.storage,
       checkERC20Allowance,
