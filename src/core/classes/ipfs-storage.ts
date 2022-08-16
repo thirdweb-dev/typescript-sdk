@@ -191,6 +191,9 @@ export class IpfsStorage implements IStorage {
       uri = resolveGatewayUrl(hash, "ipfs://", this.gatewayUrl);
     }
     const result = await fetch(uri);
+    if (!result.ok && result.status === 500) {
+      throw new Error(`Error fetching ${uri} - Status code ${result.status}`);
+    }
     if (!result.ok && result.status !== 404) {
       const nextUrl = this.getNextPublicGateway();
       if (nextUrl) {
