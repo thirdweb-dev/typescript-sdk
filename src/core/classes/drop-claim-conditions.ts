@@ -376,6 +376,7 @@ export class DropClaimConditions<
   ): Promise<TransactionResult> {
     let claimConditionsProcessed = claimConditionInputs;
     if (this.isSinglePhaseDropContract(this.contractWrapper)) {
+      resetClaimEligibilityForAll = true;
       if (claimConditionInputs.length === 0) {
         claimConditionsProcessed = [
           {
