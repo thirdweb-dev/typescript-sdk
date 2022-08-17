@@ -252,12 +252,6 @@ export class DelayedReveal<
     const uriIndicesWithZeroStart = uriIndices.slice(0, uriIndices.length - 1);
 
     // returns the token uri for each batches. first batch always starts from token id 0.
-    // const tokenUris = await Promise.all(
-    //   Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
-    //     this.contractWrapper.readContract.tokenURI(i),
-    //   ),
-    // );
-
     const tokenMetadatas = await Promise.all(
       Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
         this.getNftMetadata(i.toString()),
