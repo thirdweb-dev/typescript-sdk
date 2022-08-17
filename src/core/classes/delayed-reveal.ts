@@ -284,9 +284,9 @@ export class DelayedReveal<
 
     return tokenMetadatas
       .map((meta, index) => ({
-        batchId: BigNumber.from(meta.id),
+        batchId: BigNumber.from(index),
         batchUri: meta.uri,
-        placeholderMetadata: tokenMetadatas[index],
+        placeholderMetadata: meta,
       }))
       .filter(
         (_, index) => ethers.utils.hexDataLength(encryptedBaseUris[index]) > 0,
