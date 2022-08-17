@@ -293,6 +293,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     if (detectContractFeature<AppURI>(this.contractWrapper, "AppURI")) {
       return new ContractAppURI(this.contractWrapper);
     }
+    // TODO detect app_uri in ContractMetadata
     return undefined;
   }
 }

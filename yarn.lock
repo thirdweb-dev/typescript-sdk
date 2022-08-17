@@ -816,7 +816,7 @@
     "@swc/core-win32-x64-msvc" "1.2.196"
 
 "@thirdweb-dev/contracts@file:.yalc/@thirdweb-dev/contracts":
-  version "3.1.0-1"
+  version "2.3.0-6"
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.8"

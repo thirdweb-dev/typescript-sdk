@@ -40,6 +40,8 @@ export class ContractAppURI<TContract extends IAppURI>
    * @param appURI - the uri to set (typically an IPFS hash)
    */
   public async set(appURI: string): Promise<TransactionResult> {
+    // TODO make it work with ContractMetadata
+    // if (detectContractFeature(this.contractWrapper, "AppURI"))
     return {
       receipt: await this.contractWrapper.sendTransaction("setAppURI", [
         appURI,
