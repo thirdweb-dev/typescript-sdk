@@ -38,7 +38,7 @@
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 NFT functions |
 |  [Erc721BatchMintable](./sdk.erc721batchmintable.md) | Mint Many ERC721 NFTs at once |
 |  [Erc721Burnable](./sdk.erc721burnable.md) |  |
-|  [Erc721Claimable](./sdk.erc721claimable.md) | Lazily mint and claim ERC721 NFTs |
+|  [Erc721Claimable](./sdk.erc721claimable.md) | Configure and claim ERC721 NFTs |
 |  [Erc721Droppable](./sdk.erc721droppable.md) | Lazily mint and claim ERC721 NFTs |
 |  [Erc721Enumerable](./sdk.erc721enumerable.md) | List owned ERC721 NFTs |
 |  [Erc721Mintable](./sdk.erc721mintable.md) | Mint ERC721 NFTs |

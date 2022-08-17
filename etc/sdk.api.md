@@ -1066,7 +1066,7 @@ export const CompilerMetadataFetchedSchema: z.ZodObject<{
         details?: string | undefined;
         notice?: string | undefined;
     }>;
-    licenses: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+    licenses: z.ZodEffects<z.ZodDefault<z.ZodArray<z.ZodOptional<z.ZodString>, "many">>, string[], (string | undefined)[] | undefined>;
 }, "strip", z.ZodTypeAny, {
     name: string;
     metadata: Record<string, any>;
@@ -1105,7 +1105,7 @@ export const CompilerMetadataFetchedSchema: z.ZodObject<{
     };
     licenses: string[];
 }, {
-    licenses?: string[] | undefined;
+    licenses?: (string | undefined)[] | undefined;
     name: string;
     metadata: Record<string, any>;
     abi: {
@@ -1769,9 +1769,10 @@ export interface DirectListing {
 
 // Warning: (ae-forgotten-export) The symbol "DropERC20" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseClaimConditionERC721" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BaseDropERC20" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | BaseClaimConditionERC721 | SignatureDrop_2> {
+export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | BaseClaimConditionERC721 | BaseDropERC20 | SignatureDrop_2> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
     canClaim(quantity: Amount, addressToCheck?: string): Promise<boolean>;
     getActive(): Promise<ClaimCondition>;
@@ -2541,6 +2542,10 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20 | Ba
     burn: Erc20Burnable | undefined;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
+    // Warning: (ae-forgotten-export) The symbol "Erc20Droppable" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    drop: Erc20Droppable | undefined;
     // (undocumented)
     featureName: "ERC20";
     get(): Promise<Currency>;
@@ -4472,7 +4477,7 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
         details?: string | undefined;
         notice?: string | undefined;
     }>;
-    licenses: z.ZodDefault<z.ZodArray<z.ZodString, "many">>;
+    licenses: z.ZodEffects<z.ZodDefault<z.ZodArray<z.ZodOptional<z.ZodString>, "many">>, string[], (string | undefined)[] | undefined>;
 }>, {
     bytecode: z.ZodString;
 }>, "strip", z.ZodAny, {
@@ -4519,7 +4524,7 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
     bytecode: string;
 }, {
     [x: string]: any;
-    licenses?: string[] | undefined;
+    licenses?: (string | undefined)[] | undefined;
     analytics?: any;
     name: string;
     metadataUri: string;
