@@ -9,14 +9,15 @@ Constructs a new instance of the `DelayedReveal` class
 <b>Signature:</b>
 
 ```typescript
-constructor(erc721: Erc721, contractWrapper: ContractWrapper<T>, storage: IStorage);
+constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, fetureName: FeatureName, nextTokenIdToMintFn: () => Promise<BigNumber>);
 ```
 
 ## Parameters
 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
-|  erc721 | [Erc721](./sdk.erc721.md) |  |
 |  contractWrapper | ContractWrapper&lt;T&gt; |  |
 |  storage | [IStorage](./sdk.istorage.md) |  |
+|  fetureName | FeatureName |  |
+|  nextTokenIdToMintFn | () =&gt; Promise&lt;BigNumber&gt; |  |
 

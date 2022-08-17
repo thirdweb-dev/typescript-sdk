@@ -27,3 +27,4 @@ export type BaseClaimConditionERC1155 = BaseDropERC1155 & DropSinglePhase1155;
 export type BaseSignatureMintERC721 = BaseERC721 & ISignatureMintERC721;
 export type BaseSignatureMintERC20 = BaseERC20 & ISignatureMintERC20;
 export type BaseSignatureMintERC1155 = BaseERC1155 & ISignatureMintERC1155;
+export type BaseDelayedRevealERC1155 = BaseDropERC1155 & DelayedReveal;

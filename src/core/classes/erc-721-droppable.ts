@@ -1,5 +1,8 @@
 import { ethers } from "ethers";
-import { FEATURE_NFT_DROPPABLE } from "../../constants/erc721-features";
+import {
+  FEATURE_NFT_DROPPABLE,
+  FEATURE_NFT_REVEALABLE,
+} from "../../constants/erc721-features";
 import { NFTMetadata, NFTMetadataOrUri } from "../../schema";
 import { UploadProgressEvent } from "../../types";
 import {
@@ -30,6 +33,37 @@ import { uploadOrExtractURIs } from "../../common/nft";
 export class Erc721Droppable implements DetectableFeature {
   featureName = FEATURE_NFT_DROPPABLE.name;
 
+  /**
+   * Delayed reveal
+   * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
+   * @example
+   * ```javascript
+   * // the real NFTs, these will be encrypted until you reveal them
+   * const realNFTs = [{
+   *   name: "Common NFT #1",
+   *   description: "Common NFT, one of many.",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }, {
+   *   name: "Super Rare NFT #2",
+   *   description: "You got a Super Rare NFT!",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }];
+   * // A placeholder NFT that people will get immediately in their wallet, and will be converted to the real NFT at reveal time
+   * const placeholderNFT = {
+   *   name: "Hidden NFT",
+   *   description: "Will be revealed next week!"
+   * };
+   * // Create and encrypt the NFTs
+   * await contract.nft.drop.revealer.createDelayedRevealBatch(
+   *   placeholderNFT,
+   *   realNFTs,
+   *   "my secret password",
+   * );
+   * // Whenever you're ready, reveal your NFTs at any time
+   * const batchId = 0; // the batch to reveal
+   * await contract.nft.drop.revealer.reveal(batchId, "my secret password");
+   * ```
+   */
   public revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
 
   /**
@@ -146,7 +180,12 @@ export class Erc721Droppable implements DetectableFeature {
         "ERC721Revealable",
       )
     ) {
-      return new DelayedReveal(this.erc721, this.contractWrapper, this.storage);
+      return new DelayedReveal(
+        this.contractWrapper,
+        this.storage,
+        FEATURE_NFT_REVEALABLE.name,
+        () => this.erc721.nextTokenIdToMint(),
+      );
     }
     return undefined;
   }

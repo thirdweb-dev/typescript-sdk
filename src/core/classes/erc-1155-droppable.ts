@@ -1,9 +1,16 @@
 import { TokensLazyMintedEvent } from "contracts/LazyMint";
 import { detectContractFeature } from "../../common/feature-detection";
 import { uploadOrExtractURIs } from "../../common/nft";
-import { FEATURE_EDITION_DROPPABLE } from "../../constants/erc1155-features";
+import {
+  FEATURE_EDITION_DROPPABLE,
+  FEATURE_EDITION_REVEALABLE,
+} from "../../constants/erc1155-features";
 import { NFTMetadata, NFTMetadataOrUri } from "../../schema/tokens/common";
-import { BaseClaimConditionERC1155, BaseDropERC1155 } from "../../types/eips";
+import {
+  BaseClaimConditionERC1155,
+  BaseDelayedRevealERC1155,
+  BaseDropERC1155,
+} from "../../types/eips";
 import { UploadProgressEvent } from "../../types/events";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { IStorage } from "../interfaces/IStorage";
@@ -11,9 +18,43 @@ import { TransactionResultWithId } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
 import { Erc1155Claimable } from "./erc-1155-claimable";
+import { DelayedReveal } from "./delayed-reveal";
 
 export class Erc1155Droppable implements DetectableFeature {
   featureName = FEATURE_EDITION_DROPPABLE.name;
+
+  /**
+   * Delayed reveal
+   * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
+   * @example
+   * ```javascript
+   * // the real NFTs, these will be encrypted until you reveal them
+   * const realNFTs = [{
+   *   name: "Common NFT #1",
+   *   description: "Common NFT, one of many.",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }, {
+   *   name: "Super Rare NFT #2",
+   *   description: "You got a Super Rare NFT!",
+   *   image: fs.readFileSync("path/to/image.png"),
+   * }];
+   * // A placeholder NFT that people will get immediately in their wallet, and will be converted to the real NFT at reveal time
+   * const placeholderNFT = {
+   *   name: "Hidden NFT",
+   *   description: "Will be revealed next week!"
+   * };
+   * // Create and encrypt the NFTs
+   * await contract.edition.drop.revealer.createDelayedRevealBatch(
+   *   placeholderNFT,
+   *   realNFTs,
+   *   "my secret password",
+   * );
+   * // Whenever you're ready, reveal your NFTs at any time
+   * const batchId = 0; // the batch to reveal
+   * await contract.edition.drop.revealer.reveal(batchId, "my secret password");
+   * ```
+   */
+  public revealer: DelayedReveal<BaseDelayedRevealERC1155> | undefined;
 
   /**
    * Claim tokens and configure claim conditions
@@ -41,6 +82,7 @@ export class Erc1155Droppable implements DetectableFeature {
 
     this.storage = storage;
     this.claim = this.detectErc1155Claimable();
+    this.revealer = this.detectErc721Revealable();
   }
 
   /**
@@ -127,6 +169,25 @@ export class Erc1155Droppable implements DetectableFeature {
       )
     ) {
       return new Erc1155Claimable(this.contractWrapper, this.storage);
+    }
+    return undefined;
+  }
+
+  private detectErc721Revealable():
+    | DelayedReveal<BaseDelayedRevealERC1155>
+    | undefined {
+    if (
+      detectContractFeature<BaseDelayedRevealERC1155>(
+        this.contractWrapper,
+        "ERC1155Revealable",
+      )
+    ) {
+      return new DelayedReveal(
+        this.contractWrapper,
+        this.storage,
+        FEATURE_EDITION_REVEALABLE.name,
+        () => this.erc1155.nextTokenIdToMint(),
+      );
     }
     return undefined;
   }
