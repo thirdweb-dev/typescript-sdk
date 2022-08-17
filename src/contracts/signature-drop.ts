@@ -38,6 +38,7 @@ import {
 import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
 import { TransactionTask } from "../core/classes/TransactionTask";
 import { Erc721Burnable } from "../core/classes/erc-721-burnable";
+import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -202,7 +203,12 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.revealer = new DelayedReveal(this, this.contractWrapper, this.storage);
+    this.revealer = new DelayedReveal(
+      this.contractWrapper,
+      this.storage,
+      FEATURE_NFT_REVEALABLE.name,
+      () => this.nextTokenIdToMint(),
+    );
     this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
       this.storage,

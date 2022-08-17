@@ -6,40 +6,44 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../../schema/tokens/common";
-import {
-  Erc721,
-  IStorage,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../index";
-import { fetchTokenMetadata } from "../../common/nft";
+import { IStorage, TransactionResult, TransactionResultWithId } from "../index";
+import { fetchTokenMetadataForContract } from "../../common/nft";
 import { BatchToReveal } from "../../types/delayed-reveal";
 import { TokensLazyMintedEvent } from "contracts/DropERC721";
 import { UploadProgressEvent } from "../../types/events";
-import { BaseDelayedRevealERC721 } from "../../types/eips";
+import {
+  BaseDelayedRevealERC1155,
+  BaseDelayedRevealERC721,
+} from "../../types/eips";
 import { hasFunction } from "../../common";
-import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
 import DeprecatedAbi from "../../../abis/IDelayedRevealDeprecated.json";
+import { FeatureName } from "../../constants/contract-features";
 
 /**
  * Handles delayed reveal logic
  * @public
  */
 export class DelayedReveal<
-  T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop,
+  T extends
+    | DropERC721
+    | BaseDelayedRevealERC721
+    | SignatureDrop
+    | BaseDelayedRevealERC1155,
 > {
-  featureName = FEATURE_NFT_REVEALABLE.name;
+  featureName;
 
   private contractWrapper: ContractWrapper<T>;
   private storage: IStorage;
-  private erc721: Erc721;
+  private nextTokenIdToMintFn: () => Promise<BigNumber>;
 
   constructor(
-    erc721: Erc721,
     contractWrapper: ContractWrapper<T>,
     storage: IStorage,
+    fetureName: FeatureName,
+    nextTokenIdToMintFn: () => Promise<BigNumber>,
   ) {
-    this.erc721 = erc721;
+    this.featureName = fetureName;
+    this.nextTokenIdToMintFn = nextTokenIdToMintFn;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
   }
@@ -99,7 +103,7 @@ export class DelayedReveal<
       await this.contractWrapper.getSigner()?.getAddress(),
     );
 
-    const startFileNumber = await this.erc721.nextTokenIdToMint();
+    const startFileNumber = await this.nextTokenIdToMintFn();
 
     const batch = await this.storage.uploadMetadataBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),
@@ -248,11 +252,11 @@ export class DelayedReveal<
     const uriIndicesWithZeroStart = uriIndices.slice(0, uriIndices.length - 1);
 
     // returns the token uri for each batches. first batch always starts from token id 0.
-    const tokenUris = await Promise.all(
-      Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
-        this.contractWrapper.readContract.tokenURI(i),
-      ),
-    );
+    // const tokenUris = await Promise.all(
+    //   Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
+    //     this.contractWrapper.readContract.tokenURI(i),
+    //   ),
+    // );
 
     const tokenMetadatas = await Promise.all(
       Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
@@ -284,10 +288,10 @@ export class DelayedReveal<
       }
     });
 
-    return tokenUris
-      .map((uri, index) => ({
-        batchId: BigNumber.from(index),
-        batchUri: uri,
+    return tokenMetadatas
+      .map((meta, index) => ({
+        batchId: BigNumber.from(meta.id),
+        batchUri: meta.uri,
         placeholderMetadata: tokenMetadatas[index],
       }))
       .filter(
@@ -313,8 +317,12 @@ export class DelayedReveal<
   }
 
   private async getNftMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
-    const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
-    return fetchTokenMetadata(tokenId, tokenUri, this.storage);
+    return fetchTokenMetadataForContract(
+      this.contractWrapper.readContract.address,
+      this.contractWrapper.getProvider(),
+      tokenId,
+      this.storage,
+    );
   }
 
   private async isLegacyContract(): Promise<boolean> {
