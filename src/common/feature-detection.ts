@@ -327,7 +327,6 @@ export async function fetchContractMetadataFromAddress(
     address,
     provider,
   );
-  console.log(`Fetching metadata from ${compilerMetadataUri}`);
   if (!compilerMetadataUri) {
     throw new Error(`Could not resolve metadata for contract at ${address}`);
   }
