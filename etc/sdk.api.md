@@ -1725,20 +1725,21 @@ export const DEFAULT_QUERY_ALL_COUNT = 100;
 // Warning: (ae-forgotten-export) The symbol "DropERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseDelayedRevealERC721" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "SignatureDrop" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BaseDelayedRevealERC1155" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop_2> {
-    constructor(erc721: Erc721, contractWrapper: ContractWrapper<T>, storage: IStorage);
+export class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop_2 | BaseDelayedRevealERC1155> {
+    // Warning: (ae-forgotten-export) The symbol "FeatureName" needs to be exported by the entry point index.d.ts
+    constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, fetureName: FeatureName, nextTokenIdToMintFn: () => Promise<BigNumber>);
     createDelayedRevealBatch(placeholder: NFTMetadataInput, metadatas: NFTMetadataInput[], password: string, options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<TransactionResultWithId[]>;
     // (undocumented)
-    featureName: "ERC721Revealable";
+    featureName: "ERC721Burnable" | "ERC721Revealable" | "ERC721Claimable" | "ERC721Droppable" | "ERC721BatchMintable" | "ERC721Mintable" | "ERC721SignatureMint" | "ERC721Enumerable" | "ERC721Supply" | "ERC721" | "ERC20Droppable" | "ERC20Burnable" | "ERC20SignatureMintable" | "ERC20BatchMintable" | "ERC20Mintable" | "ERC20" | "ERC1155Burnable" | "ERC1155Claimable" | "ERC1155Droppable" | "ERC1155Revealable" | "ERC1155SignatureMintable" | "ERC1155BatchMintable" | "ERC1155Mintable" | "ERC1155Enumerable" | "ERC1155" | "Royalty" | "PrimarySale" | "PlatformFee" | "Permissions" | "ContractMetadata";
     getBatchesToReveal(): Promise<BatchToReveal[]>;
     reveal(batchId: BigNumberish, password: string): Promise<TransactionResult>;
 }
 
-// Warning: (ae-forgotten-export) The symbol "FeatureName" needs to be exported by the entry point index.d.ts
 // Warning: (ae-internal-missing-underscore) The name "detectContractFeature" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
@@ -1780,7 +1781,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | Base
     getAll(): Promise<ClaimCondition[]>;
     getClaimIneligibilityReasons(quantity: Amount, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // @internal
-    prepareClaim(quantity: BigNumberish, checkERC20Allowance: boolean): Promise<ClaimVerification>;
+    prepareClaim(quantity: BigNumberish, checkERC20Allowance: boolean, decimals?: number): Promise<ClaimVerification>;
     set(claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
     update(index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
 }
@@ -2483,6 +2484,7 @@ export class Erc1155Droppable implements DetectableFeature {
     lazyMint(metadatas: NFTMetadataOrUri[], options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<TransactionResultWithId<NFTMetadata>[]>;
+    revealer: DelayedReveal<BaseDelayedRevealERC1155> | undefined;
 }
 
 // @public
@@ -2702,7 +2704,6 @@ export class Erc721Droppable implements DetectableFeature {
     lazyMint(metadatas: NFTMetadataOrUri[], options?: {
         onProgress: (event: UploadProgressEvent) => void;
     }): Promise<TransactionResultWithId<NFTMetadata>[]>;
-    // (undocumented)
     revealer: DelayedReveal<BaseDelayedRevealERC721> | undefined;
 }
 
