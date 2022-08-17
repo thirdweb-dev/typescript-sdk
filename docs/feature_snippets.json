@@ -773,10 +773,10 @@
   },
   "ERC721Claimable": {
     "name": "Erc721Claimable",
-    "summary": "Lazily mint and claim ERC721 NFTs\n\n",
+    "summary": "Configure and claim ERC721 NFTs\n\n",
     "remarks": "\n\nManage claim phases and claim ERC721 NFTs that have been lazily minted.\n\n",
     "examples": {
-      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nawait contract.drop.claim.to(\"0x...\", quantity);"
+      "javascript": "const contract = await sdk.getContract(\"{{contract_address}}\");\nawait contract.nft.drop.claim.to(\"0x...\", quantity);"
     },
     "methods": [
       {

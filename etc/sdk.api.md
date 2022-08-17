@@ -1770,9 +1770,10 @@ export interface DirectListing {
 
 // Warning: (ae-forgotten-export) The symbol "DropERC20" needs to be exported by the entry point index.d.ts
 // Warning: (ae-forgotten-export) The symbol "BaseClaimConditionERC721" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "BaseDropERC20" needs to be exported by the entry point index.d.ts
 //
 // @public
-export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | BaseClaimConditionERC721 | SignatureDrop_2> {
+export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | BaseClaimConditionERC721 | BaseDropERC20 | SignatureDrop_2> {
     constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetadata<TContract, any>, storage: IStorage);
     canClaim(quantity: Amount, addressToCheck?: string): Promise<boolean>;
     getActive(): Promise<ClaimCondition>;
@@ -2542,6 +2543,10 @@ export class Erc20<T extends TokenERC20 | DropERC20 | BaseERC20 = BaseERC20 | Ba
     burn: Erc20Burnable | undefined;
     // (undocumented)
     protected contractWrapper: ContractWrapper<T>;
+    // Warning: (ae-forgotten-export) The symbol "Erc20Droppable" needs to be exported by the entry point index.d.ts
+    //
+    // (undocumented)
+    drop: Erc20Droppable | undefined;
     // (undocumented)
     featureName: "ERC20";
     get(): Promise<Currency>;
