@@ -280,12 +280,15 @@ export class ContractPublisher extends RPCConnectionHandler {
   public async getLatest(
     publisherAddress: string,
     contractId: string,
-  ): Promise<PublishedContract> {
+  ): Promise<PublishedContract | undefined> {
     const model = await this.publisher.readContract.getPublishedContract(
       publisherAddress,
       contractId,
     );
-    return this.toPublishedContract(model);
+    if (model && model.publishMetadataUri) {
+      return this.toPublishedContract(model);
+    }
+    return undefined;
   }
 
   public async publish(
