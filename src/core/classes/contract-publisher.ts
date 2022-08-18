@@ -8,6 +8,7 @@ import {
   extractConstructorParams,
   extractFunctions,
   fetchContractMetadataFromAddress,
+  fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
   fetchSourceFilesFromMetadata,
@@ -148,7 +149,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     return {
       name: contract.id,
       publishedTimestamp: contract.timestamp,
-      publishedMetadata: await this.fetchPublishedMetadata(
+      publishedMetadata: await this.fetchFullPublishMetadata(
         contract.metadataUri,
       ),
     };
@@ -158,11 +159,10 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * @param publishedMetadataUri
    */
-  public async fetchPublishedMetadata(
+  public async fetchFullPublishMetadata(
     publishedMetadataUri: string,
   ): Promise<FullPublishMetadata> {
-    const meta = await this.storage.getRaw(publishedMetadataUri);
-    return FullPublishMetadataSchema.parse(JSON.parse(meta));
+    return fetchExtendedReleaseMetadata(publishedMetadataUri, this.storage);
   }
 
   /**
@@ -186,7 +186,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     return await Promise.all(
       publishedMetadataUri
         .filter((uri) => uri.length > 0)
-        .map((uri) => this.fetchPublishedMetadata(uri)),
+        .map((uri) => this.fetchFullPublishMetadata(uri)),
     );
   }
 

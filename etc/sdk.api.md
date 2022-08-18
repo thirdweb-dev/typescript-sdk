@@ -542,6 +542,11 @@ export enum ChainId {
     Rinkeby = 4
 }
 
+// Warning: (ae-internal-missing-underscore) The name "ChainIdToAddressSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const ChainIdToAddressSchema: z.ZodRecord<z.ZodString, z.ZodString>;
+
 // Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -1170,6 +1175,7 @@ export class ContractDeployer extends RPCConnectionHandler {
     deploySplit(metadata: SplitContractDeployMetadata): Promise<string>;
     deployToken(metadata: TokenContractDeployMetadata): Promise<string>;
     deployTokenDrop(metadata: TokenContractDeployMetadata): Promise<string>;
+    deployViaFactory(factoryAddress: string, implementationAddress: string, implementationAbi: ContractInterface, initializerFunction: string, initializerArgs: any[]): Promise<string>;
     deployVote(metadata: VoteContractDeployMetadata): Promise<string>;
     // Warning: (ae-forgotten-export) The symbol "ContractRegistry" needs to be exported by the entry point index.d.ts
     //
@@ -1560,7 +1566,9 @@ export const CustomContractOutput: z.ZodObject<z.extendShape<z.extendShape<{
     image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
     external_link: z.ZodOptional<z.ZodString>;
 }, {
-    image: z.ZodOptional<z.ZodString>;
+    image: z.ZodOptional<z.ZodString>; /**
+    * @internal
+    */
 }>, {
     merkle: z.ZodOptional<z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>>;
     seller_fee_basis_points: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
@@ -1642,7 +1650,9 @@ export const CustomContractSchema: {
         image: z.ZodOptional<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>;
         external_link: z.ZodOptional<z.ZodString>;
     }, {
-        image: z.ZodOptional<z.ZodString>;
+        image: z.ZodOptional<z.ZodString>; /**
+        * @internal
+        */
     }>, {
         merkle: z.ZodOptional<z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>>;
         seller_fee_basis_points: z.ZodOptional<z.ZodDefault<z.ZodNumber>>;
@@ -2800,6 +2810,21 @@ export function extractConstructorParamsFromAbi(abi: z.input<typeof AbiSchema>):
 // @internal (undocumented)
 export function extractEventsFromAbi(abi: z.input<typeof AbiSchema>, metadata?: Record<string, any>): AbiEvent[];
 
+// Warning: (ae-internal-missing-underscore) The name "extractFunctionParamsFromAbi" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export function extractFunctionParamsFromAbi(abi: z.input<typeof AbiSchema>, functionName: string): {
+    [x: string]: any;
+    components?: {
+        [x: string]: any;
+        type: string;
+        name: string;
+    }[] | undefined;
+    stateMutability?: string | undefined;
+    type: string;
+    name: string;
+}[];
+
 // Warning: (ae-internal-missing-underscore) The name "extractFunctions" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -2826,6 +2851,21 @@ export const ExtraPublishMetadataSchema: z.ZodObject<{
     license: z.ZodOptional<z.ZodString>;
     changelog: z.ZodOptional<z.ZodString>;
     tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+    logo: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+    isDeployableViaFactory: z.ZodOptional<z.ZodBoolean>;
+    factoryDeploymentData: z.ZodOptional<z.ZodObject<{
+        implementationAddresses: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+        implementationInitializerFunction: z.ZodOptional<z.ZodDefault<z.ZodString>>;
+        factoryAddresses: z.ZodOptional<z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>>;
+    }, "strip", z.ZodTypeAny, {
+        implementationAddresses?: Record<string, string> | undefined;
+        implementationInitializerFunction?: string | undefined;
+        factoryAddresses?: Record<string, string> | undefined;
+    }, {
+        implementationAddresses?: Record<string, string> | undefined;
+        implementationInitializerFunction?: string | undefined;
+        factoryAddresses?: Record<string, string> | undefined;
+    }>>;
 }, "strip", z.ZodAny, {
     [x: string]: any;
     description?: string | undefined;
@@ -2834,6 +2874,13 @@ export const ExtraPublishMetadataSchema: z.ZodObject<{
     license?: string | undefined;
     changelog?: string | undefined;
     tags?: string[] | undefined;
+    logo?: any;
+    isDeployableViaFactory?: boolean | undefined;
+    factoryDeploymentData?: {
+        implementationAddresses?: Record<string, string> | undefined;
+        implementationInitializerFunction?: string | undefined;
+        factoryAddresses?: Record<string, string> | undefined;
+    } | undefined;
     version: string;
 }, {
     [x: string]: any;
@@ -2843,7 +2890,31 @@ export const ExtraPublishMetadataSchema: z.ZodObject<{
     license?: string | undefined;
     changelog?: string | undefined;
     tags?: string[] | undefined;
+    logo?: any;
+    isDeployableViaFactory?: boolean | undefined;
+    factoryDeploymentData?: {
+        implementationAddresses?: Record<string, string> | undefined;
+        implementationInitializerFunction?: string | undefined;
+        factoryAddresses?: Record<string, string> | undefined;
+    } | undefined;
     version: string;
+}>;
+
+// Warning: (ae-internal-missing-underscore) The name "FactoryDeploymentSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const FactoryDeploymentSchema: z.ZodObject<{
+    implementationAddresses: z.ZodRecord<z.ZodString, z.ZodString>;
+    implementationInitializerFunction: z.ZodDefault<z.ZodString>;
+    factoryAddresses: z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>;
+}, "strip", z.ZodTypeAny, {
+    implementationAddresses: Record<string, string>;
+    implementationInitializerFunction: string;
+    factoryAddresses: Record<string, string>;
+}, {
+    implementationInitializerFunction?: string | undefined;
+    factoryAddresses?: Record<string, string> | undefined;
+    implementationAddresses: Record<string, string>;
 }>;
 
 // Warning: (ae-internal-missing-underscore) The name "fetchContractMetadata" should be prefixed with an underscore because the declaration is marked as @internal
@@ -2902,9 +2973,14 @@ export class FetchError extends Error {
     innerError?: Error;
 }
 
+// Warning: (ae-internal-missing-underscore) The name "fetchExtendedReleaseMetadata" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal
+export function fetchExtendedReleaseMetadata(publishMetadataUri: string, storage: IStorage): Promise<FullPublishMetadata>;
+
 // Warning: (ae-internal-missing-underscore) The name "fetchPreDeployMetadata" should be prefixed with an underscore because the declaration is marked as @internal
 //
-// @internal (undocumented)
+// @internal
 export function fetchPreDeployMetadata(publishMetadataUri: string, storage: IStorage): Promise<PreDeployMetadataFetched>;
 
 // Warning: (ae-internal-missing-underscore) The name "fetchRawPredeployMetadata" should be prefixed with an underscore because the declaration is marked as @internal
@@ -2994,6 +3070,21 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
     license: z.ZodOptional<z.ZodString>;
     changelog: z.ZodOptional<z.ZodString>;
     tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+    logo: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
+    isDeployableViaFactory: z.ZodOptional<z.ZodBoolean>;
+    factoryDeploymentData: z.ZodOptional<z.ZodObject<{
+        implementationAddresses: z.ZodOptional<z.ZodRecord<z.ZodString, z.ZodString>>;
+        implementationInitializerFunction: z.ZodOptional<z.ZodDefault<z.ZodString>>;
+        factoryAddresses: z.ZodOptional<z.ZodDefault<z.ZodRecord<z.ZodString, z.ZodString>>>;
+    }, "strip", z.ZodTypeAny, {
+        implementationAddresses?: Record<string, string> | undefined;
+        implementationInitializerFunction?: string | undefined;
+        factoryAddresses?: Record<string, string> | undefined;
+    }, {
+        implementationAddresses?: Record<string, string> | undefined;
+        implementationInitializerFunction?: string | undefined;
+        factoryAddresses?: Record<string, string> | undefined;
+    }>>;
 }>, {
     publisher: z.ZodOptional<z.ZodEffects<z.ZodString, string, string>>;
 }>, "strip", z.ZodAny, {
@@ -3006,6 +3097,13 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
     license?: string | undefined;
     changelog?: string | undefined;
     tags?: string[] | undefined;
+    logo?: any;
+    isDeployableViaFactory?: boolean | undefined;
+    factoryDeploymentData?: {
+        implementationAddresses?: Record<string, string> | undefined;
+        implementationInitializerFunction?: string | undefined;
+        factoryAddresses?: Record<string, string> | undefined;
+    } | undefined;
     name: string;
     version: string;
     metadataUri: string;
@@ -3020,6 +3118,13 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
     license?: string | undefined;
     changelog?: string | undefined;
     tags?: string[] | undefined;
+    logo?: any;
+    isDeployableViaFactory?: boolean | undefined;
+    factoryDeploymentData?: {
+        implementationAddresses?: Record<string, string> | undefined;
+        implementationInitializerFunction?: string | undefined;
+        factoryAddresses?: Record<string, string> | undefined;
+    } | undefined;
     name: string;
     version: string;
     metadataUri: string;
@@ -7158,10 +7263,10 @@ export class WrongListingTypeError extends Error {
 
 // Warnings were encountered during analysis:
 //
-// dist/src/schema/contracts/custom.d.ts:1279:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
-// dist/src/schema/contracts/custom.d.ts:1280:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
-// dist/src/schema/contracts/custom.d.ts:1287:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
-// dist/src/schema/contracts/custom.d.ts:1288:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1361:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1362:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1369:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1370:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 

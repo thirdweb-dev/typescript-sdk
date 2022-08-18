@@ -17,6 +17,7 @@ import {
 } from "../shared";
 import { BigNumberish } from "ethers";
 import { toSemver } from "../../common/index";
+import { ChainId, CONTRACT_ADDRESSES } from "../../constants/index";
 
 /**
  * @internal
@@ -65,6 +66,41 @@ export const CustomContractSchema = {
 /**
  * @internal
  */
+const AbiTypeBaseSchema = z
+  .object({
+    type: z.string(),
+    name: z.string(),
+  })
+  .catchall(z.any());
+
+/**
+ * @internal
+ */
+export const AbiTypeSchema = AbiTypeBaseSchema.extend({
+  stateMutability: z.string().optional(),
+  components: z.array(AbiTypeBaseSchema).optional(),
+}).catchall(z.any());
+
+/**
+ * @internal
+ */
+export const AbiObjectSchema = z
+  .object({
+    type: z.string(),
+    name: z.string().default(""),
+    inputs: z.array(AbiTypeSchema).default([]),
+    outputs: z.array(AbiTypeSchema).default([]),
+  })
+  .catchall(z.any());
+
+/**
+ * @internal
+ */
+export const AbiSchema = z.array(AbiObjectSchema);
+
+/**
+ * @internal
+ */
 export const PreDeployMetadata = z
   .object({
     name: z.string(),
@@ -73,6 +109,36 @@ export const PreDeployMetadata = z
     analytics: z.any().optional(),
   })
   .catchall(z.any());
+
+/**
+ * @internal
+ */
+export const ChainIdToAddressSchema = z.record(z.string(), z.string());
+
+/**
+ * @internal
+ */
+// TODO should have an input and ouput version of this schema
+export const FactoryDeploymentSchema = z.object({
+  implementationAddresses: ChainIdToAddressSchema,
+  implementationInitializerFunction: z.string().default("initialize"),
+  factoryAddresses: ChainIdToAddressSchema.default({
+    [ChainId.Mainnet]: CONTRACT_ADDRESSES[ChainId.Mainnet].twFactory,
+    [ChainId.Goerli]: CONTRACT_ADDRESSES[ChainId.Goerli].twFactory,
+    [ChainId.Rinkeby]: CONTRACT_ADDRESSES[ChainId.Rinkeby].twFactory,
+    [ChainId.Polygon]: CONTRACT_ADDRESSES[ChainId.Polygon].twFactory,
+    [ChainId.Mumbai]: CONTRACT_ADDRESSES[ChainId.Mumbai].twFactory,
+    [ChainId.Fantom]: CONTRACT_ADDRESSES[ChainId.Fantom].twFactory,
+    [ChainId.FantomTestnet]:
+      CONTRACT_ADDRESSES[ChainId.FantomTestnet].twFactory,
+    [ChainId.Optimism]: CONTRACT_ADDRESSES[ChainId.Optimism].twFactory,
+    [ChainId.OptimismTestnet]:
+      CONTRACT_ADDRESSES[ChainId.OptimismTestnet].twFactory,
+    [ChainId.Arbitrum]: CONTRACT_ADDRESSES[ChainId.Arbitrum].twFactory,
+    [ChainId.ArbitrumTestnet]:
+      CONTRACT_ADDRESSES[ChainId.ArbitrumTestnet].twFactory,
+  }),
+});
 
 /**
  * @internal
@@ -100,6 +166,9 @@ export const ExtraPublishMetadataSchema = z
     license: z.string().optional(),
     changelog: z.string().optional(),
     tags: z.array(z.string()).optional(),
+    logo: FileBufferOrStringSchema.nullable().optional(),
+    isDeployableViaFactory: z.boolean().optional(),
+    factoryDeploymentData: FactoryDeploymentSchema.partial().optional(),
   })
   .catchall(z.any());
 export type ExtraPublishMetadata = z.infer<typeof ExtraPublishMetadataSchema>;
@@ -136,41 +205,6 @@ export const ProfileSchemaOutput = ProfileSchemaInput.extend({
 });
 export type ProfileMetadataInput = z.infer<typeof ProfileSchemaInput>;
 export type ProfileMetadata = z.infer<typeof ProfileSchemaOutput>;
-
-/**
- * @internal
- */
-const AbiTypeBaseSchema = z
-  .object({
-    type: z.string(),
-    name: z.string(),
-  })
-  .catchall(z.any());
-
-/**
- * @internal
- */
-export const AbiTypeSchema = AbiTypeBaseSchema.extend({
-  stateMutability: z.string().optional(),
-  components: z.array(AbiTypeBaseSchema).optional(),
-}).catchall(z.any());
-
-/**
- * @internal
- */
-export const AbiObjectSchema = z
-  .object({
-    type: z.string(),
-    name: z.string().default(""),
-    inputs: z.array(AbiTypeSchema).default([]),
-    outputs: z.array(AbiTypeSchema).default([]),
-  })
-  .catchall(z.any());
-
-/**
- * @internal
- */
-export const AbiSchema = z.array(AbiObjectSchema);
 
 /**
  * @internal

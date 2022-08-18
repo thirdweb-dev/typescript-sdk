@@ -1,7 +1,8 @@
-import { signers } from "./before-setup";
+import { implementations, signers } from "./before-setup";
 import { readFileSync } from "fs";
 import { expect } from "chai";
 import {
+  ChainId,
   IpfsStorage,
   isFeatureEnabled,
   resolveContractUriFromAddress,
@@ -221,6 +222,44 @@ describe("Publishing", async () => {
     expect(deployedAddr.length).to.be.gt(0);
     const all = await publisher.getAll(bobWallet.address);
     expect(all.length).to.be.eq(2); // mock publisher always returns a mock contract
+  });
+
+  it("test factory deploy", async () => {
+    const realSDK = new ThirdwebSDK(adminWallet);
+    const pub = await realSDK.getPublisher();
+    const tx = await pub.publish(
+      "ipfs://QmfGqbJKvrVDhw747YPXKf26GiuXXo4GkwUg3FcjgYzx8r",
+      {
+        version: "0.0.1",
+        isDeployableViaFactory: true,
+        factoryDeploymentData: {
+          implementationAddresses: {
+            [ChainId.Hardhat]: implementations["nft-collection"] || "",
+          },
+          factoryAddresses: {
+            [ChainId.Hardhat]: (process.env.factoryAddress as string) || "",
+          },
+        },
+      },
+    );
+    const contract = await tx.data();
+    expect(contract.id).to.eq("TokenERC721");
+    const deployedAddr = await realSDK.deployer.deployContractFromUri(
+      contract.metadataUri,
+      [
+        adminWallet.address,
+        "test factory",
+        "ffs",
+        "",
+        [],
+        adminWallet.address,
+        adminWallet.address,
+        0,
+        0,
+        adminWallet.address,
+      ],
+    );
+    expect(deployedAddr.length).to.be.gt(0);
   });
 
   it("SimpleAzuki enumerable", async () => {
