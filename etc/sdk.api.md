@@ -2851,6 +2851,7 @@ export const ExtraPublishMetadataSchema: z.ZodObject<{
     license: z.ZodOptional<z.ZodString>;
     changelog: z.ZodOptional<z.ZodString>;
     tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+    audit: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
     logo: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
     isDeployableViaFactory: z.ZodOptional<z.ZodBoolean>;
     factoryDeploymentData: z.ZodOptional<z.ZodObject<{
@@ -2874,6 +2875,7 @@ export const ExtraPublishMetadataSchema: z.ZodObject<{
     license?: string | undefined;
     changelog?: string | undefined;
     tags?: string[] | undefined;
+    audit?: any;
     logo?: any;
     isDeployableViaFactory?: boolean | undefined;
     factoryDeploymentData?: {
@@ -2890,6 +2892,7 @@ export const ExtraPublishMetadataSchema: z.ZodObject<{
     license?: string | undefined;
     changelog?: string | undefined;
     tags?: string[] | undefined;
+    audit?: any;
     logo?: any;
     isDeployableViaFactory?: boolean | undefined;
     factoryDeploymentData?: {
@@ -3070,6 +3073,7 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
     license: z.ZodOptional<z.ZodString>;
     changelog: z.ZodOptional<z.ZodString>;
     tags: z.ZodOptional<z.ZodArray<z.ZodString, "many">>;
+    audit: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
     logo: z.ZodOptional<z.ZodNullable<z.ZodUnion<[z.ZodTypeAny, z.ZodString]>>>;
     isDeployableViaFactory: z.ZodOptional<z.ZodBoolean>;
     factoryDeploymentData: z.ZodOptional<z.ZodObject<{
@@ -3097,6 +3101,7 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
     license?: string | undefined;
     changelog?: string | undefined;
     tags?: string[] | undefined;
+    audit?: any;
     logo?: any;
     isDeployableViaFactory?: boolean | undefined;
     factoryDeploymentData?: {
@@ -3118,6 +3123,7 @@ export const FullPublishMetadataSchema: z.ZodObject<z.extendShape<z.extendShape<
     license?: string | undefined;
     changelog?: string | undefined;
     tags?: string[] | undefined;
+    audit?: any;
     logo?: any;
     isDeployableViaFactory?: boolean | undefined;
     factoryDeploymentData?: {
@@ -7263,10 +7269,10 @@ export class WrongListingTypeError extends Error {
 
 // Warnings were encountered during analysis:
 //
-// dist/src/schema/contracts/custom.d.ts:1361:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
-// dist/src/schema/contracts/custom.d.ts:1362:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
-// dist/src/schema/contracts/custom.d.ts:1369:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
-// dist/src/schema/contracts/custom.d.ts:1370:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1367:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1368:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1375:5 - (ae-incompatible-release-tags) The symbol "inputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
+// dist/src/schema/contracts/custom.d.ts:1376:5 - (ae-incompatible-release-tags) The symbol "outputs" is marked as @public, but its signature references "AbiTypeSchema" which is marked as @internal
 
 // (No @packageDocumentation comment for this package)
 
