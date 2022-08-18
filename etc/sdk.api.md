@@ -1779,7 +1779,7 @@ export class DropClaimConditions<TContract extends DropERC721 | DropERC20 | Base
     getAll(): Promise<ClaimCondition[]>;
     getClaimIneligibilityReasons(quantity: Amount, addressToCheck?: string): Promise<ClaimEligibility[]>;
     // @internal
-    prepareClaim(quantity: BigNumberish, checkERC20Allowance: boolean): Promise<ClaimVerification>;
+    prepareClaim(quantity: BigNumberish, checkERC20Allowance: boolean, decimals?: number): Promise<ClaimVerification>;
     set(claimConditionInputs: ClaimConditionInput[], resetClaimEligibilityForAll?: boolean): Promise<TransactionResult>;
     update(index: number, claimConditionInput: ClaimConditionInput): Promise<TransactionResult>;
 }
