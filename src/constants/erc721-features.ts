@@ -3,7 +3,7 @@ import Erc721EnumerableAbi from "../../abis/IERC721Enumerable.json";
 import Erc721SupplyAbi from "../../abis/IERC721Supply.json";
 import IMintableERC721Abi from "../../abis/IMintableERC721.json";
 import MulticallAbi from "../../abis/IMulticall.json";
-import DelayedRevealAbi from "../../abis/DelayedReveal.json";
+import DelayedRevealAbi from "../../abis/IDelayedReveal.json";
 import ILazyMintAbi from "../../abis/ILazyMint.json";
 import IDropSinglePhase from "../../abis/IDropSinglePhase.json";
 import SignatureMintERC721Abi from "../../abis/SignatureMintERC721.json";

@@ -13,6 +13,7 @@ import {
   ISignatureMintERC721,
   LazyMint,
   DropSinglePhase1155,
+  IDelayedReveal,
 } from "contracts";
 
 export type BaseERC20 = IERC20 & IERC20Metadata;
