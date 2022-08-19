@@ -75,6 +75,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
   public interceptor: ContractInterceptor<TContract>;
   public estimator: GasCostEstimator<TContract>;
   public publishedMetadata: ContractPublishedMetadata<TContract>;
+  public abi: ContractInterface;
 
   // features
   public metadata: ContractMetadata<BaseContract, any>;
@@ -111,6 +112,7 @@ export class SmartContract<TContract extends BaseContract = BaseContract>
     this.options = options;
     this.storage = storage;
     this.contractWrapper = contractWrapper;
+    this.abi = abi;
 
     this.events = new ContractEvents(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);

@@ -365,6 +365,11 @@ export class ContractDeployer extends RPCConnectionHandler {
     const release = await new ThirdwebSDK("polygon")
       .getPublisher()
       .getLatest(releaserAddress, contractName);
+    if (!release) {
+      throw new Error(
+        `No release found for '${contractName}' by ${releaserAddress}`,
+      );
+    }
     return await this.deployContractFromUri(
       release.metadataUri,
       constructorParams,
