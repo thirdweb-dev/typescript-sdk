@@ -166,6 +166,7 @@ export const ExtraPublishMetadataSchema = z
     license: z.string().optional(),
     changelog: z.string().optional(),
     tags: z.array(z.string()).optional(),
+    audit: FileBufferOrStringSchema.nullable().optional(),
     logo: FileBufferOrStringSchema.nullable().optional(),
     isDeployableViaFactory: z.boolean().optional(),
     factoryDeploymentData: FactoryDeploymentSchema.partial().optional(),
