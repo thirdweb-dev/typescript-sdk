@@ -78,7 +78,7 @@ Here's how to provide your own private key to the SDK to perform transactions wi
 // my_script.js
 import { ThirdwebSDK } from "@thirdweb-dev/sdk";
 
-// // Learn more about securely accessing your private key: https://portal.thirdweb.com/web3-sdk/set-up-the-sdk/securing-your-private-key
+// Learn more about securely accessing your private key: https://portal.thirdweb.com/web3-sdk/set-up-the-sdk/securing-your-private-key
 const privateKey = "<your-private-key-here>";
 // instantiate the SDK based on your private key, with the desired chain to connect to
 const sdk = ThirdwebSDK.fromPrivateKey(privateKey, "polygon");
