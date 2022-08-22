@@ -20,6 +20,7 @@ import type { EventFilter } from 'ethers';
 import type { EventFragment } from '@ethersproject/abi';
 import { extendShape } from 'zod';
 import type { FunctionFragment } from '@ethersproject/abi';
+import { IStorage } from '@thirdweb-dev/storage';
 import type { Listener } from '@ethersproject/providers';
 import { ListenerFn } from 'eventemitter3';
 import type { Overrides } from 'ethers';
@@ -27,6 +28,7 @@ import type { PayableOverrides } from 'ethers';
 import type { PopulatedTransaction } from 'ethers';
 import type { Provider } from '@ethersproject/providers';
 import { providers } from 'ethers';
+import { RemoteStorage } from '@thirdweb-dev/storage';
 import type { Result } from '@ethersproject/abi';
 import { Signer } from 'ethers';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
@@ -439,6 +441,118 @@ export interface AuctionListing {
     type: ListingType.Auction;
 }
 
+// Warning: (ae-incompatible-release-tags) The symbol "AuthenticationOptions" is marked as @public, but its signature references "AuthenticationOptionsSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type AuthenticationOptions = z.input<typeof AuthenticationOptionsSchema>;
+
+// Warning: (ae-internal-missing-underscore) The name "AuthenticationOptionsSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const AuthenticationOptionsSchema: z.ZodOptional<z.ZodObject<{
+    invalidBefore: z.ZodOptional<z.ZodDate>;
+    expirationTime: z.ZodOptional<z.ZodDate>;
+}, "strip", z.ZodTypeAny, {
+    expirationTime?: Date | undefined;
+    invalidBefore?: Date | undefined;
+}, {
+    expirationTime?: Date | undefined;
+    invalidBefore?: Date | undefined;
+}>>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "AuthenticationPayload" is marked as @public, but its signature references "AuthenticationPayloadSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type AuthenticationPayload = z.output<typeof AuthenticationPayloadSchema>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "AuthenticationPayloadData" is marked as @public, but its signature references "AuthenticationPayloadDataSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type AuthenticationPayloadData = z.output<typeof AuthenticationPayloadDataSchema>;
+
+// Warning: (ae-internal-missing-underscore) The name "AuthenticationPayloadDataSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const AuthenticationPayloadDataSchema: z.ZodObject<{
+    iss: z.ZodString;
+    sub: z.ZodString;
+    aud: z.ZodString;
+    exp: z.ZodEffects<z.ZodEffects<z.ZodDate, BigNumber, Date>, number, Date>;
+    nbf: z.ZodEffects<z.ZodEffects<z.ZodDate, BigNumber, Date>, number, Date>;
+    iat: z.ZodEffects<z.ZodEffects<z.ZodDate, BigNumber, Date>, number, Date>;
+    jti: z.ZodDefault<z.ZodString>;
+}, "strip", z.ZodTypeAny, {
+    iss: string;
+    sub: string;
+    aud: string;
+    exp: number;
+    nbf: number;
+    iat: number;
+    jti: string;
+}, {
+    jti?: string | undefined;
+    iss: string;
+    sub: string;
+    aud: string;
+    exp: Date;
+    nbf: Date;
+    iat: Date;
+}>;
+
+// Warning: (ae-internal-missing-underscore) The name "AuthenticationPayloadSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const AuthenticationPayloadSchema: z.ZodObject<{
+    payload: z.ZodObject<{
+        iss: z.ZodString;
+        sub: z.ZodString;
+        aud: z.ZodString;
+        exp: z.ZodEffects<z.ZodEffects<z.ZodDate, BigNumber, Date>, number, Date>;
+        nbf: z.ZodEffects<z.ZodEffects<z.ZodDate, BigNumber, Date>, number, Date>;
+        iat: z.ZodEffects<z.ZodEffects<z.ZodDate, BigNumber, Date>, number, Date>;
+        jti: z.ZodDefault<z.ZodString>;
+    }, "strip", z.ZodTypeAny, {
+        iss: string;
+        sub: string;
+        aud: string;
+        exp: number;
+        nbf: number;
+        iat: number;
+        jti: string;
+    }, {
+        jti?: string | undefined;
+        iss: string;
+        sub: string;
+        aud: string;
+        exp: Date;
+        nbf: Date;
+        iat: Date;
+    }>;
+    signature: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    signature: string;
+    payload: {
+        iss: string;
+        sub: string;
+        aud: string;
+        exp: number;
+        nbf: number;
+        iat: number;
+        jti: string;
+    };
+}, {
+    signature: string;
+    payload: {
+        jti?: string | undefined;
+        iss: string;
+        sub: string;
+        aud: string;
+        exp: Date;
+        nbf: Date;
+        iat: Date;
+    };
+}>;
+
 // Warning: (ae-internal-missing-underscore) The name "BaseSignaturePayloadInput" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
@@ -551,16 +665,6 @@ export const ChainIdToAddressSchema: z.ZodRecord<z.ZodString, z.ZodString>;
 //
 // @internal (undocumented)
 export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "fantom-testnet" | "avalanche" | "avalanche-testnet" | "avalanche-fuji" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | (string & {});
-
-// Warning: (ae-internal-missing-underscore) The name "CidWithFileName" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export interface CidWithFileName {
-    // (undocumented)
-    cid: string;
-    // (undocumented)
-    fileNames: string[];
-}
 
 // Warning: (ae-incompatible-release-tags) The symbol "ClaimCondition" is marked as @public, but its signature references "ClaimConditionOutputSchema" which is marked as @internal
 //
@@ -3251,34 +3355,8 @@ export class InvalidAddressError extends Error {
     constructor(address?: string);
 }
 
-// @public
-export class IpfsStorage implements IStorage {
-    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "IStorageUpload" which is marked as @internal
-    constructor(gatewayUrl?: string, uploader?: IStorageUpload);
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "gatewayUrl"
-    //
-    // @internal (undocumented)
-    gatewayUrl: string;
-    get(hash: string): Promise<Record<string, any>>;
-    getRaw(hash: string): Promise<string>;
-    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<string>;
-    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<{
-        baseUri: string;
-        uris: string[];
-    }>;
-    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<string>;
-    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<UploadResult>;
-    // @internal
-    uploadSingle(data: string | Record<string, any>, contractAddress?: string, signerAddress?: string): Promise<string>;
-}
+// @public (undocumented)
+export function isDowngradeVersion(current: string, next: string): boolean;
 
 // Warning: (ae-internal-missing-underscore) The name "isFeatureEnabled" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -3289,34 +3367,6 @@ export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: Fe
 //
 // @internal (undocumented)
 export function isIncrementalVersion(current: string, next: string): boolean;
-
-// @public
-export interface IStorage {
-    get(hash: string): Promise<Record<string, any>>;
-    getRaw(hash: string): Promise<string>;
-    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<string>;
-    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<UploadResult>;
-    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<string>;
-    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<UploadResult>;
-}
-
-// Warning: (ae-internal-missing-underscore) The name "IStorageUpload" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export interface IStorageUpload {
-    // (undocumented)
-    uploadBatchWithCid(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<CidWithFileName>;
-}
 
 // Warning: (ae-forgotten-export) The symbol "JsonLiteralOrFileOrBuffer" needs to be exported by the entry point index.d.ts
 //
@@ -3360,6 +3410,105 @@ export enum ListingType {
     // (undocumented)
     Direct = 0
 }
+
+// Warning: (ae-incompatible-release-tags) The symbol "LoginOptions" is marked as @public, but its signature references "LoginOptionsSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type LoginOptions = z.input<typeof LoginOptionsSchema>;
+
+// Warning: (ae-internal-missing-underscore) The name "LoginOptionsSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const LoginOptionsSchema: z.ZodOptional<z.ZodObject<{
+    nonce: z.ZodOptional<z.ZodString>;
+    expirationTime: z.ZodOptional<z.ZodDate>;
+    chainId: z.ZodOptional<z.ZodNumber>;
+}, "strip", z.ZodTypeAny, {
+    chainId?: number | undefined;
+    nonce?: string | undefined;
+    expirationTime?: Date | undefined;
+}, {
+    chainId?: number | undefined;
+    nonce?: string | undefined;
+    expirationTime?: Date | undefined;
+}>>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "LoginPayload" is marked as @public, but its signature references "LoginPayloadSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type LoginPayload = z.output<typeof LoginPayloadSchema>;
+
+// Warning: (ae-incompatible-release-tags) The symbol "LoginPayloadData" is marked as @public, but its signature references "LoginPayloadDataSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type LoginPayloadData = z.output<typeof LoginPayloadDataSchema>;
+
+// Warning: (ae-internal-missing-underscore) The name "LoginPayloadDataSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const LoginPayloadDataSchema: z.ZodObject<{
+    domain: z.ZodString;
+    address: z.ZodEffects<z.ZodString, string, string>;
+    nonce: z.ZodDefault<z.ZodString>;
+    expiration_time: z.ZodEffects<z.ZodDate, string, Date>;
+    chain_id: z.ZodOptional<z.ZodNumber>;
+}, "strip", z.ZodTypeAny, {
+    chain_id?: number | undefined;
+    nonce: string;
+    address: string;
+    domain: string;
+    expiration_time: string;
+}, {
+    nonce?: string | undefined;
+    chain_id?: number | undefined;
+    address: string;
+    domain: string;
+    expiration_time: Date;
+}>;
+
+// Warning: (ae-internal-missing-underscore) The name "LoginPayloadSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const LoginPayloadSchema: z.ZodObject<{
+    payload: z.ZodObject<{
+        domain: z.ZodString;
+        address: z.ZodEffects<z.ZodString, string, string>;
+        nonce: z.ZodDefault<z.ZodString>;
+        expiration_time: z.ZodEffects<z.ZodDate, string, Date>;
+        chain_id: z.ZodOptional<z.ZodNumber>;
+    }, "strip", z.ZodTypeAny, {
+        chain_id?: number | undefined;
+        nonce: string;
+        address: string;
+        domain: string;
+        expiration_time: string;
+    }, {
+        nonce?: string | undefined;
+        chain_id?: number | undefined;
+        address: string;
+        domain: string;
+        expiration_time: Date;
+    }>;
+    signature: z.ZodString;
+}, "strip", z.ZodTypeAny, {
+    signature: string;
+    payload: {
+        chain_id?: number | undefined;
+        nonce: string;
+        address: string;
+        domain: string;
+        expiration_time: string;
+    };
+}, {
+    signature: string;
+    payload: {
+        nonce?: string | undefined;
+        chain_id?: number | undefined;
+        address: string;
+        domain: string;
+        expiration_time: Date;
+    };
+}>;
 
 // @public
 export class Marketplace implements UpdateableNetwork {
@@ -4589,6 +4738,7 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
     name: string;
     metadataUri: string;
     metadata: Record<string, any>;
+    bytecodeUri: string;
     abi: {
         [x: string]: any;
         type: string;
@@ -4623,15 +4773,15 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
         notice?: string | undefined;
     };
     licenses: string[];
-    bytecodeUri: string;
     bytecode: string;
 }, {
     [x: string]: any;
-    licenses?: (string | undefined)[] | undefined;
     analytics?: any;
+    licenses?: (string | undefined)[] | undefined;
     name: string;
     metadataUri: string;
     metadata: Record<string, any>;
+    bytecodeUri: string;
     abi: {
         [x: string]: any;
         name?: string | undefined;
@@ -4665,7 +4815,6 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
         details?: string | undefined;
         notice?: string | undefined;
     };
-    bytecodeUri: string;
     bytecode: string;
 }>;
 
@@ -4912,15 +5061,6 @@ export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
     readonly Pack: "pack";
     readonly Multiwrap: "multiwrap";
 };
-
-// @public
-export class RemoteStorage {
-    constructor(storage: IStorage);
-    fetch(hash: string): Promise<Record<string, any>>;
-    upload(data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<UploadResult>;
-}
 
 // Warning: (ae-internal-missing-underscore) The name "resolveContractUriFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -6094,6 +6234,8 @@ export type SignerOrProvider = Signer | providers.Provider;
 // @beta
 export class SmartContract<TContract extends BaseContract = BaseContract> implements UpdateableNetwork {
     constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractInterface, storage: IStorage, options?: SDKOptions, contractWrapper?: ContractWrapper<TContract>);
+    // (undocumented)
+    abi: ContractInterface;
     call(functionName: string, ...args: unknown[] | [...unknown[], CallOverrides]): Promise<any>;
     // (undocumented)
     static contractType: "custom";
@@ -6629,7 +6771,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ethers.BaseContract>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "custom" | "token" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
+        contractType: "custom" | "token" | "edition" | "split" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
     getEdition(address: string): Edition;
@@ -7026,12 +7168,6 @@ export interface UploadProgressEvent {
 }
 
 // @public
-export type UploadResult = {
-    baseUri: string;
-    uris: string[];
-};
-
-// @public
 export class UserWallet {
     constructor(network: NetworkOrSignerOrProvider, options: SDKOptions);
     balance(currencyAddress?: string): Promise<CurrencyValue>;
@@ -7054,6 +7190,22 @@ export type ValidContractInstance = Instance<ValidContractClass>;
 
 // @public (undocumented)
 export type ValueOf<T> = T[keyof T];
+
+// Warning: (ae-incompatible-release-tags) The symbol "VerifyOptions" is marked as @public, but its signature references "VerifyOptionsSchema" which is marked as @internal
+//
+// @public (undocumented)
+export type VerifyOptions = z.input<typeof VerifyOptionsSchema>;
+
+// Warning: (ae-internal-missing-underscore) The name "VerifyOptionsSchema" should be prefixed with an underscore because the declaration is marked as @internal
+//
+// @internal (undocumented)
+export const VerifyOptionsSchema: z.ZodOptional<z.ZodObject<{
+    chainId: z.ZodOptional<z.ZodNumber>;
+}, "strip", z.ZodTypeAny, {
+    chainId?: number | undefined;
+}, {
+    chainId?: number | undefined;
+}>>;
 
 // @public
 export class Vote implements UpdateableNetwork {
@@ -7244,12 +7396,8 @@ export enum VoteType {
 export class WalletAuthenticator extends RPCConnectionHandler {
     constructor(network: NetworkOrSignerOrProvider, wallet: UserWallet, options: SDKOptions);
     authenticate(domain: string, token: string): Promise<string>;
-    // Warning: (ae-forgotten-export) The symbol "AuthenticationOptions" needs to be exported by the entry point index.d.ts
     generateAuthToken(domain: string, payload: LoginPayload, options?: AuthenticationOptions): Promise<string>;
-    // Warning: (ae-forgotten-export) The symbol "LoginOptions" needs to be exported by the entry point index.d.ts
-    // Warning: (ae-forgotten-export) The symbol "LoginPayload" needs to be exported by the entry point index.d.ts
     login(domain: string, options?: LoginOptions): Promise<LoginPayload>;
-    // Warning: (ae-forgotten-export) The symbol "VerifyOptions" needs to be exported by the entry point index.d.ts
     verify(domain: string, payload: LoginPayload, options?: VerifyOptions): string;
 }
 

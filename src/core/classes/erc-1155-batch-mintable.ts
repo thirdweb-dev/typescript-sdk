@@ -6,7 +6,7 @@ import { EditionMetadata, EditionMetadataOrUri } from "../../schema";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { ethers } from "ethers";
 import { TokensMintedEvent } from "contracts/TokenERC1155";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { FEATURE_EDITION_BATCH_MINTABLE } from "../../constants/erc1155-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 

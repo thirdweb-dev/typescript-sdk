@@ -6,7 +6,7 @@ import {
   TokenERC20,
 } from "contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";

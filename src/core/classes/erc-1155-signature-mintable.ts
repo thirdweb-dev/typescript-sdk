@@ -13,7 +13,7 @@ import { normalizePriceValue, setErc20Allowance } from "../../common/currency";
 import invariant from "tiny-invariant";
 import { ContractWrapper } from "./contract-wrapper";
 import { ITokenERC1155, TokenERC1155 } from "contracts";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { ContractRoles } from "./contract-roles";
 import { NFTCollection } from "../../contracts";
 import { BigNumber, ethers } from "ethers";

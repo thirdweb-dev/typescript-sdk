@@ -17,5 +17,5 @@ constructor(contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>,
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;SignatureMintERC721 \| TokenERC721&gt; |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
+|  storage | IStorage |  |
 

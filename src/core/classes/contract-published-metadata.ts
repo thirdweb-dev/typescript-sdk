@@ -4,7 +4,7 @@ import {
   extractFunctionsFromAbi,
   fetchContractMetadataFromAddress,
 } from "../../common";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import {
   AbiEvent,
   AbiFunction,

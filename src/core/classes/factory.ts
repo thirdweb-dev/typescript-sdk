@@ -19,7 +19,7 @@ import { Split } from "../../contracts/split";
 import { Vote } from "../../contracts/vote";
 import { Token } from "../../contracts/token";
 import { SDKOptions } from "../../schema/sdk-options";
-import { IStorage } from "../interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { NetworkOrSignerOrProvider, ValidContractClass } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 

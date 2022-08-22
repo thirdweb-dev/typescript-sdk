@@ -17,7 +17,7 @@ import {
   SignatureMintERC721,
   TokenERC721,
 } from "contracts";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, ethers } from "ethers";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { TokensMintedWithSignatureEvent } from "contracts/SignatureDrop";

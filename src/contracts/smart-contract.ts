@@ -1,5 +1,6 @@
 import { ContractMetadata } from "../core/classes/contract-metadata";
-import { IStorage, NetworkOrSignerOrProvider } from "../core";
+import { NetworkOrSignerOrProvider } from "../core";
+import { IStorage } from "@thirdweb-dev/storage";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractPrimarySale } from "../core/classes/contract-sales";

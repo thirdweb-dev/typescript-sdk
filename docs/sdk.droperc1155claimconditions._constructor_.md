@@ -18,5 +18,5 @@ constructor(contractWrapper: ContractWrapper<TContract>, metadata: ContractMetad
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;TContract&gt; |  |
 |  metadata | [ContractMetadata](./sdk.contractmetadata.md)<!-- -->&lt;TContract, any&gt; |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
+|  storage | IStorage |  |
 

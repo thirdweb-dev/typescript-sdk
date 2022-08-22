@@ -6,7 +6,8 @@ import {
   NFTMetadata,
   NFTMetadataInput,
 } from "../../schema/tokens/common";
-import { IStorage, TransactionResult, TransactionResultWithId } from "../index";
+import { TransactionResult, TransactionResultWithId } from "../index";
+import { IStorage } from "@thirdweb-dev/storage";
 import { fetchTokenMetadataForContract } from "../../common/nft";
 import { BatchToReveal } from "../../types/delayed-reveal";
 import { TokensLazyMintedEvent } from "contracts/DropERC721";
