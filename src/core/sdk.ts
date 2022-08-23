@@ -62,6 +62,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param signer - a ethers Signer to be used for transactions
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
+   * @param storage - optional storage implementation to use
    * @returns an instance of the SDK
    *
    * @beta
@@ -92,6 +93,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
    * @param privateKey - the private key - **DO NOT EXPOSE THIS TO THE PUBLIC**
    * @param network - the network (chain) to connect to (e.g. "mainnet", "rinkeby", "polygon", "mumbai"...) or a fully formed RPC url
    * @param options - the SDK options to use
+   * @param storage - optional storage implementation to use
    * @returns an instance of the SDK
    *
    * @beta
