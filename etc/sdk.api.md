@@ -631,6 +631,10 @@ export enum ChainId {
     // (undocumented)
     AvalancheFujiTestnet = 43113,
     // (undocumented)
+    BinanceSmartChainMainnet = 56,
+    // (undocumented)
+    BinanceSmartChainTestnet = 97,
+    // (undocumented)
     Fantom = 250,
     // (undocumented)
     FantomTestnet = 4002,
@@ -3362,6 +3366,9 @@ export const InterfaceId_IERC721: Uint8Array;
 export class InvalidAddressError extends Error {
     constructor(address?: string);
 }
+
+// @public (undocumented)
+export function isDowngradeVersion(current: string, next: string): boolean;
 
 // @public (undocumented)
 export function isDowngradeVersion(current: string, next: string): boolean;
@@ -6753,7 +6760,7 @@ export interface SplitRecipientInput {
 }
 
 // @public (undocumented)
-export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet | ChainId.Optimism | ChainId.OptimismTestnet | ChainId.Arbitrum | ChainId.ArbitrumTestnet;
+export type SUPPORTED_CHAIN_ID = ChainId.Mainnet | ChainId.Rinkeby | ChainId.Goerli | ChainId.Mumbai | ChainId.Polygon | ChainId.Fantom | ChainId.FantomTestnet | ChainId.Avalanche | ChainId.AvalancheFujiTestnet | ChainId.Optimism | ChainId.OptimismTestnet | ChainId.Arbitrum | ChainId.ArbitrumTestnet | ChainId.BinanceSmartChainMainnet | ChainId.BinanceSmartChainTestnet;
 
 // @public (undocumented)
 export const SUPPORTED_CHAIN_IDS: SUPPORTED_CHAIN_ID[];

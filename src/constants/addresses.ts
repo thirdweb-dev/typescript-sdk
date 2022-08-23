@@ -101,6 +101,18 @@ export const CONTRACT_ADDRESSES: Record<
     twRegistry: "0x7c487845f98938Bb955B1D5AD069d9a30e4131fd",
     twBYOCRegistry: constants.AddressZero,
   },
+  [ChainId.BinanceSmartChainMainnet]: {
+    biconomyForwarder: constants.AddressZero,
+    twBYOCRegistry: constants.AddressZero,
+    twFactory: constants.AddressZero,
+    twRegistry: constants.AddressZero,
+  },
+  [ChainId.BinanceSmartChainTestnet]: {
+    biconomyForwarder: constants.AddressZero,
+    twBYOCRegistry: constants.AddressZero,
+    twFactory: constants.AddressZero,
+    twRegistry: constants.AddressZero,
+  },
 };
 
 /**

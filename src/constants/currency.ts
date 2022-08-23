@@ -154,6 +154,26 @@ export const NATIVE_TOKENS: Record<
       symbol: "WETH",
     },
   },
+  [ChainId.BinanceSmartChainMainnet]: {
+    name: "Binance Smart Chain Mainnet",
+    symbol: "BNB",
+    decimals: 18,
+    wrapped: {
+      address: "0xbb4CdB9CBd36B01bD1cBaEBF2De08d9173bc095c",
+      name: "Wrapped Binance Chain Token",
+      symbol: "WBNB",
+    },
+  },
+  [ChainId.BinanceSmartChainTestnet]: {
+    name: "Binance Smart Chain Mainnet",
+    symbol: "TBNB",
+    decimals: 18,
+    wrapped: {
+      address: "0x094616F0BdFB0b526bD735Bf66Eca0Ad254ca81F",
+      name: "Wrapped Binance Chain Testnet Token",
+      symbol: "WBNB",
+    },
+  },
 };
 
 /**

@@ -19,6 +19,8 @@ export declare enum ChainId
 |  ArbitrumTestnet | <code>421611</code> |  |
 |  Avalanche | <code>43114</code> |  |
 |  AvalancheFujiTestnet | <code>43113</code> |  |
+|  BinanceSmartChainMainnet | <code>56</code> |  |
+|  BinanceSmartChainTestnet | <code>97</code> |  |
 |  Fantom | <code>250</code> |  |
 |  FantomTestnet | <code>4002</code> |  |
 |  Goerli | <code>5</code> |  |
