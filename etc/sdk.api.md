@@ -668,7 +668,7 @@ export const ChainIdToAddressSchema: z.ZodRecord<z.ZodString, z.ZodString>;
 // Warning: (ae-internal-missing-underscore) The name "ChainOrRpc" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal (undocumented)
-export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "fantom-testnet" | "avalanche" | "avalanche-testnet" | "avalanche-fuji" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | (string & {});
+export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "fantom-testnet" | "avalanche" | "avalanche-testnet" | "avalanche-fuji" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | "binance" | "binance-testnet" | (string & {});
 
 // Warning: (ae-incompatible-release-tags) The symbol "ClaimCondition" is marked as @public, but its signature references "ClaimConditionOutputSchema" which is marked as @internal
 //
