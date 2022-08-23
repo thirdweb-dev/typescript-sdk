@@ -2,7 +2,7 @@ import { DropErc1155ClaimConditions } from "./drop-erc1155-claim-conditions";
 import { FEATURE_NFT_CLAIMABLE } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { BaseClaimConditionERC1155 } from "../../types/eips";
-import { IStorage } from "../interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { ContractWrapper } from "./contract-wrapper";
 import { ContractMetadata } from "./contract-metadata";
 import { CustomContractSchema } from "../../schema/contracts/custom";

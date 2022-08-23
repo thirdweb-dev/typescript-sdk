@@ -45,7 +45,6 @@
 |  [Erc721Supply](./sdk.erc721supply.md) | List ERC721 NFTs |
 |  [Erc721WithQuantitySignatureMintable](./sdk.erc721withquantitysignaturemintable.md) | Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely |
 |  [GasCostEstimator](./sdk.gascostestimator.md) | Estimates the gas cost of Contract calls |
-|  [IpfsStorage](./sdk.ipfsstorage.md) | IPFS Storage implementation, accepts custom IPFS gateways |
 |  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [MarketplaceAuction](./sdk.marketplaceauction.md) | Handles auction listings |
 |  [MarketplaceDirect](./sdk.marketplacedirect.md) | Handles direct listings |
@@ -53,7 +52,6 @@
 |  [NFTCollection](./sdk.nftcollection.md) | Create a collection of one-of-one NFTs. |
 |  [NFTDrop](./sdk.nftdrop.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [Pack](./sdk.pack.md) | Create lootboxes of NFTs with rarity based open mechanics. |
-|  [RemoteStorage](./sdk.remotestorage.md) | Fetch and upload files to IPFS or any other storage. |
 |  [SignatureDrop](./sdk.signaturedrop.md) | Setup a collection of NFTs where when it comes to minting, you can authorize some external party to mint tokens on your contract, and specify what exactly will be minted by that external party.. |
 |  [SmartContract](./sdk.smartcontract.md) | <b><i>(BETA)</i></b> Custom contract dynamic class with feature detection |
 |  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
@@ -94,7 +92,6 @@
 |  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
 |  [EventQueryFilter](./sdk.eventqueryfilter.md) | Filters for querying past events |
 |  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
-|  [IStorage](./sdk.istorage.md) | Interface for any storage provider |
 |  [MarketplaceContractDeployMetadata](./sdk.marketplacecontractdeploymetadata.md) | Options for deploying a Marketplace contract |
 |  [MarketplaceFilter](./sdk.marketplacefilter.md) |  |
 |  [MultiwrapContractDeployMetadata](./sdk.multiwrapcontractdeploymetadata.md) | Options for deploying an Multiwrap contract |
@@ -213,7 +210,6 @@
 |  [TransactionResult](./sdk.transactionresult.md) |  |
 |  [TransactionResultWithAddress](./sdk.transactionresultwithaddress.md) |  |
 |  [TransactionResultWithId](./sdk.transactionresultwithid.md) |  |
-|  [UploadResult](./sdk.uploadresult.md) | The result of an IPFS upload, including the URI of the upload director and the URIs of the uploaded files. |
 |  [ValidContractClass](./sdk.validcontractclass.md) |  |
 |  [ValidContractInstance](./sdk.validcontractinstance.md) |  |
 |  [ValueOf](./sdk.valueof.md) |  |

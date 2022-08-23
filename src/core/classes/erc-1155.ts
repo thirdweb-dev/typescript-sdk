@@ -8,7 +8,7 @@ import {
 } from "contracts";
 import { BigNumber, BigNumberish, BytesLike } from "ethers";
 import { NFTMetadata } from "../../schema/tokens/common";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";

@@ -1,6 +1,6 @@
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { SDKOptions } from "../../schema/sdk-options";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";

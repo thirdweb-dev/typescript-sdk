@@ -1,6 +1,6 @@
 import { IContractMetadata, IERC20Metadata } from "contracts";
 import { z } from "zod";
-import { IStorage } from "../interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import {

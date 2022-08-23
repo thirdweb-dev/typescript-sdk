@@ -18,5 +18,5 @@ constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseClaimConditionE
 |  --- | --- | --- |
 |  erc721 | [Erc721](./sdk.erc721.md) |  |
 |  contractWrapper | ContractWrapper&lt;BaseClaimConditionERC721&gt; |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
+|  storage | IStorage |  |
 

@@ -4,7 +4,7 @@ import { ContractRegistry } from "./registry";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { ContractFactory } from "./factory";
 import { SDKOptions } from "../../schema/sdk-options";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import {
   Edition,

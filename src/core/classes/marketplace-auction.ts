@@ -1,6 +1,6 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { IMarketplace, Marketplace } from "contracts";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, BigNumberish, ethers, constants } from "ethers";
 import {
   AuctionListing,

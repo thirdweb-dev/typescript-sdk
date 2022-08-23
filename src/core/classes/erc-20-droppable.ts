@@ -3,7 +3,7 @@ import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimVerification } from "../../types";
 import { Amount } from "../../types/currency";
 import { BaseDropERC20 } from "../../types/eips";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { TransactionResult } from "../types";
 import { ContractMetadata } from "./contract-metadata";

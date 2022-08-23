@@ -40,7 +40,7 @@ import {
   mapOffer,
   validateNewListingParam,
 } from "../../common/marketplace";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 import { ListingAddedEvent } from "contracts/Marketplace";
 import ERC1155Abi from "../../../abis/IERC1155.json";

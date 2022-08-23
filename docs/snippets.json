@@ -1334,34 +1334,6 @@
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.Pack"
   },
-  "RemoteStorage": {
-    "name": "RemoteStorage",
-    "summary": "Fetch and upload files to IPFS or any other storage.\n\n\n",
-    "remarks": null,
-    "examples": {},
-    "methods": [
-      {
-        "name": "fetch",
-        "summary": "Fetch data from any IPFS hash without worrying about gateways, data types, etc. Simply pass in an IPFS url and we'll handle fetching for you and try every public gateway to get the fastest response.\n\n",
-        "remarks": null,
-        "examples": {
-          "javascript": "// Your IPFS hash here\nconst hash = \"ipfs://...\"\nconst data = await sdk.storage.fetch(hash);"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.RemoteStorage.fetch"
-      },
-      {
-        "name": "upload",
-        "summary": "Upload any data to an IPFS directory. We'll handle all the details for you, including pinning your files and making sure that you get the fastest upload speeds.\n\n",
-        "remarks": null,
-        "examples": {
-          "javascript": "// File upload\nconst files = [\n  fs.readFileSync(\"file1.png\"),\n  fs.readFileSync(\"file2.png\"),\n]\nconst result = await sdk.storage.upload(files);\n// uri for each uploaded file will look like something like: ipfs://<hash>/0\n\n// JSON metadata upload\nconst jsonMetadata = {\n  name: \"Name\",\n  description: \"Description\",\n}\nconst result = await sdk.storage.upload(jsonMetadata);\n\n// Upload progress (browser only)\nconst result = await sdk.storage.upload(files, {\n  onProgress: (event: UploadProgressEvent) => {\n    console.log(`Downloaded ${event.progress} / ${event.total}`);\n  },\n});"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.RemoteStorage.upload"
-      }
-    ],
-    "properties": [],
-    "reference": "https://docs.thirdweb.com/typescript/sdk.RemoteStorage"
-  },
   "SignatureDrop": {
     "name": "SignatureDrop",
     "summary": "Setup a collection of NFTs where when it comes to minting, you can authorize some external party to mint tokens on your contract, and specify what exactly will be minted by that external party..\n\n",

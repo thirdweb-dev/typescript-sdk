@@ -7,7 +7,7 @@ import { EditionMetadata, EditionMetadataOrUri } from "../../schema";
 import { TransactionResultWithId } from "../types";
 import { uploadOrExtractURI } from "../../common/nft";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_EDITION_MINTABLE } from "../../constants/erc1155-features";
 import { TransferSingleEvent } from "contracts/ITokenERC1155";

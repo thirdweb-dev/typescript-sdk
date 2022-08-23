@@ -20,6 +20,7 @@ import type { EventFilter } from 'ethers';
 import type { EventFragment } from '@ethersproject/abi';
 import { extendShape } from 'zod';
 import type { FunctionFragment } from '@ethersproject/abi';
+import { IStorage } from '@thirdweb-dev/storage';
 import type { Listener } from '@ethersproject/providers';
 import { ListenerFn } from 'eventemitter3';
 import type { Overrides } from 'ethers';
@@ -27,6 +28,7 @@ import type { PayableOverrides } from 'ethers';
 import type { PopulatedTransaction } from 'ethers';
 import type { Provider } from '@ethersproject/providers';
 import { providers } from 'ethers';
+import { RemoteStorage } from '@thirdweb-dev/storage';
 import type { Result } from '@ethersproject/abi';
 import { Signer } from 'ethers';
 import { TransactionReceipt } from '@ethersproject/abstract-provider';
@@ -663,16 +665,6 @@ export const ChainIdToAddressSchema: z.ZodRecord<z.ZodString, z.ZodString>;
 //
 // @internal (undocumented)
 export type ChainOrRpc = "mumbai" | "polygon" | "matic" | "rinkeby" | "goerli" | "mainnet" | "ethereum" | "fantom" | "fantom-testnet" | "avalanche" | "avalanche-testnet" | "avalanche-fuji" | "optimism" | "optimism-testnet" | "arbitrum" | "arbitrum-testnet" | (string & {});
-
-// Warning: (ae-internal-missing-underscore) The name "CidWithFileName" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export interface CidWithFileName {
-    // (undocumented)
-    cid: string;
-    // (undocumented)
-    fileNames: string[];
-}
 
 // Warning: (ae-incompatible-release-tags) The symbol "ClaimCondition" is marked as @public, but its signature references "ClaimConditionOutputSchema" which is marked as @internal
 //
@@ -3371,34 +3363,8 @@ export class InvalidAddressError extends Error {
     constructor(address?: string);
 }
 
-// @public
-export class IpfsStorage implements IStorage {
-    // Warning: (ae-incompatible-release-tags) The symbol "__constructor" is marked as @public, but its signature references "IStorageUpload" which is marked as @internal
-    constructor(gatewayUrl?: string, uploader?: IStorageUpload);
-    // Warning: (ae-unresolved-inheritdoc-reference) The @inheritDoc reference could not be resolved: No member was found with name "gatewayUrl"
-    //
-    // @internal (undocumented)
-    gatewayUrl: string;
-    get(hash: string): Promise<Record<string, any>>;
-    getRaw(hash: string): Promise<string>;
-    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<string>;
-    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<{
-        baseUri: string;
-        uris: string[];
-    }>;
-    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<string>;
-    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<UploadResult>;
-    // @internal
-    uploadSingle(data: string | Record<string, any>, contractAddress?: string, signerAddress?: string): Promise<string>;
-}
+// @public (undocumented)
+export function isDowngradeVersion(current: string, next: string): boolean;
 
 // @public (undocumented)
 export function isDowngradeVersion(current: string, next: string): boolean;
@@ -3412,34 +3378,6 @@ export function isFeatureEnabled(abi: z.input<typeof AbiSchema>, featureName: Fe
 //
 // @internal (undocumented)
 export function isIncrementalVersion(current: string, next: string): boolean;
-
-// @public
-export interface IStorage {
-    get(hash: string): Promise<Record<string, any>>;
-    getRaw(hash: string): Promise<string>;
-    upload(data: string | FileOrBuffer, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<string>;
-    uploadBatch(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<UploadResult>;
-    uploadMetadata(metadata: JsonObject, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<string>;
-    uploadMetadataBatch(metadatas: JsonObject[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<UploadResult>;
-}
-
-// Warning: (ae-internal-missing-underscore) The name "IStorageUpload" should be prefixed with an underscore because the declaration is marked as @internal
-//
-// @internal (undocumented)
-export interface IStorageUpload {
-    // (undocumented)
-    uploadBatchWithCid(files: (string | FileOrBuffer)[], fileStartNumber?: number, contractAddress?: string, signerAddress?: string, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<CidWithFileName>;
-}
 
 // Warning: (ae-forgotten-export) The symbol "JsonLiteralOrFileOrBuffer" needs to be exported by the entry point index.d.ts
 //
@@ -4811,6 +4749,7 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
     name: string;
     metadataUri: string;
     metadata: Record<string, any>;
+    bytecodeUri: string;
     abi: {
         [x: string]: any;
         type: string;
@@ -4845,15 +4784,15 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
         notice?: string | undefined;
     };
     licenses: string[];
-    bytecodeUri: string;
     bytecode: string;
 }, {
     [x: string]: any;
-    licenses?: (string | undefined)[] | undefined;
     analytics?: any;
+    licenses?: (string | undefined)[] | undefined;
     name: string;
     metadataUri: string;
     metadata: Record<string, any>;
+    bytecodeUri: string;
     abi: {
         [x: string]: any;
         name?: string | undefined;
@@ -4887,7 +4826,6 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
         details?: string | undefined;
         notice?: string | undefined;
     };
-    bytecodeUri: string;
     bytecode: string;
 }>;
 
@@ -5134,15 +5072,6 @@ export const REMOTE_CONTRACT_TO_CONTRACT_TYPE: {
     readonly Pack: "pack";
     readonly Multiwrap: "multiwrap";
 };
-
-// @public
-export class RemoteStorage {
-    constructor(storage: IStorage);
-    fetch(hash: string): Promise<Record<string, any>>;
-    upload(data: FileOrBuffer[] | JsonObject[] | FileOrBuffer | JsonObject, options?: {
-        onProgress: (event: UploadProgressEvent) => void;
-    }): Promise<UploadResult>;
-}
 
 // Warning: (ae-internal-missing-underscore) The name "resolveContractUriFromAddress" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -6853,7 +6782,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
     getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ethers.BaseContract>;
     getContractList(walletAddress: string): Promise<{
         address: string;
-        contractType: "custom" | "token" | "split" | "edition" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
+        contractType: "custom" | "token" | "edition" | "split" | "edition-drop" | "token-drop" | "vote" | "marketplace" | "pack" | "nft-drop" | "signature-drop" | "multiwrap" | "nft-collection";
         metadata: () => Promise<any>;
     }[]>;
     getEdition(address: string): Edition;
@@ -7248,12 +7177,6 @@ export interface UploadProgressEvent {
     progress: number;
     total: number;
 }
-
-// @public
-export type UploadResult = {
-    baseUri: string;
-    uris: string[];
-};
 
 // @public
 export class UserWallet {
