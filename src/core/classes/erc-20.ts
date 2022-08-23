@@ -16,7 +16,7 @@ import {
   fetchCurrencyValue,
 } from "../../common/currency";
 import { TokenMintInput } from "../../schema/tokens/token";
-import { PriceSchema } from "../../schema";
+import { AmountSchema } from "../../schema";
 import {
   BaseDropERC20,
   BaseERC20,
@@ -341,7 +341,7 @@ export class Erc20<
    */
   public async normalizeAmount(amount: Amount): Promise<BigNumber> {
     const decimals = await this.contractWrapper.readContract.decimals();
-    return ethers.utils.parseUnits(PriceSchema.parse(amount), decimals);
+    return ethers.utils.parseUnits(AmountSchema.parse(amount), decimals);
   }
 
   /**

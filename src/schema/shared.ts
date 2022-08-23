@@ -73,23 +73,16 @@ export const AddressSchema = z.string().refine(
   },
 );
 
-export const PriceSchema = z
+export const AmountSchema = z
   .union([
-    z.string().regex(/^([0-9]+\.?[0-9]*|\.[0-9]+)$/, "Invalid price"),
-    z.number().min(0, "Price cannot be negative"),
+    z.string().regex(/^([0-9]+\.?[0-9]*|\.[0-9]+)$/, "Invalid amount"),
+    z.number().min(0, "Amount cannot be negative"),
   ])
   .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
 
 export const RawDateSchema = z.date().transform((i) => {
   return BigNumber.from(Math.floor(i.getTime() / 1000));
 });
-
-export const AirdropQuantitySchema = z
-  .union([
-    z.string().regex(/^([0-9]+\.?[0-9]*|\.[0-9]+)$/, "Invalid quantity"),
-    z.number().min(0, "Quantity cannot be negative"),
-  ])
-  .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
 
 /**
  * Default to now
