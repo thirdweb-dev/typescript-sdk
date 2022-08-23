@@ -458,7 +458,14 @@ export class Marketplace implements UpdateableNetwork {
         try {
           listing = await this.getListing(i);
         } catch (err) {
-          return undefined;
+          if (err instanceof ListingNotFoundError) {
+            return undefined;
+          } else {
+            console.warn(
+              `Failed to get listing ${i}' - skipping. Try 'marketplace.getListing(${i})' to get the underlying error.`,
+            );
+            return undefined;
+          }
         }
 
         if (listing.type === ListingType.Auction) {

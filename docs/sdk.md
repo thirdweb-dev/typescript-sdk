@@ -83,6 +83,7 @@
 |  --- | --- |
 |  [getNativeTokenByChainId(chainId)](./sdk.getnativetokenbychainid.md) | Returns the native token for a given chain |
 |  [getReadOnlyProvider(network, chainId)](./sdk.getreadonlyprovider.md) |  |
+|  [isDowngradeVersion(current, next)](./sdk.isdowngradeversion.md) |  |
 
 ## Interfaces
 
@@ -137,6 +138,9 @@
 |  [AbiFunction](./sdk.abifunction.md) |  |
 |  [AirdropInput](./sdk.airdropinput.md) | Input model to pass a list of addresses + amount to transfer to each one |
 |  [Amount](./sdk.amount.md) | Represents a currency amount already formatted. ie. "1" for 1 ether. |
+|  [AuthenticationOptions](./sdk.authenticationoptions.md) |  |
+|  [AuthenticationPayload](./sdk.authenticationpayload.md) |  |
+|  [AuthenticationPayloadData](./sdk.authenticationpayloaddata.md) |  |
 |  [BufferOrStringWithName](./sdk.bufferorstringwithname.md) |  |
 |  [ClaimCondition](./sdk.claimcondition.md) | Represents a claim condition fetched from the SDK |
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
@@ -168,6 +172,9 @@
 |  [FullPublishMetadata](./sdk.fullpublishmetadata.md) |  |
 |  [Json](./sdk.json.md) |  |
 |  [JsonObject](./sdk.jsonobject.md) |  |
+|  [LoginOptions](./sdk.loginoptions.md) |  |
+|  [LoginPayload](./sdk.loginpayload.md) |  |
+|  [LoginPayloadData](./sdk.loginpayloaddata.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
@@ -210,5 +217,6 @@
 |  [ValidContractClass](./sdk.validcontractclass.md) |  |
 |  [ValidContractInstance](./sdk.validcontractinstance.md) |  |
 |  [ValueOf](./sdk.valueof.md) |  |
+|  [VerifyOptions](./sdk.verifyoptions.md) |  |
 |  [WrappedTokens](./sdk.wrappedtokens.md) | Output for the contents of a bundle wrapped token |
 

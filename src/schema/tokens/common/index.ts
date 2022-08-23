@@ -12,7 +12,7 @@ import { OptionalPropertiesInput } from "./properties";
  */
 export const CommonTokenInput = z
   .object({
-    name: z.string().optional(),
+    name: z.union([z.string(), z.number()]).optional(),
     description: z.string().nullable().optional(),
     image: FileBufferOrStringSchema.nullable().optional(),
     external_url: FileBufferOrStringSchema.nullable().optional(),
