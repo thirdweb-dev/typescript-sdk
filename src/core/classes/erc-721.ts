@@ -1,7 +1,7 @@
 import { ContractWrapper } from "./contract-wrapper";
 import { BigNumber, BigNumberish, constants } from "ethers";
 import { NFTMetadata, NFTMetadataOwner } from "../../schema/tokens/common";
-import { IStorage } from "../interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
@@ -13,6 +13,7 @@ import {
 } from "../../common";
 import {
   DropERC721,
+  IBurnableERC721,
   IERC721Supply,
   IMintableERC721,
   ISignatureMintERC721,
@@ -25,8 +26,9 @@ import { Erc721Mintable } from "./erc-721-mintable";
 import { BaseDropERC721, BaseERC721 } from "../../types/eips";
 import { FEATURE_NFT } from "../../constants/erc721-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { Erc721Dropable } from "./erc-721-dropable";
+import { Erc721Droppable } from "./erc-721-droppable";
 import { Erc721WithQuantitySignatureMintable } from "./erc-721-with-quantity-signature-mintable";
+import { Erc721Burnable } from "./erc-721-burnable";
 
 /**
  * Standard ERC721 NFT functions
@@ -50,7 +52,8 @@ export class Erc721<
   featureName = FEATURE_NFT.name;
   public query: Erc721Supply | undefined;
   public mint: Erc721Mintable | undefined;
-  public drop: Erc721Dropable | undefined;
+  public burn: Erc721Burnable | undefined;
+  public drop: Erc721Droppable | undefined;
   public signature: Erc721WithQuantitySignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
@@ -74,7 +77,8 @@ export class Erc721<
     }
     this.query = this.detectErc721Enumerable();
     this.mint = this.detectErc721Mintable();
-    this.drop = this.detectErc721Dropable();
+    this.burn = this.detectErc721Burnable();
+    this.drop = this.detectErc721Droppable();
     this.signature = this.detectErc721SignatureMintable();
   }
 
@@ -280,14 +284,26 @@ export class Erc721<
     return undefined;
   }
 
-  private detectErc721Dropable(): Erc721Dropable | undefined {
+  private detectErc721Burnable(): Erc721Burnable | undefined {
+    if (
+      detectContractFeature<IBurnableERC721>(
+        this.contractWrapper,
+        "ERC721Burnable",
+      )
+    ) {
+      return new Erc721Burnable(this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc721Droppable(): Erc721Droppable | undefined {
     if (
       detectContractFeature<BaseDropERC721>(
         this.contractWrapper,
-        "ERC721Dropable",
+        "ERC721Droppable",
       )
     ) {
-      return new Erc721Dropable(this, this.contractWrapper, this.storage);
+      return new Erc721Droppable(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }

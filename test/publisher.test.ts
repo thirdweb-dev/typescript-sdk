@@ -1,12 +1,13 @@
-import { signers } from "./before-setup";
+import { implementations, signers } from "./before-setup";
 import { readFileSync } from "fs";
 import { expect } from "chai";
 import {
-  IpfsStorage,
+  ChainId,
   isFeatureEnabled,
   resolveContractUriFromAddress,
   ThirdwebSDK,
 } from "../src";
+import { IpfsStorage } from "@thirdweb-dev/storage";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../typechain";
@@ -106,9 +107,8 @@ describe("Publishing", async () => {
       version: "0.0.1",
     });
     const contract = await tx.data();
-    const deployedAddr = await publisher.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
+    const deployedAddr = await sdk.deployer.deployContractFromUri(
+      contract.metadataUri,
       [],
     );
     expect(deployedAddr.length).to.be.gt(0);
@@ -132,18 +132,17 @@ describe("Publishing", async () => {
       version: "0.0.2",
     });
     const contract = await tx.data();
-    const deployedAddr = await publisher.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
+    const deployedAddr = await sdk.deployer.deployContractFromUri(
+      contract.metadataUri,
       [],
     );
     expect(deployedAddr.length).to.be.gt(0);
     const all = await publisher.getAll(adminWallet.address);
-    expect(all.length).to.be.eq(1);
+    expect(all.length).to.be.eq(2); // mock publisher always returns a mock contract
     // fetch metadata back
     const c = await sdk.getContract(deployedAddr);
     const meta = await c.metadata.get();
-    expect(meta.name).to.eq("Greeter");
+    expect(meta.name).to.eq("MyToken");
   });
 
   it("should publish multiple versions", async () => {
@@ -158,7 +157,7 @@ describe("Publishing", async () => {
     }
     const all = await publisher.getAll(samWallet.address);
     const versions = await publisher.getAllVersions(samWallet.address, id);
-    expect(all.length).to.be.eq(1);
+    expect(all.length).to.be.eq(2);
     expect(versions.length).to.be.eq(5);
     expect(all[all.length - 1] === versions[versions.length - 1]);
     const last = await publisher.getLatest(samWallet.address, id);
@@ -210,9 +209,8 @@ describe("Publishing", async () => {
       version: "0.0.1",
     });
     const contract = await tx.data();
-    const deployedAddr = await publisher.deployPublishedContract(
-      bobWallet.address,
-      contract.id,
+    const deployedAddr = await sdk.deployer.deployContractFromUri(
+      contract.metadataUri,
       [
         adminWallet.address,
         "0x1234",
@@ -223,7 +221,45 @@ describe("Publishing", async () => {
     );
     expect(deployedAddr.length).to.be.gt(0);
     const all = await publisher.getAll(bobWallet.address);
-    expect(all.length).to.be.eq(1);
+    expect(all.length).to.be.eq(2); // mock publisher always returns a mock contract
+  });
+
+  it("test factory deploy", async () => {
+    const realSDK = new ThirdwebSDK(adminWallet);
+    const pub = await realSDK.getPublisher();
+    const tx = await pub.publish(
+      "ipfs://QmfGqbJKvrVDhw747YPXKf26GiuXXo4GkwUg3FcjgYzx8r",
+      {
+        version: "0.0.1",
+        isDeployableViaFactory: true,
+        factoryDeploymentData: {
+          implementationAddresses: {
+            [ChainId.Hardhat]: implementations["nft-collection"] || "",
+          },
+          factoryAddresses: {
+            [ChainId.Hardhat]: (process.env.factoryAddress as string) || "",
+          },
+        },
+      },
+    );
+    const contract = await tx.data();
+    expect(contract.id).to.eq("TokenERC721");
+    const deployedAddr = await realSDK.deployer.deployContractFromUri(
+      contract.metadataUri,
+      [
+        adminWallet.address,
+        "test factory",
+        "ffs",
+        "",
+        [],
+        adminWallet.address,
+        adminWallet.address,
+        0,
+        0,
+        adminWallet.address,
+      ],
+    );
+    expect(deployedAddr.length).to.be.gt(0);
   });
 
   it("SimpleAzuki enumerable", async () => {
@@ -234,9 +270,8 @@ describe("Publishing", async () => {
       version: "0.0.1",
     });
     const contract = await tx.data();
-    const deployedAddr = await pub.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
+    const deployedAddr = await sdk.deployer.deployContractFromUri(
+      contract.metadataUri,
       [],
     );
     const c = await realSDK.getContract(deployedAddr);
@@ -253,9 +288,8 @@ describe("Publishing", async () => {
       version: "0.0.1",
     });
     const contract = await tx.data();
-    const deployedAddr = await pub.deployPublishedContract(
-      adminWallet.address,
-      contract.id,
+    const deployedAddr = await sdk.deployer.deployContractFromUri(
+      contract.metadataUri,
       [10, "bar"],
     );
     const c = await sdk.getContract(deployedAddr);
@@ -272,7 +306,7 @@ describe("Publishing", async () => {
     expect(all.length).to.eq(1);
     invariant(c.royalties, "no royalties detected");
     const prevMeta = await c.metadata.get();
-    expect(prevMeta.name).to.eq("CustomAzukiContract");
+    expect(prevMeta.name).to.eq("AzukiMint");
     expect(prevMeta.description).to.eq(
       "Azuki contract that can be fully used in the thirdweb dashboard",
     );
@@ -284,9 +318,8 @@ describe("Publishing", async () => {
   });
 
   it("ERC721Dropable multiphase feature detection", async () => {
-    const pub = sdk.getPublisher();
     const ipfsUri = "ipfs://QmWaidQMSYHPzYYZCxMc2nSk2vrD28mS43Xc9k7QFyAGja/0";
-    const addr = await pub.deployContract(ipfsUri, []);
+    const addr = await sdk.deployer.deployContractFromUri(ipfsUri, []);
     const c = await sdk.getContract(addr);
 
     invariant(c.nft, "nft must be defined");
@@ -312,9 +345,8 @@ describe("Publishing", async () => {
   });
 
   it("ERC721Drop base feature detection", async () => {
-    const pub = sdk.getPublisher();
-    const ipfsUri = "ipfs://QmfQwWiMbKaSmng5GN1P5bgCfdEy4Uyg7BznwbaP1bvj7f/0";
-    const addr = await pub.deployContract(ipfsUri, []);
+    const ipfsUri = "ipfs://QmXQ2f6qA7FD8uks1hKK1soTn6sbEGBSfDpzN9buYXkGxZ";
+    const addr = await sdk.deployer.deployContractFromUri(ipfsUri, []);
     const c = await sdk.getContract(addr);
 
     invariant(c.nft, "nft must be defined");
@@ -353,9 +385,8 @@ describe("Publishing", async () => {
   });
 
   it("Constructor params with tuples", async () => {
-    const pub = await sdk.getPublisher();
     const ipfsUri = "ipfs://QmZQa56Cj1gFnZgKSkvGE5uzhaQrQV3nU6upDWDusCaCwY/0";
-    const addr = await pub.deployContract(ipfsUri, [
+    const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
       "0x1234",
       "123",
       JSON.stringify(["0x1234", "0x4567"]),

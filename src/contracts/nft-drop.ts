@@ -3,7 +3,7 @@ import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { IStorage } from "../core/interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -38,6 +38,9 @@ import {
 } from "contracts/DropERC721";
 import { UploadProgressEvent } from "../types/events";
 import { uploadOrExtractURIs } from "../common/nft";
+import { TransactionTask } from "../core/classes/TransactionTask";
+import { Erc721Burnable } from "../core/classes/erc-721-burnable";
+import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -149,6 +152,7 @@ export class NFTDrop extends Erc721<DropERC721> {
 
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
+  private _burn = this.burn as Erc721Burnable;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -181,9 +185,10 @@ export class NFTDrop extends Erc721<DropERC721> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.revealer = new DelayedReveal<DropERC721>(
-      this,
       this.contractWrapper,
       this.storage,
+      FEATURE_NFT_REVEALABLE.name,
+      () => this.nextTokenIdToMint(),
     );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }
@@ -448,6 +453,37 @@ export class NFTDrop extends Erc721<DropERC721> {
   }
 
   /**
+   * Construct a claim transaction without executing it.
+   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param destinationAddress
+   * @param quantity
+   * @param checkERC20Allowance
+   */
+  public async getClaimTransaction(
+    destinationAddress: string,
+    quantity: BigNumberish,
+    checkERC20Allowance = true, // TODO split up allowance checks
+  ): Promise<TransactionTask> {
+    const claimVerification = await this.prepareClaim(
+      quantity,
+      checkERC20Allowance,
+    );
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "claim",
+      args: [
+        destinationAddress,
+        quantity,
+        claimVerification.currencyAddress,
+        claimVerification.price,
+        claimVerification.proofs,
+        claimVerification.maxQuantityPerTransaction,
+      ],
+      overrides: claimVerification.overrides,
+    });
+  }
+
+  /**
    * Claim unique NFTs to a specific Wallet
    *
    * @remarks Let the specified wallet claim NFTs.
@@ -474,22 +510,12 @@ export class NFTDrop extends Erc721<DropERC721> {
     quantity: BigNumberish,
     checkERC20Allowance = true,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const claimVerification = await this.prepareClaim(
+    const task = await this.getClaimTransaction(
+      destinationAddress,
       quantity,
       checkERC20Allowance,
     );
-    const receipt = await this.contractWrapper.sendTransaction(
-      "claim",
-      [
-        destinationAddress,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
-      ],
-      claimVerification.overrides,
-    );
+    const { receipt } = await task.execute();
     const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
       "TokensClaimed",
       receipt?.logs,
@@ -532,14 +558,12 @@ export class NFTDrop extends Erc721<DropERC721> {
    *
    * @example
    * ```javascript
-   * const result = await contract.burn(tokenId);
+   * const result = await contract.burnToken(tokenId);
    * ```
    *
    */
-  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
-    };
+  public async burnToken(tokenId: BigNumberish): Promise<TransactionResult> {
+    return this._burn.token(tokenId);
   }
 
   /** ******************************

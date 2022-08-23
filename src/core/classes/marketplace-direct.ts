@@ -40,7 +40,7 @@ import {
   mapOffer,
   validateNewListingParam,
 } from "../../common/marketplace";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import invariant from "tiny-invariant";
 import { ListingAddedEvent } from "contracts/Marketplace";
 import ERC1155Abi from "../../../abis/IERC1155.json";
@@ -359,11 +359,12 @@ export class MarketplaceDirect {
     receiver?: string,
   ): Promise<TransactionResult> {
     const listing = await this.validateListing(BigNumber.from(listingId));
-    const valid = await this.isStillValidListing(listing, quantityDesired);
+    const { valid, error } = await this.isStillValidListing(
+      listing,
+      quantityDesired,
+    );
     if (!valid) {
-      throw new Error(
-        "The asset on this listing has been moved from the lister's wallet, this listing is now invalid",
-      );
+      throw new Error(`Listing ${listingId} is no longer valid. ${error}`);
     }
     const buyFor = receiver
       ? receiver
@@ -501,7 +502,7 @@ export class MarketplaceDirect {
   public async isStillValidListing(
     listing: DirectListing,
     quantity?: BigNumberish,
-  ): Promise<boolean> {
+  ): Promise<{ valid: boolean; error?: string }> {
     const approved = await isTokenApprovedForTransfer(
       this.contractWrapper.getProvider(),
       this.getAddress(),
@@ -511,7 +512,10 @@ export class MarketplaceDirect {
     );
 
     if (!approved) {
-      return false;
+      return {
+        valid: false,
+        error: `Token '${listing.tokenId}' from contract '${listing.assetContractAddress}' is not approved for transfer`,
+      };
     }
 
     const provider = this.contractWrapper.getProvider();
@@ -528,10 +532,15 @@ export class MarketplaceDirect {
         ERC721Abi,
         provider,
       ) as IERC721;
-      return (
+      const valid =
         (await asset.ownerOf(listing.tokenId)).toLowerCase() ===
-        listing.sellerAddress.toLowerCase()
-      );
+        listing.sellerAddress.toLowerCase();
+      return {
+        valid,
+        error: valid
+          ? undefined
+          : `Seller is not the owner of Token '${listing.tokenId}' from contract '${listing.assetContractAddress} anymore'`,
+      };
     } else if (isERC1155) {
       const asset = new Contract(
         listing.assetContractAddress,
@@ -542,10 +551,18 @@ export class MarketplaceDirect {
         listing.sellerAddress,
         listing.tokenId,
       );
-      return balance.gte(quantity || listing.quantity);
+      const valid = balance.gte(quantity || listing.quantity);
+      return {
+        valid,
+        error: valid
+          ? undefined
+          : `Seller does not have enough balance of Token '${listing.tokenId}' from contract '${listing.assetContractAddress} to fulfill the listing`,
+      };
     } else {
-      console.error("Contract does not implement ERC 1155 or ERC 721.");
-      return false;
+      return {
+        valid: false,
+        error: "Contract does not implement ERC 1155 or ERC 721.",
+      };
     }
   }
 }

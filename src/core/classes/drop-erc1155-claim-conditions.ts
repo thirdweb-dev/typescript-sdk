@@ -1,39 +1,52 @@
-import { IStorage } from "../interfaces/IStorage";
-import { DropErc721ContractSchema } from "../../schema/contracts/drop-erc721";
+import { IStorage } from "@thirdweb-dev/storage";
 import { ContractMetadata } from "./contract-metadata";
-import { DropERC1155, IERC20, IERC20__factory } from "contracts";
-import { BigNumber, BigNumberish, constants, ethers } from "ethers";
+import {
+  ContractMetadata as ContractMetadataContract,
+  DropERC1155,
+  DropSinglePhase1155,
+  IERC20,
+  IERC20__factory,
+} from "contracts";
+import { BigNumber, BigNumberish, constants, ethers, utils } from "ethers";
 import { isNativeToken } from "../../common/currency";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   ClaimCondition,
   ClaimConditionInput,
   ClaimConditionsForToken,
+  ClaimVerification,
 } from "../../types";
 import deepEqual from "fast-deep-equal";
 import { ClaimEligibility } from "../../enums";
 import { TransactionResult } from "../index";
 import {
   getClaimerProofs,
+  prepareClaim,
   processClaimConditionInputs,
   transformResultToClaimCondition,
   updateExistingClaimConditions,
 } from "../../common/claim-conditions";
 import { includesErrorMessage } from "../../common";
+import { hasFunction } from "../../common/feature-detection";
 import { isNode } from "../../common/utils";
+import { BaseClaimConditionERC1155 } from "../../types/eips";
+import { IDropClaimCondition } from "contracts/DropERC1155";
+import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 
 /**
  * Manages claim conditions for Edition Drop contracts
  * @public
  */
-export class DropErc1155ClaimConditions {
+export class DropErc1155ClaimConditions<
+  TContract extends DropERC1155 | BaseClaimConditionERC1155,
+> {
   private contractWrapper;
   private metadata;
   private storage: IStorage;
 
   constructor(
-    contractWrapper: ContractWrapper<DropERC1155>,
-    metadata: ContractMetadata<DropERC1155, typeof DropErc721ContractSchema>,
+    contractWrapper: ContractWrapper<TContract>,
+    metadata: ContractMetadata<TContract, any>,
     storage: IStorage,
   ) {
     this.storage = storage;
@@ -51,14 +64,7 @@ export class DropErc1155ClaimConditions {
    * @returns the claim condition metadata
    */
   public async getActive(tokenId: BigNumberish): Promise<ClaimCondition> {
-    const id =
-      await this.contractWrapper.readContract.getActiveClaimConditionId(
-        tokenId,
-      );
-    const mc = await this.contractWrapper.readContract.getClaimConditionById(
-      tokenId,
-      id,
-    );
+    const mc = await this.get(tokenId);
     const metadata = await this.metadata.get();
     return await transformResultToClaimCondition(
       mc,
@@ -69,37 +75,65 @@ export class DropErc1155ClaimConditions {
     );
   }
 
+  private async get(
+    tokenId: BigNumberish,
+  ): Promise<IDropClaimCondition.ClaimConditionStructOutput> {
+    if (this.isSinglePhaseDropContract(this.contractWrapper)) {
+      return (await this.contractWrapper.readContract.claimCondition(
+        tokenId,
+      )) as IDropClaimCondition.ClaimConditionStructOutput;
+    } else if (this.isMultiPhaseDropContract(this.contractWrapper)) {
+      const id =
+        await this.contractWrapper.readContract.getActiveClaimConditionId(
+          tokenId,
+        );
+      return await this.contractWrapper.readContract.getClaimConditionById(
+        tokenId,
+        id,
+      );
+    } else {
+      throw new Error("Contract does not support claim conditions");
+    }
+  }
+
   /**
    * Get all the claim conditions
    *
    * @returns the claim conditions metadata
    */
   public async getAll(tokenId: BigNumberish): Promise<ClaimCondition[]> {
-    const claimCondition =
-      await this.contractWrapper.readContract.claimCondition(tokenId);
-    const startId = claimCondition.currentStartId.toNumber();
-    const count = claimCondition.count.toNumber();
-    const conditions = [];
-    for (let i = startId; i < startId + count; i++) {
-      conditions.push(
-        await this.contractWrapper.readContract.getClaimConditionById(
-          tokenId,
-          i,
+    if (this.isMultiPhaseDropContract(this.contractWrapper)) {
+      const claimCondition =
+        (await this.contractWrapper.readContract.claimCondition(tokenId)) as {
+          currentStartId: BigNumber;
+          count: BigNumber;
+        };
+      const startId = claimCondition.currentStartId.toNumber();
+      const count = claimCondition.count.toNumber();
+      const conditions = [];
+      for (let i = startId; i < startId + count; i++) {
+        conditions.push(
+          await this.contractWrapper.readContract.getClaimConditionById(
+            tokenId,
+            i,
+          ),
+        );
+      }
+      const metadata = await this.metadata.get();
+      return Promise.all(
+        conditions.map((c) =>
+          transformResultToClaimCondition(
+            c,
+            0,
+            this.contractWrapper.getProvider(),
+            metadata.merkle,
+            this.storage,
+          ),
         ),
       );
+    } else {
+      return [await this.getActive(tokenId)];
     }
-    const metadata = await this.metadata.get();
-    return Promise.all(
-      conditions.map((c) =>
-        transformResultToClaimCondition(
-          c,
-          0,
-          this.contractWrapper.getProvider(),
-          metadata.merkle,
-          this.storage,
-        ),
-      ),
-    );
   }
 
   /**
@@ -164,10 +198,7 @@ export class DropErc1155ClaimConditions {
     }
 
     try {
-      [activeConditionIndex, claimCondition] = await Promise.all([
-        this.contractWrapper.readContract.getActiveClaimConditionId(tokenId),
-        this.getActive(tokenId),
-      ]);
+      claimCondition = await this.getActive(tokenId);
     } catch (err: any) {
       if (
         includesErrorMessage(err, "!CONDITION") ||
@@ -201,15 +232,34 @@ export class DropErc1155ClaimConditions {
         this.storage,
       );
       try {
-        const [validMerkleProof] =
-          await this.contractWrapper.readContract.verifyClaimMerkleProof(
-            activeConditionIndex,
-            addressToCheck,
-            tokenId,
-            quantity,
-            proofs.proof,
-            proofs.maxClaimable,
-          );
+        let validMerkleProof;
+        if (this.isMultiPhaseDropContract(this.contractWrapper)) {
+          activeConditionIndex =
+            await this.contractWrapper.readContract.getActiveClaimConditionId(
+              tokenId,
+            );
+          [validMerkleProof] =
+            await this.contractWrapper.readContract.verifyClaimMerkleProof(
+              activeConditionIndex,
+              addressToCheck,
+              tokenId,
+              quantity,
+              proofs.proof,
+              proofs.maxClaimable,
+            );
+        } else if (this.isSinglePhaseDropContract(this.contractWrapper)) {
+          [validMerkleProof] =
+            await this.contractWrapper.readContract.verifyClaimMerkleProof(
+              tokenId,
+              addressToCheck,
+              quantity,
+              {
+                proof: proofs.proof,
+                maxQuantityInAllowlist: proofs.maxClaimable,
+              },
+            );
+        }
+
         if (!validMerkleProof) {
           reasons.push(ClaimEligibility.AddressNotAllowed);
           return reasons;
@@ -221,12 +271,28 @@ export class DropErc1155ClaimConditions {
     }
 
     // check for claim timestamp between claims
-    const [lastClaimedTimestamp, timestampForNextClaim] =
-      await this.contractWrapper.readContract.getClaimTimestamp(
-        tokenId,
-        activeConditionIndex,
-        addressToCheck,
-      );
+    let [lastClaimedTimestamp, timestampForNextClaim] = [
+      BigNumber.from(0),
+      BigNumber.from(0),
+    ];
+    if (this.isMultiPhaseDropContract(this.contractWrapper)) {
+      activeConditionIndex =
+        await this.contractWrapper.readContract.getActiveClaimConditionId(
+          tokenId,
+        );
+      [lastClaimedTimestamp, timestampForNextClaim] =
+        await this.contractWrapper.readContract.getClaimTimestamp(
+          tokenId,
+          activeConditionIndex,
+          addressToCheck,
+        );
+    } else if (this.isSinglePhaseDropContract(this.contractWrapper)) {
+      [lastClaimedTimestamp, timestampForNextClaim] =
+        await this.contractWrapper.readContract.getClaimTimestamp(
+          tokenId,
+          addressToCheck,
+        );
+    }
 
     const now = BigNumber.from(Date.now()).div(1000);
 
@@ -362,10 +428,33 @@ export class DropErc1155ClaimConditions {
     const merkleInfo: { [key: string]: string } = {};
     const processedClaimConditions = await Promise.all(
       claimConditionsForToken.map(async ({ tokenId, claimConditions }) => {
+        // sanitize for single phase deletions
+        let claimConditionsProcessed = claimConditions;
+        if (this.isSinglePhaseDropContract(this.contractWrapper)) {
+          resetClaimEligibilityForAll = true;
+          if (claimConditions.length === 0) {
+            claimConditionsProcessed = [
+              {
+                startTime: new Date(0),
+                currencyAddress: NATIVE_TOKEN_ADDRESS,
+                price: 0,
+                maxQuantity: 0,
+                quantityLimitPerTransaction: 0,
+                waitInSeconds: 0,
+                merkleRootHash: utils.hexZeroPad([0], 32),
+                snapshot: [],
+              },
+            ];
+          } else if (claimConditions.length > 1) {
+            throw new Error(
+              "Single phase drop contract cannot have multiple claim conditions, only one is allowed",
+            );
+          }
+        }
         // process inputs
         const { snapshotInfos, sortedConditions } =
           await processClaimConditionInputs(
-            claimConditions,
+            claimConditionsProcessed,
             0,
             this.contractWrapper.getProvider(),
             this.storage,
@@ -399,22 +488,46 @@ export class DropErc1155ClaimConditions {
       const contractURI = await this.metadata._parseAndUploadMetadata(
         mergedMetadata,
       );
-      encoded.push(
-        this.contractWrapper.readContract.interface.encodeFunctionData(
+
+      if (
+        hasFunction<ContractMetadataContract>(
           "setContractURI",
-          [contractURI],
-        ),
-      );
+          this.contractWrapper,
+        )
+      ) {
+        encoded.push(
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "setContractURI",
+            [contractURI],
+          ),
+        );
+      } else {
+        throw new Error(
+          "Setting a merkle root requires implementing ContractMetadata in your contract to support storing a merkle root.",
+        );
+      }
     }
 
     processedClaimConditions.forEach(({ tokenId, sortedConditions }) => {
-      encoded.push(
-        this.contractWrapper.readContract.interface.encodeFunctionData(
-          "setClaimConditions",
-          [tokenId, sortedConditions, resetClaimEligibilityForAll],
-        ),
-      );
+      if (this.isSinglePhaseDropContract(this.contractWrapper)) {
+        encoded.push(
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "setClaimConditions",
+            [tokenId, sortedConditions[0], resetClaimEligibilityForAll],
+          ),
+        );
+      } else if (this.isMultiPhaseDropContract(this.contractWrapper)) {
+        encoded.push(
+          this.contractWrapper.readContract.interface.encodeFunctionData(
+            "setClaimConditions",
+            [tokenId, sortedConditions, resetClaimEligibilityForAll],
+          ),
+        );
+      } else {
+        throw new Error("Contract does not support claim conditions");
+      }
     });
+
     return {
       receipt: await this.contractWrapper.multiCall(encoded),
     };
@@ -438,5 +551,41 @@ export class DropErc1155ClaimConditions {
       existingConditions,
     );
     return await this.set(tokenId, newConditionInputs);
+  }
+
+  /**
+   * Returns proofs and the overrides required for the transaction.
+   *
+   * @returns - `overrides` and `proofs` as an object.
+   */
+  public async prepareClaim(
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    checkERC20Allowance: boolean,
+  ): Promise<ClaimVerification> {
+    return prepareClaim(
+      quantity,
+      await this.getActive(tokenId),
+      async () => (await this.metadata.get()).merkle,
+      0,
+      this.contractWrapper,
+      this.storage,
+      checkERC20Allowance,
+    );
+  }
+
+  private isSinglePhaseDropContract(
+    contractWrapper: ContractWrapper<any>,
+  ): contractWrapper is ContractWrapper<DropSinglePhase1155> {
+    return !hasFunction<DropSinglePhase1155>(
+      "getClaimConditionById",
+      contractWrapper,
+    );
+  }
+
+  private isMultiPhaseDropContract(
+    contractWrapper: ContractWrapper<any>,
+  ): contractWrapper is ContractWrapper<DropERC1155> {
+    return hasFunction<DropERC1155>("getClaimConditionById", contractWrapper);
   }
 }

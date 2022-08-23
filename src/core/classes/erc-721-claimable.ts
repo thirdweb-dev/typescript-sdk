@@ -5,21 +5,22 @@ import { NFTMetadataOwner } from "../../schema";
 import { ClaimVerification } from "../../types";
 import { BaseClaimConditionERC721 } from "../../types/eips";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { IStorage } from "../interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { TransactionResultWithId } from "../types";
 import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
 import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc721 } from "./erc-721";
 import { CustomContractSchema } from "../../schema/contracts/custom";
+import { TransactionTask } from "./TransactionTask";
 
 /**
- * Lazily mint and claim ERC721 NFTs
+ * Configure and claim ERC721 NFTs
  * @remarks Manage claim phases and claim ERC721 NFTs that have been lazily minted.
  * @example
  * ```javascript
  * const contract = await sdk.getContract("{{contract_address}}");
- * await contract.drop.claim.to("0x...", quantity);
+ * await contract.nft.drop.claim.to("0x...", quantity);
  * ```
  */
 export class Erc721Claimable implements DetectableFeature {
@@ -74,6 +75,50 @@ export class Erc721Claimable implements DetectableFeature {
   }
 
   /**
+   * Construct a claim transaction without executing it.
+   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param destinationAddress
+   * @param quantity
+   * @param checkERC20Allowance
+   * @param claimData
+   */
+  public async getClaimTransaction(
+    destinationAddress: string,
+    quantity: BigNumberish,
+    checkERC20Allowance = true, // TODO split up allowance checks
+    claimData?: ClaimVerification,
+  ): Promise<TransactionTask> {
+    let claimVerification = claimData;
+    if (this.conditions && !claimData) {
+      claimVerification = await this.conditions.prepareClaim(
+        quantity,
+        checkERC20Allowance,
+      );
+    }
+    if (!claimVerification) {
+      throw new Error(
+        "Claim verification Data is required - either pass it in as 'claimData' or set claim conditions via 'conditions.set()'",
+      );
+    }
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "claim",
+      args: [
+        destinationAddress,
+        quantity,
+        claimVerification.currencyAddress,
+        claimVerification.price,
+        {
+          proof: claimVerification.proofs,
+          maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
+        },
+        ethers.utils.toUtf8Bytes(""),
+      ],
+      overrides: claimVerification.overrides,
+    });
+  }
+
+  /**
    * Claim unique NFTs to a specific Wallet
    *
    * @remarks Let the specified wallet claim NFTs.
@@ -101,35 +146,13 @@ export class Erc721Claimable implements DetectableFeature {
     checkERC20Allowance = true,
     claimData?: ClaimVerification,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    let claimVerification = claimData;
-    if (this.conditions && !claimData) {
-      claimVerification = await this.conditions.prepareClaim(
-        quantity,
-        checkERC20Allowance,
-      );
-    }
-
-    if (!claimVerification) {
-      throw new Error(
-        "Claim verification Data is required - either pass it in as 'claimData' or set claim conditions via 'conditions.set()'",
-      );
-    }
-
-    const receipt = await this.contractWrapper.sendTransaction(
-      "claim",
-      [
-        destinationAddress,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        {
-          proof: claimVerification.proofs,
-          maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
-        },
-        ethers.utils.toUtf8Bytes(""),
-      ],
-      claimVerification.overrides,
+    const task = await this.getClaimTransaction(
+      destinationAddress,
+      quantity,
+      checkERC20Allowance,
+      claimData,
     );
+    const { receipt } = await task.execute();
     const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
       "TokensClaimed",
       receipt?.logs,

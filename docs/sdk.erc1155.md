@@ -35,13 +35,15 @@ await contract.edition.transfer(walletAddress, tokenId, quantity);
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
+|  [burn](./sdk.erc1155.burn.md) |  | [Erc1155Burnable](./sdk.erc1155burnable.md) \| undefined |  |
 |  [contractWrapper](./sdk.erc1155.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
+|  [drop](./sdk.erc1155.drop.md) |  | [Erc1155Droppable](./sdk.erc1155droppable.md) \| undefined |  |
 |  [featureName](./sdk.erc1155.featurename.md) |  | "ERC1155" |  |
 |  [mint](./sdk.erc1155.mint.md) |  | [Erc1155Mintable](./sdk.erc1155mintable.md) \| undefined |  |
 |  [options](./sdk.erc1155.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [query](./sdk.erc1155.query.md) |  | [Erc1155Enumerable](./sdk.erc1155enumerable.md) \| undefined |  |
 |  [signature](./sdk.erc1155.signature.md) |  | [Erc1155SignatureMintable](./sdk.erc1155signaturemintable.md) \| undefined |  |
-|  [storage](./sdk.erc1155.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
+|  [storage](./sdk.erc1155.storage.md) |  | IStorage |  |
 
 ## Methods
 

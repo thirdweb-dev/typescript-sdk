@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-drop: Erc721Dropable | undefined;
+drop: Erc721Droppable | undefined;
 ```

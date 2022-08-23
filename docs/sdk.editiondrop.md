@@ -33,7 +33,7 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [claimConditions](./sdk.editiondrop.claimconditions.md) |  | [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md) | Configure claim conditions for each NFT |
+|  [claimConditions](./sdk.editiondrop.claimconditions.md) |  | [DropErc1155ClaimConditions](./sdk.droperc1155claimconditions.md)<!-- -->&lt;DropERC1155&gt; | Configure claim conditions for each NFT |
 |  [contractAbi](./sdk.editiondrop.contractabi.md) | <code>static</code> | any |  |
 |  [contractRoles](./sdk.editiondrop.contractroles.md) | <code>static</code> | readonly \["admin", "minter", "transfer"\] |  |
 |  [contractType](./sdk.editiondrop.contracttype.md) | <code>static</code> | "edition-drop" |  |
@@ -51,11 +51,12 @@ const contract = sdk.getEditionDrop("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [burn(tokenId, amount)](./sdk.editiondrop.burn.md) |  | Burn a specified amount of a NFT |
+|  [burnTokens(tokenId, amount)](./sdk.editiondrop.burntokens.md) |  | Burn a specified amount of a NFT |
 |  [claim(tokenId, quantity, checkERC20Allowance)](./sdk.editiondrop.claim.md) |  | Claim a token to the connected wallet |
 |  [claimTo(destinationAddress, tokenId, quantity, checkERC20Allowance)](./sdk.editiondrop.claimto.md) |  | Claim NFTs to a specific Wallet |
 |  [createBatch(metadatas, options)](./sdk.editiondrop.createbatch.md) |  | Create a batch of NFTs to be claimed in the future |
 |  [getAll(queryParams)](./sdk.editiondrop.getall.md) |  | Get All Minted NFTs |
+|  [getClaimTransaction(destinationAddress, tokenId, quantity, checkERC20Allowance)](./sdk.editiondrop.getclaimtransaction.md) |  | Construct a claim transaction without executing it. This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution. |
 |  [getOwned(walletAddress)](./sdk.editiondrop.getowned.md) |  | Get Owned NFTs |
 |  [getTotalCount()](./sdk.editiondrop.gettotalcount.md) |  | Get the number of NFTs minted |
 |  [isTransferRestricted()](./sdk.editiondrop.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |

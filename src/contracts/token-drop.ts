@@ -1,9 +1,9 @@
 import { DropERC20 } from "contracts";
-import { IStorage } from "../core/interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { BigNumberish, constants } from "ethers";
+import { constants } from "ethers";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
@@ -13,11 +13,11 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { DropClaimConditions } from "../core/classes/drop-claim-conditions";
 import { Erc20 } from "../core/classes/erc-20";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { Amount, ClaimVerification, CurrencyValue } from "../types";
+import { Amount, CurrencyValue } from "../types";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
-
-import { prepareClaim } from "../common/claim-conditions";
 import { getRoleHash } from "../common";
+import { Erc20Burnable } from "../core/classes/erc-20-burnable";
+import { Erc20Droppable } from "../core/classes/erc-20-droppable";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -40,6 +40,9 @@ export class TokenDrop extends Erc20<DropERC20> {
    * @internal
    */
   static schema = DropErc20ContractSchema;
+
+  private _burn = this.burn as Erc20Burnable;
+  private _drop = this.drop as Erc20Droppable;
 
   public metadata: ContractMetadata<DropERC20, typeof TokenDrop.schema>;
   public roles: ContractRoles<
@@ -210,24 +213,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     amount: Amount,
     checkERC20Allowance = true,
   ): Promise<TransactionResult> {
-    const quantity = await this.normalizeAmount(amount);
-    const claimVerification = await this.prepareClaim(
-      quantity,
-      checkERC20Allowance,
-    );
-    const receipt = await this.contractWrapper.sendTransaction(
-      "claim",
-      [
-        destinationAddress,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
-      ],
-      claimVerification.overrides,
-    );
-    return { receipt };
+    return this._drop.claimTo(destinationAddress, amount, checkERC20Allowance);
   }
 
   /**
@@ -256,15 +242,11 @@ export class TokenDrop extends Erc20<DropERC20> {
    * // The amount of this token you want to burn
    * const amount = 1.2;
    *
-   * await contract.burn(amount);
+   * await contract.burnTokens(amount);
    * ```
    */
-  public async burn(amount: Amount): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [
-        await this.normalizeAmount(amount),
-      ]),
-    };
+  public async burnTokens(amount: Amount): Promise<TransactionResult> {
+    return this._burn.tokens(amount);
   }
 
   /**
@@ -287,35 +269,6 @@ export class TokenDrop extends Erc20<DropERC20> {
     holder: string,
     amount: Amount,
   ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burnFrom", [
-        holder,
-        await this.normalizeAmount(amount),
-      ]),
-    };
-  }
-
-  /** ******************************
-   * PRIVATE FUNCTIONS
-   *******************************/
-
-  /**
-   * Returns proofs and the overrides required for the transaction.
-   *
-   * @returns - `overrides` and `proofs` as an object.
-   */
-  private async prepareClaim(
-    quantity: BigNumberish,
-    checkERC20Allowance = true,
-  ): Promise<ClaimVerification> {
-    return prepareClaim(
-      quantity,
-      await this.claimConditions.getActive(),
-      async () => (await this.metadata.get()).merkle,
-      await this.contractWrapper.readContract.decimals(),
-      this.contractWrapper,
-      this.storage,
-      checkERC20Allowance,
-    );
+    return this._burn.from(holder, amount);
   }
 }

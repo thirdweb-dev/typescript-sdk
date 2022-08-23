@@ -1,6 +1,4 @@
 import { ContractInterface, ethers, Signer } from "ethers";
-import { IStorage } from "./interfaces/IStorage";
-import { RemoteStorage } from "./classes/remote-storage";
 import {
   Edition,
   EditionDrop,
@@ -16,7 +14,7 @@ import {
   Vote,
 } from "../contracts";
 import { SDKOptions } from "../schema/sdk-options";
-import { IpfsStorage } from "./classes/ipfs-storage";
+import { IpfsStorage, RemoteStorage, IStorage } from "@thirdweb-dev/storage";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
   ContractForContractType,
@@ -437,18 +435,18 @@ export class ThirdwebSDK extends RPCConnectionHandler {
       return this.contractCache.get(address) as SmartContract;
     }
     try {
-      const publisher = this.getPublisher();
-      const metadata = await publisher.fetchCompilerMetadataFromAddress(
-        address,
-      );
-      return this.getContractFromAbi(address, metadata.abi);
-    } catch (e) {
+      // try built in contract first, eventually all our contracts will have bytecode metadata
+      const contractType = await this.resolveContractType(address);
+      const abi = KNOWN_CONTRACTS_MAP[contractType].contractAbi;
+      return this.getContractFromAbi(address, abi);
+    } catch (err) {
       try {
-        // try built in contract instead, eventually all our contracts will have bytecode metadata
-        const contractType = await this.resolveContractType(address);
-        const abi = KNOWN_CONTRACTS_MAP[contractType].contractAbi;
-        return this.getContractFromAbi(address, abi);
-      } catch (err) {
+        const publisher = this.getPublisher();
+        const metadata = await publisher.fetchCompilerMetadataFromAddress(
+          address,
+        );
+        return this.getContractFromAbi(address, metadata.abi);
+      } catch (e) {
         throw new Error(`Error fetching ABI for this contract\n\n${err}`);
       }
     }

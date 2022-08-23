@@ -1,7 +1,12 @@
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC20, IMintableERC20, TokenERC20 } from "contracts";
+import {
+  DropERC20,
+  IBurnableERC20,
+  IMintableERC20,
+  TokenERC20,
+} from "contracts";
 import { BigNumber, BigNumberish, ethers } from "ethers";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { UpdateableNetwork } from "../interfaces/contract";
 import { SDKOptions, SDKOptionsSchema } from "../../schema/sdk-options";
@@ -12,12 +17,18 @@ import {
 } from "../../common/currency";
 import { TokenMintInput } from "../../schema/tokens/token";
 import { PriceSchema } from "../../schema";
-import { BaseERC20, BaseSignatureMintERC20 } from "../../types/eips";
+import {
+  BaseDropERC20,
+  BaseERC20,
+  BaseSignatureMintERC20,
+} from "../../types/eips";
 import { detectContractFeature } from "../../common";
 import { Erc20Mintable } from "./erc-20-mintable";
 import { FEATURE_TOKEN } from "../../constants/erc20-features";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { Erc20SignatureMintable } from "./erc-20-signature-mintable";
+import { Erc20Burnable } from "./erc-20-burnable";
+import { Erc20Droppable } from "./erc-20-droppable";
 
 /**
  * Standard ERC20 Token functions
@@ -40,6 +51,8 @@ export class Erc20<
    * Mint tokens
    */
   public mint: Erc20Mintable | undefined;
+  public burn: Erc20Burnable | undefined;
+  public drop: Erc20Droppable | undefined;
   public signature: Erc20SignatureMintable | undefined;
   protected contractWrapper: ContractWrapper<T>;
   protected storage: IStorage;
@@ -62,6 +75,8 @@ export class Erc20<
       this.options = SDKOptionsSchema.parse({});
     }
     this.mint = this.detectErc20Mintable();
+    this.burn = this.detectErc20Burnable();
+    this.drop = this.detectErc20Droppable();
     this.signature = this.detectErc20SignatureMintable();
   }
 
@@ -343,6 +358,30 @@ export class Erc20<
   private detectErc20Mintable(): Erc20Mintable | undefined {
     if (detectContractFeature<IMintableERC20>(this.contractWrapper, "ERC20")) {
       return new Erc20Mintable(this, this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc20Burnable(): Erc20Burnable | undefined {
+    if (
+      detectContractFeature<IBurnableERC20>(
+        this.contractWrapper,
+        "ERC20Burnable",
+      )
+    ) {
+      return new Erc20Burnable(this, this.contractWrapper);
+    }
+    return undefined;
+  }
+
+  private detectErc20Droppable(): Erc20Droppable | undefined {
+    if (
+      detectContractFeature<BaseDropERC20>(
+        this.contractWrapper,
+        "ERC20Droppable",
+      )
+    ) {
+      return new Erc20Droppable(this, this.contractWrapper, this.storage);
     }
     return undefined;
   }

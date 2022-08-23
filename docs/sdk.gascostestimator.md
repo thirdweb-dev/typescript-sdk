@@ -24,4 +24,5 @@ export declare class GasCostEstimator<TContract extends BaseContract>
 |  --- | --- | --- |
 |  [currentGasPriceInGwei()](./sdk.gascostestimator.currentgaspriceingwei.md) |  | Returns the current gas price in gwei |
 |  [gasCostOf(fn, args)](./sdk.gascostestimator.gascostof.md) |  | Estimates the cost of gas in native token of the current chain Pass in the same parameters as the contract's function. |
+|  [gasLimitOf(fn, args)](./sdk.gascostestimator.gaslimitof.md) |  | Estimates the gas limit of a transaction Pass in the same parameters as the contract's function. |
 

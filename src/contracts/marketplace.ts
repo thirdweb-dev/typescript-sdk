@@ -2,7 +2,7 @@ import { Marketplace as MarketplaceContract } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractEncoder } from "../core/classes/contract-encoder";
-import { IStorage } from "../core/interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -227,7 +227,7 @@ export class Marketplace implements UpdateableNetwork {
   public async getActiveListings(
     filter?: MarketplaceFilter,
   ): Promise<(AuctionListing | DirectListing)[]> {
-    const rawListings = await this.getAllListingsNoFilter();
+    const rawListings = await this.getAllListingsNoFilter(true);
     const filtered = this.applyFilter(rawListings, filter);
     const now = BigNumber.from(Math.floor(Date.now() / 1000));
     return filtered.filter((l) => {
@@ -255,7 +255,7 @@ export class Marketplace implements UpdateableNetwork {
   public async getAllListings(
     filter?: MarketplaceFilter,
   ): Promise<(AuctionListing | DirectListing)[]> {
-    const rawListings = await this.getAllListingsNoFilter();
+    const rawListings = await this.getAllListingsNoFilter(false);
     return this.applyFilter(rawListings, filter);
   }
 
@@ -444,9 +444,9 @@ export class Marketplace implements UpdateableNetwork {
    * PRIVATE FUNCTIONS
    *******************************/
 
-  private async getAllListingsNoFilter(): Promise<
-    (AuctionListing | DirectListing)[]
-  > {
+  private async getAllListingsNoFilter(
+    filterInvalidListings: boolean,
+  ): Promise<(AuctionListing | DirectListing)[]> {
     const listings = await Promise.all(
       Array.from(
         Array(
@@ -458,16 +458,25 @@ export class Marketplace implements UpdateableNetwork {
         try {
           listing = await this.getListing(i);
         } catch (err) {
-          return undefined;
+          if (err instanceof ListingNotFoundError) {
+            return undefined;
+          } else {
+            console.warn(
+              `Failed to get listing ${i}' - skipping. Try 'marketplace.getListing(${i})' to get the underlying error.`,
+            );
+            return undefined;
+          }
         }
 
         if (listing.type === ListingType.Auction) {
           return listing;
         }
 
-        const valid = await this.direct.isStillValidListing(listing);
-        if (!valid) {
-          return undefined;
+        if (filterInvalidListings) {
+          const { valid } = await this.direct.isStillValidListing(listing);
+          if (!valid) {
+            return undefined;
+          }
         }
 
         return listing;

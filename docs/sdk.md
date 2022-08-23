@@ -25,23 +25,26 @@
 |  [EditionDrop](./sdk.editiondrop.md) | Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them. |
 |  [Erc1155](./sdk.erc1155.md) | Standard ERC1155 NFT functions |
 |  [Erc1155BatchMintable](./sdk.erc1155batchmintable.md) | Mint Many ERC1155 NFTs at once |
+|  [Erc1155Burnable](./sdk.erc1155burnable.md) |  |
+|  [Erc1155Droppable](./sdk.erc1155droppable.md) |  |
 |  [Erc1155Enumerable](./sdk.erc1155enumerable.md) | List ERC1155 NFTs |
 |  [Erc1155Mintable](./sdk.erc1155mintable.md) | Mint ERC1155 NFTs |
 |  [Erc1155SignatureMintable](./sdk.erc1155signaturemintable.md) | Enables generating dynamic ERC1155 NFTs with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc20](./sdk.erc20.md) | Standard ERC20 Token functions |
 |  [Erc20BatchMintable](./sdk.erc20batchmintable.md) | Mint Many ERC20 Tokens at once |
+|  [Erc20Burnable](./sdk.erc20burnable.md) |  |
 |  [Erc20Mintable](./sdk.erc20mintable.md) | Mint ERC20 Tokens |
 |  [Erc20SignatureMintable](./sdk.erc20signaturemintable.md) | Enables generating ERC20 Tokens with rules and an associated signature, which can then be minted by anyone securely |
 |  [Erc721](./sdk.erc721.md) | Standard ERC721 NFT functions |
 |  [Erc721BatchMintable](./sdk.erc721batchmintable.md) | Mint Many ERC721 NFTs at once |
-|  [Erc721Claimable](./sdk.erc721claimable.md) | Lazily mint and claim ERC721 NFTs |
-|  [Erc721Dropable](./sdk.erc721dropable.md) | Lazily mint and claim ERC721 NFTs |
+|  [Erc721Burnable](./sdk.erc721burnable.md) |  |
+|  [Erc721Claimable](./sdk.erc721claimable.md) | Configure and claim ERC721 NFTs |
+|  [Erc721Droppable](./sdk.erc721droppable.md) | Lazily mint and claim ERC721 NFTs |
 |  [Erc721Enumerable](./sdk.erc721enumerable.md) | List owned ERC721 NFTs |
 |  [Erc721Mintable](./sdk.erc721mintable.md) | Mint ERC721 NFTs |
 |  [Erc721Supply](./sdk.erc721supply.md) | List ERC721 NFTs |
 |  [Erc721WithQuantitySignatureMintable](./sdk.erc721withquantitysignaturemintable.md) | Enables generating dynamic ERC721 NFTs with rules and an associated signature, which can then be minted by anyone securely |
 |  [GasCostEstimator](./sdk.gascostestimator.md) | Estimates the gas cost of Contract calls |
-|  [IpfsStorage](./sdk.ipfsstorage.md) | IPFS Storage implementation, accepts custom IPFS gateways |
 |  [Marketplace](./sdk.marketplace.md) | Create your own whitelabel marketplace that enables users to buy and sell any digital assets. |
 |  [MarketplaceAuction](./sdk.marketplaceauction.md) | Handles auction listings |
 |  [MarketplaceDirect](./sdk.marketplacedirect.md) | Handles direct listings |
@@ -49,7 +52,6 @@
 |  [NFTCollection](./sdk.nftcollection.md) | Create a collection of one-of-one NFTs. |
 |  [NFTDrop](./sdk.nftdrop.md) | Setup a collection of one-of-one NFTs that are minted as users claim them. |
 |  [Pack](./sdk.pack.md) | Create lootboxes of NFTs with rarity based open mechanics. |
-|  [RemoteStorage](./sdk.remotestorage.md) | Fetch and upload files to IPFS or any other storage. |
 |  [SignatureDrop](./sdk.signaturedrop.md) | Setup a collection of NFTs where when it comes to minting, you can authorize some external party to mint tokens on your contract, and specify what exactly will be minted by that external party.. |
 |  [SmartContract](./sdk.smartcontract.md) | <b><i>(BETA)</i></b> Custom contract dynamic class with feature detection |
 |  [Split](./sdk.split.md) | Create custom royalty splits to distribute funds. |
@@ -79,6 +81,7 @@
 |  --- | --- |
 |  [getNativeTokenByChainId(chainId)](./sdk.getnativetokenbychainid.md) | Returns the native token for a given chain |
 |  [getReadOnlyProvider(network, chainId)](./sdk.getreadonlyprovider.md) |  |
+|  [isDowngradeVersion(current, next)](./sdk.isdowngradeversion.md) |  |
 
 ## Interfaces
 
@@ -89,7 +92,6 @@
 |  [DirectListing](./sdk.directlisting.md) | Represents a marketplace direct listing. |
 |  [EventQueryFilter](./sdk.eventqueryfilter.md) | Filters for querying past events |
 |  [GaslessTransaction](./sdk.gaslesstransaction.md) | transaction message contains information that's needed to execute a gasless transaction |
-|  [IStorage](./sdk.istorage.md) | Interface for any storage provider |
 |  [MarketplaceContractDeployMetadata](./sdk.marketplacecontractdeploymetadata.md) | Options for deploying a Marketplace contract |
 |  [MarketplaceFilter](./sdk.marketplacefilter.md) |  |
 |  [MultiwrapContractDeployMetadata](./sdk.multiwrapcontractdeploymetadata.md) | Options for deploying an Multiwrap contract |
@@ -129,9 +131,13 @@
 
 |  Type Alias | Description |
 |  --- | --- |
+|  [AbiEvent](./sdk.abievent.md) |  |
 |  [AbiFunction](./sdk.abifunction.md) |  |
 |  [AirdropInput](./sdk.airdropinput.md) | Input model to pass a list of addresses + amount to transfer to each one |
 |  [Amount](./sdk.amount.md) | Represents a currency amount already formatted. ie. "1" for 1 ether. |
+|  [AuthenticationOptions](./sdk.authenticationoptions.md) |  |
+|  [AuthenticationPayload](./sdk.authenticationpayload.md) |  |
+|  [AuthenticationPayloadData](./sdk.authenticationpayloaddata.md) |  |
 |  [BufferOrStringWithName](./sdk.bufferorstringwithname.md) |  |
 |  [ClaimCondition](./sdk.claimcondition.md) | Represents a claim condition fetched from the SDK |
 |  [ClaimConditionInput](./sdk.claimconditioninput.md) | Input model to create a claim condition with optional snapshot of wallets |
@@ -163,6 +169,9 @@
 |  [FullPublishMetadata](./sdk.fullpublishmetadata.md) |  |
 |  [Json](./sdk.json.md) |  |
 |  [JsonObject](./sdk.jsonobject.md) |  |
+|  [LoginOptions](./sdk.loginoptions.md) |  |
+|  [LoginPayload](./sdk.loginpayload.md) |  |
+|  [LoginPayloadData](./sdk.loginpayloaddata.md) |  |
 |  [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 |  [NFTMetadata](./sdk.nftmetadata.md) |  |
 |  [NFTMetadataInput](./sdk.nftmetadatainput.md) |  |
@@ -201,9 +210,9 @@
 |  [TransactionResult](./sdk.transactionresult.md) |  |
 |  [TransactionResultWithAddress](./sdk.transactionresultwithaddress.md) |  |
 |  [TransactionResultWithId](./sdk.transactionresultwithid.md) |  |
-|  [UploadResult](./sdk.uploadresult.md) | The result of an IPFS upload, including the URI of the upload director and the URIs of the uploaded files. |
 |  [ValidContractClass](./sdk.validcontractclass.md) |  |
 |  [ValidContractInstance](./sdk.validcontractinstance.md) |  |
 |  [ValueOf](./sdk.valueof.md) |  |
+|  [VerifyOptions](./sdk.verifyoptions.md) |  |
 |  [WrappedTokens](./sdk.wrappedtokens.md) | Output for the contents of a bundle wrapped token |
 

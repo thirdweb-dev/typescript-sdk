@@ -1,8 +1,8 @@
 import { FileOrBuffer, JsonObject } from "../../src/core/types";
 import { v4 as uuidv4 } from "uuid";
-import { IStorage, NotFoundError } from "../../src";
-import { UploadResult } from "../../src/core/interfaces/IStorageUpload";
+import { NotFoundError } from "../../src";
 import { File } from "@web-std/file";
+import { IStorage, UploadResult } from "@thirdweb-dev/storage";
 
 export class MockStorage implements IStorage {
   private objects: { [key: string]: any } = {};

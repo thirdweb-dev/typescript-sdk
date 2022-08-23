@@ -5,6 +5,8 @@ import {
   DropERC20__factory,
   DropERC721__factory,
   Marketplace__factory,
+  MockContractPublisher,
+  MockContractPublisher__factory,
   Multiwrap__factory,
   Pack__factory,
   SignatureDrop__factory,
@@ -56,6 +58,7 @@ const ipfsGatewayUrl = DEFAULT_IPFS_GATEWAY;
 let signer: SignerWithAddress;
 let signers: SignerWithAddress[];
 let storage: IStorage;
+let implementations: { [key in ContractType]?: string };
 
 const fastForwardTime = async (timeInSeconds: number): Promise<void> => {
   const now = Math.floor(Date.now() / 1000);
@@ -74,6 +77,7 @@ export const expectError = (e: unknown, message: string) => {
 
 before(async () => {
   signers = await hardhatEthers.getSigners();
+  implementations = {};
 
   [signer] = signers;
 
@@ -113,12 +117,22 @@ before(async () => {
     .deploy(trustedForwarderAddress, thirdwebFactoryDeployer.address);
   await thirdwebFactoryDeployer.deployed();
 
+  // Mock publisher for tests
+  const mockPublisher = (await new ethers.ContractFactory(
+    MockContractPublisher__factory.abi,
+    MockContractPublisher__factory.bytecode,
+  )
+    .connect(signer)
+    .deploy()) as MockContractPublisher;
   const contractPublisher = (await new ethers.ContractFactory(
     ContractPublisher__factory.abi,
     ContractPublisher__factory.bytecode,
   )
     .connect(signer)
-    .deploy(trustedForwarderAddress)) as ContractPublisher;
+    .deploy(
+      trustedForwarderAddress,
+      mockPublisher.address,
+    )) as ContractPublisher; // TODO needs MockPublisher here
   await contractPublisher.deployed();
 
   async function deployContract(
@@ -206,6 +220,7 @@ before(async () => {
       deployedContract.address,
     );
     await tx.wait();
+    implementations[contractType as ContractType] = deployedContract.address;
   }
 
   process.env.registryAddress = thirdwebRegistryAddress;
@@ -232,4 +247,5 @@ export {
   registryAddress,
   fastForwardTime,
   storage,
+  implementations,
 };

@@ -5,7 +5,7 @@ import { ContractRoles } from "../core/classes/contract-roles";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
 import { Erc1155Enumerable } from "../core/classes/erc-1155-enumerable";
-import { IStorage } from "../core/interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -15,25 +15,22 @@ import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { NFTMetadata, NFTMetadataOrUri } from "../schema/tokens/common";
 import { BigNumber, BigNumberish, constants } from "ethers";
-import { prepareClaim } from "../common/claim-conditions";
 import { DropErc1155ClaimConditions } from "../core/classes/drop-erc1155-claim-conditions";
 import { DropErc1155ContractSchema } from "../schema/contracts/drop-erc1155";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import {
-  ClaimVerification,
-  QueryAllParams,
-  UploadProgressEvent,
-} from "../types";
+import { QueryAllParams, UploadProgressEvent } from "../types";
 import { DropErc1155History } from "../core/classes/drop-erc1155-history";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { TokensLazyMintedEvent } from "contracts/DropERC1155";
 import { getRoleHash } from "../common";
 
 import { EditionMetadata, EditionMetadataOwner } from "../schema";
-import { uploadOrExtractURIs } from "../common/nft";
+import { TransactionTask } from "../core/classes/TransactionTask";
+import { Erc1155Burnable } from "../core/classes/erc-1155-burnable";
+import { Erc1155Droppable } from "../core/index";
+import { Erc1155Claimable } from "../core/classes/erc-1155-claimable";
 
 /**
  * Setup a collection of NFTs with a customizable number of each NFT that are minted as users claim them.
@@ -59,6 +56,9 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   static schema = DropErc1155ContractSchema;
 
   private _query = this.query as Erc1155Enumerable;
+  private _burn = this.burn as Erc1155Burnable;
+  private _drop = this.drop as Erc1155Droppable;
+  private _claim = this.drop?.claim as Erc1155Claimable;
 
   public sales: ContractPrimarySale<DropERC1155>;
   public platformFees: ContractPlatformFee<DropERC1155>;
@@ -112,7 +112,7 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    * await contract.claimConditions.set(tokenId, claimConditions);
    * ```
    */
-  public claimConditions: DropErc1155ClaimConditions;
+  public claimConditions: DropErc1155ClaimConditions<DropERC1155>;
   public history: DropErc1155History;
   /**
    * @internal
@@ -258,45 +258,29 @@ export class EditionDrop extends Erc1155<DropERC1155> {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    const startFileNumber =
-      await this.contractWrapper.readContract.nextTokenIdToMint();
-    const batch = await uploadOrExtractURIs(
-      metadatas,
-      this.storage,
-      startFileNumber.toNumber(),
-      this.contractWrapper.readContract.address,
-      await this.contractWrapper.getSigner()?.getAddress(),
-      options,
+    return this._drop.lazyMint(metadatas, options);
+  }
+
+  /**
+   * Construct a claim transaction without executing it.
+   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param destinationAddress
+   * @param tokenId
+   * @param quantity
+   * @param checkERC20Allowance
+   */
+  public async getClaimTransaction(
+    destinationAddress: string,
+    tokenId: BigNumberish,
+    quantity: BigNumberish,
+    checkERC20Allowance = true, // TODO split up allowance checks
+  ): Promise<TransactionTask> {
+    return this._claim.getClaimTransaction(
+      destinationAddress,
+      tokenId,
+      quantity,
+      checkERC20Allowance,
     );
-    // ensure baseUri is the same for the entire batch
-    const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
-    for (let i = 0; i < batch.length; i++) {
-      const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
-      if (baseUri !== uri) {
-        throw new Error(
-          `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
-        );
-      }
-    }
-    const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.length,
-      `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
-    ]);
-    const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
-      "TokensLazyMinted",
-      receipt?.logs,
-    );
-    const startingIndex = event[0].args.startTokenId;
-    const endingIndex = event[0].args.endTokenId;
-    const results = [];
-    for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
-      results.push({
-        id,
-        receipt,
-        data: () => this.getTokenMetadata(id),
-      });
-    }
-    return results;
   }
 
   /**
@@ -328,26 +312,12 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     quantity: BigNumberish,
     checkERC20Allowance = true,
   ): Promise<TransactionResult> {
-    const claimVerification = await this.prepareClaim(
+    return this._claim.to(
+      destinationAddress,
       tokenId,
       quantity,
       checkERC20Allowance,
     );
-    return {
-      receipt: await this.contractWrapper.sendTransaction(
-        "claim",
-        [
-          destinationAddress,
-          tokenId,
-          quantity,
-          claimVerification.currencyAddress,
-          claimVerification.price,
-          claimVerification.proofs,
-          claimVerification.maxQuantityPerTransaction,
-        ],
-        claimVerification.overrides,
-      ),
-    };
   }
 
   /**
@@ -379,45 +349,13 @@ export class EditionDrop extends Erc1155<DropERC1155> {
    *
    * @example
    * ```javascript
-   * const result = await contract.burn(tokenId, amount);
+   * const result = await contract.burnTokens(tokenId, amount);
    * ```
    */
-  public async burn(
+  public async burnTokens(
     tokenId: BigNumberish,
     amount: BigNumberish,
   ): Promise<TransactionResult> {
-    const account = await this.contractWrapper.getSignerAddress();
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [
-        account,
-        tokenId,
-        amount,
-      ]),
-    };
-  }
-
-  /** ******************************
-   * PRIVATE FUNCTIONS
-   *******************************/
-
-  /**
-   * Returns proofs and the overrides required for the transaction.
-   *
-   * @returns - `overrides` and `proofs` as an object.
-   */
-  private async prepareClaim(
-    tokenId: BigNumberish,
-    quantity: BigNumberish,
-    checkERC20Allowance: boolean,
-  ): Promise<ClaimVerification> {
-    return prepareClaim(
-      quantity,
-      await this.claimConditions.getActive(tokenId),
-      async () => (await this.metadata.get()).merkle,
-      0,
-      this.contractWrapper,
-      this.storage,
-      checkERC20Allowance,
-    );
+    return this._burn.tokens(tokenId, amount);
   }
 }

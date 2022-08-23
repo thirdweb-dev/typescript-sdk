@@ -1,10 +1,10 @@
 import { ContractRoles } from "../core/classes/contract-roles";
 import { SignatureDrop as SignatureDropContract } from "contracts";
-import { BigNumber, BigNumberish, constants, ethers } from "ethers";
+import { BigNumber, BigNumberish, constants } from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { IStorage } from "../core/interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -20,23 +20,25 @@ import {
 import { DEFAULT_QUERY_ALL_COUNT, QueryAllParams } from "../types/QueryParams";
 import { Erc721 } from "../core/classes/erc-721";
 import { ContractPrimarySale } from "../core/classes/contract-sales";
-import { prepareClaim } from "../common/claim-conditions";
 import { ContractEncoder } from "../core/classes/contract-encoder";
 import { Erc721Enumerable } from "../core/classes/erc-721-enumerable";
 import { Erc721Supply } from "../core/classes/erc-721-supply";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
-import { ClaimVerification, UploadProgressEvent } from "../types";
+import { UploadProgressEvent } from "../types";
 import { ContractEvents } from "../core/classes/contract-events";
 import { ContractPlatformFee } from "../core/classes/contract-platform-fee";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
 import { getRoleHash } from "../common";
 import {
-  TokensClaimedEvent,
-  TokensLazyMintedEvent,
-} from "contracts/DropERC721";
-import { DelayedReveal, DropClaimConditions } from "../core/index";
+  DelayedReveal,
+  DropClaimConditions,
+  Erc721Claimable,
+  Erc721Droppable,
+} from "../core/index";
 import { Erc721WithQuantitySignatureMintable } from "../core/classes/erc-721-with-quantity-signature-mintable";
-import { uploadOrExtractURIs } from "../common/nft";
+import { TransactionTask } from "../core/classes/TransactionTask";
+import { Erc721Burnable } from "../core/classes/erc-721-burnable";
+import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
 
 /**
  * Setup a collection of NFTs where when it comes to minting, you can authorize
@@ -116,7 +118,8 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * await contract.claimConditions.set([claimCondition]);
    * ```
    */
-  public claimConditions: DropClaimConditions<SignatureDropContract>;
+  public claimConditions = this.drop?.claim
+    ?.conditions as DropClaimConditions<SignatureDropContract>;
   /**
    * Delayed reveal
    * @remarks Create a batch of encrypted NFTs that can be revealed at a later time.
@@ -167,6 +170,9 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
 
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
+  private _burn = this.burn as Erc721Burnable;
+  private _drop = this.drop as Erc721Droppable;
+  private _claim = this.drop?.claim as Erc721Claimable;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -197,14 +203,14 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.interceptor = new ContractInterceptor(this.contractWrapper);
-    this.revealer = new DelayedReveal(this, this.contractWrapper, this.storage);
-    this.signature = new Erc721WithQuantitySignatureMintable(
+    this.revealer = new DelayedReveal(
       this.contractWrapper,
       this.storage,
+      FEATURE_NFT_REVEALABLE.name,
+      () => this.nextTokenIdToMint(),
     );
-    this.claimConditions = new DropClaimConditions(
+    this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
-      this.metadata,
       this.storage,
     );
   }
@@ -421,46 +427,26 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
       onProgress: (event: UploadProgressEvent) => void;
     },
   ): Promise<TransactionResultWithId<NFTMetadata>[]> {
-    const startFileNumber =
-      await this.contractWrapper.readContract.nextTokenIdToMint();
-    const batch = await uploadOrExtractURIs(
-      metadatas,
-      this.storage,
-      startFileNumber.toNumber(),
-      this.contractWrapper.readContract.address,
-      await this.contractWrapper.getSigner()?.getAddress(),
-      options,
+    return this._drop.lazyMint(metadatas, options);
+  }
+
+  /**
+   * Construct a claim transaction without executing it.
+   * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
+   * @param destinationAddress
+   * @param quantity
+   * @param checkERC20Allowance
+   */
+  public async getClaimTransaction(
+    destinationAddress: string,
+    quantity: BigNumberish,
+    checkERC20Allowance = true, // TODO split up allowance checks
+  ): Promise<TransactionTask> {
+    return this._claim.getClaimTransaction(
+      destinationAddress,
+      quantity,
+      checkERC20Allowance,
     );
-    // ensure baseUri is the same for the entire batch
-    const baseUri = batch[0].substring(0, batch[0].lastIndexOf("/"));
-    for (let i = 0; i < batch.length; i++) {
-      const uri = batch[i].substring(0, batch[i].lastIndexOf("/"));
-      if (baseUri !== uri) {
-        throw new Error(
-          `Can only create batches with the same base URI for every entry in the batch. Expected '${baseUri}' but got '${uri}'`,
-        );
-      }
-    }
-    const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.length,
-      baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
-      ethers.utils.toUtf8Bytes(""),
-    ]);
-    const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
-      "TokensLazyMinted",
-      receipt?.logs,
-    );
-    const startingIndex = event[0].args.startTokenId;
-    const endingIndex = event[0].args.endTokenId;
-    const results = [];
-    for (let id = startingIndex; id.lte(endingIndex); id = id.add(1)) {
-      results.push({
-        id,
-        receipt,
-        data: () => this.getTokenMetadata(id),
-      });
-    }
-    return results;
   }
 
   /**
@@ -490,40 +476,7 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
     quantity: BigNumberish,
     checkERC20Allowance = true,
   ): Promise<TransactionResultWithId<NFTMetadataOwner>[]> {
-    const claimVerification = await this.prepareClaim(
-      quantity,
-      checkERC20Allowance,
-    );
-    const receipt = await this.contractWrapper.sendTransaction(
-      "claim",
-      [
-        destinationAddress,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        {
-          proof: claimVerification.proofs,
-          maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
-        },
-        ethers.utils.toUtf8Bytes(""),
-      ],
-      claimVerification.overrides,
-    );
-    const event = this.contractWrapper.parseLogs<TokensClaimedEvent>(
-      "TokensClaimed",
-      receipt?.logs,
-    );
-    const startingIndex: BigNumber = event[0].args.startTokenId;
-    const endingIndex = startingIndex.add(quantity);
-    const results = [];
-    for (let id = startingIndex; id.lt(endingIndex); id = id.add(1)) {
-      results.push({
-        id,
-        receipt,
-        data: () => this.get(id),
-      });
-    }
-    return results;
+    return this._claim.to(destinationAddress, quantity, checkERC20Allowance);
   }
 
   /**
@@ -549,36 +502,10 @@ export class SignatureDrop extends Erc721<SignatureDropContract> {
    * @param tokenId - the token Id to burn
    * @example
    * ```javascript
-   * const result = await contract.burn(tokenId, amount);
+   * const result = await contract.burnToken(tokenId);
    * ```
    */
-  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
-    };
-  }
-
-  /** ******************************
-   * PRIVATE FUNCTIONS
-   *******************************/
-
-  /**
-   * Returns proofs and the overrides required for the transaction.
-   *
-   * @returns - `overrides` and `proofs` as an object.
-   */
-  private async prepareClaim(
-    quantity: BigNumberish,
-    checkERC20Allowance: boolean,
-  ): Promise<ClaimVerification> {
-    return prepareClaim(
-      quantity,
-      await this.claimConditions.getActive(),
-      async () => (await this.metadata.get()).merkle,
-      0,
-      this.contractWrapper,
-      this.storage,
-      checkERC20Allowance,
-    );
+  public async burnToken(tokenId: BigNumberish): Promise<TransactionResult> {
+    return this._burn.token(tokenId);
   }
 }

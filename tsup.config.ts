@@ -12,7 +12,7 @@ export default defineConfig([
     sourcemap: true,
     // we'll just manually "clean" the dist dir before running this (to avoid potential race conditions)
     clean: false,
-    minify: true,
+    minify: false,
     platform: "node",
     replaceNodeEnv: true,
     // now required because not defaulted anymore

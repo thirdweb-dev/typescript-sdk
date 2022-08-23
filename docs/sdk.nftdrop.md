@@ -51,13 +51,14 @@ const contract = sdk.getNFTDrop("{{contract_address}}");
 
 |  Method | Modifiers | Description |
 |  --- | --- | --- |
-|  [burn(tokenId)](./sdk.nftdrop.burn.md) |  | Burn a single NFT |
+|  [burnToken(tokenId)](./sdk.nftdrop.burntoken.md) |  | Burn a single NFT |
 |  [claim(quantity, checkERC20Allowance)](./sdk.nftdrop.claim.md) |  | Claim NFTs to the connected wallet. |
 |  [claimTo(destinationAddress, quantity, checkERC20Allowance)](./sdk.nftdrop.claimto.md) |  | Claim unique NFTs to a specific Wallet |
 |  [createBatch(metadatas, options)](./sdk.nftdrop.createbatch.md) |  | Create a batch of unique NFTs to be claimed in the future |
 |  [getAll(queryParams)](./sdk.nftdrop.getall.md) |  | Get All Minted NFTs |
 |  [getAllClaimed(queryParams)](./sdk.nftdrop.getallclaimed.md) |  | Get All Claimed NFTs |
 |  [getAllUnclaimed(queryParams)](./sdk.nftdrop.getallunclaimed.md) |  | Get All Unclaimed NFTs |
+|  [getClaimTransaction(destinationAddress, quantity, checkERC20Allowance)](./sdk.nftdrop.getclaimtransaction.md) |  | Construct a claim transaction without executing it. This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution. |
 |  [getOwned(walletAddress)](./sdk.nftdrop.getowned.md) |  | Get Owned NFTs |
 |  [getOwnedTokenIds(walletAddress)](./sdk.nftdrop.getownedtokenids.md) |  | Get all token ids of NFTs owned by a specific wallet. |
 |  [isTransferRestricted()](./sdk.nftdrop.istransferrestricted.md) |  | Get whether users can transfer NFTs from this contract |

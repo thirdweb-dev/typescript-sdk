@@ -815,10 +815,19 @@
     "@swc/core-win32-ia32-msvc" "1.2.196"
     "@swc/core-win32-x64-msvc" "1.2.196"
 
-"@thirdweb-dev/contracts@^3.0.0":
-  version "3.0.0"
-  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.0.0.tgz#0849f9bc961d654e07bca78c85a4ce1e5294e039"
-  integrity sha512-9LCjLLE+JXuwMfxis77GtHawMOaUhUutTm/h2y7F7K95GRMVydCGHQ4r7hL3cXnYQCLxLdTzUtwBqjqWH2nOlw==
+"@thirdweb-dev/contracts@3.1.0-1":
+  version "3.1.0-1"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/contracts/-/contracts-3.1.0-1.tgz#8c4d068f0548f780a90cc723636bcc358cb946eb"
+  integrity sha512-v19UtKKIpd6ol7fXcAL24F7Jwew1jIAmxstogTw9MdX2k9McwaI0Ebxu/3SSkQq2AhmruwOPp+E2xq1SWKsBUw==
+
+"@thirdweb-dev/storage@^0.1.0":
+  version "0.1.0"
+  resolved "https://registry.yarnpkg.com/@thirdweb-dev/storage/-/storage-0.1.0.tgz#5bd38cb2abf174d50bca76576d9cbcc64c04ce18"
+  integrity sha512-/ss9vDBun2Ibkxzhjpw88q44/fzGmVwxKOBda9V7WS86cfxwP6mW3RaixaguYkQtMxPatQom/2nCoSxYWHUKhQ==
+  dependencies:
+    "@web-std/file" "^3.0.2"
+    cross-fetch "^3.1.5"
+    form-data "^4.0.0"
 
 "@tsconfig/node10@^1.0.7":
   version "1.0.8"
@@ -1086,7 +1095,7 @@
     "@web-std/stream" "1.0.0"
     web-encoding "1.1.5"
 
-"@web-std/file@^3.0.0":
+"@web-std/file@^3.0.0", "@web-std/file@^3.0.2":
   version "3.0.2"
   resolved "https://registry.npmjs.org/@web-std/file/-/file-3.0.2.tgz"
   integrity sha512-pIH0uuZsmY8YFvSHP1NsBIiMT/1ce0suPrX74fEeO3Wbr1+rW0fUGEe4d0R99iLwXtyCwyserqCFI4BJkJlkRA==

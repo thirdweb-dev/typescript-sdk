@@ -24,7 +24,10 @@ describe("Custom Contracts", async () => {
   let nftContractAddress: string;
   let tokenContractAddress: string;
   let editionContractAddress: string;
+  let editionDropContractAddress: string;
+  let tokenDropContractAddress: string;
   let sigDropContractAddress: string;
+  let nftDropContractAddress: string;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -41,8 +44,7 @@ describe("Custom Contracts", async () => {
 
   beforeEach(async () => {
     sdk.updateSignerOrProvider(adminWallet);
-    const publisher = sdk.getPublisher();
-    customContractAddress = await publisher.deployContract(
+    customContractAddress = await sdk.deployer.deployContractFromUri(
       simpleContractUri,
       [],
     );
@@ -77,8 +79,20 @@ describe("Custom Contracts", async () => {
       platform_fee_basis_points: 10,
       platform_fee_recipient: adminWallet.address,
     });
+    editionDropContractAddress = await sdk.deployer.deployEditionDrop({
+      name: "EditionDrop",
+      primary_sale_recipient: samWallet.address,
+    });
+    tokenDropContractAddress = await sdk.deployer.deployTokenDrop({
+      name: "TokenDrop",
+      primary_sale_recipient: samWallet.address,
+    });
     sigDropContractAddress = await sdk.deployer.deploySignatureDrop({
       name: "sigdrop",
+      primary_sale_recipient: adminWallet.address,
+    });
+    nftDropContractAddress = await sdk.deployer.deployNFTDrop({
+      name: "nftdrop",
       primary_sale_recipient: adminWallet.address,
     });
   });
@@ -137,12 +151,19 @@ describe("Custom Contracts", async () => {
     expect(functions.length).gt(0);
   });
 
+  it("should extract events", async () => {
+    const c = await sdk.getContract(customContractAddress);
+    invariant(c, "Contract undefined");
+    const events = await c.publishedMetadata.extractEvents();
+    expect(events.length).gt(0);
+  });
+
   it("should detect feature: metadata", async () => {
     const c = await sdk.getContract(customContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.metadata, "Contract undefined");
     const meta = await c.metadata.get();
-    expect(meta.name).to.eq("Greeter");
+    expect(meta.name).to.eq("MyToken");
   });
 
   it("should detect feature: roles", async () => {
@@ -229,6 +250,41 @@ describe("Custom Contracts", async () => {
     );
   });
 
+  it("should detect feature: erc20 burnable", async () => {
+    const c = await sdk.getContract(tokenContractAddress);
+    invariant(c, "Contract undefined");
+    invariant(c.token, "ERC20 undefined");
+    invariant(c.token.burn, "ERC20Burnable undefined");
+    await c.token.mint?.to(adminWallet.address, 2);
+    expect((await c.token.balance()).displayValue).to.eq("2.0");
+    await c.token.burn.tokens(1);
+    expect((await c.token.balance()).displayValue).to.eq("1.0");
+  });
+
+  it("should detect feature: erc20 droppable", async () => {
+    const c = await sdk.getContract(tokenDropContractAddress);
+
+    invariant(c, "Contract undefined");
+    invariant(c.token, "ERC20 undefined");
+    invariant(c.token.drop, "ERC20 drop undefined");
+
+    await c.token.drop.claimConditions.set([
+      {
+        startTime: new Date(new Date().getTime() - 1000 * 60 * 60),
+        price: 0,
+        maxQuantity: 10,
+      },
+    ]);
+
+    let b = await c.token.balance();
+    expect(b.displayValue).to.equal("0.0");
+
+    await c.token.drop.claimTo(adminWallet.address, 5);
+
+    b = await c.token.balance();
+    expect(b.displayValue).to.equal("5.0");
+  });
+
   it("should detect feature: erc721", async () => {
     const c = await sdk.getContract(nftContractAddress);
     invariant(c, "Contract undefined");
@@ -241,6 +297,22 @@ describe("Custom Contracts", async () => {
     const nfts = await c.nft.query.all();
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
+  });
+
+  it("should detect feature: erc721 burnable", async () => {
+    const c = await sdk.getContract(nftContractAddress);
+    invariant(c, "Contract undefined");
+    invariant(c.nft, "ERC721 undefined");
+    invariant(c.nft.burn, "ERC721Burnable undefined");
+    invariant(c.nft.query, "ERC721 query undefined");
+    await c.nft.mint?.to(adminWallet.address, {
+      name: "Custom NFT",
+    });
+    let balance = await c.nft.balance();
+    expect(balance.toString()).to.eq("1");
+    await c.nft.burn.token(0);
+    balance = await c.nft.balance();
+    expect(balance.toString()).to.eq("0");
   });
 
   it("should detect feature: erc721 lazy mint", async () => {
@@ -263,11 +335,11 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: erc721 delay reveal", async () => {
-    const c = await sdk.getContract(sigDropContractAddress);
+    const c = await sdk.getContract(nftDropContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
     invariant(c.nft.drop, "ERC721 drop");
-    invariant(c.nft.drop.revealer, "ERC721 query undefined");
+    invariant(c.nft.drop.revealer, "ERC721 revealer undefined");
 
     await c.nft.drop.revealer.createDelayedRevealBatch(
       {
@@ -300,6 +372,65 @@ describe("Custom Contracts", async () => {
     expect(nfts.length).to.eq(1);
     expect(nfts[0].metadata.name).to.eq("Custom NFT");
   });
+
+  it("should detect feature: erc1155 burnable", async () => {
+    const c = await sdk.getContract(editionContractAddress);
+    invariant(c, "Contract undefined");
+    invariant(c.edition, "ERC1155 undefined");
+    invariant(c.edition.mint, "ERC1155 mintable undefined");
+    invariant(c.edition.mint.batch, "ERC1155 batch undefined");
+    invariant(c.edition.burn, "ERC1155 burnable undefined");
+    invariant(c.edition.query, "ERC1155 query undefined");
+
+    await c.edition.mint.batch.to(adminWallet.address, [
+      {
+        metadata: {
+          name: "Custom NFT",
+        },
+        supply: 100,
+      },
+      {
+        metadata: {
+          name: "Custom NFT",
+        },
+        supply: 100,
+      },
+    ]);
+
+    let balance = await c.edition.balance(0);
+    expect(balance.toString()).to.eq("100");
+    await c.edition.burn.tokens(0, 10);
+    balance = await c.edition.balance(0);
+    expect(balance.toString()).to.eq("90");
+
+    await c.edition.burn.batch([0, 1], [10, 10]);
+    balance = await c.edition.balance(0);
+    expect(balance.toString()).to.eq("80");
+    balance = await c.edition.balance(1);
+    expect(balance.toString()).to.eq("90");
+  });
+
+  it("should detect feature: erc1155 lazy mint", async () => {
+    const c = await sdk.getContract(editionDropContractAddress);
+
+    invariant(c, "Contract undefined");
+    invariant(c.edition, "ERC1155 undefined");
+    invariant(c.edition.query, "ERC1155 query undefined");
+    invariant(c.edition.drop, "ERC1155 drop undefined");
+
+    await c.edition.drop.lazyMint([
+      {
+        name: "Custom NFT",
+      },
+      {
+        name: "Another one",
+      },
+    ]);
+    const nfts = await c.edition.query.all();
+    expect(nfts.length).to.eq(2);
+    expect(nfts[0].metadata.name).to.eq("Custom NFT");
+  });
+
   it("should detect feature: erc1155 signature mintable", async () => {
     const c = await sdk.getContract(editionContractAddress);
 
@@ -363,8 +494,8 @@ describe("Custom Contracts", async () => {
 
     const batch = await c.token.signature.generateBatch(input);
 
-    for (const [_, v] of batch.entries()) {
-      await c.token.signature.mint(v);
+    for (const b of batch) {
+      await c.token.signature.mint(b);
     }
     const balance = await c.token.balanceOf(samWallet.address);
     expect(balance.displayValue).to.eq("6.0");

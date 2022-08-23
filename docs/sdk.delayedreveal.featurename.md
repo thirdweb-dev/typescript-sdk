@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-featureName: "ERC721Revealable";
+featureName: "ERC721Burnable" | "ERC721Revealable" | "ERC721Claimable" | "ERC721Droppable" | "ERC721BatchMintable" | "ERC721Mintable" | "ERC721SignatureMint" | "ERC721Enumerable" | "ERC721Supply" | "ERC721" | "ERC20Droppable" | "ERC20Burnable" | "ERC20SignatureMintable" | "ERC20BatchMintable" | "ERC20Mintable" | "ERC20" | "ERC1155Burnable" | "ERC1155Claimable" | "ERC1155Droppable" | "ERC1155Revealable" | "ERC1155SignatureMintable" | "ERC1155BatchMintable" | "ERC1155Mintable" | "ERC1155Enumerable" | "ERC1155" | "Royalty" | "PrimarySale" | "PlatformFee" | "Permissions" | "ContractMetadata";
 ```

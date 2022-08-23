@@ -3,10 +3,22 @@ import Erc721EnumerableAbi from "../../abis/IERC721Enumerable.json";
 import Erc721SupplyAbi from "../../abis/IERC721Supply.json";
 import IMintableERC721Abi from "../../abis/IMintableERC721.json";
 import MulticallAbi from "../../abis/IMulticall.json";
-import DelayedRevealAbi from "../../abis/DelayedReveal.json";
-import LazyMintAbi from "../../abis/ILazyMint.json";
+import DelayedRevealAbi from "../../abis/IDelayedReveal.json";
+import ILazyMintAbi from "../../abis/ILazyMint.json";
 import IDropSinglePhase from "../../abis/IDropSinglePhase.json";
 import SignatureMintERC721Abi from "../../abis/SignatureMintERC721.json";
+import IBurnableERC721Abi from "../../abis/IBurnableERC721.json";
+
+export const FEATURE_NFT_BURNABLE = {
+  name: "ERC721Burnable",
+  namespace: "nft.burn",
+  docLinks: {
+    sdk: "sdk.erc721burnable",
+    contracts: "IBurnableERC721",
+  },
+  abis: [Erc721Abi, IBurnableERC721Abi],
+  features: {},
+} as const;
 
 export const FEATURE_NFT_REVEALABLE = {
   name: "ERC721Revealable",
@@ -15,30 +27,30 @@ export const FEATURE_NFT_REVEALABLE = {
     sdk: "sdk.drop.delayedreveal",
     contracts: "DelayedReveal",
   },
-  abis: [Erc721Abi, LazyMintAbi, DelayedRevealAbi],
+  abis: [Erc721Abi, ILazyMintAbi, DelayedRevealAbi],
   features: {},
 } as const;
 
 // Update ABI dependencies
 export const FEATURE_NFT_CLAIMABLE = {
-  name: "ERC721ClaimConditions",
+  name: "ERC721Claimable",
   namespace: "nft.drop.claim",
   docLinks: {
-    sdk: "sdk.dropClaimConditions",
+    sdk: "sdk.erc721claimable",
     contracts: "DropSinglePhase",
   },
-  abis: [Erc721Abi, LazyMintAbi, IDropSinglePhase],
+  abis: [Erc721Abi, ILazyMintAbi, IDropSinglePhase],
   features: {},
 } as const;
 
-export const FEATURE_NFT_DROPABLE = {
-  name: "ERC721Dropable",
+export const FEATURE_NFT_DROPPABLE = {
+  name: "ERC721Droppable",
   namespace: "nft.drop",
   docLinks: {
-    sdk: "sdk.erc721dropable",
+    sdk: "sdk.erc721droppable",
     contracts: "LazyMint",
   },
-  abis: [Erc721Abi, LazyMintAbi],
+  abis: [Erc721Abi, ILazyMintAbi],
   features: {
     [FEATURE_NFT_REVEALABLE.name]: FEATURE_NFT_REVEALABLE,
     [FEATURE_NFT_CLAIMABLE.name]: FEATURE_NFT_CLAIMABLE,
@@ -113,9 +125,10 @@ export const FEATURE_NFT = {
   },
   abis: [Erc721Abi],
   features: {
+    [FEATURE_NFT_BURNABLE.name]: FEATURE_NFT_BURNABLE,
     [FEATURE_NFT_SUPPLY.name]: FEATURE_NFT_SUPPLY,
     [FEATURE_NFT_MINTABLE.name]: FEATURE_NFT_MINTABLE,
-    [FEATURE_NFT_DROPABLE.name]: FEATURE_NFT_DROPABLE,
+    [FEATURE_NFT_DROPPABLE.name]: FEATURE_NFT_DROPPABLE,
     [FEATURE_NFT_SIGNATURE_MINTABLE.name]: FEATURE_NFT_SIGNATURE_MINTABLE,
   },
 } as const;

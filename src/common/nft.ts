@@ -6,7 +6,7 @@ import {
   NFTMetadataInput,
   NFTMetadataOrUri,
 } from "../schema/tokens/common";
-import type { IStorage } from "../core";
+import type { IStorage } from "@thirdweb-dev/storage";
 import { IERC1155Metadata, IERC165, IERC721Metadata } from "contracts";
 import { NotFoundError } from "./error";
 import {
@@ -43,14 +43,21 @@ export async function fetchTokenMetadata(
   try {
     jsonMetadata = await storage.get(parsedUri);
   } catch (err) {
-    console.warn(
-      `failed to get token metadata: ${JSON.stringify({
-        tokenId,
-        tokenUri,
-      })} -- falling back to default metadata`,
-      err,
+    const unparsedTokenIdUri = tokenUri.replace(
+      "{id}",
+      BigNumber.from(tokenId).toString(),
     );
-    jsonMetadata = FALLBACK_METADATA;
+    try {
+      jsonMetadata = await storage.get(unparsedTokenIdUri);
+    } catch (e) {
+      console.warn(
+        `failed to get token metadata: ${JSON.stringify({
+          tokenId: tokenId.toString(),
+          tokenUri,
+        })} -- falling back to default metadata`,
+      );
+      jsonMetadata = FALLBACK_METADATA;
+    }
   }
 
   return CommonNFTOutput.parse({

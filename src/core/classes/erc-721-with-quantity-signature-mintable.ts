@@ -17,9 +17,7 @@ import {
   SignatureMintERC721,
   TokenERC721,
 } from "contracts";
-import { IStorage } from "../interfaces";
-import { ContractRoles } from "./contract-roles";
-import { NFTCollection } from "../../contracts";
+import { IStorage } from "@thirdweb-dev/storage";
 import { BigNumber, ethers } from "ethers";
 import { uploadOrExtractURIs } from "../../common/nft";
 import { TokensMintedWithSignatureEvent } from "contracts/SignatureDrop";
@@ -37,22 +35,13 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   private contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>;
 
   private storage: IStorage;
-  private roles?: ContractRoles<
-    TokenERC721,
-    typeof NFTCollection.contractRoles[number]
-  >;
 
   constructor(
     contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>,
     storage: IStorage,
-    roles?: ContractRoles<
-      TokenERC721,
-      typeof NFTCollection.contractRoles[number]
-    >,
   ) {
     this.contractWrapper = contractWrapper;
     this.storage = storage;
-    this.roles = roles;
   }
 
   /**
@@ -263,10 +252,6 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
   ): Promise<SignedPayload721WithQuantitySignature[]> {
     const isLegacyNFTContract = await this.isLegacyNFTContract();
 
-    await this.roles?.verify(
-      ["minter"],
-      await this.contractWrapper.getSignerAddress(),
-    );
     const parsedRequests = payloadsToSign.map((m) =>
       Signature721WithQuantityInput.parse(m),
     );
@@ -380,10 +365,14 @@ export class Erc721WithQuantitySignatureMintable implements DetectableFeature {
 
   private async isLegacyNFTContract() {
     if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
-      const contractType = ethers.utils.toUtf8String(
-        await this.contractWrapper.readContract.contractType(),
-      );
-      return contractType.includes("TokenERC721");
+      try {
+        const contractType = ethers.utils.toUtf8String(
+          await this.contractWrapper.readContract.contractType(),
+        );
+        return contractType.includes("TokenERC721");
+      } catch (e) {
+        return false;
+      }
     } else {
       return false;
     }

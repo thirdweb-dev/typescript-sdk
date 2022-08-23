@@ -1,6 +1,6 @@
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { IStorage } from "../core/interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import {
   NetworkOrSignerOrProvider,
   TransactionResultWithId,

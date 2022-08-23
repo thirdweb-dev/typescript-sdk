@@ -421,13 +421,13 @@
     },
     "methods": [
       {
-        "name": "burn",
+        "name": "burnTokens",
         "summary": "Burn a specified amount of a NFT\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const result = await contract.burn(tokenId, amount);"
+          "javascript": "const result = await contract.burnTokens(tokenId, amount);"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.Edition.burn"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Edition.burnTokens"
       },
       {
         "name": "getAll",
@@ -533,13 +533,13 @@
     },
     "methods": [
       {
-        "name": "burn",
+        "name": "burnTokens",
         "summary": "Burn a specified amount of a NFT\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const result = await contract.burn(tokenId, amount);"
+          "javascript": "const result = await contract.burnTokens(tokenId, amount);"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.EditionDrop.burn"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.EditionDrop.burnTokens"
       },
       {
         "name": "claimTo",
@@ -659,6 +659,15 @@
           "javascript": "const costOfClaim = await nftDrop?.estimator.gasCostOf(\"claim\", [\n  \"0x...\", // receiver\n  1, // quantity\n  \"0x...\", // currency\n  1, // price per token\n  [], // proofs\n  1, // proof max quantity per transaction\n]);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.GasCostEstimator.gasCostOf"
+      },
+      {
+        "name": "gasLimitOf",
+        "summary": "Estimates the gas limit of a transaction Pass in the same parameters as the contract's function.\n\n",
+        "remarks": "\n\nEstimates the gas limit of a transaction\n\n",
+        "examples": {
+          "javascript": "const gasLimitOfClaim = await nftDrop?.estimator.gasLimitOf(\"claim\", [\n  \"0x...\", // receiver\n  1, // quantity\n  \"0x...\", // currency\n  1, // price per token\n  [], // proofs\n  1, // proof max quantity per transaction\n]);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.GasCostEstimator.gasLimitOf"
       }
     ],
     "properties": [],
@@ -971,13 +980,13 @@
     },
     "methods": [
       {
-        "name": "burn",
+        "name": "burnToken",
         "summary": "Burn a single NFT\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const result = await contract.burn(tokenId);"
+          "javascript": "const result = await contract.burnToken(tokenId);"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTCollection.burn"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTCollection.burnToken"
       },
       {
         "name": "getAll",
@@ -1074,13 +1083,13 @@
     },
     "methods": [
       {
-        "name": "burn",
+        "name": "burnToken",
         "summary": "Burn a single NFT\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const result = await contract.burn(tokenId);"
+          "javascript": "const result = await contract.burnToken(tokenId);"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop.burn"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.NFTDrop.burnToken"
       },
       {
         "name": "claimTo",
@@ -1325,34 +1334,6 @@
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.Pack"
   },
-  "RemoteStorage": {
-    "name": "RemoteStorage",
-    "summary": "Fetch and upload files to IPFS or any other storage.\n\n\n",
-    "remarks": null,
-    "examples": {},
-    "methods": [
-      {
-        "name": "fetch",
-        "summary": "Fetch data from any IPFS hash without worrying about gateways, data types, etc. Simply pass in an IPFS url and we'll handle fetching for you and try every public gateway to get the fastest response.\n\n",
-        "remarks": null,
-        "examples": {
-          "javascript": "// Your IPFS hash here\nconst hash = \"ipfs://...\"\nconst data = await sdk.storage.fetch(hash);"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.RemoteStorage.fetch"
-      },
-      {
-        "name": "upload",
-        "summary": "Upload any data to an IPFS directory. We'll handle all the details for you, including pinning your files and making sure that you get the fastest upload speeds.\n\n",
-        "remarks": null,
-        "examples": {
-          "javascript": "// File upload\nconst files = [\n  fs.readFileSync(\"file1.png\"),\n  fs.readFileSync(\"file2.png\"),\n]\nconst result = await sdk.storage.upload(files);\n// uri for each uploaded file will look like something like: ipfs://<hash>/0\n\n// JSON metadata upload\nconst jsonMetadata = {\n  name: \"Name\",\n  description: \"Description\",\n}\nconst result = await sdk.storage.upload(jsonMetadata);\n\n// Upload progress (browser only)\nconst result = await sdk.storage.upload(files, {\n  onProgress: (event: UploadProgressEvent) => {\n    console.log(`Downloaded ${event.progress} / ${event.total}`);\n  },\n});"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.RemoteStorage.upload"
-      }
-    ],
-    "properties": [],
-    "reference": "https://docs.thirdweb.com/typescript/sdk.RemoteStorage"
-  },
   "SignatureDrop": {
     "name": "SignatureDrop",
     "summary": "Setup a collection of NFTs where when it comes to minting, you can authorize some external party to mint tokens on your contract, and specify what exactly will be minted by that external party..\n\n",
@@ -1362,13 +1343,13 @@
     },
     "methods": [
       {
-        "name": "burn",
+        "name": "burnToken",
         "summary": "Burn a single NFT\n\n",
         "remarks": null,
         "examples": {
-          "javascript": "const result = await contract.burn(tokenId, amount);"
+          "javascript": "const result = await contract.burnToken(tokenId);"
         },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.SignatureDrop.burn"
+        "reference": "https://docs.thirdweb.com/typescript/sdk.SignatureDrop.burnToken"
       },
       {
         "name": "claimTo",
@@ -1606,15 +1587,6 @@
     },
     "methods": [
       {
-        "name": "burn",
-        "summary": "Burn Tokens\n\n",
-        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
-        "examples": {
-          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burn(amount);"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.Token.burn"
-      },
-      {
         "name": "burnFrom",
         "summary": "Burn Tokens\n\n",
         "remarks": "\n\nBurn tokens held by the specified wallet\n\n",
@@ -1622,6 +1594,15 @@
           "javascript": "// Address of the wallet sending the tokens\nconst holderAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burnFrom(holderAddress, amount);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.Token.burnFrom"
+      },
+      {
+        "name": "burnTokens",
+        "summary": "Burn Tokens\n\n",
+        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
+        "examples": {
+          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burnTokens(amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.Token.burnTokens"
       },
       {
         "name": "mintBatchTo",
@@ -1754,15 +1735,6 @@
     },
     "methods": [
       {
-        "name": "burn",
-        "summary": "Burn Tokens\n\n",
-        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
-        "examples": {
-          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burn(amount);"
-        },
-        "reference": "https://docs.thirdweb.com/typescript/sdk.TokenDrop.burn"
-      },
-      {
         "name": "burnFrom",
         "summary": "Burn Tokens\n\n",
         "remarks": "\n\nBurn tokens held by the specified wallet\n\n",
@@ -1770,6 +1742,15 @@
           "javascript": "// Address of the wallet sending the tokens\nconst holderAddress = \"{{wallet_address}}\";\n\n// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burnFrom(holderAddress, amount);"
         },
         "reference": "https://docs.thirdweb.com/typescript/sdk.TokenDrop.burnFrom"
+      },
+      {
+        "name": "burnTokens",
+        "summary": "Burn Tokens\n\n",
+        "remarks": "\n\nBurn tokens held by the connected wallet\n\n",
+        "examples": {
+          "javascript": "// The amount of this token you want to burn\nconst amount = 1.2;\n\nawait contract.burnTokens(amount);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.TokenDrop.burnTokens"
       },
       {
         "name": "claimTo",

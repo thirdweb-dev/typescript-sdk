@@ -1,4 +1,4 @@
-import { IStorage } from "../interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { ContractMetadata } from "./contract-metadata";
 import {
   ContractMetadata as ContractMetadataContract,
@@ -36,7 +36,7 @@ import { includesErrorMessage } from "../../common";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { isNode } from "../../common/utils";
 import deepEqual from "fast-deep-equal";
-import { BaseClaimConditionERC721 } from "../../types/eips";
+import { BaseClaimConditionERC721, BaseDropERC20 } from "../../types/eips";
 import { IDropClaimCondition } from "contracts/DropERC20";
 import { NATIVE_TOKEN_ADDRESS } from "../../constants/index";
 
@@ -49,6 +49,7 @@ export class DropClaimConditions<
     | DropERC721
     | DropERC20
     | BaseClaimConditionERC721
+    | BaseDropERC20
     | SignatureDrop,
 > {
   private contractWrapper;
@@ -376,6 +377,7 @@ export class DropClaimConditions<
   ): Promise<TransactionResult> {
     let claimConditionsProcessed = claimConditionInputs;
     if (this.isSinglePhaseDropContract(this.contractWrapper)) {
+      resetClaimEligibilityForAll = true;
       if (claimConditionInputs.length === 0) {
         claimConditionsProcessed = [
           {
@@ -505,12 +507,13 @@ export class DropClaimConditions<
   public async prepareClaim(
     quantity: BigNumberish,
     checkERC20Allowance: boolean,
+    decimals = 0,
   ): Promise<ClaimVerification> {
     return prepareClaim(
       quantity,
       await this.getActive(),
       async () => (await this.metadata.get()).merkle,
-      0,
+      decimals,
       this.contractWrapper,
       this.storage,
       checkERC20Allowance,

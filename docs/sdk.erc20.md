@@ -35,12 +35,14 @@ await contract.token.transfer(walletAddress, amount);
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
+|  [burn](./sdk.erc20.burn.md) |  | [Erc20Burnable](./sdk.erc20burnable.md) \| undefined |  |
 |  [contractWrapper](./sdk.erc20.contractwrapper.md) |  | ContractWrapper&lt;T&gt; |  |
+|  [drop](./sdk.erc20.drop.md) |  | Erc20Droppable \| undefined |  |
 |  [featureName](./sdk.erc20.featurename.md) |  | "ERC20" |  |
 |  [mint](./sdk.erc20.mint.md) |  | [Erc20Mintable](./sdk.erc20mintable.md) \| undefined | Mint tokens |
 |  [options](./sdk.erc20.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [signature](./sdk.erc20.signature.md) |  | [Erc20SignatureMintable](./sdk.erc20signaturemintable.md) \| undefined |  |
-|  [storage](./sdk.erc20.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
+|  [storage](./sdk.erc20.storage.md) |  | IStorage |  |
 
 ## Methods
 

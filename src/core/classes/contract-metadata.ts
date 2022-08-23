@@ -1,11 +1,12 @@
-import { IContractMetadata } from "contracts";
+import { IContractMetadata, IERC20Metadata } from "contracts";
 import { z } from "zod";
-import { IStorage } from "../interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import {
   detectContractFeature,
   fetchContractMetadataFromAddress,
+  hasFunction,
 } from "../../common";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
 import { FEATURE_METADATA } from "../../constants/thirdweb-features";
@@ -80,21 +81,29 @@ export class ContractMetadata<
     let data;
     if (this.supportsContractMetadata(this.contractWrapper)) {
       const uri = await this.contractWrapper.readContract.contractURI();
-      if (uri) {
+      if (uri && uri.includes("://")) {
         data = await this.storage.get(uri);
       }
     }
 
     if (!data) {
       try {
-        // try fetching metadata from bytecode
+        // try fetching metadata from bytecode and / or contract itself
+        let contractName: string | undefined;
+        try {
+          if (hasFunction<IERC20Metadata>("name", this.contractWrapper)) {
+            contractName = await this.contractWrapper.readContract.name();
+          }
+        } catch (err) {
+          // no-op
+        }
         const publishedMetadata = await fetchContractMetadataFromAddress(
           this.contractWrapper.readContract.address,
           this.contractWrapper.getProvider(),
           this.storage,
         );
         data = {
-          name: publishedMetadata.name,
+          name: contractName || publishedMetadata.name,
           description: publishedMetadata.info.title,
         };
       } catch (e) {

@@ -9,7 +9,7 @@ Constructs a new instance of the `Erc721WithQuantitySignatureMintable` class
 <b>Signature:</b>
 
 ```typescript
-constructor(contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>, storage: IStorage, roles?: ContractRoles<TokenERC721, typeof NFTCollection.contractRoles[number]>);
+constructor(contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>, storage: IStorage);
 ```
 
 ## Parameters
@@ -17,6 +17,5 @@ constructor(contractWrapper: ContractWrapper<SignatureMintERC721 | TokenERC721>,
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;SignatureMintERC721 \| TokenERC721&gt; |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
-|  roles | [ContractRoles](./sdk.contractroles.md)<!-- -->&lt;TokenERC721, typeof [NFTCollection.contractRoles](./sdk.nftcollection.contractroles.md)<!-- -->\[number\]&gt; | <i>(Optional)</i> |
+|  storage | IStorage |  |
 

@@ -1,4 +1,4 @@
-import { IStorage } from "../core/interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import type {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -27,6 +27,7 @@ import { NFTMetadataOrUri, NFTMetadataOwner } from "../schema";
 import { QueryAllParams } from "../types";
 import { GasCostEstimator } from "../core/classes/gas-cost-estimator";
 import { Erc721WithQuantitySignatureMintable } from "../core";
+import { Erc721Burnable } from "../core/classes/erc-721-burnable";
 
 /**
  * Create a collection of one-of-one NFTs.
@@ -100,6 +101,7 @@ export class NFTCollection extends Erc721<TokenERC721> {
   public interceptor: ContractInterceptor<TokenERC721>;
 
   private _mint = this.mint as Erc721Mintable;
+  private _burn = this.burn as Erc721Burnable;
   private _batchMint = this._mint.batch as Erc721BatchMintable;
   private _query = this.query as Erc721Supply;
   private _owned = this._query.owned as Erc721Enumerable;
@@ -133,7 +135,6 @@ export class NFTCollection extends Erc721<TokenERC721> {
     this.signature = new Erc721WithQuantitySignatureMintable(
       this.contractWrapper,
       this.storage,
-      this.roles,
     );
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
@@ -340,12 +341,10 @@ export class NFTCollection extends Erc721<TokenERC721> {
    *
    * @example
    * ```javascript
-   * const result = await contract.burn(tokenId);
+   * const result = await contract.burnToken(tokenId);
    * ```
    */
-  public async burn(tokenId: BigNumberish): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [tokenId]),
-    };
+  public async burnToken(tokenId: BigNumberish): Promise<TransactionResult> {
+    return this._burn.token(tokenId);
   }
 }

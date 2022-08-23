@@ -22,7 +22,7 @@ constructor(network: NetworkOrSignerOrProvider, address: string, abi: ContractIn
 |  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 |  address | string |  |
 |  abi | ContractInterface |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
+|  storage | IStorage |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> |
 |  contractWrapper | ContractWrapper&lt;TContract&gt; | <i>(Optional)</i> |
 

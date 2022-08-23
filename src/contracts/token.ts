@@ -2,11 +2,8 @@ import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
 import { TokenERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
-import {
-  IStorage,
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-} from "../core";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../core";
+import { IStorage } from "@thirdweb-dev/storage";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenMintInput } from "../schema/tokens/token";
@@ -23,6 +20,7 @@ import { Erc20Mintable } from "../core/classes/erc-20-mintable";
 import { Erc20BatchMintable } from "../core/classes/erc-20-batch-mintable";
 import { constants } from "ethers";
 import { Erc20SignatureMintable } from "../core/classes/erc-20-signature-mintable";
+import { Erc20Burnable } from "../core/classes/erc-20-burnable";
 
 /**
  * Create a standard crypto token or cryptocurrency.
@@ -73,6 +71,7 @@ export class Token extends Erc20<TokenERC20> {
   public interceptor: ContractInterceptor<TokenERC20>;
   private _mint = this.mint as Erc20Mintable;
   private _batchMint = this._mint.batch as Erc20BatchMintable;
+  private _burn = this.burn as Erc20Burnable;
 
   constructor(
     network: NetworkOrSignerOrProvider,
@@ -239,15 +238,11 @@ export class Token extends Erc20<TokenERC20> {
    * // The amount of this token you want to burn
    * const amount = 1.2;
    *
-   * await contract.burn(amount);
+   * await contract.burnTokens(amount);
    * ```
    */
-  public async burn(amount: Amount): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burn", [
-        await this.normalizeAmount(amount),
-      ]),
-    };
+  public async burnTokens(amount: Amount): Promise<TransactionResult> {
+    return this._burn.tokens(amount);
   }
 
   /**
@@ -270,11 +265,6 @@ export class Token extends Erc20<TokenERC20> {
     holder: string,
     amount: Amount,
   ): Promise<TransactionResult> {
-    return {
-      receipt: await this.contractWrapper.sendTransaction("burnFrom", [
-        holder,
-        await this.normalizeAmount(amount),
-      ]),
-    };
+    return this._burn.from(holder, amount);
   }
 }

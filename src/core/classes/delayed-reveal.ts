@@ -1,44 +1,50 @@
 import { BigNumber, BigNumberish, ethers } from "ethers";
 import { ContractWrapper } from "./contract-wrapper";
-import { DropERC721, SignatureDrop } from "contracts";
+import { DropERC721, IThirdwebContract, SignatureDrop } from "contracts";
 import {
   CommonNFTInput,
   NFTMetadata,
   NFTMetadataInput,
 } from "../../schema/tokens/common";
-import {
-  Erc721,
-  IStorage,
-  TransactionResult,
-  TransactionResultWithId,
-} from "../index";
-import { fetchTokenMetadata } from "../../common/nft";
+import { TransactionResult, TransactionResultWithId } from "../index";
+import { IStorage } from "@thirdweb-dev/storage";
+import { fetchTokenMetadataForContract } from "../../common/nft";
 import { BatchToReveal } from "../../types/delayed-reveal";
 import { TokensLazyMintedEvent } from "contracts/DropERC721";
 import { UploadProgressEvent } from "../../types/events";
-import { BaseDelayedRevealERC721 } from "../../types/eips";
+import {
+  BaseDelayedRevealERC1155,
+  BaseDelayedRevealERC721,
+} from "../../types/eips";
 import { hasFunction } from "../../common";
-import { FEATURE_NFT_REVEALABLE } from "../../constants/erc721-features";
+import DeprecatedAbi from "../../../abis/IDelayedRevealDeprecated.json";
+import { FeatureName } from "../../constants/contract-features";
 
 /**
  * Handles delayed reveal logic
  * @public
  */
 export class DelayedReveal<
-  T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop,
+  T extends
+    | DropERC721
+    | BaseDelayedRevealERC721
+    | SignatureDrop
+    | BaseDelayedRevealERC1155,
 > {
-  featureName = FEATURE_NFT_REVEALABLE.name;
+  featureName;
 
   private contractWrapper: ContractWrapper<T>;
   private storage: IStorage;
-  private erc721: Erc721;
+  private nextTokenIdToMintFn: () => Promise<BigNumber>;
 
   constructor(
-    erc721: Erc721,
     contractWrapper: ContractWrapper<T>,
     storage: IStorage,
+    fetureName: FeatureName,
+    nextTokenIdToMintFn: () => Promise<BigNumber>,
   ) {
-    this.erc721 = erc721;
+    this.featureName = fetureName;
+    this.nextTokenIdToMintFn = nextTokenIdToMintFn;
     this.contractWrapper = contractWrapper;
     this.storage = storage;
   }
@@ -98,7 +104,7 @@ export class DelayedReveal<
       await this.contractWrapper.getSigner()?.getAddress(),
     );
 
-    const startFileNumber = await this.erc721.nextTokenIdToMint();
+    const startFileNumber = await this.nextTokenIdToMintFn();
 
     const batch = await this.storage.uploadMetadataBatch(
       metadatas.map((m) => CommonNFTInput.parse(m)),
@@ -108,20 +114,40 @@ export class DelayedReveal<
       options,
     );
 
-    const baseUri = batch.baseUri;
+    const baseUri = batch.baseUri.endsWith("/")
+      ? batch.baseUri
+      : `${batch.baseUri}/`;
     const baseUriId = await this.contractWrapper.readContract.getBaseURICount();
+    const hashedPassword = await this.hashDelayRevealPasword(
+      baseUriId,
+      password,
+    );
     const encryptedBaseUri =
       await this.contractWrapper.readContract.encryptDecrypt(
-        ethers.utils.toUtf8Bytes(
-          baseUri.endsWith("/") ? baseUri : `${baseUri}/`,
-        ),
-        await this.hashDelayRevealPasword(baseUriId, password),
+        ethers.utils.toUtf8Bytes(baseUri),
+        hashedPassword,
       );
+
+    let data: string;
+    const legacyContract = await this.isLegacyContract();
+    if (legacyContract) {
+      data = encryptedBaseUri;
+    } else {
+      const chainId = await this.contractWrapper.getChainID();
+      const provenanceHash = ethers.utils.solidityKeccak256(
+        ["bytes", "bytes", "uint256"],
+        [ethers.utils.toUtf8Bytes(baseUri), hashedPassword, chainId],
+      );
+      data = ethers.utils.defaultAbiCoder.encode(
+        ["bytes", "bytes32"],
+        [encryptedBaseUri, provenanceHash],
+      );
+    }
 
     const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
       batch.uris.length,
       placeholderUri.endsWith("/") ? placeholderUri : `${placeholderUri}/`,
-      encryptedBaseUri,
+      data,
     ]);
 
     const events = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
@@ -201,7 +227,6 @@ export class DelayedReveal<
     }
 
     const countRangeArray = Array.from(Array(count.toNumber()).keys());
-
     // map over to get the base uri indices, which should be the end token id of every batch
     const uriIndices = await Promise.all(
       countRangeArray.map((i) => {
@@ -228,30 +253,41 @@ export class DelayedReveal<
     const uriIndicesWithZeroStart = uriIndices.slice(0, uriIndices.length - 1);
 
     // returns the token uri for each batches. first batch always starts from token id 0.
-    const tokenUris = await Promise.all(
-      Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
-        this.contractWrapper.readContract.tokenURI(i),
-      ),
-    );
-
     const tokenMetadatas = await Promise.all(
       Array.from([0, ...uriIndicesWithZeroStart]).map((i) =>
         this.getNftMetadata(i.toString()),
       ),
     );
 
-    // index is the uri indicies, which is end token id. different from uris
-    const encryptedBaseUris = await Promise.all(
+    // index is the uri indices, which is end token id. different from uris
+    const legacyContract = await this.isLegacyContract();
+    const encryptedUriData = await Promise.all(
       Array.from([...uriIndices]).map((i) =>
-        this.contractWrapper.readContract.encryptedBaseURI(i),
+        legacyContract
+          ? this.getLegacyEncryptedData(i)
+          : this.contractWrapper.readContract.encryptedData(i),
       ),
     );
+    const encryptedBaseUris = encryptedUriData.map((data) => {
+      if (ethers.utils.hexDataLength(data) > 0) {
+        if (legacyContract) {
+          return data;
+        }
+        const result = ethers.utils.defaultAbiCoder.decode(
+          ["bytes", "bytes32"],
+          data,
+        );
+        return result[0];
+      } else {
+        return data;
+      }
+    });
 
-    return tokenUris
-      .map((uri, index) => ({
+    return tokenMetadatas
+      .map((meta, index) => ({
         batchId: BigNumber.from(index),
-        batchUri: uri,
-        placeholderMetadata: tokenMetadatas[index],
+        batchUri: meta.uri,
+        placeholderMetadata: meta,
       }))
       .filter(
         (_, index) => ethers.utils.hexDataLength(encryptedBaseUris[index]) > 0,
@@ -276,7 +312,40 @@ export class DelayedReveal<
   }
 
   private async getNftMetadata(tokenId: BigNumberish): Promise<NFTMetadata> {
-    const tokenUri = await this.contractWrapper.readContract.tokenURI(tokenId);
-    return fetchTokenMetadata(tokenId, tokenUri, this.storage);
+    return fetchTokenMetadataForContract(
+      this.contractWrapper.readContract.address,
+      this.contractWrapper.getProvider(),
+      tokenId,
+      this.storage,
+    );
+  }
+
+  private async isLegacyContract(): Promise<boolean> {
+    if (
+      hasFunction<IThirdwebContract>("contractVersion", this.contractWrapper)
+    ) {
+      try {
+        const version =
+          await this.contractWrapper.readContract.contractVersion();
+        return version <= 2;
+      } catch (e) {
+        return false;
+      }
+    }
+    return false;
+  }
+
+  private async getLegacyEncryptedData(index: BigNumber) {
+    const legacy = new ethers.Contract(
+      this.contractWrapper.readContract.address,
+      DeprecatedAbi,
+      this.contractWrapper.getProvider(),
+    );
+    const result = await legacy.functions["encryptedBaseURI"](index);
+    if (result.length > 0) {
+      return result[0];
+    } else {
+      return "0x";
+    }
   }
 }

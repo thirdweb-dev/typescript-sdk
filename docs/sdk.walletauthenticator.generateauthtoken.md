@@ -20,8 +20,8 @@ generateAuthToken(domain: string, payload: LoginPayload, options?: Authenticatio
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  domain | string | The domain of the server-side application to authenticate to |
-|  payload | LoginPayload | The login payload to authenticate with |
-|  options | AuthenticationOptions | <i>(Optional)</i> Optional configuration options for the authentication request |
+|  payload | [LoginPayload](./sdk.loginpayload.md) | The login payload to authenticate with |
+|  options | [AuthenticationOptions](./sdk.authenticationoptions.md) | <i>(Optional)</i> Optional configuration options for the authentication request |
 
 <b>Returns:</b>
 

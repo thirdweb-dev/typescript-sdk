@@ -91,7 +91,7 @@ describe("Token Contract", async () => {
       ethers.utils.parseEther("20"),
       `Wrong balance`,
     );
-    await currencyContract.burn(10);
+    await currencyContract.burnTokens(10);
     assert.deepEqual(
       (await currencyContract.balanceOf(adminWallet.address)).value,
       ethers.utils.parseEther("10"),

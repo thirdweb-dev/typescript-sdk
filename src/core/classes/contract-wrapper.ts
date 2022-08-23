@@ -311,7 +311,7 @@ export class ContractWrapper<
   /**
    * @internal
    */
-  private async sendTransactionByFunction(
+  public async sendTransactionByFunction(
     fn: keyof TContract["functions"],
     args: any[],
     callOverrides: CallOverrides,
