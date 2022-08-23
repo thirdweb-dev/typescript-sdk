@@ -3366,9 +3366,6 @@ export class InvalidAddressError extends Error {
 // @public (undocumented)
 export function isDowngradeVersion(current: string, next: string): boolean;
 
-// @public (undocumented)
-export function isDowngradeVersion(current: string, next: string): boolean;
-
 // Warning: (ae-internal-missing-underscore) The name "isFeatureEnabled" should be prefixed with an underscore because the declaration is marked as @internal
 //
 // @internal
