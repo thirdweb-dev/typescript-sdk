@@ -3,7 +3,7 @@ import { IMintableERC721, IMulticall } from "contracts";
 import { NFTMetadataOrUri, NFTMetadataOwner } from "../../schema";
 import { TransactionResultWithId } from "../types";
 import { uploadOrExtractURIs } from "../../common/nft";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { Erc721 } from "./erc-721";
 import { TokensMintedEvent } from "contracts/IMintableERC721";
 import { FEATURE_NFT_BATCH_MINTABLE } from "../../constants/erc721-features";

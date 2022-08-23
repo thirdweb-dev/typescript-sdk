@@ -24,7 +24,7 @@ import {
   SnapshotInfo,
 } from "../types";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { IStorage } from "../core";
+import { IStorage } from "@thirdweb-dev/storage";
 import {
   ClaimConditionInputArray,
   ClaimConditionInputSchema,

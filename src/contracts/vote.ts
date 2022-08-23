@@ -1,7 +1,7 @@
 import { IERC20, VoteERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractInterceptor } from "../core/classes/contract-interceptor";
-import { IStorage } from "../core/interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,

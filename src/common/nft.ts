@@ -6,7 +6,7 @@ import {
   NFTMetadataInput,
   NFTMetadataOrUri,
 } from "../schema/tokens/common";
-import type { IStorage } from "../core";
+import type { IStorage } from "@thirdweb-dev/storage";
 import { IERC1155Metadata, IERC165, IERC721Metadata } from "contracts";
 import { NotFoundError } from "./error";
 import {

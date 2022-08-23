@@ -1,4 +1,4 @@
-import { IStorage } from "../interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { ContractMetadata } from "./contract-metadata";
 import {
   ContractMetadata as ContractMetadataContract,

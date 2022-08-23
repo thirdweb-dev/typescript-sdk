@@ -17,7 +17,7 @@ constructor(contractWrapper: ContractWrapper<T>, storage: IStorage, fetureName: 
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;T&gt; |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
+|  storage | IStorage |  |
 |  fetureName | FeatureName |  |
 |  nextTokenIdToMintFn | () =&gt; Promise&lt;BigNumber&gt; |  |
 

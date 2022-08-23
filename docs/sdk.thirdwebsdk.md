@@ -25,7 +25,7 @@ export declare class ThirdwebSDK extends RPCConnectionHandler
 |  --- | --- | --- | --- |
 |  [auth](./sdk.thirdwebsdk.auth.md) |  | [WalletAuthenticator](./sdk.walletauthenticator.md) | Enable authentication with the connected wallet |
 |  [deployer](./sdk.thirdwebsdk.deployer.md) |  | [ContractDeployer](./sdk.contractdeployer.md) | New contract deployer |
-|  [storage](./sdk.thirdwebsdk.storage.md) |  | [RemoteStorage](./sdk.remotestorage.md) | Upload and download files from IPFS or from your own storage service |
+|  [storage](./sdk.thirdwebsdk.storage.md) |  | RemoteStorage | Upload and download files from IPFS or from your own storage service |
 |  [wallet](./sdk.thirdwebsdk.wallet.md) |  | [UserWallet](./sdk.userwallet.md) | Interact with the connected wallet |
 
 ## Methods

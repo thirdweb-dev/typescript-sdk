@@ -18,5 +18,5 @@ constructor(erc721: Erc721, contractWrapper: ContractWrapper<BaseDropERC721>, st
 |  --- | --- | --- |
 |  erc721 | [Erc721](./sdk.erc721.md) |  |
 |  contractWrapper | ContractWrapper&lt;BaseDropERC721&gt; |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
+|  storage | IStorage |  |
 

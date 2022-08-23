@@ -17,5 +17,5 @@ constructor(contractWrapper: ContractWrapper<Marketplace>, storage: IStorage);
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  contractWrapper | ContractWrapper&lt;Marketplace&gt; |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
+|  storage | IStorage |  |
 

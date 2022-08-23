@@ -1,11 +1,11 @@
 import { assert } from "chai";
-import { IpfsStorage, JsonObject } from "../src";
+import { IpfsStorage } from "@thirdweb-dev/storage";
 
 const ipfsGatewayUrl = "https://ipfs.thirdweb.com/ipfs/";
 const storage = new IpfsStorage(ipfsGatewayUrl);
 
 describe("Recursive Testing", async () => {
-  let json: JsonObject;
+  let json: Record<string, any>;
   beforeEach(async () => {
     json = {
       test: "test",

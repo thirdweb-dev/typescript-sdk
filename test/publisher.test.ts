@@ -3,11 +3,11 @@ import { readFileSync } from "fs";
 import { expect } from "chai";
 import {
   ChainId,
-  IpfsStorage,
   isFeatureEnabled,
   resolveContractUriFromAddress,
   ThirdwebSDK,
 } from "../src";
+import { IpfsStorage } from "@thirdweb-dev/storage";
 import { SignerWithAddress } from "@nomiclabs/hardhat-ethers/signers";
 import invariant from "tiny-invariant";
 import { DropERC721__factory, TokenERC721__factory } from "../typechain";

@@ -20,8 +20,8 @@ verify(domain: string, payload: LoginPayload, options?: VerifyOptions): string;
 |  Parameter | Type | Description |
 |  --- | --- | --- |
 |  domain | string | The domain of the server-side application to verify the login request for |
-|  payload | LoginPayload | The login payload to verify |
-|  options | VerifyOptions | <i>(Optional)</i> |
+|  payload | [LoginPayload](./sdk.loginpayload.md) | The login payload to verify |
+|  options | [VerifyOptions](./sdk.verifyoptions.md) | <i>(Optional)</i> |
 
 <b>Returns:</b>
 

@@ -43,7 +43,7 @@ await contract.nft.transfer(walletAddress, tokenId);
 |  [options](./sdk.erc721.options.md) |  | [SDKOptions](./sdk.sdkoptions.md) |  |
 |  [query](./sdk.erc721.query.md) |  | [Erc721Supply](./sdk.erc721supply.md) \| undefined |  |
 |  [signature](./sdk.erc721.signature.md) |  | [Erc721WithQuantitySignatureMintable](./sdk.erc721withquantitysignaturemintable.md) \| undefined |  |
-|  [storage](./sdk.erc721.storage.md) |  | [IStorage](./sdk.istorage.md) |  |
+|  [storage](./sdk.erc721.storage.md) |  | IStorage |  |
 
 ## Methods
 

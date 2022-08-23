@@ -1,6 +1,4 @@
 import { ContractInterface, ethers, Signer } from "ethers";
-import { IStorage } from "./interfaces/IStorage";
-import { RemoteStorage } from "./classes/remote-storage";
 import {
   Edition,
   EditionDrop,
@@ -16,7 +14,7 @@ import {
   Vote,
 } from "../contracts";
 import { SDKOptions } from "../schema/sdk-options";
-import { IpfsStorage } from "./classes/ipfs-storage";
+import { IpfsStorage, RemoteStorage, IStorage } from "@thirdweb-dev/storage";
 import { RPCConnectionHandler } from "./classes/rpc-connection-handler";
 import type {
   ContractForContractType,

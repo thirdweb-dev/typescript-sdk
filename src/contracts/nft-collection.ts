@@ -1,4 +1,4 @@
-import { IStorage } from "../core/interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import type {
   NetworkOrSignerOrProvider,
   TransactionResult,

@@ -18,7 +18,7 @@ constructor(network: NetworkOrSignerOrProvider, address: string, storage: IStora
 |  --- | --- | --- |
 |  network | [NetworkOrSignerOrProvider](./sdk.networkorsignerorprovider.md) |  |
 |  address | string |  |
-|  storage | [IStorage](./sdk.istorage.md) |  |
+|  storage | IStorage |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> |
 |  contractWrapper | ContractWrapper&lt;TokenERC20&gt; | <i>(Optional)</i> |
 

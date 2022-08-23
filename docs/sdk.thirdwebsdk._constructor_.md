@@ -18,5 +18,5 @@ constructor(network: ChainOrRpc | SignerOrProvider, options?: SDKOptions, storag
 |  --- | --- | --- |
 |  network | ChainOrRpc \| [SignerOrProvider](./sdk.signerorprovider.md) |  |
 |  options | [SDKOptions](./sdk.sdkoptions.md) | <i>(Optional)</i> |
-|  storage | [IStorage](./sdk.istorage.md) | <i>(Optional)</i> |
+|  storage | IStorage | <i>(Optional)</i> |
 
