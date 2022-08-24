@@ -7,7 +7,7 @@ import {
   CurrencySchema,
   CurrencyValueSchema,
 } from "../schema/contracts/common/currency";
-import { PriceSchema } from "../schema/shared";
+import { AmountSchema } from "../schema/shared";
 
 /**
  * @public
@@ -39,10 +39,10 @@ export type TokenHolderBalance = { holder: string; balance: CurrencyValue };
  * Represents a currency price already formatted. ie. "1" for 1 ether.
  * @public
  */
-export type Price = z.input<typeof PriceSchema>;
+export type Price = z.input<typeof AmountSchema>;
 
 /**
  * Represents a currency amount already formatted. ie. "1" for 1 ether.
  * @public
  */
-export type Amount = z.input<typeof PriceSchema>;
+export type Amount = z.input<typeof AmountSchema>;

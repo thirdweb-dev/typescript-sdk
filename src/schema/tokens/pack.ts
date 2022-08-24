@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { BigNumberishSchema, PriceSchema, RawDateSchema } from "../shared";
+import { BigNumberishSchema, AmountSchema, RawDateSchema } from "../shared";
 import { NFTInputOrUriSchema } from "./common";
 import {
   ERC1155WrappableSchema,
@@ -13,7 +13,7 @@ import {
 const ERC20RewardSchema = ERC20WrappableSchema.omit({
   quantity: true,
 }).extend({
-  quantityPerReward: PriceSchema,
+  quantityPerReward: AmountSchema,
 });
 
 /**
