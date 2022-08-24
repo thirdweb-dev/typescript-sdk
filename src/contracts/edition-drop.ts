@@ -264,10 +264,11 @@ export class EditionDrop extends Erc1155<DropERC1155> {
   /**
    * Construct a claim transaction without executing it.
    * This is useful for estimating the gas cost of a claim transaction, overriding transaction options and having fine grained control over the transaction execution.
-   * @param destinationAddress
-   * @param tokenId
-   * @param quantity
-   * @param checkERC20Allowance
+   * @param destinationAddress - Address you want to send the token to
+   * @param tokenId - Id of the token you want to claim
+   * @param quantity - Quantity of the tokens you want to claim
+   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
+   * @param claimData - Optional claim verification data (e.g. price, allowlist proof, etc...)
    */
   public async getClaimTransaction(
     destinationAddress: string,
@@ -275,12 +276,25 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     quantity: BigNumberish,
     checkERC20Allowance = true, // TODO split up allowance checks
   ): Promise<TransactionTask> {
-    return this._claim.getClaimTransaction(
-      destinationAddress,
+    const claimVerification = await this._claim.conditions.prepareClaim(
       tokenId,
       quantity,
       checkERC20Allowance,
     );
+    return TransactionTask.make({
+      contractWrapper: this.contractWrapper,
+      functionName: "claim",
+      args: [
+        destinationAddress,
+        tokenId,
+        quantity,
+        claimVerification.currencyAddress,
+        claimVerification.price,
+        claimVerification.proofs,
+        claimVerification.maxQuantityPerTransaction,
+      ],
+      overrides: claimVerification.overrides,
+    });
   }
 
   /**
@@ -312,12 +326,13 @@ export class EditionDrop extends Erc1155<DropERC1155> {
     quantity: BigNumberish,
     checkERC20Allowance = true,
   ): Promise<TransactionResult> {
-    return this._claim.to(
+    const tx = await this.getClaimTransaction(
       destinationAddress,
       tokenId,
       quantity,
       checkERC20Allowance,
     );
+    return await tx.execute();
   }
 
   /**
