@@ -73,10 +73,10 @@ export const AddressSchema = z.string().refine(
   },
 );
 
-export const PriceSchema = z
+export const AmountSchema = z
   .union([
-    z.string().regex(/^([0-9]+\.?[0-9]*|\.[0-9]+)$/, "Invalid price"),
-    z.number().min(0, "Price cannot be negative"),
+    z.string().regex(/^([0-9]+\.?[0-9]*|\.[0-9]+)$/, "Invalid amount"),
+    z.number().min(0, "Amount cannot be negative"),
   ])
   .transform((arg) => (typeof arg === "number" ? arg.toString() : arg));
 

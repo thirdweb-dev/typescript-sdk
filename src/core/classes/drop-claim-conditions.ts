@@ -31,7 +31,7 @@ import {
   detectContractFeature,
   hasFunction,
 } from "../../common/feature-detection";
-import { PriceSchema } from "../../schema";
+import { AmountSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { isNode } from "../../common/utils";
@@ -179,7 +179,7 @@ export class DropClaimConditions<
 
     const decimals = await this.getTokenDecimals();
     const quantityWithDecimals = ethers.utils.parseUnits(
-      PriceSchema.parse(quantity),
+      AmountSchema.parse(quantity),
       decimals,
     );
 
