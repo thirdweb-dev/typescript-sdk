@@ -1,5 +1,8 @@
 import { TokensLazyMintedEvent } from "contracts/LazyMint";
-import { detectContractFeature } from "../../common/feature-detection";
+import {
+  detectContractFeature,
+  hasFunction,
+} from "../../common/feature-detection";
 import { uploadOrExtractURIs } from "../../common/nft";
 import {
   FEATURE_EDITION_DROPPABLE,
@@ -19,6 +22,8 @@ import { ContractWrapper } from "./contract-wrapper";
 import { Erc1155 } from "./erc-1155";
 import { Erc1155Claimable } from "./erc-1155-claimable";
 import { DelayedReveal } from "./delayed-reveal";
+import { TokenERC721 } from "contracts";
+import { ethers } from "ethers";
 
 export class Erc1155Droppable implements DetectableFeature {
   featureName = FEATURE_EDITION_DROPPABLE.name;
@@ -136,10 +141,22 @@ export class Erc1155Droppable implements DetectableFeature {
         );
       }
     }
-    const receipt = await this.contractWrapper.sendTransaction("lazyMint", [
-      batch.length,
-      `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
-    ]);
+    const isLegacyEditionDropContract =
+      await this.isLegacyEditionDropContract();
+    let receipt;
+    if (isLegacyEditionDropContract) {
+      receipt = await this.contractWrapper.sendTransaction("lazyMint", [
+        batch.length,
+        `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
+      ]);
+    } else {
+      // new contracts/extensions have support for delayed reveal that adds an extra parameter to lazyMint
+      receipt = await this.contractWrapper.sendTransaction("lazyMint", [
+        batch.length,
+        `${baseUri.endsWith("/") ? baseUri : `${baseUri}/`}`,
+        ethers.utils.toUtf8Bytes(""),
+      ]);
+    }
     const event = this.contractWrapper.parseLogs<TokensLazyMintedEvent>(
       "TokensLazyMinted",
       receipt?.logs,
@@ -190,5 +207,20 @@ export class Erc1155Droppable implements DetectableFeature {
       );
     }
     return undefined;
+  }
+
+  private async isLegacyEditionDropContract() {
+    if (hasFunction<TokenERC721>("contractType", this.contractWrapper)) {
+      try {
+        const contractType = ethers.utils.toUtf8String(
+          await this.contractWrapper.readContract.contractType(),
+        );
+        return contractType.includes("DropERC1155");
+      } catch (e) {
+        return false;
+      }
+    } else {
+      return false;
+    }
   }
 }
