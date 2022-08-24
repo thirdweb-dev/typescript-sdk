@@ -155,6 +155,10 @@ export const ExtraPublishMetadataSchemaInput = z
     factoryDeploymentData: FactoryDeploymentSchema.optional(),
   })
   .catchall(z.any());
+
+/**
+ * @internal
+ */
 export const ExtraPublishMetadataSchemaOutput =
   ExtraPublishMetadataSchemaInput.extend({
     audit: z.string().nullable().optional(),
@@ -172,6 +176,9 @@ export const FullPublishMetadataSchemaInput = PreDeployMetadata.merge(
 ).extend({
   publisher: AddressSchema.optional(),
 });
+/**
+ * @internal
+ */
 export const FullPublishMetadataSchemaOutput = PreDeployMetadata.merge(
   ExtraPublishMetadataSchemaOutput,
 ).extend({

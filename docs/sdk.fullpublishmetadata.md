@@ -7,5 +7,5 @@
 <b>Signature:</b>
 
 ```typescript
-export declare type FullPublishMetadata = z.infer<typeof FullPublishMetadataSchema>;
+export declare type FullPublishMetadata = z.infer<typeof FullPublishMetadataSchemaOutput>;
 ```
