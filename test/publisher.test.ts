@@ -233,6 +233,7 @@ describe("Publishing", async () => {
         version: "0.0.1",
         isDeployableViaFactory: true,
         factoryDeploymentData: {
+          implementationInitializerFunction: "initialize",
           implementationAddresses: {
             [ChainId.Hardhat]: implementations["nft-collection"] || "",
           },
