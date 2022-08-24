@@ -41,7 +41,7 @@ export class Erc20Claimable {
    * await contract.nft.drop.claim.conditions.set(claimConditions);
    * ```
    */
-  public claimConditions: DropClaimConditions<BaseDropERC20>;
+  public conditions: DropClaimConditions<BaseDropERC20>;
   private contractWrapper: ContractWrapper<BaseDropERC20>;
   private erc20: Erc20;
   private storage: IStorage;
@@ -60,7 +60,7 @@ export class Erc20Claimable {
       CustomContractSchema,
       this.storage,
     );
-    this.claimConditions = new DropClaimConditions(
+    this.conditions = new DropClaimConditions(
       this.contractWrapper,
       metadata,
       this.storage,
@@ -96,8 +96,8 @@ export class Erc20Claimable {
     const quantity = await this.erc20.normalizeAmount(amount);
 
     let claimVerification = claimData;
-    if (this.claimConditions && !claimData) {
-      claimVerification = await this.claimConditions.prepareClaim(
+    if (this.conditions && !claimData) {
+      claimVerification = await this.conditions.prepareClaim(
         quantity,
         checkERC20Allowance,
         await this.contractWrapper.readContract.decimals(),
