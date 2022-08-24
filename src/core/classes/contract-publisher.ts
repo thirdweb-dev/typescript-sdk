@@ -19,7 +19,7 @@ import {
   ContractSource,
   ExtraPublishMetadata,
   FullPublishMetadata,
-  FullPublishMetadataSchema,
+  FullPublishMetadataSchemaInput,
   PreDeployMetadataFetched,
   ProfileMetadata,
   ProfileMetadataInput,
@@ -331,7 +331,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     const bytecodeHash = utils.solidityKeccak256(["bytes"], [bytecode]);
     const contractId = predeployMetadata.name;
 
-    const fullMetadata = FullPublishMetadataSchema.parse({
+    const fullMetadata = FullPublishMetadataSchemaInput.parse({
       ...extraMetadata,
       ...predeployMetadata,
       publisher,

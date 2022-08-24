@@ -9,7 +9,7 @@ import {
   ContractInfoSchema,
   ContractSource,
   FullPublishMetadata,
-  FullPublishMetadataSchema,
+  FullPublishMetadataSchemaOutput,
   PreDeployMetadata,
   PreDeployMetadataFetched,
   PreDeployMetadataFetchedSchema,
@@ -451,7 +451,7 @@ export async function fetchExtendedReleaseMetadata(
   storage: IStorage,
 ): Promise<FullPublishMetadata> {
   const meta = await storage.getRaw(publishMetadataUri);
-  return FullPublishMetadataSchema.parse(JSON.parse(meta));
+  return FullPublishMetadataSchemaOutput.parse(JSON.parse(meta));
 }
 
 /**
