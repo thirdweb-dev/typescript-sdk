@@ -3,7 +3,7 @@ import {
   BigNumberishSchema,
   BigNumberSchema,
   EndDateSchema,
-  PriceSchema,
+  AmountSchema,
   StartDateSchema,
 } from "../../shared";
 import { z } from "zod";
@@ -17,7 +17,7 @@ import { resolveOrGenerateId } from "../../../common/signature-minting";
  */
 export const BaseSignaturePayloadInput = z.object({
   to: z.string().default(constants.AddressZero),
-  price: PriceSchema.default(0),
+  price: AmountSchema.default(0),
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
   mintStartTime: StartDateSchema,
   mintEndTime: EndDateSchema,
@@ -32,7 +32,7 @@ export const BaseSignaturePayloadInput = z.object({
  * @internal
  */
 export const Signature20PayloadInput = BaseSignaturePayloadInput.extend({
-  quantity: PriceSchema,
+  quantity: AmountSchema,
 });
 
 /**

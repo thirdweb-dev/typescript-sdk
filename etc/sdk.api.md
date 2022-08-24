@@ -396,10 +396,10 @@ export type AirdropInput = z.input<typeof AirdropInputSchema>;
 // @public (undocumented)
 export const ALL_ROLES: ("transfer" | "unwrap" | "factory" | "lister" | "admin" | "minter" | "pauser" | "asset")[];
 
-// Warning: (ae-forgotten-export) The symbol "PriceSchema" needs to be exported by the entry point index.d.ts
+// Warning: (ae-forgotten-export) The symbol "AmountSchema" needs to be exported by the entry point index.d.ts
 //
 // @public
-export type Amount = z.input<typeof PriceSchema>;
+export type Amount = z.input<typeof AmountSchema>;
 
 // Warning: (ae-internal-missing-underscore) The name "AssetNotFoundError" should be prefixed with an underscore because the declaration is marked as @internal
 //
@@ -4827,7 +4827,7 @@ export const PreDeployMetadataFetchedSchema: z.ZodObject<z.extendShape<z.extendS
 }>;
 
 // @public
-export type Price = z.input<typeof PriceSchema>;
+export type Price = z.input<typeof AmountSchema>;
 
 // @public (undocumented)
 export type ProfileMetadata = z.infer<typeof ProfileSchemaOutput>;

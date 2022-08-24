@@ -4,7 +4,7 @@ import {
   BigNumberishSchema,
   BigNumberSchema,
   BytesLikeSchema,
-  PriceSchema,
+  AmountSchema,
   StartDateSchema,
 } from "../../shared";
 
@@ -16,7 +16,7 @@ import { SnapshotInputSchema } from "./snapshots";
  * @internal
  */
 export const QuantitySchema = z
-  .union([PriceSchema, z.literal("unlimited")])
+  .union([AmountSchema, z.literal("unlimited")])
   .default("unlimited");
 
 /**
@@ -25,7 +25,7 @@ export const QuantitySchema = z
 export const ClaimConditionInputSchema = z.object({
   startTime: StartDateSchema,
   currencyAddress: z.string().default(NATIVE_TOKEN_ADDRESS),
-  price: PriceSchema.default(0),
+  price: AmountSchema.default(0),
   maxQuantity: QuantitySchema,
   quantityLimitPerTransaction: QuantitySchema,
   waitInSeconds: BigNumberishSchema.default(0),

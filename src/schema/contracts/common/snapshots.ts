@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AddressSchema, PriceSchema } from "../../shared";
+import { AddressSchema, AmountSchema } from "../../shared";
 
 /**
  * @internal
@@ -13,7 +13,7 @@ export const MerkleSchema = z.object({
  */
 export const SnapshotAddressInput = z.object({
   address: AddressSchema,
-  maxClaimable: PriceSchema.default(0),
+  maxClaimable: AmountSchema.default(0),
 });
 
 /**

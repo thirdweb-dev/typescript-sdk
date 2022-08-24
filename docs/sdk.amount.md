@@ -9,5 +9,5 @@ Represents a currency amount already formatted. ie. "1" for 1 ether.
 <b>Signature:</b>
 
 ```typescript
-export declare type Amount = z.input<typeof PriceSchema>;
+export declare type Amount = z.input<typeof AmountSchema>;
 ```
