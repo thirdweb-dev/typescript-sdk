@@ -7,7 +7,7 @@ import { ContractWrapper } from "./contract-wrapper";
 import { ContractMetadata } from "./contract-metadata";
 import { CustomContractSchema } from "../../schema/contracts/custom";
 import { ClaimVerification } from "../../types/claim-conditions/claim-conditions";
-import { BigNumberish } from "ethers";
+import { BigNumberish, ethers } from "ethers";
 import { TransactionResult } from "../types";
 import { TransactionTask } from "./TransactionTask";
 
@@ -75,8 +75,11 @@ export class Erc1155Claimable implements DetectableFeature {
         quantity,
         claimVerification.currencyAddress,
         claimVerification.price,
-        claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
+        {
+          proof: claimVerification.proofs,
+          maxQuantityInAllowlist: claimVerification.maxQuantityPerTransaction,
+        },
+        ethers.utils.toUtf8Bytes(""),
       ],
       overrides: claimVerification.overrides,
     });
@@ -112,21 +115,6 @@ export class Erc1155Claimable implements DetectableFeature {
     checkERC20Allowance = true,
     claimData?: ClaimVerification,
   ): Promise<TransactionResult> {
-    let claimVerification = claimData;
-    if (this.conditions && !claimData) {
-      claimVerification = await this.conditions.prepareClaim(
-        tokenId,
-        quantity,
-        checkERC20Allowance,
-      );
-    }
-
-    if (!claimVerification) {
-      throw new Error(
-        "Claim verification Data is required - either pass it in as 'claimData' or set claim conditions via 'conditions.set()'",
-      );
-    }
-
     const tx = await this.getClaimTransaction(
       destinationAddress,
       tokenId,

@@ -1,6 +1,6 @@
 {
   "name": "@thirdweb-dev/sdk",
-  "version": "2.3.39-1",
+  "version": "2.4.0-0",
   "description": "The main thirdweb SDK.",
   "repository": {
     "type": "git",
@@ -105,7 +105,7 @@
     "ethers": "^5"
   },
   "dependencies": {
-    "@thirdweb-dev/contracts": "3.1.0-1",
+    "@thirdweb-dev/contracts": "3.1.2",
     "@thirdweb-dev/storage": "^0.1.0",
     "@web-std/file": "^3.0.0",
     "cbor": "^8.1.0",

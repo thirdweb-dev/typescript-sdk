@@ -268,7 +268,7 @@ describe("Custom Contracts", async () => {
     invariant(c.token, "ERC20 undefined");
     invariant(c.token.drop, "ERC20 drop undefined");
 
-    await c.token.drop.claimConditions.set([
+    await c.token.drop.claim.conditions.set([
       {
         startTime: new Date(new Date().getTime() - 1000 * 60 * 60),
         price: 0,
@@ -279,7 +279,7 @@ describe("Custom Contracts", async () => {
     let b = await c.token.balance();
     expect(b.displayValue).to.equal("0.0");
 
-    await c.token.drop.claimTo(adminWallet.address, 5);
+    await c.token.drop.claim.to(adminWallet.address, 5);
 
     b = await c.token.balance();
     expect(b.displayValue).to.equal("5.0");

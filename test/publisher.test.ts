@@ -384,6 +384,49 @@ describe("Publishing", async () => {
     expect(nftsAfter[1].owner).to.equal(AddressZero);
   });
 
+  it("ERC1155Drop base feature detection", async () => {
+    const ipfsUri = "ipfs://QmZsZcLS3fAtPw2EyZGbHxkdeofTxNtqMoXNWLc79sRXWa";
+    const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
+      "test",
+      "test",
+    ]);
+    const c = await sdk.getContract(addr);
+
+    invariant(c.edition, "edition must be defined");
+    invariant(c.edition.query, "query must be defined");
+    invariant(c.edition.drop, "drop must be defined");
+    invariant(c.edition.drop.claim, "claim conditions must be defined");
+
+    const nftsBefore = await c.edition.query.all();
+    expect(nftsBefore.length).to.equal(0);
+
+    const tx = await c.edition.drop.lazyMint([
+      {
+        name: "cool nft 1",
+      },
+      {
+        name: "cool nft 2",
+      },
+    ]);
+    expect(tx.length).to.eq(2);
+
+    await c.edition.drop.claim.conditions.set(0, [
+      {
+        price: "0",
+        maxQuantity: 2,
+        startTime: new Date(0),
+      },
+    ]);
+    await c.edition.drop.claim.to(adminWallet.address, 0, 1);
+
+    const nftsAfter = await c.edition.query.all();
+    expect(nftsAfter.length).to.equal(2);
+    expect(nftsAfter[0].metadata.name).to.equal("cool nft 1");
+    expect(nftsAfter[0].supply.toNumber()).to.equal(1);
+    expect(nftsAfter[1].metadata.name).to.equal("cool nft 2");
+    expect(nftsAfter[1].supply.toNumber()).to.equal(0);
+  });
+
   it("Constructor params with tuples", async () => {
     const ipfsUri = "ipfs://QmZQa56Cj1gFnZgKSkvGE5uzhaQrQV3nU6upDWDusCaCwY/0";
     const addr = await sdk.deployer.deployContractFromUri(ipfsUri, [
