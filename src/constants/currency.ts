@@ -155,7 +155,7 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.BinanceSmartChainMainnet]: {
-    name: "Binance Smart Chain Mainnet",
+    name: "Binance Chain Native Token",
     symbol: "BNB",
     decimals: 18,
     wrapped: {
@@ -165,7 +165,7 @@ export const NATIVE_TOKENS: Record<
     },
   },
   [ChainId.BinanceSmartChainTestnet]: {
-    name: "Binance Smart Chain Mainnet",
+    name: "Binance Chain Native Token",
     symbol: "TBNB",
     decimals: 18,
     wrapped: {
