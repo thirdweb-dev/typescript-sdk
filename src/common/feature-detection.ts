@@ -87,7 +87,6 @@ function extractCommentFromMetadata(
   metadata: Record<string, any> | undefined,
   type: "methods" | "events",
 ) {
-  // console.log(metadata?.output?.userdoc);
   return (
     metadata?.output?.userdoc?.[type]?.[
       Object.keys(metadata?.output?.userdoc[type] || {}).find((fn) =>

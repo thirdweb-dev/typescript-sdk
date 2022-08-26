@@ -378,7 +378,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           try {
             metadata = (await this.getContract(address)).metadata;
           } catch (e) {
-            console.log(
+            console.warn(
               `Couldn't get contract metadata for custom contract: ${address}`,
             );
           }

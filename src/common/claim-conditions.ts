@@ -119,9 +119,12 @@ export async function prepareClaim(
  */
 export async function fetchSnapshot(
   merkleRoot: string,
-  merkleMetadata: Record<string, string>,
+  merkleMetadata: Record<string, string> | undefined,
   storage: IStorage,
 ) {
+  if (!merkleMetadata) {
+    return undefined;
+  }
   const snapshotUri = merkleMetadata[merkleRoot];
   let snapshot = undefined;
   if (snapshotUri) {
@@ -336,10 +339,11 @@ export async function transformResultToClaimCondition(
   pm: IDropClaimCondition.ClaimConditionStructOutput,
   tokenDecimals: number,
   provider: providers.Provider,
-  merkleMetadata: Record<string, string>,
+  merkleMetadata: Record<string, string> | undefined,
   storage: IStorage,
 ): Promise<ClaimCondition> {
   const cv = await fetchCurrencyValue(provider, pm.currency, pm.pricePerToken);
+
   const claims = await fetchSnapshot(pm.merkleRoot, merkleMetadata, storage);
   const maxClaimableSupply = convertToReadableQuantity(
     pm.maxClaimableSupply,
