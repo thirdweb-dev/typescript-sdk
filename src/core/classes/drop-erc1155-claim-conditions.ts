@@ -1,4 +1,4 @@
-import { IStorage } from "../interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { ContractMetadata } from "./contract-metadata";
 import {
   ContractMetadata as ContractMetadataContract,
@@ -474,7 +474,7 @@ export class DropErc1155ClaimConditions<
     const encoded = [];
 
     // keep the old merkle roots from other tokenIds
-    for (const key of Object.keys(metadata.merkle)) {
+    for (const key of Object.keys(metadata.merkle || {})) {
       merkleInfo[key] = metadata.merkle[key];
     }
 

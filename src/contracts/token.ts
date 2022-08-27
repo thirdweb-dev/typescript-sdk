@@ -2,11 +2,8 @@ import { TokenErc20ContractSchema } from "../schema/contracts/token-erc20";
 import { TokenERC20 } from "contracts";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoles } from "../core/classes/contract-roles";
-import {
-  IStorage,
-  NetworkOrSignerOrProvider,
-  TransactionResult,
-} from "../core";
+import { NetworkOrSignerOrProvider, TransactionResult } from "../core";
+import { IStorage } from "@thirdweb-dev/storage";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
 import { TokenMintInput } from "../schema/tokens/token";

@@ -6,6 +6,7 @@ import ISignatureMintERC1155Abi from "../../abis/ISignatureMintERC1155.json";
 import ILazyMintAbi from "../../abis/ILazyMint.json";
 import IBurnableERC1155Abi from "../../abis/IBurnableERC1155.json";
 import DropSinglePhase1155 from "../../abis/DropSinglePhase1155.json";
+import DelayedRevealAbi from "../../abis/DelayedReveal.json";
 
 export const FEATURE_EDITION_BURNABLE = {
   name: "ERC1155Burnable",
@@ -40,6 +41,17 @@ export const FEATURE_EDITION_DROPPABLE = {
   features: {
     [FEATURE_EDITION_CLAIMABLE.name]: FEATURE_EDITION_CLAIMABLE,
   },
+} as const;
+
+export const FEATURE_EDITION_REVEALABLE = {
+  name: "ERC1155Revealable",
+  namespace: "edition.drop.revealer",
+  docLinks: {
+    sdk: "sdk.drop.delayedreveal",
+    contracts: "DelayedReveal",
+  },
+  abis: [Erc1155Abi, ILazyMintAbi, DelayedRevealAbi],
+  features: {},
 } as const;
 
 export const FEATURE_EDITION_SIGNATURE_MINTABLE = {
@@ -101,6 +113,7 @@ export const FEATURE_EDITION = {
     [FEATURE_EDITION_ENUMERABLE.name]: FEATURE_EDITION_ENUMERABLE,
     [FEATURE_EDITION_MINTABLE.name]: FEATURE_EDITION_MINTABLE,
     [FEATURE_EDITION_DROPPABLE.name]: FEATURE_EDITION_DROPPABLE,
+    [FEATURE_EDITION_REVEALABLE.name]: FEATURE_EDITION_REVEALABLE,
     [FEATURE_EDITION_SIGNATURE_MINTABLE.name]:
       FEATURE_EDITION_SIGNATURE_MINTABLE,
   },

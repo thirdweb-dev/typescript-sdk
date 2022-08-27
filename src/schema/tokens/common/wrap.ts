@@ -1,5 +1,5 @@
 import { z } from "zod";
-import { AddressSchema, BigNumberishSchema, PriceSchema } from "../../shared";
+import { AddressSchema, BigNumberishSchema, AmountSchema } from "../../shared";
 
 /**
  * @internal
@@ -12,7 +12,7 @@ const CommonWrappableSchema = z.object({
  * @internal
  */
 export const ERC20WrappableSchema = CommonWrappableSchema.extend({
-  quantity: PriceSchema,
+  quantity: AmountSchema,
 });
 
 /**

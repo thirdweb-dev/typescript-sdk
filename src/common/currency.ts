@@ -13,7 +13,7 @@ import {
   NATIVE_TOKEN_ADDRESS,
 } from "../constants/currency";
 import { Amount, Currency, CurrencyValue, Price } from "../types/currency";
-import { PriceSchema } from "../schema/shared";
+import { AmountSchema } from "../schema/shared";
 import ERC20Abi from "../../abis/IERC20.json";
 import ERC20MetadataAbi from "../../abis/IERC20Metadata.json";
 import { BaseERC20 } from "../types/eips";
@@ -32,7 +32,7 @@ export async function normalizePriceValue(
   currencyAddress: string,
 ) {
   const metadata = await fetchCurrencyMetadata(provider, currencyAddress);
-  return utils.parseUnits(PriceSchema.parse(inputPrice), metadata.decimals);
+  return utils.parseUnits(AmountSchema.parse(inputPrice), metadata.decimals);
 }
 
 export async function fetchCurrencyMetadata(
@@ -160,5 +160,5 @@ export async function normalizeAmount(
   amount: Amount,
 ): Promise<BigNumber> {
   const decimals = await contractWrapper.readContract.decimals();
-  return utils.parseUnits(PriceSchema.parse(amount), decimals);
+  return utils.parseUnits(AmountSchema.parse(amount), decimals);
 }

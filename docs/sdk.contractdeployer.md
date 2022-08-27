@@ -35,6 +35,7 @@ export declare class ContractDeployer extends RPCConnectionHandler
 |  [deploySplit(metadata)](./sdk.contractdeployer.deploysplit.md) |  | Deploys a new Split contract |
 |  [deployToken(metadata)](./sdk.contractdeployer.deploytoken.md) |  | Deploys a new Token contract |
 |  [deployTokenDrop(metadata)](./sdk.contractdeployer.deploytokendrop.md) |  | Deploys a new Token Drop contract |
+|  [deployViaFactory(factoryAddress, implementationAddress, implementationAbi, initializerFunction, initializerArgs)](./sdk.contractdeployer.deployviafactory.md) |  | Deploy a proxy contract of a given implementation via the given factory |
 |  [deployVote(metadata)](./sdk.contractdeployer.deployvote.md) |  | Deploys a new Vote contract |
 |  [updateSignerOrProvider(network)](./sdk.contractdeployer.updatesignerorprovider.md) |  |  |
 

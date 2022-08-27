@@ -4,7 +4,7 @@ import { ContractRegistry } from "./registry";
 import { getContractAddressByChainId } from "../../constants/addresses";
 import { ContractFactory } from "./factory";
 import { SDKOptions } from "../../schema/sdk-options";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import {
   Edition,
@@ -32,9 +32,12 @@ import { ThirdwebSDK } from "../sdk";
 import invariant from "tiny-invariant";
 import {
   extractConstructorParamsFromAbi,
+  extractFunctionParamsFromAbi,
+  fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
 } from "../../common/index";
 import { BigNumber, BytesLike, ContractInterface, ethers } from "ethers";
+import { FactoryDeploymentSchema } from "../../schema/contracts/custom";
 
 /**
  * Handles deploying new contracts
@@ -362,9 +365,46 @@ export class ContractDeployer extends RPCConnectionHandler {
     const release = await new ThirdwebSDK("polygon")
       .getPublisher()
       .getLatest(releaserAddress, contractName);
+    if (!release) {
+      throw new Error(
+        `No release found for '${contractName}' by ${releaserAddress}`,
+      );
+    }
     return await this.deployContractFromUri(
       release.metadataUri,
       constructorParams,
+    );
+  }
+
+  /**
+   * Deploy a proxy contract of a given implementation via the given factory
+   * @param factoryAddress
+   * @param implementationAddress
+   * @param implementationAbi
+   * @param initializerFunction
+   * @param initializerArgs
+   */
+  public async deployViaFactory(
+    factoryAddress: string,
+    implementationAddress: string,
+    implementationAbi: ContractInterface,
+    initializerFunction: string,
+    initializerArgs: any[],
+  ): Promise<string> {
+    const signer = this.getSigner();
+    invariant(signer, "signer is required");
+    // TODO only require factory interface here - IProxyFactory
+    const proxyFactory = new ContractFactory(
+      factoryAddress,
+      this.getSignerOrProvider(),
+      this.storage,
+      {},
+    );
+    return await proxyFactory.deployProxyByImplementation(
+      implementationAddress,
+      implementationAbi,
+      initializerFunction,
+      initializerArgs,
     );
   }
 
@@ -449,24 +489,85 @@ export class ContractDeployer extends RPCConnectionHandler {
   ) {
     const signer = this.getSigner();
     invariant(signer, "A signer is required");
-    const metadata = await fetchPreDeployMetadata(
+    const compilerMetadata = await fetchPreDeployMetadata(
       publishMetadataUri,
       this.storage,
     );
-    const bytecode = metadata.bytecode.startsWith("0x")
-      ? metadata.bytecode
-      : `0x${metadata.bytecode}`;
+    let isDeployableViaFactory;
+    let factoryDeploymentData;
+    try {
+      const extendedMetadata = await fetchExtendedReleaseMetadata(
+        publishMetadataUri,
+        this.storage,
+      );
+      isDeployableViaFactory = extendedMetadata.isDeployableViaFactory;
+      factoryDeploymentData = FactoryDeploymentSchema.parse(
+        extendedMetadata.factoryDeploymentData,
+      );
+    } catch (e) {
+      // not a factory deployment, ignore
+    }
+
+    if (isDeployableViaFactory && factoryDeploymentData) {
+      const chainId = (await this.getProvider().getNetwork()).chainId;
+      invariant(
+        factoryDeploymentData.factoryAddresses,
+        "factoryAddresses is required",
+      );
+      invariant(
+        factoryDeploymentData.implementationAddresses,
+        "implementationAddresses is required",
+      );
+      const factoryAddress = factoryDeploymentData.factoryAddresses[chainId];
+      const implementationAddress =
+        factoryDeploymentData.implementationAddresses[chainId];
+      invariant(
+        factoryAddress,
+        `factoryAddress not found for chainId '${chainId}'`,
+      );
+      invariant(
+        implementationAddress,
+        `implementationAddress not found for chainId '${chainId}'`,
+      );
+      invariant(
+        factoryDeploymentData.implementationInitializerFunction,
+        `implementationInitializerFunction not set'`,
+      );
+      const initializerParamTypes = extractFunctionParamsFromAbi(
+        compilerMetadata.abi,
+        factoryDeploymentData.implementationInitializerFunction,
+      ).map((p) => p.type);
+      const paramValues = this.convertParamValues(
+        initializerParamTypes,
+        constructorParamValues,
+      );
+      return await this.deployViaFactory(
+        factoryAddress,
+        implementationAddress,
+        compilerMetadata.abi,
+        factoryDeploymentData.implementationInitializerFunction,
+        paramValues,
+      );
+    }
+
+    const bytecode = compilerMetadata.bytecode.startsWith("0x")
+      ? compilerMetadata.bytecode
+      : `0x${compilerMetadata.bytecode}`;
     if (!ethers.utils.isHexString(bytecode)) {
       throw new Error(`Contract bytecode is invalid.\n\n${bytecode}`);
     }
     const constructorParamTypes = extractConstructorParamsFromAbi(
-      metadata.abi,
+      compilerMetadata.abi,
     ).map((p) => p.type);
     const paramValues = this.convertParamValues(
       constructorParamTypes,
       constructorParamValues,
     );
-    return this.deployContractWithAbi(metadata.abi, bytecode, paramValues);
+    return this.deployContractWithAbi(
+      compilerMetadata.abi,
+      bytecode,
+      paramValues,
+    );
   }
 
   private convertParamValues(

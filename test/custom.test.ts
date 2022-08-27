@@ -27,6 +27,7 @@ describe("Custom Contracts", async () => {
   let editionDropContractAddress: string;
   let tokenDropContractAddress: string;
   let sigDropContractAddress: string;
+  let nftDropContractAddress: string;
   let adminWallet: SignerWithAddress,
     samWallet: SignerWithAddress,
     bobWallet: SignerWithAddress;
@@ -88,6 +89,10 @@ describe("Custom Contracts", async () => {
     });
     sigDropContractAddress = await sdk.deployer.deploySignatureDrop({
       name: "sigdrop",
+      primary_sale_recipient: adminWallet.address,
+    });
+    nftDropContractAddress = await sdk.deployer.deployNFTDrop({
+      name: "nftdrop",
       primary_sale_recipient: adminWallet.address,
     });
   });
@@ -263,7 +268,7 @@ describe("Custom Contracts", async () => {
     invariant(c.token, "ERC20 undefined");
     invariant(c.token.drop, "ERC20 drop undefined");
 
-    await c.token.drop.claimConditions.set([
+    await c.token.drop.claim.conditions.set([
       {
         startTime: new Date(new Date().getTime() - 1000 * 60 * 60),
         price: 0,
@@ -274,7 +279,7 @@ describe("Custom Contracts", async () => {
     let b = await c.token.balance();
     expect(b.displayValue).to.equal("0.0");
 
-    await c.token.drop.claimTo(adminWallet.address, 5);
+    await c.token.drop.claim.to(adminWallet.address, 5);
 
     b = await c.token.balance();
     expect(b.displayValue).to.equal("5.0");
@@ -330,11 +335,11 @@ describe("Custom Contracts", async () => {
   });
 
   it("should detect feature: erc721 delay reveal", async () => {
-    const c = await sdk.getContract(sigDropContractAddress);
+    const c = await sdk.getContract(nftDropContractAddress);
     invariant(c, "Contract undefined");
     invariant(c.nft, "ERC721 undefined");
     invariant(c.nft.drop, "ERC721 drop");
-    invariant(c.nft.drop.revealer, "ERC721 query undefined");
+    invariant(c.nft.drop.revealer, "ERC721 revealer undefined");
 
     await c.nft.drop.revealer.createDelayedRevealBatch(
       {
@@ -489,8 +494,8 @@ describe("Custom Contracts", async () => {
 
     const batch = await c.token.signature.generateBatch(input);
 
-    for (const [_, v] of batch.entries()) {
-      await c.token.signature.mint(v);
+    for (const b of batch) {
+      await c.token.signature.mint(b);
     }
     const balance = await c.token.balanceOf(samWallet.address);
     expect(balance.displayValue).to.eq("6.0");

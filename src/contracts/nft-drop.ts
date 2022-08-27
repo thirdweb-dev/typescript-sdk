@@ -3,7 +3,7 @@ import { BigNumber, BigNumberish, constants, ethers } from "ethers";
 import { ContractMetadata } from "../core/classes/contract-metadata";
 import { ContractRoyalty } from "../core/classes/contract-royalty";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
-import { IStorage } from "../core/interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import {
   NetworkOrSignerOrProvider,
   TransactionResult,
@@ -40,6 +40,7 @@ import { UploadProgressEvent } from "../types/events";
 import { uploadOrExtractURIs } from "../common/nft";
 import { TransactionTask } from "../core/classes/TransactionTask";
 import { Erc721Burnable } from "../core/classes/erc-721-burnable";
+import { FEATURE_NFT_REVEALABLE } from "../constants/erc721-features";
 
 /**
  * Setup a collection of one-of-one NFTs that are minted as users claim them.
@@ -184,9 +185,10 @@ export class NFTDrop extends Erc721<DropERC721> {
     this.events = new ContractEvents(this.contractWrapper);
     this.platformFees = new ContractPlatformFee(this.contractWrapper);
     this.revealer = new DelayedReveal<DropERC721>(
-      this,
       this.contractWrapper,
       this.storage,
+      FEATURE_NFT_REVEALABLE.name,
+      () => this.nextTokenIdToMint(),
     );
     this.interceptor = new ContractInterceptor(this.contractWrapper);
   }

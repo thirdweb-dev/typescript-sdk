@@ -1,4 +1,4 @@
-import { IStorage } from "../interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { ContractMetadata } from "./contract-metadata";
 import {
   ContractMetadata as ContractMetadataContract,
@@ -31,7 +31,7 @@ import {
   detectContractFeature,
   hasFunction,
 } from "../../common/feature-detection";
-import { PriceSchema } from "../../schema";
+import { AmountSchema } from "../../schema";
 import { includesErrorMessage } from "../../common";
 import ERC20Abi from "../../../abis/IERC20.json";
 import { isNode } from "../../common/utils";
@@ -179,7 +179,7 @@ export class DropClaimConditions<
 
     const decimals = await this.getTokenDecimals();
     const quantityWithDecimals = ethers.utils.parseUnits(
-      PriceSchema.parse(quantity),
+      AmountSchema.parse(quantity),
       decimals,
     );
 
@@ -206,7 +206,7 @@ export class DropClaimConditions<
         reasons.push(ClaimEligibility.NoClaimConditionSet);
         return reasons;
       }
-      console.log("failed to get active claim condition", err);
+      console.warn("failed to get active claim condition", err);
       reasons.push(ClaimEligibility.Unknown);
       return reasons;
     }

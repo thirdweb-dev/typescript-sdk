@@ -1,6 +1,6 @@
 import { NetworkOrSignerOrProvider, TransactionResult } from "../types";
 import { SDKOptions } from "../../schema/sdk-options";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { RPCConnectionHandler } from "./rpc-connection-handler";
 import { constants, utils } from "ethers";
 import invariant from "tiny-invariant";
@@ -8,6 +8,7 @@ import {
   extractConstructorParams,
   extractFunctions,
   fetchContractMetadataFromAddress,
+  fetchExtendedReleaseMetadata,
   fetchPreDeployMetadata,
   fetchRawPredeployMetadata,
   fetchSourceFilesFromMetadata,
@@ -148,7 +149,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     return {
       name: contract.id,
       publishedTimestamp: contract.timestamp,
-      publishedMetadata: await this.fetchPublishedMetadata(
+      publishedMetadata: await this.fetchFullPublishMetadata(
         contract.metadataUri,
       ),
     };
@@ -158,11 +159,10 @@ export class ContractPublisher extends RPCConnectionHandler {
    * @internal
    * @param publishedMetadataUri
    */
-  public async fetchPublishedMetadata(
+  public async fetchFullPublishMetadata(
     publishedMetadataUri: string,
   ): Promise<FullPublishMetadata> {
-    const meta = await this.storage.getRaw(publishedMetadataUri);
-    return FullPublishMetadataSchema.parse(JSON.parse(meta));
+    return fetchExtendedReleaseMetadata(publishedMetadataUri, this.storage);
   }
 
   /**
@@ -186,7 +186,7 @@ export class ContractPublisher extends RPCConnectionHandler {
     return await Promise.all(
       publishedMetadataUri
         .filter((uri) => uri.length > 0)
-        .map((uri) => this.fetchPublishedMetadata(uri)),
+        .map((uri) => this.fetchFullPublishMetadata(uri)),
     );
   }
 
@@ -280,12 +280,15 @@ export class ContractPublisher extends RPCConnectionHandler {
   public async getLatest(
     publisherAddress: string,
     contractId: string,
-  ): Promise<PublishedContract> {
+  ): Promise<PublishedContract | undefined> {
     const model = await this.publisher.readContract.getPublishedContract(
       publisherAddress,
       contractId,
     );
-    return this.toPublishedContract(model);
+    if (model && model.publishMetadataUri) {
+      return this.toPublishedContract(model);
+    }
+    return undefined;
   }
 
   public async publish(

@@ -9,20 +9,20 @@ Handles delayed reveal logic
 <b>Signature:</b>
 
 ```typescript
-export declare class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop> 
+export declare class DelayedReveal<T extends DropERC721 | BaseDelayedRevealERC721 | SignatureDrop | BaseDelayedRevealERC1155> 
 ```
 
 ## Constructors
 
 |  Constructor | Modifiers | Description |
 |  --- | --- | --- |
-|  [(constructor)(erc721, contractWrapper, storage)](./sdk.delayedreveal._constructor_.md) |  | Constructs a new instance of the <code>DelayedReveal</code> class |
+|  [(constructor)(contractWrapper, storage, fetureName, nextTokenIdToMintFn)](./sdk.delayedreveal._constructor_.md) |  | Constructs a new instance of the <code>DelayedReveal</code> class |
 
 ## Properties
 
 |  Property | Modifiers | Type | Description |
 |  --- | --- | --- | --- |
-|  [featureName](./sdk.delayedreveal.featurename.md) |  | "ERC721Revealable" |  |
+|  [featureName](./sdk.delayedreveal.featurename.md) |  | "ERC721Burnable" \| "ERC721Revealable" \| "ERC721Claimable" \| "ERC721Droppable" \| "ERC721BatchMintable" \| "ERC721Mintable" \| "ERC721SignatureMint" \| "ERC721Enumerable" \| "ERC721Supply" \| "ERC721" \| "ERC20Droppable" \| "ERC20Burnable" \| "ERC20SignatureMintable" \| "ERC20BatchMintable" \| "ERC20Mintable" \| "ERC20" \| "ERC1155Burnable" \| "ERC1155Claimable" \| "ERC1155Droppable" \| "ERC1155Revealable" \| "ERC1155SignatureMintable" \| "ERC1155BatchMintable" \| "ERC1155Mintable" \| "ERC1155Enumerable" \| "ERC1155" \| "Royalty" \| "PrimarySale" \| "PlatformFee" \| "Permissions" \| "ContractMetadata" |  |
 
 ## Methods
 

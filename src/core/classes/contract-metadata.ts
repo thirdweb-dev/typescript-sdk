@@ -1,6 +1,6 @@
 import { IContractMetadata, IERC20Metadata } from "contracts";
 import { z } from "zod";
-import { IStorage } from "../interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { TransactionResult } from "../types";
 import { ContractWrapper } from "./contract-wrapper";
 import {
@@ -81,7 +81,7 @@ export class ContractMetadata<
     let data;
     if (this.supportsContractMetadata(this.contractWrapper)) {
       const uri = await this.contractWrapper.readContract.contractURI();
-      if (uri) {
+      if (uri && uri.includes("://")) {
         data = await this.storage.get(uri);
       }
     }

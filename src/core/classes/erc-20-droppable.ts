@@ -1,15 +1,10 @@
 import { FEATURE_TOKEN_DROPPABLE } from "../../constants/erc20-features";
-import { CustomContractSchema } from "../../schema/contracts/custom";
-import { ClaimVerification } from "../../types";
-import { Amount } from "../../types/currency";
 import { BaseDropERC20 } from "../../types/eips";
-import { IStorage } from "../interfaces";
+import { IStorage } from "@thirdweb-dev/storage";
 import { DetectableFeature } from "../interfaces/DetectableFeature";
-import { TransactionResult } from "../types";
-import { ContractMetadata } from "./contract-metadata";
 import { ContractWrapper } from "./contract-wrapper";
-import { DropClaimConditions } from "./drop-claim-conditions";
 import { Erc20 } from "./erc-20";
+import { Erc20Claimable } from "./erc-20-claimable";
 
 /**
  * Configure and claim ERC20 tokens
@@ -45,7 +40,7 @@ export class Erc20Droppable implements DetectableFeature {
    * await contract.nft.drop.claim.conditions.set(claimConditions);
    * ```
    */
-  public claimConditions: DropClaimConditions<BaseDropERC20>;
+  public claim: Erc20Claimable;
   private contractWrapper: ContractWrapper<BaseDropERC20>;
   private erc20: Erc20;
   private storage: IStorage;
@@ -59,72 +54,10 @@ export class Erc20Droppable implements DetectableFeature {
     this.contractWrapper = contractWrapper;
 
     this.storage = storage;
-    const metadata = new ContractMetadata(
+    this.claim = new Erc20Claimable(
+      this.erc20,
       this.contractWrapper,
-      CustomContractSchema,
       this.storage,
     );
-    this.claimConditions = new DropClaimConditions(
-      this.contractWrapper,
-      metadata,
-      this.storage,
-    );
-  }
-
-  /**
-   * Claim a certain amount of tokens to a specific Wallet
-   *
-   * @remarks Let the specified wallet claim Tokens.
-   *
-   * @example
-   * ```javascript
-   * const address = "{{wallet_address}}"; // address of the wallet you want to claim the NFTs
-   * const quantity = 42.69; // how many tokens you want to claim
-   *
-   * const tx = await contract.token.drop.claim.to(address, quantity);
-   * const receipt = tx.receipt; // the transaction receipt
-   * ```
-   *
-   * @param destinationAddress - Address you want to send the token to
-   * @param amount - Quantity of the tokens you want to claim
-   * @param checkERC20Allowance - Optional, check if the wallet has enough ERC20 allowance to claim the tokens, and if not, approve the transfer
-   *
-   * @returns - The transaction receipt
-   */
-  public async claimTo(
-    destinationAddress: string,
-    amount: Amount,
-    checkERC20Allowance = true,
-    claimData?: ClaimVerification,
-  ): Promise<TransactionResult> {
-    const quantity = await this.erc20.normalizeAmount(amount);
-
-    let claimVerification = claimData;
-    if (this.claimConditions && !claimData) {
-      claimVerification = await this.claimConditions.prepareClaim(
-        quantity,
-        checkERC20Allowance,
-        await this.contractWrapper.readContract.decimals(),
-      );
-    }
-    if (!claimVerification) {
-      throw new Error(
-        "Claim verification Data is required - either pass it in as 'claimData' or set claim conditions via 'conditions.set()'",
-      );
-    }
-
-    const receipt = await this.contractWrapper.sendTransaction(
-      "claim",
-      [
-        destinationAddress,
-        quantity,
-        claimVerification.currencyAddress,
-        claimVerification.price,
-        claimVerification.proofs,
-        claimVerification.maxQuantityPerTransaction,
-      ],
-      claimVerification.overrides,
-    );
-    return { receipt };
   }
 }

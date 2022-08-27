@@ -1,5 +1,5 @@
 import { DropERC20 } from "contracts";
-import { IStorage } from "../core/interfaces/IStorage";
+import { IStorage } from "@thirdweb-dev/storage";
 import { NetworkOrSignerOrProvider, TransactionResult } from "../core/types";
 import { SDKOptions } from "../schema/sdk-options";
 import { ContractWrapper } from "../core/classes/contract-wrapper";
@@ -17,7 +17,7 @@ import { Amount, CurrencyValue } from "../types";
 import { DropErc20ContractSchema } from "../schema/contracts/drop-erc20";
 import { getRoleHash } from "../common";
 import { Erc20Burnable } from "../core/classes/erc-20-burnable";
-import { Erc20Droppable } from "../core/classes/erc-20-droppable";
+import { Erc20Claimable } from "../core/classes/erc-20-claimable";
 
 /**
  * Create a Drop contract for a standard crypto token or cryptocurrency.
@@ -42,7 +42,7 @@ export class TokenDrop extends Erc20<DropERC20> {
   static schema = DropErc20ContractSchema;
 
   private _burn = this.burn as Erc20Burnable;
-  private _drop = this.drop as Erc20Droppable;
+  private _claim = this.drop?.claim as Erc20Claimable;
 
   public metadata: ContractMetadata<DropERC20, typeof TokenDrop.schema>;
   public roles: ContractRoles<
@@ -213,7 +213,7 @@ export class TokenDrop extends Erc20<DropERC20> {
     amount: Amount,
     checkERC20Allowance = true,
   ): Promise<TransactionResult> {
-    return this._drop.claimTo(destinationAddress, amount, checkERC20Allowance);
+    return this._claim.to(destinationAddress, amount, checkERC20Allowance);
   }
 
   /**
