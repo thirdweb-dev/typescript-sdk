@@ -28,3 +28,17 @@ getContractFromAbi(address: string, abi: ContractInterface): SmartContract<ether
 
 the contract
 
+## Example
+
+
+```javascript
+// Import your ABI from a JSON file
+import myABI from "./path/to/myABI.json";
+
+const contract = sdk.getContractFromAbi(
+  "{{contract_address}}",
+  // Pass in the "abi" field from the JSON file
+  myABI.abi
+);
+```
+
