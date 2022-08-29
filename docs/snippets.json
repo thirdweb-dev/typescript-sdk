@@ -1578,6 +1578,52 @@
     "properties": [],
     "reference": "https://docs.thirdweb.com/typescript/sdk.Split"
   },
+  "ThirdwebSDK": {
+    "name": "ThirdwebSDK",
+    "summary": "The main entry point for the thirdweb SDK\n\n\n",
+    "remarks": null,
+    "examples": {},
+    "methods": [
+      {
+        "name": "fromPrivateKey",
+        "summary": "Get an instance of the thirdweb SDK based on a private key.\n\n",
+        "remarks": "\n\nThis should only be used for backend services or scripts, with the private key stored in a secure way. **NEVER** expose your private key to the public in any way.\n\n",
+        "examples": {
+          "javascript": "const sdk = ThirdwebSDK.fromPrivateKey(\"SecretPrivateKey\", \"mainnet\");"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ThirdwebSDK.fromPrivateKey"
+      },
+      {
+        "name": "fromSigner",
+        "summary": "Get an instance of the thirdweb SDK based on an existing ethers signer\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "// get a signer from somewhere (createRandom is being used purely for example purposes)\nconst signer = ethers.Wallet.createRandom();\n\n// get an instance of the SDK with the signer already setup\nconst sdk = ThirdwebSDK.fromSigner(signer, \"mainnet\");"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ThirdwebSDK.fromSigner"
+      },
+      {
+        "name": "getBalance",
+        "summary": "Get the native balance of a given address (wallet or contract)\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const balance = await sdk.getBalance(\"0x...\");\nconsole.log(balance.displayValue);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ThirdwebSDK.getBalance"
+      },
+      {
+        "name": "getContractFromAbi",
+        "summary": "Get an instance of a Custom contract from a json ABI\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "// Import your ABI from a JSON file\nimport myABI from \"./path/to/myABI.json\";\n\nconst contract = sdk.getContractFromAbi(\n  \"{{contract_address}}\",\n  // Pass in the \"abi\" field from the JSON file\n  myABI.abi\n);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.ThirdwebSDK.getContractFromAbi"
+      }
+    ],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.ThirdwebSDK"
+  },
   "Token": {
     "name": "Token",
     "summary": "Create a standard crypto token or cryptocurrency.\n\n",
@@ -1864,6 +1910,63 @@
       }
     ],
     "reference": "https://docs.thirdweb.com/typescript/sdk.TokenDrop"
+  },
+  "UserWallet": {
+    "name": "UserWallet",
+    "summary": "Connect and Interact with a user wallet\n\n",
+    "remarks": null,
+    "examples": {
+      "javascript": "const balance = await sdk.wallet.balance();"
+    },
+    "methods": [
+      {
+        "name": "balance",
+        "summary": "Fetch the native or ERC20 token balance of this wallet\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "// native currency balance\nconst balance = await sdk.wallet.balance();\n// ERC20 token balance\nconst erc20balance = await sdk.wallet.balance(tokenContractAddress);\n"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.UserWallet.balance"
+      },
+      {
+        "name": "getAddress",
+        "summary": "Get the currently connected address\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const address = await sdk.wallet.getAddress();"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.UserWallet.getAddress"
+      },
+      {
+        "name": "recoverAddress",
+        "summary": "Recover the signing address from a signed message\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "const message = \"Sign this message...\";\nconst signature = await sdk.wallet.sign(message);\n\n// Now we can recover the signing address\nconst address = sdk.wallet.recoverAddress(message, signature);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.UserWallet.recoverAddress"
+      },
+      {
+        "name": "sign",
+        "summary": "Sign any message with the connected wallet private key\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": "// This is the message to be signed\nconst message = \"Sign this message...\";\n\n// Now we can sign the message with the connected wallet\nconst signature = await sdk.wallet.sign(message);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.UserWallet.sign"
+      },
+      {
+        "name": "transfer",
+        "summary": "Transfer native or ERC20 tokens from this wallet to another wallet\n\n",
+        "remarks": null,
+        "examples": {
+          "javascript": " // transfer 0.8 ETH\nawait sdk.wallet.transfer(\"0x...\", 0.8);\n // transfer 0.8 tokens of `tokenContractAddress`\nawait sdk.wallet.transfer(\"0x...\", 0.8, tokenContractAddress);"
+        },
+        "reference": "https://docs.thirdweb.com/typescript/sdk.UserWallet.transfer"
+      }
+    ],
+    "properties": [],
+    "reference": "https://docs.thirdweb.com/typescript/sdk.UserWallet"
   },
   "Vote": {
     "name": "Vote",

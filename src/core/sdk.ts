@@ -378,7 +378,7 @@ export class ThirdwebSDK extends RPCConnectionHandler {
           try {
             metadata = (await this.getContract(address)).metadata;
           } catch (e) {
-            console.log(
+            console.warn(
               `Couldn't get contract metadata for custom contract: ${address}`,
             );
           }
@@ -454,6 +454,17 @@ export class ThirdwebSDK extends RPCConnectionHandler {
 
   /**
    * Get an instance of a Custom contract from a json ABI
+   * @example
+   * ```javascript
+   * // Import your ABI from a JSON file
+   * import myABI from "./path/to/myABI.json";
+   * 
+   * const contract = sdk.getContractFromAbi(
+   *   "{{contract_address}}",
+   *   // Pass in the "abi" field from the JSON file
+   *   myABI.abi
+   * );
+   * ```
    * @param address - the address of the deployed contract
    * @param abi - the JSON abi
    * @returns the contract
